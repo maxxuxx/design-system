@@ -1,0 +1,19 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<section class="component-preview" aria-label={title} data-component-preview>
+  <div class="component-preview-copy">
+    <h3>{title}</h3>
+    {description && <p>{description}</p>}
+  </div>
+  <div class="component-preview-stage"><slot /></div>
+  {Astro.slots.has('controls') && (
+    <div class="component-preview-controls"><slot name="controls" /></div>
+  )}
+</section>

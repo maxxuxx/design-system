@@ -1,0 +1,13 @@
+---
+import { tokensByPrefix } from '../../lib/token-data';
+const spaces = tokensByPrefix('space/');
+---
+<div class="specimen-list">
+  {spaces.map((token) => (
+    <article class="metric-row">
+      <code>{token.name}</code>
+      <div class="spacing-bar" style={`width:min(${Number(token.resolvedValue) * 4}px, 100%)`}></div>
+      <span>{token.resolvedValue}px</span>
+    </article>
+  ))}
+</div>

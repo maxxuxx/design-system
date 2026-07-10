@@ -1,0 +1,26 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SideNavigation from '../components/SideNavigation.astro';
+import '../styles/docs.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout title={title} description={description}>
+  <SiteHeader currentPath={currentPath} />
+  <div class="docs-grid">
+    <aside class="desktop-sidebar">
+      <SideNavigation currentPath={currentPath} />
+    </aside>
+    <main id="main-content" class="docs-main" tabindex="-1">
+      <slot />
+    </main>
+  </div>
+</BaseLayout>

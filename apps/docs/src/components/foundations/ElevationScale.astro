@@ -1,0 +1,12 @@
+---
+import { tokensByPrefix } from '../../lib/token-data';
+const elevations = tokensByPrefix('elevation/');
+---
+<div class="token-grid elevation-grid">
+  {elevations.map((token) => (
+    <article class="elevation-sample" style={`box-shadow:${token.resolvedValue}`}>
+      <strong>{token.name}</strong>
+      <code>{String(token.resolvedValue)}</code>
+    </article>
+  ))}
+</div>
