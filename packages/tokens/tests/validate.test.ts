@@ -8,7 +8,7 @@ function token(
   type: TokenType,
   kind: TokenDefinition['kind'],
   value: string | number,
-  description = '寃利??숈옉???뺤씤?섎뒗 ?뚯뒪???좏겙?낅땲??',
+  description = '검증 동작을 확인하는 테스트 토큰입니다.',
 ): TokenDefinition {
   return { name, type, kind, value, description };
 }
