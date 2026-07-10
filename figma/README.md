@@ -58,6 +58,7 @@ empty `Page 1` remains after this managed prefix and is not used by the library.
 
 - Documentation roots: `00 Cover`, `01 Principles`, `02 Getting Started`,
   `03 Foundations`, and `04 Components`
+- Cover frame: fixed `1440 × 900` for a stable Figma page thumbnail
 - Catalog sections: 13
 - Catalog items: 114
   - Variables: 104
@@ -69,8 +70,10 @@ empty `Page 1` remains after this managed prefix and is not used by the library.
 
 All five roots use token-bound canvas, text, spacing, and padding values. The
 Foundations catalog binds every applicable sample to its exact Variable or
-Style. The complete CSS font stack is displayed as text because a Figma text
-node accepts one installed family rather than a fallback stack.
+Style. Dimension and radius geometry uses the semantic `color/action/primary`
+fill so it remains visible on surface cards. The complete CSS font stack is
+displayed as text because a Figma text node accepts one installed family rather
+than a fallback stack.
 
 Status: Foundations visual approval is pending. `Icon`, `Badge`, `Button`, and
 `TextField` pages exist but do not contain components yet.

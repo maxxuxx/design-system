@@ -305,18 +305,15 @@ return { createdNodeIds: changed.map((item) => item.id), pages: changed };
 Build one page root per call with this complete script. `input` contains the actual page name, copy, `IBM Plex Sans KR` family/style names, and variable IDs read from the ledger.
 
 ```js
-const input = { pageName: '', title: '', description: '', fontFamily: '', regularStyle: '', boldStyle: '', canvasVariableId: '', textVariableId: '', secondaryTextVariableId: '', sectionGapVariableId: '', pagePaddingVariableId: '', titleTextStyleId: '', bodyTextStyleId: '' };
+const input = { pageName: '', title: '', description: '', fixedHeight: null, fontFamily: '', regularStyle: '', boldStyle: '', canvasVariableId: '', textVariableId: '', secondaryTextVariableId: '', sectionGapVariableId: '', pagePaddingVariableId: '', titleTextStyleId: '', bodyTextStyleId: '' };
 if (!input.pageName || !input.title || !input.fontFamily) throw new Error('Documentation root input is incomplete');
+if (input.fixedHeight !== null && (!Number.isFinite(input.fixedHeight) || input.fixedHeight <= 0)) throw new Error('Documentation fixedHeight must be null or positive');
 const RUN_ID = 'design-system-v0.1-2026-07-10';
 const page = figma.root.children.find((item) => item.name === input.pageName);
 if (!page) throw new Error(`Page not found: ${input.pageName}`);
 await figma.setCurrentPageAsync(page);
 const existing = page.findAllWithCriteria({ sharedPluginData: { namespace: 'dsb', keys: ['key'] } }).find((node) => node.getSharedPluginData('dsb', 'key') === `doc-root/${input.pageName}`);
-if (existing) {
-  if (existing.type !== 'FRAME') throw new Error(`Documentation root is not a frame: ${input.pageName}`);
-  existing.primaryAxisSizingMode = 'AUTO';
-  return { createdNodeIds: [existing.id], rootId: existing.id };
-}
+if (existing && existing.type !== 'FRAME') throw new Error(`Documentation root is not a frame: ${input.pageName}`);
 await Promise.all([
   figma.loadFontAsync({ family: input.fontFamily, style: input.regularStyle }),
   figma.loadFontAsync({ family: input.fontFamily, style: input.boldStyle }),
@@ -329,42 +326,51 @@ const [canvasVariable, textVariable, secondaryTextVariable, sectionGapVariable, 
   figma.variables.getVariableByIdAsync(input.pagePaddingVariableId),
 ]);
 if (!canvasVariable || !textVariable || !secondaryTextVariable || !sectionGapVariable || !pagePaddingVariable) throw new Error('Documentation variables are missing');
-const root = figma.createFrame();
+const root = existing ?? figma.createFrame();
+const isNewRoot = !existing;
 root.layoutMode = 'VERTICAL';
 root.name = `${input.pageName} / Documentation`;
-root.resize(1440, 1);
+root.resize(1440, input.fixedHeight ?? 1);
 root.layoutSizingHorizontal = 'FIXED';
-root.primaryAxisSizingMode = 'AUTO';
+root.primaryAxisSizingMode = input.fixedHeight === null ? 'AUTO' : 'FIXED';
 root.setBoundVariable('itemSpacing', sectionGapVariable);
 root.setBoundVariable('paddingTop', pagePaddingVariable); root.setBoundVariable('paddingRight', pagePaddingVariable); root.setBoundVariable('paddingBottom', pagePaddingVariable); root.setBoundVariable('paddingLeft', pagePaddingVariable);
 root.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }, 'color', canvasVariable)];
-root.x = Math.max(0, ...page.children.filter((node) => node.id !== root.id).map((node) => node.x + node.width + 160));
-root.y = 0;
+if (isNewRoot) {
+  root.x = Math.max(0, ...page.children.map((node) => node.x + node.width + 160));
+  root.y = 0;
+}
 root.setSharedPluginData('dsb', 'run_id', RUN_ID);
 root.setSharedPluginData('dsb', 'phase', 'phase2');
 root.setSharedPluginData('dsb', 'key', `doc-root/${input.pageName}`);
-const title = figma.createText();
+let title = root.children[0];
+if (!title || title.type !== 'TEXT') {
+  title = figma.createText();
+  root.insertChild(0, title);
+}
 title.fontName = { family: input.fontFamily, style: input.boldStyle };
 title.characters = input.title;
 await title.setTextStyleIdAsync(input.titleTextStyleId);
 title.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }, 'color', textVariable)];
-root.appendChild(title);
-const description = figma.createText();
+let description = root.children[1];
+if (!description || description.type !== 'TEXT') {
+  description = figma.createText();
+  root.insertChild(1, description);
+}
 description.fontName = { family: input.fontFamily, style: input.regularStyle };
 description.characters = input.description;
 await description.setTextStyleIdAsync(input.bodyTextStyleId);
 description.resize(1120, 1);
 description.textAutoResize = 'HEIGHT';
 description.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }, 'color', secondaryTextVariable)];
-root.appendChild(description);
-page.appendChild(root);
+if (isNewRoot) page.appendChild(root);
 return { createdNodeIds: [root.id, title.id, description.id], rootId: root.id };
 ```
 
 Foundations cards are added in batches of at most two with this script. `kind` is `color`, `dimension`, `radius`, `textVariable`, `textStyle`, or `effectStyle`; every item supplies the actual readback ID. A `textVariable` supplies `fontFamily`, `fontSize`, `fontWeight`, or `lineHeight` plus its exact `resolvedValue`. Size, weight, and line-height variables bind to the sample; the full CSS font-family stack is shown verbatim because it is not a valid single-family text-node binding.
 
 ```js
-const input = { pageName: '03 Foundations', rootId: '', sectionName: '', fontFamily: '', regularStyle: '', surfaceVariableId: '', textVariableId: '', sectionGapVariableId: '', cardGapVariableId: '', cardPaddingVariableId: '', items: [] };
+const input = { pageName: '03 Foundations', rootId: '', sectionName: '', fontFamily: '', regularStyle: '', surfaceVariableId: '', visibleSampleVariableId: '', textVariableId: '', sectionGapVariableId: '', cardGapVariableId: '', cardPaddingVariableId: '', items: [] };
 if (input.items.length < 1 || input.items.length > 2) throw new Error('Foundation batch must contain 1..2 items');
 const RUN_ID = 'design-system-v0.1-2026-07-10';
 const page = figma.root.children.find((item) => item.name === input.pageName);
@@ -372,32 +378,56 @@ const root = await figma.getNodeByIdAsync(input.rootId);
 if (!page || !root || root.type !== 'FRAME') throw new Error('Foundation page/root missing');
 await figma.setCurrentPageAsync(page);
 await figma.loadFontAsync({ family: input.fontFamily, style: input.regularStyle });
-const [surfaceVariable, textVariable, sectionGapVariable, cardGapVariable, cardPaddingVariable] = await Promise.all([
+const [surfaceVariable, visibleSampleVariable, textVariable, sectionGapVariable, cardGapVariable, cardPaddingVariable] = await Promise.all([
   figma.variables.getVariableByIdAsync(input.surfaceVariableId),
+  figma.variables.getVariableByIdAsync(input.visibleSampleVariableId),
   figma.variables.getVariableByIdAsync(input.textVariableId),
   figma.variables.getVariableByIdAsync(input.sectionGapVariableId),
   figma.variables.getVariableByIdAsync(input.cardGapVariableId),
   figma.variables.getVariableByIdAsync(input.cardPaddingVariableId),
 ]);
-if (!surfaceVariable || !textVariable || !sectionGapVariable || !cardGapVariable || !cardPaddingVariable) throw new Error('Foundation chrome variables are missing');
+if (!surfaceVariable || !visibleSampleVariable || !textVariable || !sectionGapVariable || !cardGapVariable || !cardPaddingVariable) throw new Error('Foundation chrome variables are missing');
 let section = root.findOne((node) => node.getSharedPluginData('dsb', 'key') === `foundation/${input.sectionName}`);
 const created = [];
 if (!section) {
   section = figma.createFrame();
-  section.layoutMode = 'HORIZONTAL';
-  section.name = input.sectionName;
-  section.layoutWrap = 'WRAP';
-  section.counterAxisSizingMode = 'AUTO';
-  section.setBoundVariable('itemSpacing', sectionGapVariable);
   section.setSharedPluginData('dsb', 'run_id', RUN_ID);
   section.setSharedPluginData('dsb', 'phase', 'phase2');
   section.setSharedPluginData('dsb', 'key', `foundation/${input.sectionName}`);
   root.appendChild(section);
-  section.layoutSizingHorizontal = 'FILL';
-  created.push(section.id);
 }
+if (section.type !== 'FRAME') throw new Error(`Foundation section is not a frame: ${input.sectionName}`);
+section.layoutMode = 'HORIZONTAL';
+section.name = input.sectionName;
+section.layoutWrap = 'WRAP';
+section.counterAxisSizingMode = 'AUTO';
+section.setBoundVariable('itemSpacing', sectionGapVariable);
+section.layoutSizingHorizontal = 'FILL';
+created.push(section.id);
 for (const item of input.items) {
-  if (section.findOne((node) => node.getSharedPluginData('dsb', 'key') === `foundation-item/${item.sourceName}`)) continue;
+  const existingCard = section.findOne((node) => node.getSharedPluginData('dsb', 'key') === `foundation-item/${item.sourceName}`);
+  if (existingCard) {
+    if (existingCard.type !== 'FRAME' || existingCard.children.length < 2) throw new Error(`Foundation card is invalid: ${item.sourceName}`);
+    const sample = existingCard.children[0];
+    const label = existingCard.children[1];
+    if (label.type !== 'TEXT') throw new Error(`Foundation label is invalid: ${item.sourceName}`);
+    existingCard.layoutMode = 'VERTICAL';
+    existingCard.counterAxisSizingMode = 'AUTO';
+    existingCard.setBoundVariable('itemSpacing', cardGapVariable);
+    existingCard.setBoundVariable('paddingTop', cardPaddingVariable); existingCard.setBoundVariable('paddingRight', cardPaddingVariable); existingCard.setBoundVariable('paddingBottom', cardPaddingVariable); existingCard.setBoundVariable('paddingLeft', cardPaddingVariable);
+    existingCard.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }, 'color', surfaceVariable)];
+    if ((item.kind === 'dimension' || item.kind === 'radius') && 'fills' in sample) {
+      sample.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 1 } }, 'color', visibleSampleVariable)];
+    }
+    label.fontName = { family: input.fontFamily, style: input.regularStyle };
+    label.characters = `${item.sourceName}\n${item.webSyntax ?? ''}`.trim();
+    label.fontSize = 12;
+    label.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }, 'color', textVariable)];
+    label.resize(180, 1);
+    label.textAutoResize = 'HEIGHT';
+    created.push(existingCard.id, sample.id, label.id);
+    continue;
+  }
   const card = figma.createFrame();
   card.layoutMode = 'VERTICAL';
   card.counterAxisSizingMode = 'AUTO';
@@ -436,9 +466,11 @@ for (const item of input.items) {
       sample.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: .5, g: .5, b: .5 } }, 'color', variable)];
     } else if (item.kind === 'dimension') {
       const variable = await figma.variables.getVariableByIdAsync(item.id);
+      sample.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 1 } }, 'color', visibleSampleVariable)];
       sample.setBoundVariable('width', variable);
     } else if (item.kind === 'radius') {
       const variable = await figma.variables.getVariableByIdAsync(item.id);
+      sample.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 1 } }, 'color', visibleSampleVariable)];
       sample.setBoundVariable('cornerRadius', variable);
     } else if (item.kind === 'effectStyle') {
       await sample.setEffectStyleIdAsync(item.id);
@@ -1018,17 +1050,17 @@ Run the exact Page batch script above three times with `PAGE_NAMES.slice(0, 5)`,
 
 - [ ] **Step 3: Build documentation frames one page at a time**
 
-Run the exact documentation-root script once for each row, passing the real `IBM Plex Sans KR` styles; `color/bg/canvas`, `color/text/primary`, `color/text/secondary`, `space/32`, and `space/64` variable IDs; and `Display`/`Body` text-style IDs from the ledger.
+Run the exact documentation-root script once for each row, passing the real `IBM Plex Sans KR` styles; `color/bg/canvas`, `color/text/primary`, `color/text/secondary`, `space/32`, and `space/64` variable IDs; and `Display`/`Body` text-style IDs from the ledger. Pass `fixedHeight: 900` only for `00 Cover`; pass `fixedHeight: null` for the other four roots so they hug content vertically.
 
-| Page | Title | Description |
-|---|---|---|
-| `00 Cover` | `Design System v0.1` | `모바일 우선 제품 경험을 위한 토큰, 컴포넌트, 사용 규칙입니다.` |
-| `01 Principles` | `Principles` | `명확한 위계, 읽기 쉬운 정보, 하나의 주 행동, 절제된 장식을 기준으로 설계합니다.` |
-| `02 Getting Started` | `Getting Started` | `Foundations를 확인한 뒤 컴포넌트 계약과 React 예제를 같은 이름으로 사용합니다.` |
-| `03 Foundations` | `Foundations` | `코드 토큰과 동일한 색상, 간격, 크기, 타이포그래피, 반경, elevation 원본입니다.` |
-| `04 Components` | `Components` | `Icon, Badge, Button, TextField의 목적, 변형, 상태, 접근성 계약을 제공합니다.` |
+| Page | Title | Description | Height |
+|---|---|---|---|
+| `00 Cover` | `Design System v0.1` | `모바일 우선 제품 경험을 위한 토큰, 컴포넌트, 사용 규칙입니다.` | `900` |
+| `01 Principles` | `Principles` | `명확한 위계, 읽기 쉬운 정보, 하나의 주 행동, 절제된 장식을 기준으로 설계합니다.` | Hug |
+| `02 Getting Started` | `Getting Started` | `Foundations를 확인한 뒤 컴포넌트 계약과 React 예제를 같은 이름으로 사용합니다.` | Hug |
+| `03 Foundations` | `Foundations` | `코드 토큰과 동일한 색상, 간격, 크기, 타이포그래피, 반경, elevation 원본입니다.` | Hug |
+| `04 Components` | `Components` | `Icon, Badge, Button, TextField의 목적, 변형, 상태, 접근성 계약을 제공합니다.` | Hug |
 
-On `03 Foundations`, run the exact Foundation batch script repeatedly with at most two entries. Supply `color/bg/surface`, `color/text/primary`, `space/16`, `space/8`, and `space/12` as the chrome-variable IDs. Render every color variable as `color`; every `space/*` and `size/*` entry as `dimension`; every radius variable as `radius`; typography variables as `textVariable` with `font/family/* → fontFamily`, `font/size/* → fontSize`, `font/weight/* → fontWeight`, and `font/line-height/* → lineHeight`; all eight styles as `textStyle`; and both effect styles as `effectStyle`. Each item uses its exact readback ID, source name, and resolved value. The completed page must cover all 104 variables plus all 10 styles; every bindable value is bound, while the full CSS font stack is displayed verbatim and applied through approved `IBM Plex Sans KR` Text Styles rather than an invalid stack binding.
+On `03 Foundations`, run the exact Foundation batch script repeatedly with at most two entries. Supply `color/bg/surface`, `color/action/primary`, `color/text/primary`, `space/16`, `space/8`, and `space/12` as the chrome and visible-sample Variable IDs. Render every color variable as `color`; every `space/*` and `size/*` entry as `dimension`; every radius variable as `radius`; typography variables as `textVariable` with `font/family/* → fontFamily`, `font/size/* → fontSize`, `font/weight/* → fontWeight`, and `font/line-height/* → lineHeight`; all eight styles as `textStyle`; and both effect styles as `effectStyle`. Dimension and radius samples use the semantic `color/action/primary` fill so their bound geometry remains visible on the surface card. Each item uses its exact readback ID, source name, and resolved value. The completed page must cover all 104 variables plus all 10 styles; every bindable value is bound, while the full CSS font stack is displayed verbatim and applied through approved `IBM Plex Sans KR` Text Styles rather than an invalid stack binding.
 
 - [ ] **Step 4: Validate and screenshot every documentation page**
 
