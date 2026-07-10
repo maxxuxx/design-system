@@ -72,7 +72,7 @@
       "slug": "badge",
       "description": "짧은 상태나 범주 메타데이터를 비대화식으로 표시하는 compact label입니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=47-2",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
