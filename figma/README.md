@@ -10,7 +10,8 @@ This file is the approved target for the Figma implementation. Phase 0 resolved
 the source-of-truth decisions. Phase 1 created and validated the five token
 collections, 104 Variables, eight Text Styles, and two Effect Styles. Phase 2
 created the ordered page structure and the first five documentation roots.
-Component construction starts after the pending Foundations visual approval.
+Foundations visual approval was recorded at `2026-07-10T23:08:13+09:00`, and
+Phase 3 component construction is now in progress.
 
 ## Typography
 
@@ -75,7 +76,46 @@ fill so it remains visible on surface cards. The complete CSS font stack is
 displayed as text because a Figma text node accepts one installed family rather
 than a fallback stack.
 
-Status: Foundations visual approval is pending. `Icon`, `Badge`, `Button`, and
+## Foundations approval
+
+- `approved`: `true`
+- `approvedAt`: `2026-07-10T23:08:13+09:00`
+- `tokenParity`: `true`
+
+The approved readback preserves all 104 Variables, eight Text Styles, two Effect
+Styles, explicit scopes, WEB syntax, aliases, and the full generated CSS font
+stack without missing or duplicate source items.
+
+## Phase 3 Icon validation
+
+- Component count: 5
+- Component names: `Icon/Check`, `Icon/ChevronRight`, `Icon/Close`, `Icon/Info`,
+  and `Icon/Search`
+- `properties`: `[]`
+- Masters: five owned `24 × 24` SVG components
+- Catalog instances: 15 total, covering all five icons at `16`, `20`, and `24`
+- Master size binding: `size/icon/large`
+- Catalog size bindings: `size/icon/small`, `size/icon/medium`, and
+  `size/icon/large`
+- Vector fill/stroke binding: `color/icon/primary`
+- Accessibility description: `기능 아이콘입니다. 단독으로 사용할 때는 반드시 접근 가능한 텍스트 이름을 함께 제공하세요.`
+- Layout audit: no overlaps, clipping, or unnamed nodes; exactly five catalog
+  instances per row
+- Full-page screenshot target: `04.1 Icon` (`9:7`), rendered at `1440 × 572`
+- Catalog: [open in Figma](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=31-2)
+- Owned components:
+  - [Icon/Check](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-4)
+  - [Icon/ChevronRight](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-7)
+  - [Icon/Close](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-11)
+  - [Icon/Info](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-16)
+  - [Icon/Search](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-20)
+
+The final binding audit passed every structural, variable-binding, naming,
+description, ownership, URL-distinctness, and non-overlap check. The screenshot
+shows readable documentation, one aligned master row, and three unclipped
+five-icon catalog rows.
+
+Status: Foundations and Icon are approved and validated. `Badge`, `Button`, and
 `TextField` pages exist but do not contain components yet.
 
 Code Connect is excluded from v0.1.
