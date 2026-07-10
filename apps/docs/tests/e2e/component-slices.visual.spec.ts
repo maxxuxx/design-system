@@ -1,8 +1,10 @@
-
 import { expect, test } from '@playwright/test';
 import { expectPageScreenshot } from './support/visual';
 
-const slices = [{ name: 'Icon', slug: 'icon' }] as const;
+const slices = [
+  { name: 'Icon', slug: 'icon' },
+  { name: 'Badge', slug: 'badge' },
+] as const;
 
 for (const slice of slices) {
   test(`${slice.name} component slice`, async ({ page }, testInfo) => {

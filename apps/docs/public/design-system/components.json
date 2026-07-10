@@ -66,6 +66,88 @@
         "color/icon/primary"
       ],
       "docsUrl": "/components/icon/"
+    },
+    {
+      "name": "Badge",
+      "slug": "badge",
+      "description": "짧은 상태나 범주 메타데이터를 비대화식으로 표시하는 compact label입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "soft",
+        "solid",
+        "neutral",
+        "primary",
+        "success",
+        "danger"
+      ],
+      "sizes": [
+        "small",
+        "medium"
+      ],
+      "states": [
+        "default"
+      ],
+      "accessibility": "native span과 visible children을 유지하며 tone만으로 상태 의미를 전달하지 않습니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "짧고 직접적인 badge label입니다."
+        },
+        {
+          "name": "size",
+          "type": "BadgeSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small 또는 medium 높이입니다."
+        },
+        {
+          "name": "variant",
+          "type": "BadgeVariant",
+          "required": false,
+          "defaultValue": "soft",
+          "description": "soft 또는 solid 시각 강도입니다."
+        },
+        {
+          "name": "tone",
+          "type": "BadgeTone",
+          "required": false,
+          "defaultValue": "neutral",
+          "description": "neutral, primary, success, danger 중 의미 tone입니다."
+        },
+        {
+          "name": "...spanProps",
+          "type": "HTMLAttributes<HTMLSpanElement>",
+          "required": false,
+          "defaultValue": null,
+          "description": "native span props와 ARIA attributes입니다."
+        }
+      ],
+      "tokens": [
+        "size/badge/small",
+        "size/badge/medium",
+        "radius/full",
+        "color/status/neutral",
+        "color/status/neutral-subtle",
+        "color/status/success",
+        "color/status/success-subtle",
+        "color/status/danger",
+        "color/status/danger-subtle",
+        "color/status/on-status",
+        "color/action/primary",
+        "color/action/weak",
+        "color/action/on-primary",
+        "color/action/on-weak"
+      ],
+      "docsUrl": "/components/badge/"
     }
   ]
 }
