@@ -6,9 +6,10 @@
 - File: [Design System v0.1](https://www.figma.com/design/hNlju4j556mzi0G515UDwE)
 - Phase 0 approved: 2026-07-10
 
-This file is the approved target for the Figma implementation. Phase 0 only
-established the target and resolved source-of-truth decisions; Figma
-Foundations, pages, Variables, Styles, and components have not been created yet.
+This file is the approved target for the Figma implementation. Phase 0 resolved
+the source-of-truth decisions. Phase 1 created and validated the five token
+collections, 104 Variables, eight Text Styles, and two Effect Styles. Page
+documentation and components have not been created yet.
 
 ## Typography
 
@@ -22,13 +23,18 @@ The approved Figma font family is `IBM Plex Sans KR` with these exact styles:
 The code token keeps the complete CSS fallback stack. Figma Text Styles use the
 installed `IBM Plex Sans KR` family.
 
-## Planned collections
+## Collections
 
 - `Primitives`
 - `Semantic Color`
 - `Spacing`
 - `Typography`
 - `Radius`
+
+Every collection has one `Default` mode. Primitive colors are hidden from
+pickers, semantic colors alias primitive variables, every Variable has explicit
+scopes and WEB syntax, and the machine-readable readback is stored in
+[`token-map.json`](./token-map.json).
 
 ## Planned pages
 
