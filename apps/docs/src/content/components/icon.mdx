@@ -1,7 +1,7 @@
 ---
 name: Icon
 slug: icon
-description: Owned stroke icons
+description: 익숙한 인터페이스 동작을 텍스트 중복 없이 전달하는 다섯 개의 owned stroke glyph입니다.
 status: preview
 figmaUrl: ""
 frameworks:
@@ -11,11 +11,112 @@ frameworks:
 variants: [check, chevron-right, close, info, search]
 sizes: ["16", "20", "24"]
 states: [decorative, labelled]
-accessibility: Decorative by default; non-empty label provides img semantics.
-props: []
-tokens: [size/icon/small, size/icon/medium, size/icon/large, color/text/primary]
+accessibility: label이 없으면 장식용으로 숨기고, 단독 의미를 전달할 때는 label로 img role과 accessible name을 제공합니다.
+props:
+  - name: name
+    type: IconName
+    required: true
+    defaultValue: null
+    description: check, chevron-right, close, info, search 중 하나입니다.
+  - name: size
+    type: IconSize
+    required: false
+    defaultValue: "24"
+    description: 16, 20, 24 중 렌더링 크기입니다.
+  - name: label
+    type: string
+    required: false
+    defaultValue: null
+    description: 단독 아이콘의 accessible name입니다. 비어 있으면 장식용입니다.
+  - name: ...svgProps
+    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-hidden'>"
+    required: false
+    defaultValue: null
+    description: component-owned geometry와 ARIA를 제외한 native SVG props입니다.
+tokens:
+  - size/icon/small
+  - size/icon/medium
+  - size/icon/large
+  - color/text/primary
 ---
+
 import ComponentPreview from '../../components/ComponentPreview.astro';
 import IconExample from '../../components/examples/IconExample';
+import { ICON_NAMES, Icon } from '@maxxuxx/react';
+
 ## 예제
-<ComponentPreview title="Icon"><IconExample client:load /></ComponentPreview>
+
+<ComponentPreview title="다섯 아이콘" description="이름, 크기, accessible label 여부를 바꿔 보세요.">
+  <IconExample client:load />
+</ComponentPreview>
+
+<div className="component-demo__grid">
+  {ICON_NAMES.map((name) => (
+    <div className="component-demo__item component-demo__item--stacked">
+      <Icon name={name} />
+      <span className="component-demo__label">{name}</span>
+    </div>
+  ))}
+</div>
+
+## 사용해야 할 때
+
+확인, 다음 이동, 닫기, 정보, 검색처럼 익숙한 기능을 좁은 공간에서 보조할 때 사용합니다.
+
+## 사용하지 말아야 할 때
+
+의미가 불분명한 장식이나 브랜드 로고, 긴 설명의 대체물로 사용하지 않습니다.
+
+## 구조
+
+24px viewBox 안의 repository-owned stroke path로 구성됩니다.
+
+## 크기와 변형
+
+`16`, `20`, `24` 세 크기와 다섯 이름을 제공합니다. 기본 크기는 `24`입니다.
+
+## 상태와 동작
+
+Icon 자체에는 hover, pressed, disabled 상태가 없습니다. 상호작용 상태는 Icon을 포함한 Button이나 링크가 소유합니다.
+
+## 반응형 동작
+
+모바일과 데스크톱에서 같은 geometry를 사용합니다. 주변 control의 touch target은 control이 책임집니다.
+
+## 접근성
+
+`label`이 없거나 공백뿐이면 `aria-hidden="true"`입니다. 단독으로 의미를 전달할 때 non-empty `label`을 주면 `role="img"`와 accessible name이 생성됩니다.
+
+## React 예제
+
+```tsx
+import { Icon } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function SearchLabel() {
+  return <span><Icon name="search" size={20} />검색</span>;
+}
+```
+
+## API
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `name` | `IconName` | required | 다섯 owned glyph 중 하나 |
+| `size` | `16 \| 20 \| 24` | `24` | width와 height를 함께 결정 |
+| `label` | `string` | 없음 | 단독 아이콘의 accessible name |
+
+## 사용 토큰
+
+- `size/icon/small`, `size/icon/medium`, `size/icon/large`
+- `color/text/primary`
+
+## Figma
+
+Pre-Figma contract는 다섯 개의 24px master component입니다. 이 단계에서는 Figma를 변경하지 않으므로 `figmaUrl`은 비워 둡니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

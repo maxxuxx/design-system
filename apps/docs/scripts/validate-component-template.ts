@@ -29,8 +29,12 @@ export function extractSecondLevelHeadings(source: string): string[] {
   let fenceLength = 0;
   let jsxDepth = 0;
   let pendingJsxTag = '';
+  let inFrontmatter = false;
+  let frontmatterSeen = false;
 
   for (const line of source.replaceAll('\r\n', '\n').split('\n')) {
+    if (!frontmatterSeen && line.trim() === '---') { frontmatterSeen = true; inFrontmatter = true; continue; }
+    if (inFrontmatter) { if (line.trim() === '---') inFrontmatter = false; continue; }
     const trimmed = line.trimStart();
     const fenceMatch = trimmed.match(/^(`{3,}|~{3,})/);
     if (fenceMatch) {

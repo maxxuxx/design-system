@@ -1,4 +1,71 @@
 {
   "schemaVersion": 1,
-  "components": []
+  "components": [
+    {
+      "name": "Icon",
+      "slug": "icon",
+      "description": "익숙한 인터페이스 동작을 텍스트 중복 없이 전달하는 다섯 개의 owned stroke glyph입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "check",
+        "chevron-right",
+        "close",
+        "info",
+        "search"
+      ],
+      "sizes": [
+        "16",
+        "20",
+        "24"
+      ],
+      "states": [
+        "decorative",
+        "labelled"
+      ],
+      "accessibility": "label이 없으면 장식용으로 숨기고, 단독 의미를 전달할 때는 label로 img role과 accessible name을 제공합니다.",
+      "props": [
+        {
+          "name": "name",
+          "type": "IconName",
+          "required": true,
+          "defaultValue": null,
+          "description": "check, chevron-right, close, info, search 중 하나입니다."
+        },
+        {
+          "name": "size",
+          "type": "IconSize",
+          "required": false,
+          "defaultValue": "24",
+          "description": "16, 20, 24 중 렌더링 크기입니다."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "단독 아이콘의 accessible name입니다. 비어 있으면 장식용입니다."
+        },
+        {
+          "name": "...svgProps",
+          "type": "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-hidden'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "component-owned geometry와 ARIA를 제외한 native SVG props입니다."
+        }
+      ],
+      "tokens": [
+        "size/icon/small",
+        "size/icon/medium",
+        "size/icon/large",
+        "color/text/primary"
+      ],
+      "docsUrl": "/components/icon/"
+    }
+  ]
 }
