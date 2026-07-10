@@ -115,7 +115,33 @@ description, ownership, URL-distinctness, and non-overlap check. The screenshot
 shows readable documentation, one aligned master row, and three unclipped
 five-icon catalog rows.
 
-Status: Foundations and Icon are approved and validated. `Badge`, `Button`, and
-`TextField` pages exist but do not contain components yet.
+## Phase 3 Badge validation
+
+- Component set: [Badge](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=47-2)
+- Variant count: 16
+- Axes:
+  - `Size`: `Small`, `Medium`
+  - `Variant`: `Soft`, `Solid`
+  - `Tone`: `Neutral`, `Primary`, `Success`, `Danger`
+- Component properties: `Label` (`TEXT`, default `Badge`)
+- Size bindings: `size/badge/small` (`20px`) and `size/badge/medium` (`24px`)
+- Padding bindings: `space/8`; Medium adds token-bound `space/2` adjustments
+- Radius binding: `radius/full`
+- Typography: `Caption` or `Body/Small` plus `font/weight/semibold`
+- Product fills and text use only the planned semantic status/action Variables
+- Layout audit: 0 unnamed nodes, duplicate keys, variant overlaps, or
+  documentation/component-set overlaps
+- Binding audit: every applicable fill, text color, height, padding, radius,
+  typography weight, and component-property reference passed
+- Full-page screenshot target: `04.2 Badge` (`9:8`), rendered at `1440 × 532`
+
+The planned variant creation script was reconciled with the existing Icon page
+convention: component height is bound before restoring horizontal hug sizing,
+and the full-width documentation root sits at `(0, 0)` with the component set
+below it at `(64, 296)`. This preserves the compact React width model and avoids
+top-level overlap.
+
+Status: Foundations, Icon, and Badge are validated. `Button` and `TextField`
+pages exist but do not contain components yet.
 
 Code Connect is excluded from v0.1.
