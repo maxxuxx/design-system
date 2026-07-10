@@ -1,7 +1,17 @@
 export const REQUIRED_COMPONENT_HEADINGS = [
-  'Example', 'When to use', 'When not to use', 'Anatomy',
-  'Sizes and variants', 'States and behavior', 'Responsive behavior',
-  'Accessibility', 'React example', 'API', 'Tokens', 'Figma', 'Support status',
+  '예제',
+  '사용해야 할 때',
+  '사용하지 말아야 할 때',
+  '구조',
+  '크기와 변형',
+  '상태와 동작',
+  '반응형 동작',
+  '접근성',
+  'React 예제',
+  'API',
+  '사용 토큰',
+  'Figma',
+  '지원 상태',
 ] as const;
 
 function tagDepthDelta(line: string): number {

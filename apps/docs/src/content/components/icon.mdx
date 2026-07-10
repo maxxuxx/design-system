@@ -44,7 +44,7 @@ import ComponentPreview from '../../components/ComponentPreview.astro';
 import IconExample from '../../components/examples/IconExample';
 import { ICON_NAMES, Icon } from '@maxxuxx/react';
 
-## Example
+## 예제
 
 <ComponentPreview title="Accessible icons" description="Compare icon names, sizes, and labelled states.">
   <IconExample client:load />
@@ -59,35 +59,35 @@ import { ICON_NAMES, Icon } from '@maxxuxx/react';
   ))}
 </div>
 
-## When to use
+## 사용해야 할 때
 
 Use Icon for compact actions, navigation, status, and search affordances where a familiar glyph improves recognition.
 
-## When not to use
+## 사용하지 말아야 할 때
 
 Do not use Icon as a logo, illustration, or replacement for a text label when the action is not familiar.
 
-## Anatomy
+## 구조
 
 Each icon uses a repository-owned stroke path inside a 24px viewBox.
 
-## Sizes and variants
+## 크기와 변형
 
 Supported sizes are `16`, `20`, and `24`; the default is `24`. The supported glyph names are listed in the API below.
 
-## States and behavior
+## 상태와 동작
 
 Icon has no independent hover, pressed, or disabled state. A containing Button or link owns interaction state.
 
-## Responsive behavior
+## 반응형 동작
 
 The same geometry is used on mobile and desktop. A containing control owns the touch target.
 
-## Accessibility
+## 접근성
 
 Without a non-empty `label`, Icon renders as decorative with `aria-hidden="true"`. With a label, it renders `role="img"` and exposes the trimmed label as its accessible name.
 
-## React example
+## React 예제
 
 ```tsx
 import { Icon } from '@maxxuxx/react';
@@ -106,7 +106,7 @@ export function SearchLabel() {
 | `size` | `16 \| 20 \| 24` | `24` | Width and height in pixels |
 | `label` | `string` | none | Accessible name for a meaningful icon |
 
-## Tokens
+## 사용 토큰
 
 - `size/icon/small`
 - `size/icon/medium`
@@ -117,7 +117,7 @@ export function SearchLabel() {
 
 This is the pre-Figma contract for the 24px master component. The Figma URL remains empty until the Figma library checkpoint is completed.
 
-## Support status
+## 지원 상태
 
 | React | Svelte | React Native |
 |---|---|---|
