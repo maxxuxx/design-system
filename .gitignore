@@ -1,1 +1,12 @@
 .worktrees/
+node_modules/
+.astro/
+apps/docs/dist/
+coverage/
+playwright-report/
+test-results/
+*.local
+.env
+.env.*
+!.env.example
+figma/.state/
