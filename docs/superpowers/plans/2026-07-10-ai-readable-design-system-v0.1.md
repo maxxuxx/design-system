@@ -13,8 +13,8 @@
 - 기준 설계서: `docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md`
 - 기준 저장소: `C:\Github\design-system`
 - 원격: `maxxuxx/design-system`
-- 계획 작성 시점 원격 visibility: `PUBLIC`
-- 로컬 작업과 커밋은 가능하지만 원격이 `PRIVATE`로 확인되기 전에는 push하지 않는다.
+- 원격 visibility는 의도적으로 `PUBLIC`이며, `gh repo view maxxuxx/design-system --json visibility,isPrivate`의 예상 결과 `{"isPrivate":false,"visibility":"PUBLIC"}`는 유효한 운영 상태다.
+- Public visibility는 로컬 작업과 커밋, 상위 로드맵이 소유한 push, v0.1 완료를 막지 않는다.
 - npm 배포, registry, 외부 호스팅은 v0.1 범위가 아니다.
 - Svelte와 React Native는 `planned`; 코드 폴더를 미리 만들지 않는다.
 - 컴포넌트 상태는 v0.1에서 모두 `preview`; `stable` 승격은 후속 작업이다.
@@ -28,7 +28,7 @@
 | 02 | [Astro 문서 플랫폼](./2026-07-10-ai-readable-design-system-v0.1-02-docs.md) | 정적 문서 shell, content schema, manifest pipeline, Playwright 기반 | content·manifest tests와 Astro build 통과 |
 | 03 | [React 파일럿 컴포넌트](./2026-07-10-ai-readable-design-system-v0.1-03-components.md) | Icon, Badge, Button, TextField, MDX, interaction·a11y tests | 컴포넌트별 contract·test·manifest·build·viewport QA 통과 |
 | 04 | [Figma 라이브러리](./2026-07-10-ai-readable-design-system-v0.1-04-figma.md) | Variables, Styles, Foundations, 4개 component set, QA ledger | 구조 readback, 모든 페이지 screenshot, `figma/verification.json` |
-| 05 | [통합 검증](./2026-07-10-ai-readable-design-system-v0.1-05-integration.md) | guardrails, artifact verifier, root `verify` | fresh 전체 검증과 GitHub Private readback 통과 |
+| 05 | [통합 검증](./2026-07-10-ai-readable-design-system-v0.1-05-integration.md) | guardrails, artifact verifier, root `verify` | fresh 전체 검증과 GitHub Public readback 통과 |
 
 상위 로드맵의 예전 Task 설명과 하위 계획이 충돌할 경우, 번호가 붙은 하위 실행 계획을 우선한다. 하위 계획은 실제 파일 내용, 실패 테스트, 최소 구현, 검증 명령을 포함한다.
 
@@ -73,7 +73,7 @@ tooling/verification
 1. 현재 변경 범위를 확인한다.
 2. 계획 문서를 로컬 기준점으로 보존한다.
 3. `superpowers:using-git-worktrees`에 따라 `codex/design-system-v0.1` 격리 worktree를 만든다.
-4. `gh repo view maxxuxx/design-system --json visibility,isPrivate` 결과가 Private가 아니면 push 금지를 유지한다.
+4. `gh repo view maxxuxx/design-system --json visibility,isPrivate` 결과가 `{"isPrivate":false,"visibility":"PUBLIC"}`인지 확인하고, 이 Public readback을 유효한 운영 상태로 받아들인다.
 
 ### Gate 1 — 코드 Foundations
 
@@ -131,7 +131,7 @@ token tests·generate·generated check
 → primitive color 및 workspace guardrails
 → 정적 artifact와 Figma evidence 검증
 → git diff·status 확인
-→ GitHub Private readback
+→ GitHub Public readback
 ```
 
 어떤 단계도 이전 단계의 실패를 숨기기 위해 건너뛰지 않는다.
@@ -146,7 +146,7 @@ token tests·generate·generated check
 - Figma Foundations 및 component QA 증거가 machine-readable JSON으로 남는다.
 - Svelte와 React Native는 문서에서 `planned`로만 표시된다.
 - npm 배포나 외부 호스팅 없이 로컬 build에서 전체 시스템을 탐색할 수 있다.
-- 원격이 Private로 확인되기 전에는 push하지 않는다.
+- 원격이 `{"isPrivate":false,"visibility":"PUBLIC"}`로 확인되며, 이 Public 상태가 push와 v0.1 완료에 유효하다.
 
 ## 공식 구현 참고
 
@@ -163,4 +163,4 @@ token tests·generate·generated check
 - **Subagent-Driven Development (권장):** 현재 세션에서 계획별 작업을 병렬화하되 공유 파일은 순차적으로 통합하고 각 task 후 검토한다.
 - **Inline Execution:** 현재 세션에서 한 계획씩 순서대로 직접 실행한다.
 
-두 방식 모두 위 Gate 순서, Figma 승인, Private push 금지를 동일하게 따른다.
+두 방식 모두 위 Gate 순서, Figma 승인, 의도적인 Public 저장소 정책을 동일하게 따른다.

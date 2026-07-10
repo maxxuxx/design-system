@@ -1380,4 +1380,4 @@ git diff --cached --check
 git commit -m "docs(figma): record design system library verification"
 ```
 
-Expected: commit succeeds locally. Do not push until GitHub visibility is Private.
+Expected: commit succeeds locally. This sub-plan leaves push/integration to the parent roadmap and does not push independently; Public GitHub visibility is valid and not a blocker.
