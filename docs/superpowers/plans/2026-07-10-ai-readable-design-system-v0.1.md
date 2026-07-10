@@ -27,7 +27,7 @@
 | 01 | [Foundations와 workspace](./2026-07-10-ai-readable-design-system-v0.1-01-foundations.md) | pnpm workspace, 토큰 원본·generator·검증, CSS·JSON | `tokens:generate`, token tests, generated check 통과 |
 | 02 | [Astro 문서 플랫폼](./2026-07-10-ai-readable-design-system-v0.1-02-docs.md) | 정적 문서 shell, content schema, manifest pipeline, Playwright 기반 | content·manifest tests와 Astro build 통과 |
 | 03 | [React 파일럿 컴포넌트](./2026-07-10-ai-readable-design-system-v0.1-03-components.md) | Icon, Badge, Button, TextField, MDX, interaction·a11y tests | 컴포넌트별 contract·test·manifest·build·viewport QA 통과 |
-| 04 | [Figma 라이브러리](./2026-07-10-ai-readable-design-system-v0.1-04-figma.md) | Variables, Styles, Foundations, 4개 component set, QA ledger | 구조 readback, 모든 페이지 screenshot, `figma/verification.json` |
+| 04 | [Figma 라이브러리](./2026-07-10-ai-readable-design-system-v0.1-04-figma.md) | Variables, Styles, Foundations, 5개 standalone owned Icon component, Icon Catalog, 3개 component set, QA ledger | 구조 readback, 모든 페이지 screenshot, `figma/verification.json` |
 | 05 | [통합 검증](./2026-07-10-ai-readable-design-system-v0.1-05-integration.md) | guardrails, artifact verifier, root `verify` | fresh 전체 검증과 GitHub Public readback 통과 |
 
 상위 로드맵의 예전 Task 설명과 하위 계획이 충돌할 경우, 번호가 붙은 하위 실행 계획을 우선한다. 하위 계획은 실제 파일 내용, 실패 테스트, 최소 구현, 검증 명령을 포함한다.
