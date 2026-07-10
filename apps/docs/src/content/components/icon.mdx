@@ -1,0 +1,21 @@
+---
+name: Icon
+slug: icon
+description: Owned stroke icons
+status: preview
+figmaUrl: ""
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [check, chevron-right, close, info, search]
+sizes: ["16", "20", "24"]
+states: [decorative, labelled]
+accessibility: Decorative by default; non-empty label provides img semantics.
+props: []
+tokens: [size/icon/small, size/icon/medium, size/icon/large, color/text/primary]
+---
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import IconExample from '../../components/examples/IconExample';
+## 예제
+<ComponentPreview title="Icon"><IconExample client:load /></ComponentPreview>
