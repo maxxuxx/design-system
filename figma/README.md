@@ -129,6 +129,9 @@ five-icon catalog rows.
 - Radius binding: `radius/full`
 - Typography: `Caption` or `Body/Small` plus `font/weight/semibold`
 - Product fills and text use only the planned semantic status/action Variables
+- WCAG AA status aliases: `color/status/success` → `color/green/700` and
+  `color/status/danger` → `color/red/700`; soft contrast is `6.18:1` and
+  `5.95:1`, while solid contrast is `6.55:1` and `6.54:1`
 - Layout audit: 0 unnamed nodes, duplicate keys, variant overlaps, or
   documentation/component-set overlaps
 - Binding audit: every applicable fill, text color, height, padding, radius,

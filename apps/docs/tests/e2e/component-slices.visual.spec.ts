@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { assertNoAxeViolations } from './support/accessibility';
 import { expectPageScreenshot } from './support/visual';
 
 const slices = [
@@ -18,3 +19,22 @@ for (const slice of slices) {
     await expectPageScreenshot(page, testInfo, slice.slug);
   });
 }
+
+test('Badge component slice has no real-browser accessibility violations', async ({ page }) => {
+  await page.goto('/components/badge/');
+  await assertNoAxeViolations(page);
+});
+
+test('Badge demo uses multiple columns on desktop', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns the multi-column layout contract.');
+
+  await page.goto('/components/badge/');
+  const items = page.locator('[data-component-demo="badge"] .component-demo__item');
+  await expect(items).toHaveCount(16);
+
+  const firstRowItemCount = await items.evaluateAll((elements) => {
+    const firstTop = elements[0]?.getBoundingClientRect().top;
+    return elements.filter((element) => element.getBoundingClientRect().top === firstTop).length;
+  });
+  expect(firstRowItemCount).toBeGreaterThan(1);
+});

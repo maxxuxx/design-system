@@ -97,9 +97,9 @@
   --ds-color-action-weak: var(--ds-color-blue-50);
   --ds-color-action-weak-hover: var(--ds-color-blue-100);
   --ds-color-action-on-weak: var(--ds-color-blue-700);
-  --ds-color-status-danger: var(--ds-color-red-600);
+  --ds-color-status-danger: var(--ds-color-red-700);
   --ds-color-status-danger-subtle: var(--ds-color-red-50);
-  --ds-color-status-success: var(--ds-color-green-600);
+  --ds-color-status-success: var(--ds-color-green-700);
   --ds-color-status-success-subtle: var(--ds-color-green-50);
   --ds-color-status-neutral: var(--ds-color-neutral-700);
   --ds-color-status-neutral-subtle: var(--ds-color-neutral-100);
