@@ -1,17 +1,7 @@
 export const REQUIRED_COMPONENT_HEADINGS = [
-  '예제',
-  '사용해야 할 때',
-  '사용하지 말아야 할 때',
-  '구조',
-  '크기와 변형',
-  '상태와 동작',
-  '반응형 동작',
-  '접근성',
-  'React 예제',
-  'API',
-  '사용 토큰',
-  'Figma',
-  '지원 상태',
+  'Example', 'When to use', 'When not to use', 'Anatomy',
+  'Sizes and variants', 'States and behavior', 'Responsive behavior',
+  'Accessibility', 'React example', 'API', 'Tokens', 'Figma', 'Support status',
 ] as const;
 
 function tagDepthDelta(line: string): number {
@@ -40,37 +30,16 @@ export function extractSecondLevelHeadings(source: string): string[] {
     if (fenceMatch) {
       const marker = fenceMatch[1]!;
       const markerKind = marker[0] as '`' | '~';
-      if (fence === null) {
-        fence = markerKind;
-        fenceLength = marker.length;
-        continue;
-      }
-      if (fence === markerKind && marker.length >= fenceLength) {
-        fence = null;
-        fenceLength = 0;
-      }
+      if (fence === null) { fence = markerKind; fenceLength = marker.length; continue; }
+      if (fence === markerKind && marker.length >= fenceLength) { fence = null; fenceLength = 0; }
       continue;
     }
     if (fence !== null) continue;
-
-    if (pendingJsxTag !== '') {
-      pendingJsxTag += `\n${line}`;
-      if (line.includes('>')) {
-        jsxDepth = Math.max(0, jsxDepth + tagDepthDelta(pendingJsxTag));
-        pendingJsxTag = '';
-      }
-      continue;
-    }
-
-    if (trimmed.startsWith('<') && !trimmed.includes('>')) {
-      pendingJsxTag = line;
-      continue;
-    }
-
+    if (pendingJsxTag !== '') { pendingJsxTag += `\n${line}`; if (line.includes('>')) { jsxDepth = Math.max(0, jsxDepth + tagDepthDelta(pendingJsxTag)); pendingJsxTag = ''; } continue; }
+    if (trimmed.startsWith('<') && !trimmed.includes('>')) { pendingJsxTag = line; continue; }
     const depthBefore = jsxDepth;
     jsxDepth = Math.max(0, jsxDepth + tagDepthDelta(line));
     if (depthBefore > 0 || trimmed.startsWith('<')) continue;
-
     const heading = line.match(/^##(?!#)\s+(.+?)\s*#*\s*$/);
     if (heading) headings.push(heading[1]!.trim());
   }
@@ -83,10 +52,6 @@ export function validateComponentTemplate(source: string, filePath: string): voi
   for (let index = 0; index < count; index += 1) {
     const expectedHeading = REQUIRED_COMPONENT_HEADINGS[index];
     const actualHeading = actual[index];
-    if (expectedHeading !== actualHeading) {
-      throw new Error(
-        `${filePath}: component heading ${index + 1} expected "${expectedHeading ?? '<none>'}" but found "${actualHeading ?? '<missing>'}".`,
-      );
-    }
+    if (expectedHeading !== actualHeading) throw new Error(`${filePath}: component heading ${index + 1} expected "${expectedHeading ?? '<none>'}" but found "${actualHeading ?? '<missing>'}".`);
   }
 }
