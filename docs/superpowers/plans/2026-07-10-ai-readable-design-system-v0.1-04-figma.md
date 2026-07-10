@@ -312,7 +312,11 @@ const page = figma.root.children.find((item) => item.name === input.pageName);
 if (!page) throw new Error(`Page not found: ${input.pageName}`);
 await figma.setCurrentPageAsync(page);
 const existing = page.findAllWithCriteria({ sharedPluginData: { namespace: 'dsb', keys: ['key'] } }).find((node) => node.getSharedPluginData('dsb', 'key') === `doc-root/${input.pageName}`);
-if (existing) return { createdNodeIds: [], rootId: existing.id };
+if (existing) {
+  if (existing.type !== 'FRAME') throw new Error(`Documentation root is not a frame: ${input.pageName}`);
+  existing.primaryAxisSizingMode = 'AUTO';
+  return { createdNodeIds: [existing.id], rootId: existing.id };
+}
 await Promise.all([
   figma.loadFontAsync({ family: input.fontFamily, style: input.regularStyle }),
   figma.loadFontAsync({ family: input.fontFamily, style: input.boldStyle }),
@@ -330,6 +334,7 @@ root.layoutMode = 'VERTICAL';
 root.name = `${input.pageName} / Documentation`;
 root.resize(1440, 1);
 root.layoutSizingHorizontal = 'FIXED';
+root.primaryAxisSizingMode = 'AUTO';
 root.setBoundVariable('itemSpacing', sectionGapVariable);
 root.setBoundVariable('paddingTop', pagePaddingVariable); root.setBoundVariable('paddingRight', pagePaddingVariable); root.setBoundVariable('paddingBottom', pagePaddingVariable); root.setBoundVariable('paddingLeft', pagePaddingVariable);
 root.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 1, g: 1, b: 1 } }, 'color', canvasVariable)];
@@ -348,8 +353,8 @@ const description = figma.createText();
 description.fontName = { family: input.fontFamily, style: input.regularStyle };
 description.characters = input.description;
 await description.setTextStyleIdAsync(input.bodyTextStyleId);
-description.textAutoResize = 'HEIGHT';
 description.resize(1120, 1);
+description.textAutoResize = 'HEIGHT';
 description.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }, 'color', secondaryTextVariable)];
 root.appendChild(description);
 page.appendChild(root);
@@ -382,6 +387,7 @@ if (!section) {
   section.layoutMode = 'HORIZONTAL';
   section.name = input.sectionName;
   section.layoutWrap = 'WRAP';
+  section.counterAxisSizingMode = 'AUTO';
   section.setBoundVariable('itemSpacing', sectionGapVariable);
   section.setSharedPluginData('dsb', 'run_id', RUN_ID);
   section.setSharedPluginData('dsb', 'phase', 'phase2');
@@ -394,6 +400,7 @@ for (const item of input.items) {
   if (section.findOne((node) => node.getSharedPluginData('dsb', 'key') === `foundation-item/${item.sourceName}`)) continue;
   const card = figma.createFrame();
   card.layoutMode = 'VERTICAL';
+  card.counterAxisSizingMode = 'AUTO';
   card.name = item.sourceName;
   card.setBoundVariable('itemSpacing', cardGapVariable);
   card.setBoundVariable('paddingTop', cardPaddingVariable); card.setBoundVariable('paddingRight', cardPaddingVariable); card.setBoundVariable('paddingBottom', cardPaddingVariable); card.setBoundVariable('paddingLeft', cardPaddingVariable);
@@ -443,8 +450,8 @@ for (const item of input.items) {
   label.characters = `${item.sourceName}\n${item.webSyntax ?? ''}`.trim();
   label.fontSize = 12;
   label.fills = [figma.variables.setBoundVariableForPaint({ type: 'SOLID', color: { r: 0, g: 0, b: 0 } }, 'color', textVariable)];
-  label.textAutoResize = 'HEIGHT';
   label.resize(180, 1);
+  label.textAutoResize = 'HEIGHT';
   card.appendChild(label);
   created.push(card.id, sample.id, label.id);
 }
