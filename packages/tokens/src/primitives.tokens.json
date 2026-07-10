@@ -76,7 +76,7 @@
   { "name": "font/line-height/title", "type": "dimension", "kind": "primitive", "value": 32, "description": "기본 제목의 행 높이를 정하는 line-height입니다." },
   { "name": "font/line-height/heading", "type": "dimension", "kind": "primitive", "value": 40, "description": "큰 heading의 행 높이를 정하는 line-height입니다." },
   { "name": "font/line-height/display", "type": "dimension", "kind": "primitive", "value": 48, "description": "display 제목의 행 높이를 정하는 line-height입니다." },
-  { "name": "font/family/sans", "type": "fontFamily", "kind": "primitive", "value": "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif", "description": "한국어와 시스템 fallback을 함께 제공하는 기본 sans-serif 글꼴 stack입니다." },
+  { "name": "font/family/sans", "type": "fontFamily", "kind": "primitive", "value": "\"IBM Plex Sans KR\", \"Noto Sans KR\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif", "description": "한국어와 시스템 fallback을 함께 제공하는 기본 sans-serif 글꼴 stack입니다." },
   { "name": "elevation/1", "type": "shadow", "kind": "primitive", "value": "0 1px 2px rgba(15, 23, 42, 0.06)", "description": "인접 surface를 미세하게 구분하는 낮은 elevation입니다." },
   { "name": "elevation/2", "type": "shadow", "kind": "primitive", "value": "0 8px 24px rgba(15, 23, 42, 0.10)", "description": "떠 있는 panel과 overlay를 구분하는 중간 elevation입니다." }
 ]

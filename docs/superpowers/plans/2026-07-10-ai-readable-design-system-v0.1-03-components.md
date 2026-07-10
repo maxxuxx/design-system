@@ -39,7 +39,7 @@ corepack pnpm --filter @maxxuxx/docs manifest:check
 corepack pnpm --filter @maxxuxx/docs build
 ```
 
-Expected: 여섯 명령이 모두 exit `0`; plan 01 token suite는 11 tests passed이고 CSS 및 두 105-token JSON 산출물이 byte-current다. component collection은 비어 있어도 유효하고 docs static build가 성공한다. 하나라도 실패하면 이 계획을 시작하지 않고 해당 선행 계획으로 돌아간다.
+Expected: 여섯 명령이 모두 exit `0`; plan 01 token suite는 11 tests passed이고 CSS 및 두 106-token JSON 산출물이 byte-current다. component collection은 비어 있어도 유효하고 docs static build가 성공한다. 하나라도 실패하면 이 계획을 시작하지 않고 해당 선행 계획으로 돌아간다.
 
 이 계획이 소비하는 고정 interface는 다음과 같다.
 
@@ -208,7 +208,7 @@ Expected after each plan 04 reconciliation: run only that component's two-comman
 - Generate: Icon mobile/desktop screenshots and one-entry `components.json`.
 
 **Interfaces:**
-- Consumes: token variables `size/icon/small|medium|large` and `color/text/primary`.
+- Consumes: token variables `size/icon/small|medium|large` and `color/icon/primary`.
 - Produces: `ICON_NAMES`, `ICON_PATHS`, `ICON_SVGS`, `Icon`, `IconName`, `IconSize`, `IconProps`.
 - Produces: `expectNoAxeViolations(container)` for all later component tests.
 - Produces: stable selector `[data-component-demo="icon"]` and route `/components/icon/`.
@@ -768,7 +768,7 @@ tokens:
   - size/icon/small
   - size/icon/medium
   - size/icon/large
-  - color/text/primary
+  - color/icon/primary
 ---
 
 import ComponentPreview from '../../components/ComponentPreview.astro';
@@ -848,7 +848,7 @@ export function SearchLabel() {
 ## 사용 토큰
 
 - `size/icon/small`, `size/icon/medium`, `size/icon/large`
-- consumer context의 `color/text/primary` 또는 다른 semantic current color
+- 기본값 `color/icon/primary` 또는 consumer context가 제공하는 다른 semantic current color
 
 ## Figma
 

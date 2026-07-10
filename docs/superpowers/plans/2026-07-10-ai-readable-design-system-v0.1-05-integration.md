@@ -253,14 +253,14 @@ Plan 04 must have already written both Figma files from final readback. Do not i
 - `schemaVersion: 1`.
 - `collections`: five entries in order `Primitives`, `Semantic Color`, `Spacing`, `Typography`, `Radius`. Every entry has non-empty `id`, `mode: { id, name: "Default" }`, and an exact `variableCount`.
 - `variables`: one entry for every non-shadow AI token. Every entry has exactly `tokenName`, `tokenType`, `collection`, `collectionId`, `variableId`, `scopes`, and `webSyntax`.
-- Variable collection and scopes are exact: primitive colors → `Primitives`/`[]`; semantic backgrounds/action/status → `Semantic Color`/`FRAME_FILL,SHAPE_FILL`; semantic text and `on-*` → `TEXT_FILL`; border/focus → `STROKE_COLOR`; `space/*` → `Spacing`/`GAP`; `size/*` → `Spacing`/`WIDTH_HEIGHT`; typography families/sizes/line-heights/weights → their matching font scope; `radius/*` → `Radius`/`CORNER_RADIUS`.
+- Variable collection and scopes are exact: primitive colors → `Primitives`/`[]`; semantic backgrounds/action/status → `Semantic Color`/`FRAME_FILL,SHAPE_FILL`; semantic text and `on-*` → `TEXT_FILL`; `color/icon/*` → `SHAPE_FILL,STROKE_COLOR`; border/focus → `STROKE_COLOR`; `space/*` → `Spacing`/`GAP`; `size/*` → `Spacing`/`WIDTH_HEIGHT`; typography families/sizes/line-heights/weights → their matching font scope; `radius/*` → `Radius`/`CORNER_RADIUS`.
 - `styles.text`: exactly `Display`, `Heading`, `Title`, `Body/Large`, `Body`, `Body/Small`, `Caption`, `Label` with non-empty IDs.
 - `styles.effect`: one entry for each shadow token with exactly `tokenName`, `name`, `styleId`, and `webSyntax`.
-- The sorted union of `variables[].tokenName` and `styles.effect[].tokenName` equals the sorted 105 names in built `tokens.json` exactly once. Every `webSyntax` equals `var(${token.cssVariable})`.
+- The sorted union of `variables[].tokenName` and `styles.effect[].tokenName` equals the sorted 106 names in built `tokens.json` exactly once. The token map contains exactly 104 Variables, including 26 Semantic Color variables and 57 COLOR variables, plus two Effect Styles. Every `webSyntax` equals `var(${token.cssVariable})`.
 
 `figma/verification.json` keeps the existing file/page/Foundation fields and uses these exact component evidence fields:
 
-- `foundations.tokenParity` may be `true` only when Plan 04 readback proves the `font/family/sans` STRING equals the complete generated CSS stack; the installed Pretendard family is applied through Text Styles, not by changing the token value.
+- `foundations.tokenParity` may be `true` only when Plan 04 readback proves the `font/family/sans` STRING equals the complete generated CSS stack; the installed `IBM Plex Sans KR` family is applied through Text Styles, not by changing the token value.
 - `Icon`: `catalogUrl`, `componentCount: 5`, five `componentUrls` entries named `Icon/Check`, `Icon/ChevronRight`, `Icon/Close`, `Icon/Info`, `Icon/Search`, `properties: []`, and the three true audit booleans.
 - `Badge`: `componentSetUrl`, `variantCount: 16`, `properties: [{ "name": "Label", "type": "TEXT" }]`, and the three true audit booleans.
 - `Button`: `componentSetUrl`, `variantCount: 27`, exact properties `Label/TEXT`, `Loading/BOOLEAN`, `Show leading icon/BOOLEAN`, `Show trailing icon/BOOLEAN`, `Leading icon/INSTANCE_SWAP`, `Trailing icon/INSTANCE_SWAP`, and the three true audit booleans.
@@ -347,37 +347,43 @@ function figmaUrl(id) {
 }
 
 function makeTokens() {
-  return Array.from({ length: 105 }, (_, index) => {
+  return Array.from({ length: 106 }, (_, index) => {
     const kind = index < 80 ? 'primitive' : 'semantic';
     let name;
     let type;
-    if (index < 50) {
+    if (index < 31) {
       name = `color/primitive/${index + 1}`;
       type = 'color';
+    } else if (index < 43) {
+      name = `space/${index - 30}`;
+      type = 'dimension';
+    } else if (index < 51) {
+      name = `size/control/${index - 42}`;
+      type = 'dimension';
+    } else if (index < 57) {
+      name = `radius/${index - 50}`;
+      type = 'dimension';
     } else if (index < 65) {
-      name = `space/${index - 49}`;
+      name = `font/size/${index - 56}`;
       type = 'dimension';
     } else if (index < 73) {
-      name = `font/size/${index - 64}`;
+      name = `font/line-height/${index - 64}`;
       type = 'dimension';
-    } else if (index === 73) {
+    } else if (index < 77) {
+      name = `font/weight/${index - 72}`;
+      type = 'fontWeight';
+    } else if (index === 77) {
       name = 'font/family/sans';
       type = 'fontFamily';
-    } else if (index === 74) {
-      name = 'font/weight/semibold';
-      type = 'fontWeight';
-    } else if (index < 78) {
-      name = `radius/${index - 74}`;
-      type = 'dimension';
     } else if (index < 80) {
       name = `elevation/${index - 77}`;
       type = 'shadow';
     } else {
-      name = `color/semantic/${index - 79}`;
+      name = index === 80 ? 'color/icon/primary' : `color/semantic/${index - 80}`;
       type = 'color';
     }
     const primitiveValue = type === 'fontFamily'
-      ? '"Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+      ? '"IBM Plex Sans KR", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
       : type === 'fontWeight'
         ? 600
         : type === 'dimension'
@@ -389,7 +395,7 @@ function makeTokens() {
       name,
       type,
       kind,
-      value: kind === 'semantic' ? `{color/primitive/${(index % 50) + 1}}` : primitiveValue,
+      value: kind === 'semantic' ? `{color/primitive/${(index % 31) + 1}}` : primitiveValue,
       description: `token ${index + 1} description`,
       cssVariable: `--ds-${name.replaceAll('/', '-')}`,
       resolvedValue: primitiveValue,
@@ -418,6 +424,7 @@ function scopesFor(token, collection) {
     return ['FONT_SIZE'];
   }
   if (token.name.startsWith('color/text/') || token.name.includes('/on-')) return ['TEXT_FILL'];
+  if (token.name.startsWith('color/icon/')) return ['SHAPE_FILL', 'STROKE_COLOR'];
   if (token.name.startsWith('color/border/') || token.name.startsWith('color/focus/')) return ['STROKE_COLOR'];
   return ['FRAME_FILL', 'SHAPE_FILL'];
 }
@@ -482,7 +489,7 @@ function makeManifest() {
       defaultValue: null,
       description: 'Example property',
     }],
-    tokens: ['color/text/primary'],
+    tokens: [name === 'Icon' ? 'color/icon/primary' : 'color/text/primary'],
     docsUrl: `/components/${slug}/`,
   }));
 }
@@ -569,7 +576,7 @@ async function createFixture() {
   return root;
 }
 
-test('accepts a complete build, 105-token map, manifest, and Figma evidence', async (t) => {
+test('accepts a complete build, 106-token map, manifest, and Figma evidence', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   assert.deepEqual(await verifyBuildArtifacts(root), []);
@@ -595,7 +602,7 @@ test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t
   delete artifact.tokens[2].resolvedValue;
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.some((value) => value.includes('exactly 105 tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 106 tokens')));
   assert.ok(violations.some((value) => value.includes('invalid kind')));
   assert.ok(violations.some((value) => value.includes('cssVariable mismatch')));
   assert.ok(violations.some((value) => value.includes('missing resolvedValue')));
@@ -831,6 +838,7 @@ function expectedScopes(token) {
     return ['FONT_SIZE'];
   }
   if (token.name.startsWith('color/text/') || token.name.includes('/on-')) return ['TEXT_FILL'];
+  if (token.name.startsWith('color/icon/')) return ['SHAPE_FILL', 'STROKE_COLOR'];
   if (token.name.startsWith('color/border/') || token.name.startsWith('color/focus/')) return ['STROKE_COLOR'];
   return ['FRAME_FILL', 'SHAPE_FILL'];
 }
@@ -843,7 +851,7 @@ function validateTokensArtifact(artifact) {
     violations.push('tokens.json must contain tokens');
     return violations;
   }
-  if (artifact.tokens.length !== 105) violations.push('tokens.json must contain exactly 105 tokens');
+  if (artifact.tokens.length !== 106) violations.push('tokens.json must contain exactly 106 tokens');
   const names = new Set();
   const cssVariables = new Set();
   let primitiveCount = 0;
@@ -875,7 +883,7 @@ function validateTokensArtifact(artifact) {
     if (token?.kind === 'semantic') semanticCount += 1;
   });
   if (primitiveCount !== 80) violations.push('tokens.json must contain exactly 80 primitive tokens');
-  if (semanticCount !== 25) violations.push('tokens.json must contain exactly 25 semantic tokens');
+  if (semanticCount !== 26) violations.push('tokens.json must contain exactly 26 semantic tokens');
   return violations;
 }
 
@@ -979,8 +987,15 @@ export function verifyTokenMap(tokens, tokenMap) {
   const tokenByName = new Map(tokens.map((token) => [token.name, token]));
   const mappedNames = [...variables.map(({ tokenName }) => tokenName), ...effects.map(({ tokenName }) => tokenName)];
   const expectedNames = tokens.map(({ name }) => name);
-  if (mappedNames.length !== 105
-    || new Set(mappedNames).size !== 105
+  if (variables.length !== 104) violations.push('token-map must contain exactly 104 variables');
+  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.kind === 'semantic').length !== 26) {
+    violations.push('token-map must contain exactly 26 Semantic Color variables');
+  }
+  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.type === 'color').length !== 57) {
+    violations.push('token-map must contain exactly 57 COLOR variables');
+  }
+  if (mappedNames.length !== 106
+    || new Set(mappedNames).size !== 106
     || JSON.stringify([...mappedNames].sort()) !== JSON.stringify([...expectedNames].sort())) {
     violations.push('token-map token-name mapping must equal tokens.json');
   }
@@ -1187,7 +1202,7 @@ corepack pnpm build
 node tooling/verification/artifacts.mjs
 ```
 
-Expected: seven artifact tests pass. Live verification reports zero violations for 12 HTML routes, both AI files, exactly 105 tokens with 80/25 kinds, the complete four-component manifest, all 105 Figma token mappings, exact Figma counts/properties/URLs, and `codeConnect: skipped-v0.1`.
+Expected: seven artifact tests pass. Live verification reports zero violations for 12 HTML routes, both AI files, exactly 106 tokens with 80/26 kinds, the complete four-component manifest, all 106 Figma token mappings (104 Variables and two Effect Styles), exact Figma counts/properties/URLs, and `codeConnect: skipped-v0.1`.
 
 - [ ] **Step 6: Add root scripts and commit**
 

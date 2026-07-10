@@ -200,6 +200,7 @@ color/bg/subtle
 color/text/primary
 color/text/secondary
 color/text/disabled
+color/icon/primary
 color/border/default
 color/action/primary
 color/action/primary-pressed

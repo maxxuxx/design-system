@@ -20,7 +20,7 @@
 - Mutating `use_figma` calls run sequentially. A script switches page at most once. No script performs more than 10 logical creations/mutations.
 - Failed `use_figma` calls are not retried immediately. Read the error, inspect state if needed, correct the script, then retry.
 - New top-level scene nodes are positioned away from existing content. Related children use auto-layout.
-- Load every exact font style before text mutation. `listAvailableFontsAsync` must resolve either `Pretendard Variable` or `Pretendard` with Regular, Medium, SemiBold/Semi Bold, and Bold styles. No alternate family is permitted: if Pretendard is unavailable, stop before Phase 1 and update `font/family/sans` through plan 01 first, regenerate tokens, and repeat Phase 0 approval.
+- Load every exact font style before text mutation. `listAvailableFontsAsync` must resolve `IBM Plex Sans KR` with the exact styles Regular, Medium, SemiBold, and Bold. No alternate family is permitted: if `IBM Plex Sans KR` is unavailable, stop before Phase 1 and repeat the Phase 0 source-of-truth decision.
 - Color values use RGBA 0–1 for variables and RGB 0–1 plus paint-level opacity for paints.
 - Every variable gets explicit scopes and WEB syntax. Primitive colors use `[]`; no variable keeps `ALL_SCOPES`.
 - Every scene node created by this workflow receives `dsb/run_id`, `dsb/phase`, and a stable `dsb/key` immediately.
@@ -77,12 +77,13 @@ Every script in this section is a complete `use_figma` body. The executor serial
 
 ### ResolvedToken to Figma operation projection
 
-Run this pure function locally over the 105-token JSON before Phase 1. It returns 103 variable operations and two effect-style operations. `fontFamily` is the exact Pretendard family discovered in Phase 0.
+Run this pure function locally over the 106-token JSON before Phase 1. It returns 104 variable operations and two effect-style operations. `fontFamily` is the exact `IBM Plex Sans KR` family approved in Phase 0.
 
 ```js
 function scopesFor(token) {
   if (token.kind === 'primitive' && token.type === 'color') return [];
   if (token.name.startsWith('color/text/') || token.name.includes('/on-')) return ['TEXT_FILL'];
+  if (token.name.startsWith('color/icon/')) return ['SHAPE_FILL', 'STROKE_COLOR'];
   if (token.name.startsWith('color/border/') || token.name.startsWith('color/focus/')) return ['STROKE_COLOR'];
   if (token.kind === 'semantic' && token.type === 'color') return ['FRAME_FILL', 'SHAPE_FILL'];
   if (token.name.startsWith('space/')) return ['GAP'];
@@ -124,7 +125,7 @@ function projectResolvedToken(token, fontFamily) {
   let value = token.resolvedValue;
   if (token.type === 'color') value = rgba(String(token.resolvedValue));
   if (token.type === 'fontFamily') {
-    if (!['Pretendard Variable', 'Pretendard'].includes(fontFamily)) throw new Error(`Unapproved Figma font family: ${fontFamily}`);
+    if (fontFamily !== 'IBM Plex Sans KR') throw new Error(`Unapproved Figma font family: ${fontFamily}`);
     if (!String(token.resolvedValue).includes(fontFamily)) throw new Error('Approved Figma font is absent from the code token stack');
   }
   return {
@@ -143,15 +144,17 @@ function projectResolvedToken(token, fontFamily) {
 }
 ```
 
-The `font/family/sans` STRING variable preserves `token.resolvedValue` byte-for-byte, including the complete CSS fallback stack. Figma Text Styles separately apply the approved installed Pretendard family because text nodes select one family rather than a CSS stack. The full-stack STRING variable is documented in Foundations but is not bound to a text node; this is not a token-value override.
+The `font/family/sans` STRING variable preserves `token.resolvedValue` byte-for-byte, including the complete CSS fallback stack. Figma Text Styles separately apply the approved installed `IBM Plex Sans KR` family because text nodes select one family rather than a CSS stack. The full-stack STRING variable is documented in Foundations but is not bound to a text node; this is not a token-value override.
 
 Assert before any Figma mutation:
 
 ```js
 const projected = tokens.map((token) => projectResolvedToken(token, fontFamily));
-if (projected.filter((item) => item.kind === 'variable').length !== 103) throw new Error('Expected 103 variable operations');
+if (projected.filter((item) => item.kind === 'variable').length !== 104) throw new Error('Expected 104 variable operations');
 if (projected.filter((item) => item.kind === 'effectStyle').length !== 2) throw new Error('Expected 2 effect styles');
-if (new Set(projected.map((item) => item.sourceName)).size !== 105) throw new Error('Projection lost or duplicated tokens');
+if (projected.filter((item) => item.type === 'COLOR').length !== 57) throw new Error('Expected 57 COLOR variables');
+if (projected.filter((item) => item.collection === 'Semantic Color').length !== 26) throw new Error('Expected 26 Semantic Color variables');
+if (new Set(projected.map((item) => item.sourceName)).size !== 106) throw new Error('Projection lost or duplicated tokens');
 const fontToken = tokens.find((token) => token.name === 'font/family/sans');
 const fontOperation = projected.find((item) => item.sourceName === 'font/family/sans');
 if (!fontToken || fontOperation?.value !== fontToken.resolvedValue) throw new Error('Figma font-family STRING must preserve the complete code token stack');
@@ -217,7 +220,7 @@ The empty `operations` array above is replaced before submission with one actual
 Use at most four definitions per call. Text definitions are exactly `Display 40/48 Bold`, `Heading 32/40 Bold`, `Title 24/32 SemiBold`, `Body/Large 18/28 Regular`, `Body 16/24 Regular`, `Body/Small 14/20 Regular`, `Caption 12/16 Regular`, and `Label 14/20 Medium`. Effect definitions are `Shadow/1` and `Shadow/2`, using the exact source colors `rgba(15,23,42,.06)` and `rgba(15,23,42,.10)`.
 
 ```js
-const input = { kind: 'text', definitions: [], fontFamily: 'Pretendard Variable', fontStyles: {} };
+const input = { kind: 'text', definitions: [], fontFamily: 'IBM Plex Sans KR', fontStyles: {} };
 if (input.definitions.length < 1 || input.definitions.length > 4) throw new Error('Style batch must contain 1..4 definitions');
 const RUN_ID = 'design-system-v0.1-2026-07-10';
 const changed = [];
@@ -299,7 +302,7 @@ for (const [offset, name] of input.pageNames.entries()) {
 return { createdNodeIds: changed.map((item) => item.id), pages: changed };
 ```
 
-Build one page root per call with this complete script. `input` contains the actual page name, copy, Pretendard family/style names, and variable IDs read from the ledger.
+Build one page root per call with this complete script. `input` contains the actual page name, copy, `IBM Plex Sans KR` family/style names, and variable IDs read from the ledger.
 
 ```js
 const input = { pageName: '', title: '', description: '', fontFamily: '', regularStyle: '', boldStyle: '', canvasVariableId: '', textVariableId: '', secondaryTextVariableId: '', sectionGapVariableId: '', pagePaddingVariableId: '', titleTextStyleId: '', bodyTextStyleId: '' };
@@ -453,7 +456,7 @@ return { createdNodeIds: created, sectionId: section.id };
 Create all five masters in one call from the exact `ICON_SVGS` strings committed by plan 03:
 
 ```js
-const input = { pageName: '04.1 Icon', icons: [], colorVariableName: 'color/text/primary', sizeVariableName: 'size/icon/large' };
+const input = { pageName: '04.1 Icon', icons: [], colorVariableName: 'color/icon/primary', sizeVariableName: 'size/icon/large' };
 if (input.icons.length !== 5) throw new Error('Icon master batch must contain exactly five SVGs');
 const RUN_ID = 'design-system-v0.1-2026-07-10';
 const page = figma.root.children.find((item) => item.name === input.pageName);
@@ -825,7 +828,7 @@ return {
   textStyles: textStyles.map((style) => ({ id: style.id, name: style.name })),
   effectStyles: effectStyles.map((style) => ({ id: style.id, name: style.name })),
   eligibleFonts: fonts
-    .filter(({ fontName }) => ['Pretendard', 'Pretendard Variable'].includes(fontName.family))
+    .filter(({ fontName }) => fontName.family === 'IBM Plex Sans KR')
     .map(({ fontName }) => fontName),
 };
 ```
@@ -906,13 +909,13 @@ return {
 
 Expected: five total collections; every mode is `Default`. Save IDs to the ledger.
 
-- [ ] **Step 3: Project all 105 tokens before submitting a variable call**
+- [ ] **Step 3: Project all 106 tokens before submitting a variable call**
 
-Run `projectResolvedToken` from the executable library over the exact `tokens` array in `packages/tokens/dist/tokens.json`. Use the Pretendard family approved in Phase 0. The preflight must prove 103 variable operations, two effect-style operations, and 105 unique `sourceName` values. It must also prove that the `font/family/sans` operation retains the full `resolvedValue`. Persist that projection in the ignored ledger so every submitted batch is reproducible.
+Run `projectResolvedToken` from the executable library over the exact `tokens` array in `packages/tokens/dist/tokens.json`. Use the `IBM Plex Sans KR` family approved in Phase 0. The preflight must prove 104 variable operations, including 26 Semantic Color and 57 COLOR variables, two effect-style operations, and 106 unique `sourceName` values. It must also prove that the `font/family/sans` operation retains the full `resolvedValue`. Persist that projection in the ignored ledger so every submitted batch is reproducible.
 
 - [ ] **Step 4: Create raw variables, then semantic aliases**
 
-Partition the 103 projected variable operations by collection. Within each collection, submit all operations with `aliasTargetName === null` first, then all alias operations. Chunk each partition into arrays of at most 10 and run the exact Variable batch script above. The script discovers the real `Default` `modeId` from the collection, resolves alias targets by the exact source token name, sets explicit scopes and WEB syntax, and returns the readback fields required for the ledger. There are no hand-authored intermediate token fields and no guessed IDs.
+Partition the 104 projected variable operations by collection. Within each collection, submit all operations with `aliasTargetName === null` first, then all alias operations. Chunk each partition into arrays of at most 10 and run the exact Variable batch script above. The script discovers the real `Default` `modeId` from the collection, resolves alias targets by the exact source token name, sets explicit scopes and WEB syntax, and returns the readback fields required for the ledger. There are no hand-authored intermediate token fields and no guessed IDs.
 
 Expected scope projection is exact and must also match plan 05: primitive colors `[]`; semantic `color/text/*` and any `/on-*` token `['TEXT_FILL']`; semantic border/focus `['STROKE_COLOR']`; other semantic color tokens `['FRAME_FILL','SHAPE_FILL']`; `space/*` `['GAP']`; `size/*` `['WIDTH_HEIGHT']`; font family/size/line-height/weight their matching single font scope; radius `['CORNER_RADIUS']`.
 
@@ -948,23 +951,23 @@ No call contains more than four style definitions. Save every returned style ID 
 
 - [ ] **Step 6: Validate Phase 1 and write the exact committed token-map**
 
-Run a fresh read-only inventory and reject anything except five ordered collections, 103 variables, one `Default` mode per collection, zero broken aliases, zero `ALL_SCOPES`, WEB syntax on every variable, eight ordered text styles, and two ordered effect styles. Compare every readback entry to the deterministic projection, not merely the counts.
+Run a fresh read-only inventory and reject anything except five ordered collections, 104 variables (26 in Semantic Color and 57 with resolved type COLOR), one `Default` mode per collection, zero broken aliases, zero `ALL_SCOPES`, WEB syntax on every variable, eight ordered text styles, and two ordered effect styles. Compare every readback entry to the deterministic projection, not merely the counts.
 
 Write `figma/token-map.json` with exactly this plan-05-compatible contract:
 
 ```text
 schemaVersion: 1
 collections[5]: { name, id, mode: { id, name: "Default" }, variableCount }
-variables[103]: { tokenName, tokenType, collection, collectionId, variableId, scopes, webSyntax }
+variables[104]: { tokenName, tokenType, collection, collectionId, variableId, scopes, webSyntax }
 styles.text[8]: { name, id }
 styles.effect[2]: { tokenName, name, styleId, webSyntax }
 ```
 
-The sorted union of `variables[].tokenName` and `styles.effect[].tokenName` must equal the 105 source token names exactly once. Each variable’s collection, token type, scopes, collection ID, variable ID, and `var(--ds-...)` syntax must match its source token and readback. Each effect entry maps one shadow token to `Shadow/1` or `Shadow/2`. Mode IDs, alias target names, source/resolved values, and the complete projection stay in the ignored ledger because the committed verifier intentionally accepts only the exact schema above.
+The sorted union of `variables[].tokenName` and `styles.effect[].tokenName` must equal the 106 source token names exactly once. Each variable’s collection, token type, scopes, collection ID, variable ID, and `var(--ds-...)` syntax must match its source token and readback. Each effect entry maps one shadow token to `Shadow/1` or `Shadow/2`. Mode IDs, alias target names, source/resolved values, and the complete projection stay in the ignored ledger because the committed verifier intentionally accepts only the exact schema above.
 
 - [ ] **Step 7: Post the Phase 1 summary**
 
-List the exact variable count per collection, all eight text styles, both effect styles, the 103+2=105 coverage proof, and the token-map path. Do not proceed when any scope, syntax, alias, font, ID, ordering, or coverage check fails.
+List the exact variable count per collection, all eight text styles, both effect styles, the 104+2=106 coverage proof, and the token-map path. Do not proceed when any scope, syntax, alias, font, ID, ordering, or coverage check fails.
 
 ### Task 3: Create page structure and Foundations documentation
 
@@ -1008,7 +1011,7 @@ Run the exact Page batch script above three times with `PAGE_NAMES.slice(0, 5)`,
 
 - [ ] **Step 3: Build documentation frames one page at a time**
 
-Run the exact documentation-root script once for each row, passing the real Pretendard styles; `color/bg/canvas`, `color/text/primary`, `color/text/secondary`, `space/32`, and `space/64` variable IDs; and `Display`/`Body` text-style IDs from the ledger.
+Run the exact documentation-root script once for each row, passing the real `IBM Plex Sans KR` styles; `color/bg/canvas`, `color/text/primary`, `color/text/secondary`, `space/32`, and `space/64` variable IDs; and `Display`/`Body` text-style IDs from the ledger.
 
 | Page | Title | Description |
 |---|---|---|
@@ -1018,7 +1021,7 @@ Run the exact documentation-root script once for each row, passing the real Pret
 | `03 Foundations` | `Foundations` | `코드 토큰과 동일한 색상, 간격, 크기, 타이포그래피, 반경, elevation 원본입니다.` |
 | `04 Components` | `Components` | `Icon, Badge, Button, TextField의 목적, 변형, 상태, 접근성 계약을 제공합니다.` |
 
-On `03 Foundations`, run the exact Foundation batch script repeatedly with at most two entries. Supply `color/bg/surface`, `color/text/primary`, `space/16`, `space/8`, and `space/12` as the chrome-variable IDs. Render every color variable as `color`; every `space/*` and `size/*` entry as `dimension`; every radius variable as `radius`; typography variables as `textVariable` with `font/family/* → fontFamily`, `font/size/* → fontSize`, `font/weight/* → fontWeight`, and `font/line-height/* → lineHeight`; all eight styles as `textStyle`; and both effect styles as `effectStyle`. Each item uses its exact readback ID, source name, and resolved value. The completed page must cover all 103 variables plus all 10 styles; every bindable value is bound, while the full CSS font stack is displayed verbatim and applied through approved Pretendard Text Styles rather than an invalid stack binding.
+On `03 Foundations`, run the exact Foundation batch script repeatedly with at most two entries. Supply `color/bg/surface`, `color/text/primary`, `space/16`, `space/8`, and `space/12` as the chrome-variable IDs. Render every color variable as `color`; every `space/*` and `size/*` entry as `dimension`; every radius variable as `radius`; typography variables as `textVariable` with `font/family/* → fontFamily`, `font/size/* → fontSize`, `font/weight/* → fontWeight`, and `font/line-height/* → lineHeight`; all eight styles as `textStyle`; and both effect styles as `effectStyle`. Each item uses its exact readback ID, source name, and resolved value. The completed page must cover all 104 variables plus all 10 styles; every bindable value is bound, while the full CSS font stack is displayed verbatim and applied through approved `IBM Plex Sans KR` Text Styles rather than an invalid stack binding.
 
 - [ ] **Step 4: Validate and screenshot every documentation page**
 
@@ -1048,7 +1051,7 @@ Run the documentation-root script on `04.1 Icon` with title `Icon` and this exac
 
 - [ ] **Step 3: Create five owned SVG components**
 
-On `04.1 Icon`, run the exact Icon master script once. Its five `icons` entries are `{ name: 'Check', svg: ICON_SVGS.check }`, `{ name: 'ChevronRight', svg: ICON_SVGS['chevron-right'] }`, `{ name: 'Close', svg: ICON_SVGS.close }`, `{ name: 'Info', svg: ICON_SVGS.info }`, and `{ name: 'Search', svg: ICON_SVGS.search }`, where the SVG strings are copied byte-for-byte from `packages/react/src/icon/paths.ts`. Never reconstruct paths with rotated lines. The script produces five 24×24 owned components, binds width/height to `size/icon/large`, binds every present vector fill/stroke to `color/text/primary`, tags them, and returns their IDs.
+On `04.1 Icon`, run the exact Icon master script once. Its five `icons` entries are `{ name: 'Check', svg: ICON_SVGS.check }`, `{ name: 'ChevronRight', svg: ICON_SVGS['chevron-right'] }`, `{ name: 'Close', svg: ICON_SVGS.close }`, `{ name: 'Info', svg: ICON_SVGS.info }`, and `{ name: 'Search', svg: ICON_SVGS.search }`, where the SVG strings are copied byte-for-byte from `packages/react/src/icon/paths.ts`. Never reconstruct paths with rotated lines. The script produces five 24×24 owned components, binds width/height to `size/icon/large`, binds every present vector fill/stroke to `color/icon/primary`, tags them, and returns their IDs.
 
 - [ ] **Step 4: Add 16/20/24 documented instances**
 
@@ -1304,7 +1307,7 @@ Capture all 11 pages, including empty-state pages `90 Native Differences` and `9
 
 - [ ] **Step 5: Update committed Figma metadata and machine-readable evidence**
 
-Regenerate `figma/token-map.json` from the final readback using the exact schema in Task 2. Assert five ordered collections, 103 variable rows, eight ordered text-style rows, two ordered effect-style rows, 105 unique source-token mappings, matching collection counts/IDs, exact scopes, non-empty variable/style IDs, `Default` mode evidence, and exact WEB syntax. Reject broken aliases or any `ALL_SCOPES` value before writing.
+Regenerate `figma/token-map.json` from the final readback using the exact schema in Task 2. Assert five ordered collections, 104 variable rows, eight ordered text-style rows, two ordered effect-style rows, 106 unique source-token mappings, 26 Semantic Color rows, 57 COLOR rows, matching collection counts/IDs, exact scopes, non-empty variable/style IDs, `Default` mode evidence, and exact WEB syntax. Reject broken aliases or any `ALL_SCOPES` value before writing.
 
 Create `figma/verification.json` only from final readback, with exactly these top-level fields: `schemaVersion`, `fileUrl`, `verifiedAt`, `codeConnect`, `collections`, `textStyleCount`, `effectStyleCount`, `pages`, `components`, `foundations`, `pageScreenshotNodeIds`, `allPagesScreenshotReviewed`, and `hardCodedProductValues`. Required scalar/list values are `schemaVersion: 1`, a private `/design/` file URL, an ISO timestamp, `codeConnect: "skipped-v0.1"`, the five ordered collection names, `textStyleCount: 8`, `effectStyleCount: 2`, the exact 11-page order from Task 3, `allPagesScreenshotReviewed: true`, and `hardCodedProductValues: 0`.
 
@@ -1317,7 +1320,7 @@ Create `figma/verification.json` only from final readback, with exactly these to
 | `Button` | `componentSetUrl`; `variantCount: 27`; `properties: [{"name":"Label","type":"TEXT"},{"name":"Loading","type":"BOOLEAN"},{"name":"Show leading icon","type":"BOOLEAN"},{"name":"Show trailing icon","type":"BOOLEAN"},{"name":"Leading icon","type":"INSTANCE_SWAP"},{"name":"Trailing icon","type":"INSTANCE_SWAP"}]`; the same three true audit booleans |
 | `TextField` | `componentSetUrl`; `variantCount: 8`; `properties: [{"name":"Label","type":"TEXT"},{"name":"Value","type":"TEXT"},{"name":"Description","type":"TEXT"},{"name":"Error","type":"TEXT"}]`; the same three true audit booleans |
 
-All nine node URLs above—the Icon catalog, five owned icon components, and three component sets—must be valid and mutually distinct. `foundations` contains exactly the fields `approved: true`, `approvedAt`, and `tokenParity: true`; `approvedAt` is the actual recorded approval time serialized as an ISO timestamp. `tokenParity: true` requires the `font/family/sans` STRING variable to equal the generated full stack exactly; Text Styles using an installed Pretendard family do not alter that variable. `pageScreenshotNodeIds` contains exactly all 11 page names as keys and each page’s actual non-empty screenshot target node ID as its value: `00 Cover`, `01 Principles`, `02 Getting Started`, `03 Foundations`, `04 Components`, `04.1 Icon`, `04.2 Badge`, `04.3 Button`, `04.4 TextField`, `90 Native Differences`, and `99 Deprecated`.
+All nine node URLs above—the Icon catalog, five owned icon components, and three component sets—must be valid and mutually distinct. `foundations` contains exactly the fields `approved: true`, `approvedAt`, and `tokenParity: true`; `approvedAt` is the actual recorded approval time serialized as an ISO timestamp. `tokenParity: true` requires the `font/family/sans` STRING variable to equal the generated full stack exactly; Text Styles using the installed `IBM Plex Sans KR` family do not alter that variable. `pageScreenshotNodeIds` contains exactly all 11 page names as keys and each page’s actual non-empty screenshot target node ID as its value: `00 Cover`, `01 Principles`, `02 Getting Started`, `03 Foundations`, `04 Components`, `04.1 Icon`, `04.2 Badge`, `04.3 Button`, `04.4 TextField`, `90 Native Differences`, and `99 Deprecated`.
 
 Replace each component MDX frontmatter `figmaUrl` with its actual documentation target URL from the same readback: the `Icon Catalog` frame for Icon and the component-set node for Badge, Button, and TextField. Do not copy the file-level URL into all four entries. Then regenerate and check the manifest so `/design-system/components.json` contains the four distinct, non-empty node URLs:
 

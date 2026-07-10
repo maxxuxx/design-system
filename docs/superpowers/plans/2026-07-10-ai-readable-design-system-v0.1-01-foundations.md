@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 고정된 pnpm workspace를 만들고, 105개 후보 디자인 토큰을 검증해 CSS와 두 개의 동일한 AI용 JSON 산출물로 재현하는 foundation pipeline을 완성한다.
+**Goal:** 고정된 pnpm workspace를 만들고, 106개 후보 디자인 토큰을 검증해 CSS와 두 개의 동일한 AI용 JSON 산출물로 재현하는 foundation pipeline을 완성한다.
 
 **Architecture:** `packages/tokens/src/primitives.tokens.json`과 `packages/tokens/src/semantic.tokens.json`만 사람이 수정하는 토큰 원본이며, 순수 함수가 schema·중복·alias·cycle을 검증하고 입력 순서대로 값을 해석한다. 하나의 CLI가 메모리에서 CSS와 JSON을 만든 뒤 `--write`에서만 세 산출물을 쓰고 `--check`에서는 byte 비교만 수행한다. 이 계획은 workspace와 token pipeline만 소유하며 Astro 구현, React 구현, Figma 쓰기, 배포는 후속 계획에 넘긴다.
 
@@ -46,13 +46,13 @@
 - Create: `packages/tokens/vitest.config.ts` — Node 환경 token test 수집.
 - Create: `packages/tokens/src/types.ts` — `TokenDefinition`과 `ResolvedToken` 계약.
 - Create: `packages/tokens/src/primitives.tokens.json` — primitive 후보 80개.
-- Create: `packages/tokens/src/semantic.tokens.json` — semantic alias 25개.
+- Create: `packages/tokens/src/semantic.tokens.json` — semantic alias 26개.
 - Create: `packages/tokens/src/validate.ts` — shape, value type, duplicate, alias, cycle 검증.
 - Create: `packages/tokens/src/generate.ts` — deterministic resolution, CSS/JSON rendering.
 - Create: `packages/tokens/scripts/tokens.ts` — `--write`와 read-only `--check` CLI.
 - Create: `packages/tokens/tests/validate.test.ts` — validation TDD.
 - Create: `packages/tokens/tests/generate.test.ts` — rendering snapshots, public JSON parity, semantic-color guard.
-- Generate and commit: `packages/tokens/dist/tokens.css` — 105개 CSS custom property.
+- Generate and commit: `packages/tokens/dist/tokens.css` — 106개 CSS custom property.
 - Generate and commit: `packages/tokens/dist/tokens.json` — AI token JSON.
 - Generate and commit: `apps/docs/public/design-system/tokens.json` — dist JSON과 byte-identical public copy.
 
@@ -722,7 +722,7 @@ Expected: one test file and seven tests pass; exit 0.
 **Interfaces:**
 - Consumes: `validateTokens` and the two exact ordered token arrays.
 - Produces: `resolveTokens`, `renderCss`, `renderJson` and `tsx scripts/tokens.ts --write|--check`.
-- Produces: 105 resolved tokens in source order, 105 CSS declarations, and byte-identical dist/public JSON.
+- Produces: 106 resolved tokens in source order, 106 CSS declarations, and byte-identical dist/public JSON.
 
 - [ ] **Step 1: Add all 80 primitive candidate tokens**
 
@@ -807,13 +807,13 @@ Create `packages/tokens/src/primitives.tokens.json` with this complete content:
   { "name": "font/line-height/title", "type": "dimension", "kind": "primitive", "value": 32, "description": "기본 제목의 행 높이를 정하는 line-height입니다." },
   { "name": "font/line-height/heading", "type": "dimension", "kind": "primitive", "value": 40, "description": "큰 heading의 행 높이를 정하는 line-height입니다." },
   { "name": "font/line-height/display", "type": "dimension", "kind": "primitive", "value": 48, "description": "display 제목의 행 높이를 정하는 line-height입니다." },
-  { "name": "font/family/sans", "type": "fontFamily", "kind": "primitive", "value": "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif", "description": "한국어와 시스템 fallback을 함께 제공하는 기본 sans-serif 글꼴 stack입니다." },
+  { "name": "font/family/sans", "type": "fontFamily", "kind": "primitive", "value": "\"IBM Plex Sans KR\", \"Noto Sans KR\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif", "description": "한국어와 시스템 fallback을 함께 제공하는 기본 sans-serif 글꼴 stack입니다." },
   { "name": "elevation/1", "type": "shadow", "kind": "primitive", "value": "0 1px 2px rgba(15, 23, 42, 0.06)", "description": "인접 surface를 미세하게 구분하는 낮은 elevation입니다." },
   { "name": "elevation/2", "type": "shadow", "kind": "primitive", "value": "0 8px 24px rgba(15, 23, 42, 0.10)", "description": "떠 있는 panel과 overlay를 구분하는 중간 elevation입니다." }
 ]
 ```
 
-- [ ] **Step 2: Add all 25 semantic alias tokens**
+- [ ] **Step 2: Add all 26 semantic alias tokens**
 
 Create `packages/tokens/src/semantic.tokens.json` with this complete content:
 
@@ -823,6 +823,7 @@ Create `packages/tokens/src/semantic.tokens.json` with this complete content:
   { "name": "color/bg/surface", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "카드와 control이 놓이는 기본 surface 배경색입니다." },
   { "name": "color/bg/subtle", "type": "color", "kind": "semantic", "value": "{color/neutral/100}", "description": "보조 구획과 약한 상태를 구분하는 배경색입니다." },
   { "name": "color/text/primary", "type": "color", "kind": "semantic", "value": "{color/neutral/900}", "description": "본문과 핵심 제목에 사용하는 기본 텍스트 색상입니다." },
+  { "name": "color/icon/primary", "type": "color", "kind": "semantic", "value": "{color/neutral/900}", "description": "기능 아이콘의 기본 전경색으로 사용하는 색상입니다." },
   { "name": "color/text/secondary", "type": "color", "kind": "semantic", "value": "{color/neutral/600}", "description": "설명과 메타데이터에 사용하는 보조 텍스트 색상입니다." },
   { "name": "color/text/disabled", "type": "color", "kind": "semantic", "value": "{color/neutral/400}", "description": "사용할 수 없는 control의 텍스트와 아이콘 색상입니다." },
   { "name": "color/text/inverse", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "어두운 surface 위 텍스트와 아이콘에 사용하는 반전 색상입니다." },
@@ -926,7 +927,7 @@ describe('token generation', () => {
     const definitions = await loadDefinitions();
     const resolved = resolveTokens(definitions);
 
-    expect(resolved).toHaveLength(105);
+    expect(resolved).toHaveLength(106);
     expect(resolved.map((token) => token.name)).toEqual(
       definitions.map((token) => token.name),
     );
@@ -954,7 +955,7 @@ describe('token generation', () => {
       '  --ds-color-action-primary: var(--ds-color-blue-600);',
     );
     expect(css).toContain(
-      '  --ds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;',
+      '  --ds-font-family-sans: "IBM Plex Sans KR", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;',
     );
     expect(css.endsWith('\n')).toBe(true);
 
@@ -963,7 +964,7 @@ describe('token generation', () => {
       tokens: Array<Record<string, unknown>>;
     };
     expect(parsed.schemaVersion).toBe(1);
-    expect(parsed.tokens).toHaveLength(105);
+    expect(parsed.tokens).toHaveLength(106);
     expect(Object.keys(parsed.tokens[0] ?? {})).toEqual([
       'name',
       'type',
@@ -1260,7 +1261,7 @@ Wrote apps/docs/public/design-system/tokens.json
 
 Generated artifact strategy:
 
-- `packages/tokens/dist/tokens.css` and both JSON files are not hand-authored plan blocks. Their complete bytes are deterministically produced by the exact 105 source objects, `resolveTokens`, `renderCss`, and `renderJson` above.
+- `packages/tokens/dist/tokens.css` and both JSON files are not hand-authored plan blocks. Their complete bytes are deterministically produced by the exact 106 source objects, `resolveTokens`, `renderCss`, and `renderJson` above.
 - The two committed JSON files are written from the same in-memory `json` string, not copied or separately serialized.
 - The committed CSS/JSON files are golden byte snapshots used by `generate.test.ts` and the read-only `--check` command.
 - Regeneration is the only permitted repair for a stale artifact.
@@ -1351,9 +1352,9 @@ Expected summary:
 ```text
 DistSchemaVersion  : 1
 DocsSchemaVersion  : 1
-DistTokenCount     : 105
-DocsTokenCount     : 105
-CssDeclarationCount : 105
+DistTokenCount     : 106
+DocsTokenCount     : 106
+CssDeclarationCount : 106
 JsonHashesMatch    : True
 ```
 
@@ -1416,7 +1417,7 @@ Plans 02–04 consume these facts without redefining them:
 CSS import: @maxxuxx/tokens/tokens.css
 JSON import: @maxxuxx/tokens/tokens.json
 Public JSON: apps/docs/public/design-system/tokens.json
-JSON envelope: schemaVersion=1, tokens=105
+JSON envelope: schemaVersion=1, tokens=106
 Token fields: name,type,kind,value,description,cssVariable,resolvedValue
 Semantic example: --ds-color-action-primary
 Dimension examples: --ds-size-control-small, --ds-radius-full
@@ -1442,10 +1443,10 @@ If either field does not prove Private, report `Push blocked: maxxuxx/design-sys
 - Local commit `chore: scaffold private design system workspace` exists.
 - Local commit `feat(tokens): add validated design token pipeline` exists.
 - pnpm 11.11.0 frozen install is reproducible.
-- Exactly 105 source tokens validate; 80 are primitive and 25 are semantic aliases.
+- Exactly 106 source tokens validate; 80 are primitive and 26 are semantic aliases.
 - Token tests and TypeScript checks pass.
-- CSS has exactly 105 declarations.
-- Dist and public JSON have schema version 1, 105 entries, and matching SHA-256 hashes.
+- CSS has exactly 106 declarations.
+- Dist and public JSON have schema version 1, 106 entries, and matching SHA-256 hashes.
 - All generated files are LF-terminated, current, committed, and reproducible from source.
 - No npm publication, external hosting, Figma mutation, React source, Astro source, Svelte package, or React Native package was added.
 - No push occurred while the GitHub repository remained Public.

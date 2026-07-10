@@ -12,7 +12,7 @@
 
 - The source of truth is `docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md` plus the locked decisions in `docs/superpowers/plans/2026-07-10-ai-readable-design-system-v0.1.md`.
 - Execute in the isolated `codex/design-system-v0.1` worktree created by `superpowers:using-git-worktrees`; never push while `gh repo view maxxuxx/design-system --json visibility` reports `PUBLIC`.
-- Plan 01 must already provide `@maxxuxx/tokens/tokens.css`, `@maxxuxx/tokens/tokens.json`, and `apps/docs/public/design-system/tokens.json`. The JSON envelope is `{ schemaVersion: 1, tokens: ResolvedToken[] }` and contains exactly 105 entries.
+- Plan 01 must already provide `@maxxuxx/tokens/tokens.css`, `@maxxuxx/tokens/tokens.json`, and `apps/docs/public/design-system/tokens.json`. The JSON envelope is `{ schemaVersion: 1, tokens: ResolvedToken[] }` and contains exactly 106 entries.
 - Plan 01 also owns the root and package manifests. This plan consumes package `@maxxuxx/docs` and does not rename or duplicate its scripts.
 - Plan 03 owns the four React implementation bodies, the four component MDX bodies, `[data-component-demo="icon|badge|button|text-field"]`, and `component-slices.visual.spec.ts`. This plan does not implement those bodies and does not define that visual spec.
 - This plan performs no Figma mutation. `--require-figma` only validates Figma URLs already written into component frontmatter by the coordinated Figma workflow.
@@ -2163,7 +2163,7 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
   expect(response.status()).toBe(200);
   const artifact = await response.json();
   expect(artifact.schemaVersion).toBe(1);
-  expect(artifact.tokens).toHaveLength(105);
+  expect(artifact.tokens).toHaveLength(106);
   for (const token of artifact.tokens) {
     expect(token).toEqual(expect.objectContaining({
       name: expect.any(String),

@@ -63,7 +63,7 @@
         "size/icon/small",
         "size/icon/medium",
         "size/icon/large",
-        "color/text/primary"
+        "color/icon/primary"
       ],
       "docsUrl": "/components/icon/"
     }

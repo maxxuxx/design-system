@@ -72,7 +72,7 @@ describe('token generation', () => {
     const definitions = await loadDefinitions();
     const resolved = resolveTokens(definitions);
 
-    expect(resolved).toHaveLength(105);
+    expect(resolved).toHaveLength(106);
     expect(resolved.map((token) => token.name)).toEqual(
       definitions.map((token) => token.name),
     );
@@ -82,6 +82,13 @@ describe('token generation', () => {
       value: '{color/blue/600}',
       cssVariable: '--ds-color-action-primary',
       resolvedValue: '#245BE0',
+    });
+    expect(
+      resolved.find((token) => token.name === 'color/icon/primary'),
+    ).toMatchObject({
+      value: '{color/neutral/900}',
+      cssVariable: '--ds-color-icon-primary',
+      resolvedValue: '#171D24',
     });
   });
 
@@ -100,7 +107,7 @@ describe('token generation', () => {
       '  --ds-color-action-primary: var(--ds-color-blue-600);',
     );
     expect(css).toContain(
-      '  --ds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;',
+      '  --ds-font-family-sans: "IBM Plex Sans KR", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;',
     );
     expect(css.endsWith('\n')).toBe(true);
 
@@ -109,7 +116,7 @@ describe('token generation', () => {
       tokens: Array<Record<string, unknown>>;
     };
     expect(parsed.schemaVersion).toBe(1);
-    expect(parsed.tokens).toHaveLength(105);
+    expect(parsed.tokens).toHaveLength(106);
     expect(Object.keys(parsed.tokens[0] ?? {})).toEqual([
       'name',
       'type',

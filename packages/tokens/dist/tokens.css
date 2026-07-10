@@ -76,7 +76,7 @@
   --ds-font-line-height-title: 32px;
   --ds-font-line-height-heading: 40px;
   --ds-font-line-height-display: 48px;
-  --ds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ds-font-family-sans: "IBM Plex Sans KR", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --ds-elevation-1: 0 1px 2px rgba(15, 23, 42, 0.06);
   --ds-elevation-2: 0 8px 24px rgba(15, 23, 42, 0.10);
   --ds-color-bg-canvas: var(--ds-color-neutral-50);
@@ -86,6 +86,7 @@
   --ds-color-text-secondary: var(--ds-color-neutral-600);
   --ds-color-text-disabled: var(--ds-color-neutral-400);
   --ds-color-text-inverse: var(--ds-color-neutral-0);
+  --ds-color-icon-primary: var(--ds-color-neutral-900);
   --ds-color-border-default: var(--ds-color-neutral-200);
   --ds-color-border-strong: var(--ds-color-neutral-300);
   --ds-color-border-focus: var(--ds-color-blue-500);

@@ -6,6 +6,7 @@
   { "name": "color/text/secondary", "type": "color", "kind": "semantic", "value": "{color/neutral/600}", "description": "설명과 메타데이터에 사용하는 보조 텍스트 색상입니다." },
   { "name": "color/text/disabled", "type": "color", "kind": "semantic", "value": "{color/neutral/400}", "description": "사용할 수 없는 control의 텍스트와 아이콘 색상입니다." },
   { "name": "color/text/inverse", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "어두운 surface 위 텍스트와 아이콘에 사용하는 반전 색상입니다." },
+  { "name": "color/icon/primary", "type": "color", "kind": "semantic", "value": "{color/neutral/900}", "description": "기능 아이콘의 기본 전경색으로 사용하는 색상입니다." },
   { "name": "color/border/default", "type": "color", "kind": "semantic", "value": "{color/neutral/200}", "description": "surface와 control의 기본 경계 색상입니다." },
   { "name": "color/border/strong", "type": "color", "kind": "semantic", "value": "{color/neutral/300}", "description": "강조가 필요한 구분선과 control 경계 색상입니다." },
   { "name": "color/border/focus", "type": "color", "kind": "semantic", "value": "{color/blue/500}", "description": "focus된 control의 직접 경계 색상입니다." },
