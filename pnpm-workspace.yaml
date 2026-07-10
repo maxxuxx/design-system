@@ -3,6 +3,3 @@ packages:
   - packages/*
 allowBuilds:
   esbuild: true
-peerDependencyRules:
-  allowedVersions:
-    "@astrojs/check@0.9.9>typescript": "7.0.2"
