@@ -1,0 +1,22 @@
+---
+slug: elevation
+title: 고도
+description: 겹침과 떠 있는 계층을 설명할 때만 두 단계 그림자를 사용합니다.
+order: 5
+tokenPrefixes: [elevation/]
+---
+import ElevationScale from '../../components/foundations/ElevationScale.astro';
+
+## 목적
+
+고도는 메뉴, 팝오버처럼 실제로 겹치는 계층을 설명합니다. 일반 카드 구분에는 우선 배경과 border를 사용합니다.
+
+## 사용 문법
+
+```css
+box-shadow: var(--ds-elevation-1);
+```
+
+## 생성된 단계
+
+<ElevationScale />

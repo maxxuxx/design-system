@@ -1,0 +1,16 @@
+---
+import { tokensByPrefix } from '../../lib/token-data';
+interface Props { prefix: string }
+const colorTokens = tokensByPrefix(Astro.props.prefix)
+  .filter(({ type }) => type === 'color');
+---
+<div class="token-grid color-grid">
+  {colorTokens.map((token) => (
+    <article class="token-card">
+      <div class="color-swatch" style={`background:${token.resolvedValue}`} aria-hidden="true"></div>
+      <strong>{token.name}</strong>
+      <code>{String(token.value)}</code>
+      <p>{token.description}</p>
+    </article>
+  ))}
+</div>

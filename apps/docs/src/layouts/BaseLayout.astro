@@ -1,0 +1,29 @@
+---
+import '@maxxuxx/tokens/tokens.css';
+import '@maxxuxx/react/styles.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = '사람과 AI가 함께 읽는 로컬 디자인 시스템 문서입니다.' } = Astro.props;
+const documentTitle = title === 'AI-Readable Design System v0.1'
+  ? title
+  : `${title} | AI-Readable Design System v0.1`;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{documentTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">본문으로 건너뛰기</a>
+    <slot />
+  </body>
+</html>

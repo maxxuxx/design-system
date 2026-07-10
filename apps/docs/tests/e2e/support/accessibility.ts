@@ -1,0 +1,6 @@
+import AxeBuilder from '@axe-core/playwright';
+import { expect, type Locator, type Page } from '@playwright/test';
+export async function assertNoAxeViolations(page: Page): Promise<void> { expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]); }
+export async function expectVisibleFocus(locator: Locator): Promise<void> { await expect(locator).toBeFocused(); expect(await locator.evaluate(e => { const s = getComputedStyle(e); return (s.outlineStyle !== 'none' && s.outlineWidth !== '0px') || s.boxShadow !== 'none'; })).toBe(true); }
+export async function tabTo(page: Page, target: Locator, maximumTabs = 40): Promise<void> { for (let i = 0; i < maximumTabs; i++) { await page.keyboard.press('Tab'); if (await target.evaluate(e => e === document.activeElement).catch(() => false)) { await expectVisibleFocus(target); return; } } throw new Error(`Target was not reached after ${maximumTabs} Tab presses.`); }
+export async function expectTabSequence(page: Page, targets: Locator[]): Promise<void> { await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur()); for (const target of targets) { await page.keyboard.press('Tab'); await expectVisibleFocus(target); } }

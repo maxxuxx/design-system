@@ -1,0 +1,40 @@
+{
+  "name": "@maxxuxx/docs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --filter @maxxuxx/tokens tokens:generate && astro dev",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "manifest:write": "tsx scripts/component-manifest.ts --write",
+    "manifest:check": "tsx scripts/component-manifest.ts --check",
+    "manifest:release-check": "tsx scripts/component-manifest.ts --check --require-figma",
+    "build": "pnpm --filter @maxxuxx/tokens generated:check && pnpm manifest:check && astro check && astro build",
+    "preview": "astro preview",
+    "preview:e2e": "pnpm run build && astro preview --host 127.0.0.1 --port 4173",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "7.0.2",
+    "@astrojs/react": "6.0.1",
+    "@maxxuxx/react": "workspace:*",
+    "@maxxuxx/tokens": "workspace:*",
+    "astro": "7.0.7",
+    "gray-matter": "4.0.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.9",
+    "@axe-core/playwright": "4.12.1",
+    "@playwright/test": "1.61.1",
+    "@types/node": "26.1.1",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "tsx": "4.23.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  }
+}

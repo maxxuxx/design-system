@@ -1,0 +1,16 @@
+---
+import SideNavigation from './SideNavigation.astro';
+
+interface Props { currentPath: string }
+const { currentPath } = Astro.props;
+---
+
+<header class="site-header">
+  <a class="site-brand" href="/">AI-Readable DS</a>
+  <details class="mobile-navigation">
+    <summary>메뉴</summary>
+    <div class="mobile-navigation-panel">
+      <SideNavigation currentPath={currentPath} label="모바일 문서 탐색" />
+    </div>
+  </details>
+</header>

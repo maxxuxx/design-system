@@ -1,0 +1,18 @@
+{
+  "name": "@maxxuxx/design-system-workspace",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @maxxuxx/docs dev",
+    "build": "pnpm --filter @maxxuxx/docs build",
+    "check": "pnpm -r --if-present check",
+    "test": "pnpm -r --if-present test",
+    "test:e2e": "pnpm --filter @maxxuxx/docs test:e2e",
+    "generated:check": "pnpm --filter @maxxuxx/tokens generated:check && pnpm --filter @maxxuxx/docs manifest:check",
+    "verify": "pnpm run check && pnpm run test && pnpm run generated:check && pnpm run build && pnpm run test:e2e"
+  }
+}

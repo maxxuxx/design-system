@@ -1,0 +1,18 @@
+---
+import { tokenByName, tokensByPrefix } from '../../lib/token-data';
+const sizes = tokensByPrefix('font/size/');
+---
+<div class="specimen-list">
+  {sizes.map((token) => {
+    const key = token.name.replace('font/size/', '');
+    const lineHeight = tokenByName(`font/line-height/${key}`);
+    return (
+      <article class="type-specimen">
+        <p style={`font-size:${token.resolvedValue}px;line-height:${lineHeight.resolvedValue}px`}>
+          읽기 쉬운 문장이 제품의 결정을 돕습니다.
+        </p>
+        <code>{token.name} · {token.resolvedValue}px / {lineHeight.resolvedValue}px</code>
+      </article>
+    );
+  })}
+</div>
