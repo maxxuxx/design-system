@@ -1,0 +1,47 @@
+name: Windows Badge baseline
+
+on:
+  push:
+    branches:
+      - codex/design-system-icon
+
+jobs:
+  badge-baseline:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.11.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.0.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter @maxxuxx/docs exec playwright install chromium
+
+      - name: Update Windows Badge baselines
+        run: pnpm --filter @maxxuxx/docs exec playwright test --project=mobile-chromium --project=desktop-chromium --grep "Badge component slice" --update-snapshots
+
+      - name: Compare Windows Badge baselines
+        run: pnpm --filter @maxxuxx/docs exec playwright test --project=mobile-chromium --project=desktop-chromium --grep "Badge component slice"
+
+      - name: Upload Windows Badge baselines
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-badge-baselines
+          path: |
+            apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec/badge-mobile-chromium.png
+            apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec/badge-desktop-chromium.png
+          if-no-files-found: error
+          retention-days: 1
