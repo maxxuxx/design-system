@@ -6,7 +6,7 @@
       "slug": "icon",
       "description": "A small, accessible set of owned stroke icons.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=31-2",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
