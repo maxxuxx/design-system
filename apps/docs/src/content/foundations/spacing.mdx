@@ -1,0 +1,23 @@
+---
+slug: spacing
+title: 간격
+description: 2px에서 64px까지의 제한된 스케일로 리듬과 그룹을 표현합니다.
+order: 3
+tokenPrefixes: [space/, size/]
+---
+import SpacingScale from '../../components/foundations/SpacingScale.astro';
+
+## 목적
+
+간격은 가까운 정보와 분리된 정보를 설명합니다. 임의의 숫자 대신 `space/*`를 사용하고, 터치 컨트롤 높이는 `size/control/*`를 사용합니다.
+
+## 사용 문법
+
+```css
+gap: var(--ds-space-16);
+min-height: var(--ds-size-control-medium);
+```
+
+## 생성된 스케일
+
+<SpacingScale />

@@ -1,0 +1,23 @@
+---
+slug: colors
+title: 색상
+description: Primitive 색상과 제품 역할을 설명하는 Semantic 색상을 분리합니다.
+order: 1
+tokenPrefixes: [color/]
+---
+import ColorGrid from '../../components/foundations/ColorGrid.astro';
+
+## 목적
+
+Primitive는 실제 팔레트 값이고 Semantic은 배경, 텍스트, 행동, 상태의 역할입니다. 제품 UI는 Semantic 색상만 사용합니다.
+
+## 사용 문법
+
+```css
+color: var(--ds-color-text-primary);
+background: var(--ds-color-bg-surface);
+```
+
+## 생성된 값
+
+<ColorGrid prefix="color/" />
