@@ -98,7 +98,7 @@ describe('token generation', () => {
     const definitions = await loadDefinitions();
     const resolved = resolveTokens(definitions);
 
-    expect(resolved).toHaveLength(106);
+    expect(resolved).toHaveLength(107);
     expect(resolved.map((token) => token.name)).toEqual(
       definitions.map((token) => token.name),
     );
@@ -116,6 +116,31 @@ describe('token generation', () => {
       cssVariable: '--ds-color-icon-primary',
       resolvedValue: '#171D24',
     });
+  });
+
+  it('emits the subtle blur primitive in deterministic source order', async () => {
+    const definitions = await loadDefinitions();
+    const first = resolveTokens(definitions);
+    const second = resolveTokens(definitions);
+
+    expect(first.find((token) => token.name === 'blur/subtle')).toMatchObject({
+      type: 'dimension',
+      kind: 'primitive',
+      value: 8,
+      cssVariable: '--ds-blur-subtle',
+      resolvedValue: 8,
+    });
+    expect(renderCss(first)).toContain('  --ds-blur-subtle: 8px;');
+    expect(second.map((token) => token.name)).toEqual(
+      first.map((token) => token.name),
+    );
+    expect(
+      first
+        .map((token) => token.name)
+        .filter((name) =>
+          ['elevation/2', 'blur/subtle', 'color/bg/canvas'].includes(name),
+        ),
+    ).toEqual(['elevation/2', 'blur/subtle', 'color/bg/canvas']);
   });
 
   it('renders deterministic CSS units, aliases, and JSON fields', async () => {
@@ -142,7 +167,7 @@ describe('token generation', () => {
       tokens: Array<Record<string, unknown>>;
     };
     expect(parsed.schemaVersion).toBe(1);
-    expect(parsed.tokens).toHaveLength(106);
+    expect(parsed.tokens).toHaveLength(107);
     expect(Object.keys(parsed.tokens[0] ?? {})).toEqual([
       'name',
       'type',
