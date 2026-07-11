@@ -76,6 +76,7 @@ describe('MDX collection coverage', () => {
       'content/components/checkbox.mdx',
       'content/components/radio-group.mdx',
       'content/components/switch.mdx',
+      'content/components/textarea.mdx',
     ]);
 
     for (const file of files) {
@@ -108,7 +109,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the eight component names and slugs in canonical order', () => {
+  it('locks the nine component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -118,6 +119,7 @@ describe('component metadata contract', () => {
       'Checkbox',
       'RadioGroup',
       'Switch',
+      'Textarea',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -128,6 +130,71 @@ describe('component metadata contract', () => {
       'checkbox',
       'radio-group',
       'switch',
+      'textarea',
+    ]);
+  });
+
+  it('locks the Textarea public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/textarea.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'Textarea',
+      slug: 'textarea',
+      figmaUrl: '',
+      variants: ['vertical', 'none'],
+      sizes: ['medium', 'large'],
+      states: ['default', 'focus', 'error', 'disabled'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'label', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+      { name: 'size', type: 'TextareaSize', required: false, defaultValue: 'medium' },
+      { name: 'resize', type: 'TextareaResize', required: false, defaultValue: 'vertical' },
+      {
+        name: '...textareaProps',
+        type: "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/medium',
+      'size/control/large',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/12',
+      'space/16',
+      'space/20',
+      'radius/md',
+      'font/family/sans',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/size/caption',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'font/line-height/caption',
+      'font/weight/semibold',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/border/focus',
+      'color/status/danger',
+      'color/status/danger-subtle',
+      'color/focus/ring',
     ]);
   });
 

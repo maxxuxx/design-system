@@ -431,6 +431,65 @@ test('Switch exposes a forced-colors keyboard focus outline', async ({ page }, t
   await expectForcedColorFocus(input);
 });
 
+test('Textarea preserves size tiers, resize modes, and horizontal bounds', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  const controls = page.locator('[data-component-demo="textarea"] .ds-textarea__control');
+  await expect(controls).toHaveCount(4);
+
+  const geometry = await controls.evaluateAll((elements) => elements.map((element) => {
+    const control = element as HTMLTextAreaElement;
+    const style = getComputedStyle(control);
+    const rect = control.getBoundingClientRect();
+    const parentRect = control.parentElement!.getBoundingClientRect();
+    return {
+      dataResize: control.dataset.resize,
+      dataSize: control.dataset.size,
+      maxInlineSize: style.maxInlineSize,
+      minHeight: Number.parseFloat(style.minHeight),
+      resize: style.resize,
+      withinParent: rect.left >= parentRect.left - 0.5 && rect.right <= parentRect.right + 0.5,
+    };
+  }));
+
+  expect([...new Set(geometry.map(({ minHeight }) => minHeight))]
+    .sort((left, right) => left - right)).toEqual([48, 56]);
+  expect(new Set(geometry.map(({ dataSize }) => dataSize))).toEqual(new Set(['medium', 'large']));
+  expect(new Set(geometry.map(({ dataResize }) => dataResize))).toEqual(new Set(['vertical', 'none']));
+  expect(new Set(geometry.map(({ resize }) => resize))).toEqual(new Set(['vertical', 'none']));
+  expect(geometry.every(({ maxInlineSize, withinParent }) => maxInlineSize === '100%' && withinParent)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test('Textarea exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  const demo = page.locator('[data-component-demo="textarea"]');
+  const control = demo.locator('.ds-textarea__control').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(control);
+});
+
+test('Textarea error keeps a distinct visible keyboard-focus style', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns keyboard focus-style coverage.');
+
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  const demo = page.locator('[data-component-demo="textarea"]');
+  await demo.getByLabel('error', { exact: true }).check();
+  const errorControl = demo.locator('.ds-textarea__control').first();
+  const signature = (element: Element) => {
+    const style = getComputedStyle(element);
+    return `${style.borderTopColor}|${style.boxShadow}|${style.outlineStyle}|${style.outlineWidth}`;
+  };
+  const before = await errorControl.evaluate(signature);
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectVisibleFocus(errorControl);
+  expect(await errorControl.evaluate(signature)).not.toBe(before);
+});
+
 test('Badge constrains a long unbroken label without page overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns constrained-label coverage.');
 

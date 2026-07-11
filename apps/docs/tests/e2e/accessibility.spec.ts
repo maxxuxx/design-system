@@ -72,3 +72,8 @@ test('Switch demo keeps native Space activation and visible focus', async ({ pag
   await page.keyboard.press('Space');
   await expect(input).toBeChecked();
 });
+
+test('Textarea demo is keyboard reachable with visible focus', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  await tabTo(page, page.locator('[data-component-demo="textarea"] .ds-textarea__control').first());
+});

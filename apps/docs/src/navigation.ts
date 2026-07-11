@@ -38,6 +38,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'Checkbox', href: '/components/checkbox/' },
       { label: 'RadioGroup', href: '/components/radio-group/' },
       { label: 'Switch', href: '/components/switch/' },
+      { label: 'Textarea', href: '/components/textarea/' },
     ],
   },
 ];

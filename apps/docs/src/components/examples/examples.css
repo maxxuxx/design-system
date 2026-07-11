@@ -130,6 +130,18 @@
   place-items: stretch;
 }
 
+.component-demo__stage--textarea {
+  place-items: stretch;
+}
+
+.textarea-demo,
+.textarea-demo__form {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ds-space-16);
+}
+
 .checkbox-demo {
   display: grid;
   width: 100%;

@@ -9,6 +9,7 @@ export const COMPONENT_NAMES = [
   'Checkbox',
   'RadioGroup',
   'Switch',
+  'Textarea',
 ] as const;
 export const COMPONENT_SLUGS = [
   'icon',
@@ -19,6 +20,7 @@ export const COMPONENT_SLUGS = [
   'checkbox',
   'radio-group',
   'switch',
+  'textarea',
 ] as const;
 
 export const COMPONENTS = [
@@ -30,6 +32,7 @@ export const COMPONENTS = [
   { name: 'Checkbox', slug: 'checkbox' },
   { name: 'RadioGroup', slug: 'radio-group' },
   { name: 'Switch', slug: 'switch' },
+  { name: 'Textarea', slug: 'textarea' },
 ] as const;
 export const COMPONENT_ORDER = new Map(
   COMPONENTS.map(({ name }, index) => [name, index]),

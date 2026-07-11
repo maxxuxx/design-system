@@ -21,13 +21,13 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
   }
 });
 
-test('components.json exposes all eight release-ready component contracts', async ({ request }) => {
+test('components.json exposes all nine current component contracts', async ({ request }) => {
   const response = await request.get('/design-system/components.json');
   expect(response.status()).toBe(200);
   const artifact = await response.json();
   expect(artifact.schemaVersion).toBe(1);
   expect(artifact.components.map(({ name }: { name: string }) => name))
-    .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch']);
+    .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea']);
   expect(artifact.components.map(({ docsUrl }: { docsUrl: string }) => docsUrl)).toEqual([
     '/components/icon/',
     '/components/badge/',
@@ -37,6 +37,7 @@ test('components.json exposes all eight release-ready component contracts', asyn
     '/components/checkbox/',
     '/components/radio-group/',
     '/components/switch/',
+    '/components/textarea/',
   ]);
   const scrollArea = artifact.components.find(({ name }: { name: string }) => name === 'ScrollArea');
   expect(scrollArea.variants).toEqual([]);
@@ -75,8 +76,12 @@ test('components.json exposes all eight release-ready component contracts', asyn
       svelte: 'planned',
       reactNative: 'planned',
     });
-    expect(component.figmaUrl).not.toBe('');
-    expect(() => new URL(component.figmaUrl)).not.toThrow();
+    if (component.name === 'Textarea') {
+      expect(component.figmaUrl).toBe('');
+    } else {
+      expect(component.figmaUrl).not.toBe('');
+      expect(() => new URL(component.figmaUrl)).not.toThrow();
+    }
     expect(component.description).not.toBe('');
     expect(component.accessibility).not.toBe('');
     expect(Array.isArray(component.variants)).toBe(true);

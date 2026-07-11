@@ -78,3 +78,15 @@ test('Switch visible label toggles its stable native switch and form value', asy
   expect(await input.evaluate((control: HTMLInputElement) =>
     new FormData(control.form!).get(control.name))).toBe('enabled');
 });
+
+test('Textarea keeps native typing, rows, maxLength, and form value', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  const textarea = page.locator('[data-component-demo="textarea"] .ds-textarea__control').first();
+
+  await expect(textarea).toHaveAttribute('rows', '4');
+  await expect(textarea).toHaveAttribute('maxlength', '80');
+  await textarea.fill('배송 전에 연락해 주세요.');
+  await expect(textarea).toHaveValue('배송 전에 연락해 주세요.');
+  expect(await textarea.evaluate((control: HTMLTextAreaElement) =>
+    new FormData(control.form!).get(control.name))).toBe('배송 전에 연락해 주세요.');
+});

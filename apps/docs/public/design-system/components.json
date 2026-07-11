@@ -808,6 +808,107 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/switch/"
+    },
+    {
+      "name": "Textarea",
+      "slug": "textarea",
+      "description": "여러 줄 자유 입력을 native textarea의 form·keyboard·resize 동작과 함께 제공합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "vertical",
+        "none"
+      ],
+      "sizes": [
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "focus",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "visible label, stable feedback IDs, ordered aria-describedby, native keyboard·form semantics와 forced error state를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "textarea와 연결되는 visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "입력 목적과 형식을 설명하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다."
+        },
+        {
+          "name": "size",
+          "type": "TextareaSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "medium 또는 large 최소 높이와 padding tier를 선택합니다."
+        },
+        {
+          "name": "resize",
+          "type": "TextareaResize",
+          "required": false,
+          "defaultValue": "vertical",
+          "description": "vertical 또는 none만 허용해 수평 크기 조절과 overflow를 막습니다."
+        },
+        {
+          "name": "...textareaProps",
+          "type": "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "children을 제외한 rows, value, maxLength, required, form 등의 native textarea props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/control/large",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/20",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/size/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "font/line-height/caption",
+        "font/weight/semibold",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/status/danger",
+        "color/status/danger-subtle",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/textarea/"
     }
   ]
 }
