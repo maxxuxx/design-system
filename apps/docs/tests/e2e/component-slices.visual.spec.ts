@@ -5,6 +5,7 @@ import { expectPageScreenshot } from './support/visual';
 const slices = [
   { name: 'Icon', slug: 'icon' },
   { name: 'Badge', slug: 'badge' },
+  { name: 'Button', slug: 'button' },
 ] as const;
 
 for (const slice of slices) {

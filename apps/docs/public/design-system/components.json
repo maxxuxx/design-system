@@ -148,6 +148,113 @@
         "color/action/on-weak"
       ],
       "docsUrl": "/components/badge/"
+    },
+    {
+      "name": "Button",
+      "slug": "button",
+      "description": "화면의 주 행동이나 보조 행동을 native button semantics로 실행하는 action control입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "fill",
+        "weak",
+        "outline"
+      ],
+      "sizes": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible",
+        "disabled",
+        "loading"
+      ],
+      "accessibility": "native button, keyboard activation, visible focus, effective disabled, loading aria-busy와 보존된 accessible name을 제공합니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "버튼의 visible accessible label입니다."
+        },
+        {
+          "name": "size",
+          "type": "ButtonSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small, medium, large control height입니다."
+        },
+        {
+          "name": "variant",
+          "type": "ButtonVariant",
+          "required": false,
+          "defaultValue": "fill",
+          "description": "fill, weak, outline 시각 위계입니다."
+        },
+        {
+          "name": "width",
+          "type": "ButtonWidth",
+          "required": false,
+          "defaultValue": "hug",
+          "description": "content 너비 또는 container full width layout입니다."
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "activation을 막고 aria-busy와 spinner를 표시합니다."
+        },
+        {
+          "name": "leadingIcon",
+          "type": "ReactElement<IconProps>",
+          "required": false,
+          "defaultValue": null,
+          "description": "label 앞의 decorative icon slot입니다."
+        },
+        {
+          "name": "trailingIcon",
+          "type": "ReactElement<IconProps>",
+          "required": false,
+          "defaultValue": null,
+          "description": "label 뒤의 decorative icon slot입니다."
+        },
+        {
+          "name": "...buttonProps",
+          "type": "ButtonHTMLAttributes<HTMLButtonElement>",
+          "required": false,
+          "defaultValue": null,
+          "description": "native button props입니다. type default는 button입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/control/medium",
+        "size/control/large",
+        "radius/md",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/border/default",
+        "color/border/strong",
+        "color/border/focus",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/button/"
     }
   ]
 }
