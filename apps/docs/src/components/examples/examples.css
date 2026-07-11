@@ -142,6 +142,18 @@
   gap: var(--ds-space-16);
 }
 
+.component-demo__stage--select {
+  place-items: stretch;
+}
+
+.select-demo,
+.select-demo__form {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ds-space-16);
+}
+
 .checkbox-demo {
   display: grid;
   width: 100%;

@@ -90,3 +90,16 @@ test('Textarea keeps native typing, rows, maxLength, and form value', async ({ p
   expect(await textarea.evaluate((control: HTMLTextAreaElement) =>
     new FormData(control.form!).get(control.name))).toBe('배송 전에 연락해 주세요.');
 });
+
+test('Select keeps native single-value option selection and form value', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const select = page.locator('[data-component-demo="select"] .ds-select__control').first();
+
+  await expect(select).not.toHaveAttribute('multiple');
+  await expect(select).not.toHaveAttribute('size');
+  await expect(select.getByRole('option', { name: '선택하세요' })).toBeDisabled();
+  await select.selectOption('express');
+  await expect(select).toHaveValue('express');
+  expect(await select.evaluate((control: HTMLSelectElement) =>
+    new FormData(control.form!).get(control.name))).toBe('express');
+});

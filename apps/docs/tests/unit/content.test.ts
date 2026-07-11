@@ -77,6 +77,7 @@ describe('MDX collection coverage', () => {
       'content/components/radio-group.mdx',
       'content/components/switch.mdx',
       'content/components/textarea.mdx',
+      'content/components/select.mdx',
     ]);
 
     for (const file of files) {
@@ -109,7 +110,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the nine component names and slugs in canonical order', () => {
+  it('locks the ten component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -120,6 +121,7 @@ describe('component metadata contract', () => {
       'RadioGroup',
       'Switch',
       'Textarea',
+      'Select',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -131,6 +133,73 @@ describe('component metadata contract', () => {
       'radio-group',
       'switch',
       'textarea',
+      'select',
+    ]);
+  });
+
+  it('locks the Select public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/select.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'Select',
+      slug: 'select',
+      figmaUrl: '',
+      variants: [],
+      sizes: ['medium', 'large'],
+      states: ['default', 'focus', 'error', 'disabled'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+      { name: 'label', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+      { name: 'placeholder', type: 'string', required: false, defaultValue: null },
+      { name: 'size', type: 'SelectSize', required: false, defaultValue: 'medium' },
+      {
+        name: '...selectProps',
+        type: "Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'multiple' | 'size'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/medium',
+      'size/control/large',
+      'size/icon/medium',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/16',
+      'space/20',
+      'radius/md',
+      'font/family/sans',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/size/caption',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'font/line-height/caption',
+      'font/weight/semibold',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/border/focus',
+      'color/icon/primary',
+      'color/status/danger',
+      'color/status/danger-subtle',
+      'color/focus/ring',
     ]);
   });
 

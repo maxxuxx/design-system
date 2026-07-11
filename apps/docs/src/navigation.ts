@@ -39,6 +39,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'RadioGroup', href: '/components/radio-group/' },
       { label: 'Switch', href: '/components/switch/' },
       { label: 'Textarea', href: '/components/textarea/' },
+      { label: 'Select', href: '/components/select/' },
     ],
   },
 ];

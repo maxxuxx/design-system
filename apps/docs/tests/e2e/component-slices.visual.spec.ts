@@ -12,6 +12,7 @@ const slices = [
   { name: 'RadioGroup', slug: 'radio-group' },
   { name: 'Switch', slug: 'switch' },
   { name: 'Textarea', slug: 'textarea' },
+  { name: 'Select', slug: 'select' },
 ] as const;
 
 for (const slice of slices) {

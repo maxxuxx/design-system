@@ -490,6 +490,66 @@ test('Textarea error keeps a distinct visible keyboard-focus style', async ({ pa
   expect(await errorControl.evaluate(signature)).not.toBe(before);
 });
 
+test('Select preserves native size tiers, decorative icon, and horizontal bounds', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const demo = page.locator('[data-component-demo="select"]');
+  const controls = demo.locator('.ds-select__control');
+  await expect(controls).toHaveCount(4);
+
+  const geometry = await demo.locator('.ds-select').evaluateAll((roots) => roots.map((root) => {
+    const select = root.querySelector<HTMLSelectElement>('.ds-select__control')!;
+    const icon = root.querySelector<SVGElement>('.ds-select__icon')!;
+    const selectRect = select.getBoundingClientRect();
+    const rootRect = root.getBoundingClientRect();
+    return {
+      height: selectRect.height,
+      iconAriaHidden: icon.getAttribute('aria-hidden'),
+      iconPointerEvents: getComputedStyle(icon).pointerEvents,
+      multiple: select.multiple,
+      sizeAttribute: select.getAttribute('size'),
+      withinRoot: selectRect.left >= rootRect.left - 0.5 && selectRect.right <= rootRect.right + 0.5,
+    };
+  }));
+
+  expect([...new Set(geometry.map(({ height }) => height))]
+    .sort((left, right) => left - right)).toEqual([48, 56]);
+  expect(geometry.every(({ iconAriaHidden }) => iconAriaHidden === 'true')).toBe(true);
+  expect(geometry.every(({ iconPointerEvents }) => iconPointerEvents === 'none')).toBe(true);
+  expect(geometry.every(({ multiple, sizeAttribute }) => !multiple && sizeAttribute === null)).toBe(true);
+  expect(geometry.every(({ withinRoot }) => withinRoot)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test('Select exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const demo = page.locator('[data-component-demo="select"]');
+  const control = demo.locator('.ds-select__control').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(control);
+});
+
+test('Select error keeps a distinct visible keyboard-focus style', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns keyboard focus-style coverage.');
+
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const demo = page.locator('[data-component-demo="select"]');
+  await demo.getByLabel('error', { exact: true }).check();
+  const errorControl = demo.locator('.ds-select__control').first();
+  const signature = (element: Element) => {
+    const style = getComputedStyle(element);
+    return `${style.borderTopColor}|${style.boxShadow}|${style.outlineStyle}|${style.outlineWidth}`;
+  };
+  const before = await errorControl.evaluate(signature);
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectVisibleFocus(errorControl);
+  expect(await errorControl.evaluate(signature)).not.toBe(before);
+});
+
 test('Badge constrains a long unbroken label without page overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns constrained-label coverage.');
 

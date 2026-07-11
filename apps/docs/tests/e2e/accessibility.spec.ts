@@ -77,3 +77,10 @@ test('Textarea demo is keyboard reachable with visible focus', async ({ page }) 
   await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
   await tabTo(page, page.locator('[data-component-demo="textarea"] .ds-textarea__control').first());
 });
+
+test('Select demo is keyboard reachable with visible focus', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const select = page.locator('[data-component-demo="select"] .ds-select__control').first();
+
+  await tabTo(page, select);
+});
