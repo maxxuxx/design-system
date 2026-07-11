@@ -13,8 +13,8 @@ collections, now containing 111 Variables, eight Text Styles, and two Effect
 Styles. Phase 2 created the ordered page structure and the first five
 documentation roots.
 Foundations visual approval was recorded at `2026-07-10T23:08:13+09:00`, and
-Phase 3 component construction covers the five v0.1 families plus Checkbox and
-RadioGroup.
+Phase 3 component construction covers the five v0.1 families plus Checkbox,
+RadioGroup, and Switch.
 
 ## Typography
 
@@ -55,10 +55,11 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 10. `04.5 ScrollArea`
 11. `04.6 Checkbox`
 12. `04.7 RadioGroup`
-13. `90 Native Differences`
-14. `99 Deprecated`
+13. `04.8 Switch`
+14. `90 Native Differences`
+15. `99 Deprecated`
 
-The required 14-page prefix is validated in this exact order. The original
+The required 15-page prefix is validated in this exact order. The original
 empty `Page 1` remains after this managed prefix and is not used by the library.
 
 ## Original Phase 2 Foundations catalog
@@ -290,13 +291,39 @@ top-level overlap.
 - Full-page screenshot target: `04.7 RadioGroup` (`147:2`), rendered at
   `1440 × 1180`
 
-Status: Foundations, all five v0.1 slices, Checkbox, and RadioGroup are
+## Form controls v0.2 Switch validation
+
+- Component set: [Switch](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122)
+- Variant count: 12
+- Axes:
+  - `Size`: `Small`, `Medium`
+  - `Value`: `Off`, `On`
+  - `State`: `Default`, `Error`, `Disabled`
+- Component properties: `Label`, `Description`, and `Error` (`TEXT`)
+- Track sizes: `size/switch/small-width` × `size/switch/small-height`
+  (`36 × 20px`) and `size/switch/medium-width` ×
+  `size/switch/medium-height` (`44 × 24px`)
+- Target row: `size/control/small` (`44px`); gaps use `space/4` and `space/8`
+- Track padding: `space/0`; radius: `radius/full`; thumb uses `Shadow/1`
+- Typography: `Body/Small`, `Body`, and `Caption`
+- Product fills, strokes, thumbs, labels, helper/error text, and disabled states
+  use semantic Variables only
+- State precedence: `Disabled > Error > Default`; Off/On remains an independent
+  value axis
+- Binding audit: all 12 tracks, thumbs, target rows, padding, gaps, radius,
+  paints, text styles, elevation, and 36 text-property references passed
+- Layout audit: all variants have content-driven heights with no clipping or
+  overlap; thumb geometry is correct for both sizes and values
+- Full-page screenshot target: `04.8 Switch` (`151:2`), rendered at
+  `1440 × 800`
+
+Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, and Switch are
 validated in Figma.
 
 ## Phase 4 library verification
 
-- Final live readback: `2026-07-12T03:36:06+09:00`
-- Managed pages: all 14 current pages in the documented order
+- Final live readback: `2026-07-12T03:48:50+09:00`
+- Managed pages: all 15 current pages in the documented order
 - Final token readback: five collections, 111 Variables, eight Text Styles, and
   two Effect Styles
 - Token-map reconciliation: the regenerated live projection is byte-identical
@@ -319,11 +346,11 @@ validated in Figma.
   fields; the stored readback is also parsed and compared to the source shadow
   tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
-  Button/TextField/ScrollArea/Checkbox/RadioGroup control target is at least
+  Button/TextField/ScrollArea/Checkbox/RadioGroup/Switch control target is at least
   44px with distinct focus, pressed, error, disabled, or direction-availability
   presentation
-- Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`, and
-  ScrollArea `4`, Checkbox `18`, and RadioGroup `18`; all properties, variants,
+- Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`,
+  ScrollArea `4`, Checkbox `18`, RadioGroup `18`, and Switch `12`; all properties, variants,
   semantic bindings, and React contracts passed
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
   keys on Instances and the intentionally invisible default fill on TextField
@@ -332,8 +359,8 @@ validated in Figma.
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
 - Screenshots: every managed page was captured and reviewed for legibility,
-  clipping, overlap, stale copy, and visible component coverage; all 14 SHA-256
-  fingerprints are stored in verification evidence for all 14 managed pages
+  clipping, overlap, stale copy, and visible component coverage; all 15 SHA-256
+  fingerprints are stored in verification evidence for all 15 managed pages
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
 Code Connect is explicitly `skipped-v0.1`.

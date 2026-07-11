@@ -717,7 +717,7 @@
       "slug": "switch",
       "description": "변경 즉시 적용되는 binary setting을 native checkbox와 switch role로 제공합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

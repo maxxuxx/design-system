@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T03:36:06+09:00",
+  "verifiedAt": "2026-07-12T03:48:50+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -25,6 +25,7 @@
     "04.5 ScrollArea",
     "04.6 Checkbox",
     "04.7 RadioGroup",
+    "04.8 Switch",
     "90 Native Differences",
     "99 Deprecated"
   ],
@@ -95,6 +96,7 @@
     "04.5 ScrollArea": "a46826086c4267d6de0f613e462997b7d8a471960e8db6b0e137c40eb865ec77",
     "04.6 Checkbox": "72185543d79c8ab482e5b975d261cc47783c573f45175bf6d74f0ab8acb93b38",
     "04.7 RadioGroup": "a0bc1871d5a0f54b41d60adc7f60649f865536065baa26b50fb2551b9ea6d7df",
+    "04.8 Switch": "88e54ade7faafefda00a8378214e7a9d2b8e52ef86ec76982984f0bb0f97b6d5",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -261,6 +263,27 @@
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
+    },
+    "Switch": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122",
+      "variantCount": 12,
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        },
+        {
+          "name": "Description",
+          "type": "TEXT"
+        },
+        {
+          "name": "Error",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
     }
   },
   "foundations": {
@@ -281,6 +304,7 @@
     "04.5 ScrollArea": "111:2",
     "04.6 Checkbox": "138:2",
     "04.7 RadioGroup": "147:2",
+    "04.8 Switch": "151:2",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

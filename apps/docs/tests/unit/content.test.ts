@@ -141,7 +141,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'Switch',
       slug: 'switch',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122',
       variants: ['off', 'on'],
       sizes: ['small', 'medium'],
       states: ['default', 'error', 'disabled'],
