@@ -12,7 +12,9 @@
     "check": "pnpm -r --if-present check",
     "test": "pnpm -r --if-present test",
     "test:e2e": "pnpm --filter @maxxuxx/docs test:e2e",
+    "test:guardrails": "node --test tooling/verification/guardrails.test.mjs",
     "generated:check": "pnpm --filter @maxxuxx/tokens generated:check && pnpm --filter @maxxuxx/docs manifest:check",
+    "guardrails:check": "node tooling/verification/guardrails.mjs",
     "verify": "pnpm run check && pnpm run test && pnpm run generated:check && pnpm run build && pnpm run test:e2e"
   }
 }
