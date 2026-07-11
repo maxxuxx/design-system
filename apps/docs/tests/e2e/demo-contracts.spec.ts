@@ -44,6 +44,172 @@ function contrastRatio(first: string, second: string): number {
   return (lighter! + 0.05) / (darker! + 0.05);
 }
 
+type ScrollAreaState = 'no-overflow' | 'start' | 'middle' | 'end';
+
+async function expectScrollAreaState(
+  root: Locator,
+  viewport: Locator,
+  edgeUp: Locator,
+  edgeDown: Locator,
+  buttonUp: Locator,
+  buttonDown: Locator,
+  state: ScrollAreaState,
+  active: { up: boolean; down: boolean },
+): Promise<void> {
+  await expect(root).toHaveAttribute('data-state', state);
+  await expect(viewport).toHaveAttribute('data-state', state);
+
+  for (const [edge, button, isActive] of [
+    [edgeUp, buttonUp, active.up],
+    [edgeDown, buttonDown, active.down],
+  ] as const) {
+    await expect(edge).toHaveAttribute('data-active', String(isActive));
+    if (isActive) await expect(button).toBeEnabled();
+    else await expect(button).toBeDisabled();
+    await expect(button).toHaveAttribute('aria-hidden', String(!isActive));
+    const cue = await edge.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        backdropFilter: style.backdropFilter,
+        backgroundImage: style.backgroundImage,
+        opacity: style.opacity,
+      };
+    });
+    if (isActive) {
+      expect(cue.backdropFilter).not.toBe('none');
+      expect(cue.backgroundImage).not.toBe('none');
+      expect(cue.opacity).toBe('1');
+    } else {
+      expect(cue.backdropFilter).toBe('none');
+      expect(cue.backgroundImage).toBe('none');
+      expect(cue.opacity).toBe('0');
+    }
+  }
+}
+
+test('ScrollArea keeps native wheel scrolling while its visual scrollbar is hidden', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns native scrolling coverage.');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openHtmlRoute(page, { path: '/components/scroll-area/', heading: 'ScrollArea' });
+  const viewport = page.getByTestId('scroll-area-viewport');
+  await expect(viewport).toHaveAttribute('data-state', 'start');
+
+  const scrolling = await viewport.evaluate((element) => {
+    const style = getComputedStyle(element);
+    const webkitScrollbar = getComputedStyle(element, '::-webkit-scrollbar');
+    return {
+      overflowY: style.overflowY,
+      scrollbarWidth: style.scrollbarWidth,
+      webkitDisplay: webkitScrollbar.display,
+    };
+  });
+  expect(scrolling).toEqual({
+    overflowY: 'auto',
+    scrollbarWidth: 'none',
+    webkitDisplay: 'none',
+  });
+
+  const initialScrollTop = await viewport.evaluate((element) => element.scrollTop);
+  await viewport.hover();
+  await page.mouse.wheel(0, 180);
+  await expect.poll(
+    () => viewport.evaluate((element) => element.scrollTop),
+    { message: 'wheel input should move the native viewport' },
+  ).toBeGreaterThan(initialScrollTop);
+});
+
+test('ScrollArea state, disabled buttons, and blur cues agree in every runtime state', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns runtime state coverage.');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openHtmlRoute(page, { path: '/components/scroll-area/', heading: 'ScrollArea' });
+  const root = page.getByTestId('scroll-area-root');
+  const viewport = page.getByTestId('scroll-area-viewport');
+  const edgeUp = page.getByTestId('scroll-area-edge-up');
+  const edgeDown = page.getByTestId('scroll-area-edge-down');
+  const buttonUp = page.getByTestId('scroll-area-button-up');
+  const buttonDown = page.getByTestId('scroll-area-button-down');
+
+  await expectScrollAreaState(
+    root, viewport, edgeUp, edgeDown, buttonUp, buttonDown,
+    'start', { up: false, down: true },
+  );
+
+  await viewport.evaluate((element) => {
+    element.scrollTop = (element.scrollHeight - element.clientHeight) / 2;
+  });
+  await expectScrollAreaState(
+    root, viewport, edgeUp, edgeDown, buttonUp, buttonDown,
+    'middle', { up: true, down: true },
+  );
+
+  await viewport.evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+  });
+  await expectScrollAreaState(
+    root, viewport, edgeUp, edgeDown, buttonUp, buttonDown,
+    'end', { up: true, down: false },
+  );
+
+  await page.getByTestId('scroll-area-content-toggle').check();
+  await expectScrollAreaState(
+    root, viewport, edgeUp, edgeDown, buttonUp, buttonDown,
+    'no-overflow', { up: false, down: false },
+  );
+  await expect(viewport).toHaveAttribute('tabindex', '-1');
+});
+
+test('ScrollArea buttons move 80 percent of the viewport in both directions', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns deterministic button scrolling.');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openHtmlRoute(page, { path: '/components/scroll-area/', heading: 'ScrollArea' });
+  const viewport = page.getByTestId('scroll-area-viewport');
+  const buttonUp = page.getByTestId('scroll-area-button-up');
+  const buttonDown = page.getByTestId('scroll-area-button-down');
+  await expect(buttonDown).toBeEnabled();
+
+  const viewportHeight = await viewport.evaluate((element) => element.clientHeight);
+  const expectedStep = viewportHeight * 0.8;
+  await buttonDown.click();
+  await expect.poll(async () => {
+    const scrollTop = await viewport.evaluate((element) => element.scrollTop);
+    return Math.abs(scrollTop - expectedStep) <= 1;
+  }, { message: 'down button should move exactly 80% of the viewport' }).toBe(true);
+
+  const afterDown = await viewport.evaluate((element) => element.scrollTop);
+  await expect(buttonUp).toBeEnabled();
+  await buttonUp.click();
+  await expect.poll(async () => {
+    const scrollTop = await viewport.evaluate((element) => element.scrollTop);
+    return Math.abs(scrollTop - (afterDown - expectedStep)) <= 1;
+  }, { message: 'up button should move exactly 80% of the viewport' }).toBe(true);
+});
+
+test('ScrollArea active navigation buttons are 44px targets with keyboard-visible focus', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns ScrollArea focus coverage.');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openHtmlRoute(page, { path: '/components/scroll-area/', heading: 'ScrollArea' });
+  const viewport = page.getByTestId('scroll-area-viewport');
+  const buttonUp = page.getByTestId('scroll-area-button-up');
+  const buttonDown = page.getByTestId('scroll-area-button-down');
+  await viewport.evaluate((element) => {
+    element.scrollTop = (element.scrollHeight - element.clientHeight) / 2;
+  });
+  await expect(buttonUp).toBeEnabled();
+  await expect(buttonDown).toBeEnabled();
+  await expectMinimumTarget(buttonUp);
+  await expectMinimumTarget(buttonDown);
+
+  await viewport.focus();
+  await page.keyboard.press('Tab');
+  await expectVisibleFocus(buttonUp);
+  await page.keyboard.press('Tab');
+  await expectVisibleFocus(buttonDown);
+});
+
 test('demo selects and toggle labels expose 44px targets with forced-colors focus', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns compact demo-control coverage.');
 

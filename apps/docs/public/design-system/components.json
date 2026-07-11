@@ -381,6 +381,96 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/text-field/"
+    },
+    {
+      "name": "ScrollArea",
+      "slug": "scroll-area",
+      "description": "native vertical scrolling을 유지하면서 방향별 blur cue와 이동 control을 고정해 제공하는 scroll container입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [],
+      "sizes": [],
+      "states": [
+        "no-overflow",
+        "start",
+        "middle",
+        "end"
+      ],
+      "accessibility": "이름 있는 region, overflow에 따른 keyboard focus, localized navigation button labels, native wheel·touch·keyboard scrolling을 제공합니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "native viewport 안에서 스크롤되는 content입니다."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "scroll viewport region의 localized accessible name입니다."
+        },
+        {
+          "name": "scrollUpLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "위쪽 navigation button의 localized accessible name입니다."
+        },
+        {
+          "name": "scrollDownLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "아래쪽 navigation button의 localized accessible name입니다."
+        },
+        {
+          "name": "viewportRef",
+          "type": "Ref<HTMLDivElement>",
+          "required": false,
+          "defaultValue": null,
+          "description": "실제 native scrolling viewport를 가리키는 ref입니다."
+        },
+        {
+          "name": "onViewportScroll",
+          "type": "UIEventHandler<HTMLDivElement>",
+          "required": false,
+          "defaultValue": null,
+          "description": "owned state가 동기화된 뒤 받는 native viewport scroll event handler입니다."
+        },
+        {
+          "name": "...rootProps",
+          "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onScroll'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "크기와 layout을 소유하는 outer root에 전달되는 native div props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/16",
+        "radius/full",
+        "elevation/1",
+        "blur/subtle",
+        "color/bg/surface",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/border/default",
+        "color/border/focus",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/scroll-area/"
     }
   ]
 }

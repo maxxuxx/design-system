@@ -15,7 +15,7 @@ const routes = [
   'foundations/spacing/index.html', 'foundations/radius/index.html',
   'foundations/elevation/index.html', 'components/icon/index.html',
   'components/badge/index.html', 'components/button/index.html',
-  'components/text-field/index.html',
+  'components/text-field/index.html', 'components/scroll-area/index.html',
 ];
 
 const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius'];
@@ -23,7 +23,7 @@ const textStyleNames = ['Display', 'Heading', 'Title', 'Body/Large', 'Body', 'Bo
 const pageNames = [
   '00 Cover', '01 Principles', '02 Getting Started', '03 Foundations',
   '04 Components', '04.1 Icon', '04.2 Badge', '04.3 Button',
-  '04.4 TextField', '90 Native Differences', '99 Deprecated',
+  '04.4 TextField', '04.5 ScrollArea', '90 Native Differences', '99 Deprecated',
 ];
 
 const componentSpecs = [
@@ -46,6 +46,10 @@ const componentSpecs = [
   {
     name: 'TextField', slug: 'text-field', variants: [],
     sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
+  },
+  {
+    name: 'ScrollArea', slug: 'scroll-area', variants: [], sizes: [],
+    states: ['no-overflow', 'start', 'middle', 'end'],
   },
 ];
 
@@ -111,6 +115,25 @@ const manifestProps = {
       defaultValue: null,
     },
   ],
+  ScrollArea: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'scrollUpLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'scrollDownLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'viewportRef', type: 'Ref<HTMLDivElement>', required: false, defaultValue: null },
+    {
+      name: 'onViewportScroll',
+      type: 'UIEventHandler<HTMLDivElement>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: '...rootProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onScroll'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
 };
 
 const properties = {
@@ -130,6 +153,7 @@ const properties = {
     { name: 'Description', type: 'TEXT' },
     { name: 'Error', type: 'TEXT' },
   ],
+  ScrollArea: [],
 };
 
 const componentNodeIds = {
@@ -137,6 +161,7 @@ const componentNodeIds = {
   Badge: '47-2',
   Button: '65-56',
   TextField: '80-50',
+  ScrollArea: '92-2',
 };
 
 const iconNodeIds = ['30-4', '30-7', '30-11', '30-16', '30-20'];
@@ -146,6 +171,7 @@ const fixtureComponentTokens = {
   Badge: ['space/1', 'color/semantic/1'],
   Button: ['size/control/1', 'color/semantic/2'],
   TextField: ['font/size/1', 'color/semantic/3'],
+  ScrollArea: ['blur/subtle'],
 };
 
 function figmaUrl(id) {
@@ -211,8 +237,8 @@ function effectValuesSha256(effectReadback) {
 }
 
 function makeTokens() {
-  return Array.from({ length: 106 }, (_, index) => {
-    const kind = index < 80 ? 'primitive' : 'semantic';
+  return Array.from({ length: 107 }, (_, index) => {
+    const kind = index < 81 ? 'primitive' : 'semantic';
     let name;
     let type;
     if (index < 31) {
@@ -242,8 +268,11 @@ function makeTokens() {
     } else if (index < 80) {
       name = `elevation/${index - 77}`;
       type = 'shadow';
+    } else if (index === 80) {
+      name = 'blur/subtle';
+      type = 'dimension';
     } else {
-      name = index === 80 ? 'color/icon/primary' : `color/semantic/${index - 80}`;
+      name = index === 81 ? 'color/icon/primary' : `color/semantic/${index - 81}`;
       type = 'color';
     }
     const primitiveValue = type === 'fontFamily'
@@ -405,6 +434,12 @@ function makeVerification(tokens) {
         properties: properties.TextField,
         ...shared,
       },
+      ScrollArea: {
+        componentSetUrl: figmaUrl(componentNodeIds.ScrollArea),
+        variantCount: 4,
+        properties: properties.ScrollArea,
+        ...shared,
+      },
     },
     foundations: {
       approved: true,
@@ -444,9 +479,12 @@ async function createFixture() {
     const declarations = fixtureComponentTokens[name]
       .map((tokenName, index) => `--fixture-${index}: var(--ds-${tokenName.replaceAll('/', '-')});`)
       .join(' ');
+    const localVariableContract = name === 'ScrollArea'
+      ? '--ds-scroll-area-edge-size: var(--ds-blur-subtle); height: var(--ds-scroll-area-edge-size); '
+      : '';
     await writeFile(
       path.join(sourceDir, `${name}.css`),
-      `.fixture { ${declarations} } /* var(--ds-commented-out-token) */`,
+      `.fixture { ${localVariableContract}${declarations} } /* var(--ds-commented-out-token) */`,
     );
   }
   const figmaDir = path.join(root, 'figma');
@@ -456,7 +494,7 @@ async function createFixture() {
   return root;
 }
 
-test('accepts a complete build, 106-token map, manifest, and Figma evidence', async (t) => {
+test('accepts a complete build, 107-token map, five-component manifest, and Figma evidence', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   assert.deepEqual(await verifyBuildArtifacts(root), []);
@@ -476,9 +514,9 @@ test('accepts equivalent Figma node URLs with additional query metadata', async 
 test('reports a missing static route', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
-  await rm(path.join(root, 'apps', 'docs', 'dist', 'components', 'icon', 'index.html'));
+  await rm(path.join(root, 'apps', 'docs', 'dist', 'components', 'scroll-area', 'index.html'));
   assert.ok((await verifyBuildArtifacts(root))
-    .some((value) => value.includes('components/icon/index.html')));
+    .some((value) => value.includes('components/scroll-area/index.html')));
 });
 
 test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t) => {
@@ -492,7 +530,9 @@ test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t
   delete artifact.tokens[2].resolvedValue;
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.some((value) => value.includes('exactly 106 tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 107 tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 81 primitive tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 26 semantic tokens')));
   assert.ok(violations.some((value) => value.includes('invalid kind')));
   assert.ok(violations.some((value) => value.includes('cssVariable mismatch')));
   assert.ok(violations.some((value) => value.includes('missing resolvedValue')));
@@ -503,6 +543,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
   const artifact = JSON.parse(await readFile(file, 'utf8'));
+  artifact.components.pop();
   artifact.components.reverse();
   artifact.components[0].status = 'stable';
   artifact.components[0].description = '';
@@ -513,6 +554,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   artifact.components[3].figmaUrl = artifact.components[2].figmaUrl;
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
+  assert.ok(violations.some((value) => value.includes('exactly 5 components')));
   assert.ok(violations.some((value) => value.includes('Component index 0 must be Icon')));
   assert.ok(violations.some((value) => value.includes('status must be preview')));
   assert.ok(violations.some((value) => value.includes('description must be non-empty')));
@@ -520,7 +562,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   assert.ok(violations.some((value) => value.includes('variants must be a string array')));
   assert.ok(violations.some((value) => value.includes('prop 0 required must be boolean')));
   assert.ok(violations.some((value) => value.includes('tokens must be a non-empty string array')));
-  assert.ok(violations.some((value) => value.includes('four distinct Figma URLs')));
+  assert.ok(violations.some((value) => value.includes('five distinct Figma URLs')));
 });
 
 test('rejects exact public component prop-contract drift', async (t) => {
@@ -534,12 +576,15 @@ test('rejects exact public component prop-contract drift', async (t) => {
     .find(({ name }) => name === 'leadingIcon').type = 'ReactElement<IconProps>';
   artifact.components.find(({ name }) => name === 'TextField').props
     .find(({ name }) => name === 'type').type = 'string';
+  artifact.components.find(({ name }) => name === 'ScrollArea').props
+    .find(({ name }) => name === 'viewportRef').type = 'MutableRefObject<HTMLDivElement>';
   await writeFile(file, JSON.stringify(artifact));
 
   const violations = await verifyBuildArtifacts(root);
   assert.ok(violations.includes('Icon prop contract mismatch'));
   assert.ok(violations.includes('Button prop contract mismatch'));
   assert.ok(violations.includes('TextField prop contract mismatch'));
+  assert.ok(violations.includes('ScrollArea prop contract mismatch'));
 });
 
 test('rejects unknown, omitted, invented, and duplicate component token declarations', async (t) => {
@@ -551,6 +596,7 @@ test('rejects unknown, omitted, invented, and duplicate component token declarat
     await readFile(badgeCss, 'utf8'),
     '.drift {',
     '  --missing: var(--ds-space-2);',
+    '  --ds-not-a-token: 1px;',
     '  --unknown: var(--ds-not-a-token);',
     '}',
   ].join('\n'));
@@ -586,10 +632,14 @@ test('rejects incomplete token-map equality and WEB syntax', async (t) => {
   delete tokenMap.variables[1].collectionId;
   tokenMap.variables[2].scopes = ['ALL_SCOPES'];
   tokenMap.variables.pop();
+  tokenMap.collections.find(({ name }) => name === 'Primitives').variableCount = 31;
   tokenMap.styles.effect[0].description = 'drifted description';
   await writeFile(file, JSON.stringify(tokenMap));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('token-name mapping must equal tokens.json')));
+  assert.ok(violations.some((value) => value.includes('exactly 105 variables')));
+  assert.ok(violations.some((value) => value.includes('Primitives collection must contain exactly 32 variables')));
+  assert.ok(violations.some((value) => value.includes('Primitives variableCount must be 32')));
   assert.ok(violations.some((value) => value.includes('WEB syntax mismatch')));
   assert.ok(violations.some((value) => value.includes('variable fields mismatch')));
   assert.ok(violations.some((value) => value.includes('scopes mismatch')));
@@ -609,6 +659,8 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   evidence.components.Button.properties[1].type = 'TEXT';
   evidence.components.TextField.variantCount = 7;
   evidence.components.TextField.properties.pop();
+  evidence.components.ScrollArea.variantCount = 3;
+  evidence.components.ScrollArea.properties = [{ name: 'Content', type: 'TEXT' }];
   await writeFile(file, JSON.stringify(evidence));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('Icon componentCount must be 5')));
@@ -619,6 +671,8 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   assert.ok(violations.some((value) => value.includes('Button property definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('TextField variantCount must be 8')));
   assert.ok(violations.some((value) => value.includes('TextField property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('ScrollArea variantCount must be 4')));
+  assert.ok(violations.some((value) => value.includes('ScrollArea property definitions mismatch')));
 });
 
 test('rejects approval, Code Connect, screenshot, hard-code, and URL mapping drift', async (t) => {
@@ -724,16 +778,19 @@ test('rejects cross-file and duplicate normalized Figma node targets', async (t)
   evidence.components.Icon.componentUrls[1].url = withQuery(figmaUrl('91:2'), 'source', 'duplicate');
   evidence.components.Badge.componentSetUrl = evidence.components.Badge.componentSetUrl
     .replace('/design/file?', '/design/other-file?');
+  evidence.components.Button.componentSetUrl = evidence.components.Badge.componentSetUrl;
   await writeFile(evidenceFile, JSON.stringify(evidence));
 
   const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
   const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
   manifest.components[1].figmaUrl = evidence.components.Badge.componentSetUrl;
+  manifest.components[2].figmaUrl = evidence.components.Button.componentSetUrl;
   await writeFile(manifestFile, JSON.stringify(manifest));
 
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('same Figma file')));
-  assert.ok(violations.some((value) => value.includes('nine distinct Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('five distinct manifest Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('ten distinct Figma node targets')));
 });
 
 test('rejects duplicate token-map collection, variable, and style IDs', async (t) => {
@@ -778,7 +835,7 @@ test('rejects unexpected Figma component evidence keys', async (t) => {
   evidence.components.Tooltip = {};
   await writeFile(file, JSON.stringify(evidence));
   assert.ok((await verifyFigmaEvidence(root))
-    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField'));
+    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField, ScrollArea'));
 });
 
 test('rejects non-strict or impossible ISO timestamps', async (t) => {

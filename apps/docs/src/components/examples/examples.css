@@ -149,7 +149,7 @@
 }
 
 .scroll-area-demo__card span {
-  color: var(--ds-color-text-secondary);
+  color: var(--ds-color-text-primary);
   font-size: var(--ds-font-size-caption);
   line-height: var(--ds-font-line-height-caption);
 }

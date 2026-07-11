@@ -16,6 +16,7 @@ const routes = [
   'components/badge/index.html',
   'components/button/index.html',
   'components/text-field/index.html',
+  'components/scroll-area/index.html',
   'design-system/tokens.json',
   'design-system/components.json',
 ];
@@ -33,7 +34,7 @@ const textStyleNames = ['Display', 'Heading', 'Title', 'Body/Large', 'Body', 'Bo
 const pageNames = [
   '00 Cover', '01 Principles', '02 Getting Started', '03 Foundations',
   '04 Components', '04.1 Icon', '04.2 Badge', '04.3 Button',
-  '04.4 TextField', '90 Native Differences', '99 Deprecated',
+  '04.4 TextField', '04.5 ScrollArea', '90 Native Differences', '99 Deprecated',
 ];
 const componentSpecs = [
   {
@@ -79,6 +80,15 @@ const componentSpecs = [
     variants: [],
     sizes: ['medium', 'large'],
     states: ['default', 'focus', 'error', 'disabled'],
+  },
+  {
+    name: 'ScrollArea',
+    slug: 'scroll-area',
+    variantCount: 4,
+    properties: [],
+    variants: [],
+    sizes: [],
+    states: ['no-overflow', 'start', 'middle', 'end'],
   },
 ];
 const componentPropContracts = {
@@ -143,6 +153,28 @@ const componentPropContracts = {
       defaultValue: null,
     },
   ],
+  ScrollArea: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'scrollUpLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'scrollDownLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'viewportRef', type: 'Ref<HTMLDivElement>', required: false, defaultValue: null },
+    {
+      name: 'onViewportScroll',
+      type: 'UIEventHandler<HTMLDivElement>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: '...rootProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onScroll'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+};
+const componentLocalCssVariables = {
+  ScrollArea: new Set(['--ds-scroll-area-edge-size']),
 };
 const iconNames = ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search'];
 
@@ -310,7 +342,7 @@ function validateTokensArtifact(artifact) {
     violations.push('tokens.json must contain tokens');
     return violations;
   }
-  if (artifact.tokens.length !== 106) violations.push('tokens.json must contain exactly 106 tokens');
+  if (artifact.tokens.length !== 107) violations.push('tokens.json must contain exactly 107 tokens');
   const names = new Set();
   const cssVariables = new Set();
   let primitiveCount = 0;
@@ -341,7 +373,7 @@ function validateTokensArtifact(artifact) {
     if (token?.kind === 'primitive') primitiveCount += 1;
     if (token?.kind === 'semantic') semanticCount += 1;
   });
-  if (primitiveCount !== 80) violations.push('tokens.json must contain exactly 80 primitive tokens');
+  if (primitiveCount !== 81) violations.push('tokens.json must contain exactly 81 primitive tokens');
   if (semanticCount !== 26) violations.push('tokens.json must contain exactly 26 semantic tokens');
   return violations;
 }
@@ -354,7 +386,7 @@ function validateComponentsArtifact(artifact) {
     violations.push('components.json must contain components');
     return violations;
   }
-  if (artifact.components.length !== 4) violations.push('components.json must contain exactly 4 components');
+  if (artifact.components.length !== 5) violations.push('components.json must contain exactly 5 components');
   const figmaUrls = [];
   componentSpecs.forEach(({ name, slug, variants, sizes, states }, index) => {
     const component = artifact.components[index];
@@ -419,8 +451,8 @@ function validateComponentsArtifact(artifact) {
       }
     }
   });
-  if (figmaUrls.length !== 4 || new Set(figmaUrls).size !== 4) {
-    violations.push('components.json must contain four distinct Figma URLs');
+  if (figmaUrls.length !== 5 || new Set(figmaUrls).size !== 5) {
+    violations.push('components.json must contain five distinct Figma URLs');
   }
   return violations;
 }
@@ -442,8 +474,16 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
     }
 
     const executableCss = source.replace(/\/\*[\s\S]*?\*\//g, '');
+    const declaredVariables = new Set(
+      [...executableCss.matchAll(/(--[A-Za-z0-9_-]+)\s*:/g)].map((match) => match[1]),
+    );
+    const allowedLocalVariables = componentLocalCssVariables[name] ?? new Set();
     const cssVariables = [...new Set(
-      [...executableCss.matchAll(/var\(\s*(--ds-[A-Za-z0-9_-]+)\b/g)].map((match) => match[1]),
+      [...executableCss.matchAll(/var\(\s*(--ds-[A-Za-z0-9_-]+)\b/g)]
+        .map((match) => match[1])
+        .filter((cssVariable) => !(
+          declaredVariables.has(cssVariable) && allowedLocalVariables.has(cssVariable)
+        )),
     )];
     const usedTokenNames = new Set();
     for (const cssVariable of cssVariables) {
@@ -518,7 +558,7 @@ export function verifyTokenMap(tokens, tokenMap) {
   const tokenByName = new Map(tokens.map((token) => [token.name, token]));
   const mappedNames = [...variables.map(({ tokenName }) => tokenName), ...effects.map(({ tokenName }) => tokenName)];
   const expectedNames = tokens.map(({ name }) => name);
-  if (variables.length !== 104) violations.push('token-map must contain exactly 104 variables');
+  if (variables.length !== 105) violations.push('token-map must contain exactly 105 variables');
   if (new Set(variables.map(({ variableId }) => variableId)).size !== variables.length) {
     violations.push('token-map variable IDs must be unique');
   }
@@ -528,8 +568,8 @@ export function verifyTokenMap(tokens, tokenMap) {
   if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.type === 'color').length !== 57) {
     violations.push('token-map must contain exactly 57 COLOR variables');
   }
-  if (mappedNames.length !== 106
-    || new Set(mappedNames).size !== 106
+  if (mappedNames.length !== 107
+    || new Set(mappedNames).size !== 107
     || JSON.stringify([...mappedNames].sort()) !== JSON.stringify([...expectedNames].sort())) {
     violations.push('token-map token-name mapping must equal tokens.json');
   }
@@ -565,6 +605,9 @@ export function verifyTokenMap(tokens, tokenMap) {
     if (collection.variableCount !== actual) {
       violations.push(`${collection.name} variableCount must be ${actual}`);
     }
+  }
+  if (collectionByName.get('Primitives')?.variableCount !== 32) {
+    violations.push('Primitives collection must contain exactly 32 variables');
   }
 
   if (JSON.stringify(tokenMap?.styles?.text?.map(({ name }) => name)) !== JSON.stringify(textStyleNames)) {
@@ -709,7 +752,7 @@ export async function verifyFigmaEvidence(root) {
   if (evidence.hardCodedProductValues !== 0) violations.push('Figma hard-coded product values must be 0');
 
   if (!exactKeys(evidence.components, componentSpecs.map(({ name }) => name))) {
-    violations.push('Figma component keys must be exactly Icon, Badge, Button, TextField');
+    violations.push(`Figma component keys must be exactly ${componentSpecs.map(({ name }) => name).join(', ')}`);
   }
 
   const manifestTargets = [];
@@ -768,16 +811,16 @@ export async function verifyFigmaEvidence(root) {
     }
   }
 
-  if (manifestTargets.length !== 4 || new Set(manifestTargets).size !== 4) {
-    violations.push('Figma evidence must expose four distinct manifest Figma node targets');
+  if (manifestTargets.length !== 5 || new Set(manifestTargets).size !== 5) {
+    violations.push('Figma evidence must expose five distinct manifest Figma node targets');
   }
   const ownedIconTargets = evidence.components?.Icon?.componentUrls
     ?.map(({ url }) => figmaNodeTarget(url)) ?? [];
   const allEvidenceTargets = [...manifestTargets, ...ownedIconTargets];
-  if (allEvidenceTargets.length !== 9
+  if (allEvidenceTargets.length !== 10
     || allEvidenceTargets.some((value) => !value)
-    || new Set(allEvidenceTargets).size !== 9) {
-    violations.push('Figma evidence must expose nine distinct Figma node targets');
+    || new Set(allEvidenceTargets).size !== 10) {
+    violations.push('Figma evidence must expose ten distinct Figma node targets');
   }
   return violations.sort();
 }
