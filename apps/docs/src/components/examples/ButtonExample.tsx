@@ -87,6 +87,13 @@ export default function ButtonExample() {
               </div>
             )),
           )}
+          <div
+            className="component-demo__item component-demo__item--stacked"
+            data-button-sample="full-width"
+          >
+            <Button width="full">full width</Button>
+            <span className="component-demo__label">full width</span>
+          </div>
           <div className="component-demo__item component-demo__item--stacked">
             <Button disabled>disabled</Button>
             <span className="component-demo__label">disabled state</span>

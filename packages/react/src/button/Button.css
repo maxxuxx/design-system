@@ -111,6 +111,10 @@
   align-items: center;
 }
 
+.ds-button__icon .ds-icon {
+  color: inherit;
+}
+
 .ds-button__label {
   min-width: 0;
 }

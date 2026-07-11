@@ -39,3 +39,43 @@ test('Badge demo uses multiple columns on desktop', async ({ page }, testInfo) =
   });
   expect(firstRowItemCount).toBeGreaterThan(1);
 });
+
+test('Button icon slots inherit the Button foreground color', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/components/button/');
+  const demo = page.locator('[data-component-demo="button"]');
+  const button = demo.getByRole('button', { name: '주문 확인' });
+  const icon = button.locator('.ds-icon');
+  const label = button.locator('.ds-button__label');
+  await expect(icon).toBeVisible();
+
+  const labelColor = await label.evaluate((element) => getComputedStyle(element).color);
+  const iconColor = await icon.evaluate((element) => getComputedStyle(element).color);
+  expect(iconColor).toBe(labelColor);
+
+  await demo.getByLabel('disabled', { exact: true }).check();
+  await expect(button).toBeDisabled();
+  const disabledLabelColor = await label.evaluate((element) => getComputedStyle(element).color);
+  const disabledIconColor = await icon.evaluate((element) => getComputedStyle(element).color);
+  expect(disabledIconColor).toBe(disabledLabelColor);
+});
+
+test('Button demo includes a full-width mobile sample', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns the full-width sample contract.');
+
+  await page.goto('/components/button/');
+  const sample = page.locator('[data-button-sample="full-width"]');
+  const button = sample.getByRole('button', { name: 'full width' });
+  await expect(button).toBeVisible();
+  await expect(button).toHaveAttribute('data-width', 'full');
+
+  const widths = await sample.evaluate((element) => {
+    const buttonElement = element.querySelector<HTMLButtonElement>('.ds-button')!;
+    const sampleStyle = getComputedStyle(element);
+    const sampleContentWidth = element.getBoundingClientRect().width
+      - Number.parseFloat(sampleStyle.paddingLeft)
+      - Number.parseFloat(sampleStyle.paddingRight);
+    return { button: buttonElement.getBoundingClientRect().width, sampleContent: sampleContentWidth };
+  });
+  expect(Math.abs(widths.button - widths.sampleContent)).toBeLessThanOrEqual(0.5);
+});
