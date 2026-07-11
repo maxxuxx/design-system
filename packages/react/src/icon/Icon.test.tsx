@@ -29,21 +29,35 @@ describe('Icon', () => {
     }
   });
 
-  it('makes size authoritative and forwards supported SVG props', () => {
+  it('makes owned geometry authoritative and forwards supported SVG props', () => {
+    const conflictingGeometry = {
+      fill: 'red',
+      height: 99,
+      stroke: 'blue',
+      strokeLinecap: 'butt',
+      strokeLinejoin: 'miter',
+      viewBox: '0 0 99 99',
+      width: 99,
+    } as unknown as IconProps;
+
     render(
       <Icon
+        {...conflictingGeometry}
         data-testid="icon"
-        height={99}
         name="search"
         size={16}
         strokeWidth={1.5}
-        width={99}
       />,
     );
     const icon = screen.getByTestId('icon');
 
     expect(icon).toHaveAttribute('width', '16');
     expect(icon).toHaveAttribute('height', '16');
+    expect(icon).toHaveAttribute('viewBox', '0 0 24 24');
+    expect(icon).toHaveAttribute('fill', 'none');
+    expect(icon).toHaveAttribute('stroke', 'currentColor');
+    expect(icon).toHaveAttribute('stroke-linecap', 'round');
+    expect(icon).toHaveAttribute('stroke-linejoin', 'round');
     expect(icon).toHaveAttribute('stroke-width', '1.5');
   });
 
@@ -60,13 +74,20 @@ describe('Icon', () => {
     expect(screen.getByTestId('icon')).toHaveAttribute('aria-hidden', 'true');
   });
 
-  it('omits caller focus and alternate naming props from its public API', () => {
+  it('omits caller-owned markup, geometry, presentation, focus, and naming props', () => {
     type ForbiddenIconProps = Extract<
       | 'aria-labelledby'
       | 'dangerouslySetInnerHTML'
+      | 'fill'
       | 'focusable'
+      | 'height'
       | 'style'
-      | 'tabIndex',
+      | 'stroke'
+      | 'strokeLinecap'
+      | 'strokeLinejoin'
+      | 'tabIndex'
+      | 'viewBox'
+      | 'width',
       keyof IconProps
     >;
 

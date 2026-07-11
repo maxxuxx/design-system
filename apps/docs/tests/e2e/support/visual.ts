@@ -2,6 +2,13 @@ import { expect, type Locator, type Page, type TestInfo } from '@playwright/test
 import { fileURLToPath } from 'node:url';
 const screenshotStylePath = fileURLToPath(new URL('./screenshot.css', import.meta.url));
 export async function prepareVisualPage(page: Page): Promise<void> { await page.emulateMedia({ reducedMotion: 'reduce' }); await page.evaluate(async () => { await document.fonts.ready; }); }
+export async function prepareTargetVisualPage(page: Page): Promise<void> {
+  await page.locator('.site-header').evaluateAll((headers) => {
+    for (const header of headers) {
+      (header as HTMLElement).style.setProperty('visibility', 'hidden', 'important');
+    }
+  });
+}
 export async function expectPageScreenshot(
   page: Page,
   testInfo: TestInfo,
@@ -17,6 +24,7 @@ export async function expectPageScreenshot(
     stylePath: screenshotStylePath,
   };
   if (target) {
+    await prepareTargetVisualPage(page);
     await expect(target).toHaveScreenshot(snapshotName, options);
     return;
   }

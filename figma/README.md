@@ -212,7 +212,7 @@ Status: Foundations and all four v0.1 component slices are validated in Figma.
 
 ## Phase 4 library verification
 
-- Final live readback: `2026-07-11T15:17:40+09:00`
+- Final live readback: `2026-07-11T15:46:07+09:00`
 - Managed pages: all 11 required pages in the documented order
 - Final token readback: five collections, 104 Variables, eight Text Styles, and
   two Effect Styles
@@ -229,6 +229,12 @@ Status: Foundations and all four v0.1 component slices are validated in Figma.
 - Live value parity: all 104 Variable source values/aliases and resolved values
   match code; the canonical evidence digest is
   `819201a3c67673929fa62f6cf4f582b02223b91d62642d974b3af901c18ec03e`
+- Effect parity: both live Effect Styles match the source shadow geometry,
+  color, alpha, visibility, and blend mode; the canonical shadow evidence
+  digest is `e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8`.
+  The digest covers normalized live style IDs, names, descriptions, and effect
+  fields; the stored readback is also parsed and compared to the source shadow
+  tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
   Button/TextField control target is at least 44px with distinct focus, pressed,
   error, and disabled presentation

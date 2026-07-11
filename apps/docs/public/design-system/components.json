@@ -53,7 +53,7 @@
         },
         {
           "name": "...svgProps",
-          "type": "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>",
+          "type": "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style' | 'width' | 'height' | 'viewBox' | 'fill' | 'stroke' | 'strokeLinecap' | 'strokeLinejoin'>",
           "required": false,
           "defaultValue": null,
           "description": "Component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded."

@@ -10,4 +10,32 @@ for (const route of COMPONENT_HTML_ROUTES) {
     await expect(page.locator(`[data-component-demo="${route.slug}"]`)).toBeVisible();
     await expect(page.getByText('preview', { exact: true }).first()).toBeVisible();
   });
+
+  test(`${route.heading} keeps code and API fields readable on mobile`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns compact API documentation.');
+    await openHtmlRoute(page, route);
+
+    const codeBlocksFit = await page.locator('main pre').evaluateAll((blocks) =>
+      blocks.every((block) => block.scrollWidth <= block.clientWidth));
+    expect(codeBlocksFit).toBe(true);
+
+    const api = page.locator('.api-table');
+    await expect(api).toBeVisible();
+    const cellWidths = await api.locator('tbody td').evaluateAll((cells) =>
+      cells.map((cell) => cell.getBoundingClientRect().width));
+    expect(cellWidths.length).toBeGreaterThan(0);
+    expect(cellWidths.every((width) => width >= 240)).toBe(true);
+  });
 }
+
+test('docs shell loads without browser console errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+
+  await openHtmlRoute(page, COMPONENT_HTML_ROUTES[0]!);
+  await page.waitForLoadState('networkidle');
+
+  expect(errors).toEqual([]);
+});

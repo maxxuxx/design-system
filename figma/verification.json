@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-11T15:17:40+09:00",
+  "verifiedAt": "2026-07-11T15:46:07+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -26,6 +26,59 @@
     "99 Deprecated"
   ],
   "tokenValuesSha256": "819201a3c67673929fa62f6cf4f582b02223b91d62642d974b3af901c18ec03e",
+  "effectValuesSha256": "e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8",
+  "effectReadback": [
+    {
+      "tokenName": "elevation/1",
+      "styleId": "S:52d62093669bbd5d8299e02d8f8d34108bc01fd7,",
+      "name": "Shadow/1",
+      "description": "인접 surface를 미세하게 구분하는 낮은 elevation입니다.",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 15,
+            "g": 23,
+            "b": 42,
+            "a": 0.06
+          },
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "radius": 2,
+          "spread": 0,
+          "visible": true,
+          "blendMode": "NORMAL"
+        }
+      ]
+    },
+    {
+      "tokenName": "elevation/2",
+      "styleId": "S:8eda28f1b0b823f8d64aa24ff849aaea4f7d9fa1,",
+      "name": "Shadow/2",
+      "description": "떠 있는 panel과 overlay를 구분하는 중간 elevation입니다.",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 15,
+            "g": 23,
+            "b": 42,
+            "a": 0.1
+          },
+          "offset": {
+            "x": 0,
+            "y": 8
+          },
+          "radius": 24,
+          "spread": 0,
+          "visible": true,
+          "blendMode": "NORMAL"
+        }
+      ]
+    }
+  ],
   "pageScreenshotSha256": {
     "00 Cover": "c77e8b4b72feed70637ebccd24bac7443b83e6b30672faf7cd2d98f6a9361a13",
     "01 Principles": "4002e3e8df110e06171a6b69a24e9b9dfb208eec633f2947e1470b185daa3625",

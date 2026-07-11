@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import { assertNoAxeViolations } from './support/accessibility';
-import { expectPageScreenshot } from './support/visual';
+import { expectPageScreenshot, prepareTargetVisualPage } from './support/visual';
 
 const slices = [
   { name: 'Icon', slug: 'icon' },
@@ -22,6 +22,17 @@ for (const slice of slices) {
     await expectPageScreenshot(page, testInfo, slice.slug, demo);
   });
 }
+
+test('target screenshot preparation excludes sticky site chrome', async ({ page }) => {
+  await page.goto('/components/button/');
+  const demo = page.locator('[data-component-demo="button"]');
+  await expect(demo).toBeVisible();
+
+  await prepareTargetVisualPage(page);
+
+  await expect(page.locator('.site-header')).toBeHidden();
+  await expect(demo).toBeVisible();
+});
 
 test('Badge component slice has no real-browser accessibility violations', async ({ page }) => {
   await page.goto('/components/badge/');

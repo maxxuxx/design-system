@@ -88,7 +88,7 @@ const componentPropContracts = {
     { name: 'label', type: 'string', required: false, defaultValue: null },
     {
       name: '...svgProps',
-      type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>",
+      type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style' | 'width' | 'height' | 'viewBox' | 'fill' | 'stroke' | 'strokeLinecap' | 'strokeLinejoin'>",
       required: false,
       defaultValue: null,
     },
@@ -257,6 +257,49 @@ export function computeTokenValuesSha256(tokens) {
       resolvedValue,
     }));
   return createHash('sha256').update(JSON.stringify(canonical)).digest('hex');
+}
+
+export function computeEffectValuesSha256(effectReadback) {
+  return createHash('sha256').update(JSON.stringify(effectReadback)).digest('hex');
+}
+
+function parseShadowEffect(value) {
+  if (typeof value !== 'string') return null;
+  const match = value.match(
+    /^(-?\d+(?:\.\d+)?)(?:px)?\s+(-?\d+(?:\.\d+)?)px\s+(\d+(?:\.\d+)?)px(?:\s+(-?\d+(?:\.\d+)?)px)?\s+rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+(?:\.\d+)?)\s*\)$/,
+  );
+  if (!match) return null;
+  return {
+    type: 'DROP_SHADOW',
+    color: {
+      r: Number(match[5]),
+      g: Number(match[6]),
+      b: Number(match[7]),
+      a: Number(match[8]),
+    },
+    offset: { x: Number(match[1]), y: Number(match[2]) },
+    radius: Number(match[3]),
+    spread: Number(match[4] ?? 0),
+    visible: true,
+    blendMode: 'NORMAL',
+  };
+}
+
+function expectedEffectReadback(tokens, tokenMap, violations) {
+  return tokens
+    .filter(({ type }) => type === 'shadow')
+    .map((token) => {
+      const effectStyle = tokenMap?.styles?.effect?.find(({ tokenName }) => tokenName === token.name);
+      const effect = parseShadowEffect(token.resolvedValue);
+      if (!effect) violations.push(`Unsupported shadow token syntax: ${token.name}`);
+      return {
+        tokenName: token.name,
+        styleId: effectStyle?.styleId,
+        name: effectStyle?.name,
+        description: token.description,
+        effects: effect ? [effect] : [],
+      };
+    });
 }
 
 function validateTokensArtifact(artifact) {
@@ -541,7 +584,7 @@ export function verifyTokenMap(tokens, tokenMap) {
     violations.push('token-map effect style IDs must be unique');
   }
   effects.forEach((effect, index) => {
-    if (!exactKeys(effect, ['tokenName', 'name', 'styleId', 'webSyntax'])) {
+    if (!exactKeys(effect, ['tokenName', 'name', 'description', 'styleId', 'webSyntax'])) {
       violations.push(`${effect.tokenName} effect style fields mismatch`);
     }
     const token = tokenByName.get(effect.tokenName);
@@ -551,6 +594,9 @@ export function verifyTokenMap(tokens, tokenMap) {
     }
     if (!nonEmpty(effect.name) || !nonEmpty(effect.styleId)) {
       violations.push(`Effect style ${effect.tokenName} metadata is incomplete`);
+    }
+    if (token && effect.description !== token.description) {
+      violations.push(`${token.name} effect style description mismatch`);
     }
     if (token && effect.webSyntax !== `var(${token.cssVariable})`) {
       violations.push(`${token.name} WEB syntax mismatch`);
@@ -587,7 +633,7 @@ export async function verifyFigmaEvidence(root) {
   if (!exactKeys(evidence, [
     'schemaVersion', 'fileUrl', 'verifiedAt', 'codeConnect', 'collections',
     'textStyleCount', 'effectStyleCount', 'pages', 'tokenValuesSha256',
-    'pageScreenshotSha256', 'components', 'foundations',
+    'effectValuesSha256', 'effectReadback', 'pageScreenshotSha256', 'components', 'foundations',
     'pageScreenshotNodeIds', 'allPagesScreenshotReviewed', 'hardCodedProductValues',
   ])) violations.push('Figma evidence top-level fields mismatch');
   if (evidence.schemaVersion !== 1) violations.push('Figma schemaVersion must be 1');
@@ -607,6 +653,16 @@ export async function verifyFigmaEvidence(root) {
   if (evidence.tokenValuesSha256 !== computeTokenValuesSha256(tokensArtifact.tokens ?? [])) {
     violations.push('Figma tokenValuesSha256 must match code token values');
   }
+  if (!/^[a-f0-9]{64}$/.test(evidence.effectValuesSha256 ?? '')) {
+    violations.push('Figma effectValuesSha256 must be a 64-character hexadecimal digest');
+  }
+  if (evidence.effectValuesSha256 !== computeEffectValuesSha256(evidence.effectReadback ?? [])) {
+    violations.push('Figma effectValuesSha256 must match live effect readback');
+  }
+  const expectedEffects = expectedEffectReadback(tokensArtifact.tokens ?? [], tokenMap, violations);
+  if (JSON.stringify(evidence.effectReadback) !== JSON.stringify(expectedEffects)) {
+    violations.push('Figma effect readback must match code effect values');
+  }
   if (JSON.stringify(Object.keys(evidence.pageScreenshotSha256 ?? {}).sort())
     !== JSON.stringify([...pageNames].sort())) {
     violations.push('Figma pageScreenshotSha256 must contain exactly all pages');
@@ -618,6 +674,10 @@ export async function verifyFigmaEvidence(root) {
     } else if (!/^[a-f0-9]{64}$/.test(screenshotSha256)) {
       violations.push(`${page} screenshot SHA-256 must be a 64-character hexadecimal digest`);
     }
+  }
+  const screenshotDigests = pageNames.map((page) => evidence.pageScreenshotSha256?.[page]);
+  if (new Set(screenshotDigests).size !== screenshotDigests.length) {
+    violations.push('Figma page screenshot SHA-256 digests must be unique');
   }
   if (!exactKeys(evidence.foundations, ['approved', 'approvedAt', 'tokenParity'])) {
     violations.push('Foundations evidence fields mismatch');

@@ -10,10 +10,17 @@ export interface IconProps extends Omit<
   | 'aria-labelledby'
   | 'children'
   | 'dangerouslySetInnerHTML'
+  | 'fill'
   | 'focusable'
+  | 'height'
   | 'role'
   | 'style'
+  | 'stroke'
+  | 'strokeLinecap'
+  | 'strokeLinejoin'
   | 'tabIndex'
+  | 'viewBox'
+  | 'width'
 > {
   name: IconName;
   size?: IconSize;

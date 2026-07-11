@@ -29,7 +29,7 @@ props:
     defaultValue: null
     description: Accessible name for a meaningful icon.
   - name: ...svgProps
-    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>"
+    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style' | 'width' | 'height' | 'viewBox' | 'fill' | 'stroke' | 'strokeLinecap' | 'strokeLinejoin'>"
     required: false
     defaultValue: null
     description: Component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded.
@@ -100,14 +100,18 @@ export function SearchLabel() {
 
 ## API
 
+<div className="api-table">
+
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `name` | `IconName` | required | Supported owned glyph name |
 | `size` | `16 \| 20 \| 24` | `24` | Width and height in pixels |
 | `label` | `string` | none | Accessible name for a meaningful icon |
-| native SVG props | <code>Omit&lt;SVGProps&lt;SVGSVGElement&gt;, 'children' \| 'role' \| 'aria-label' \| 'aria-labelledby' \| 'aria-hidden' \| 'tabIndex' \| 'focusable' \| 'dangerouslySetInnerHTML' \| 'style'&gt;</code> | none | Props outside component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics |
+| native SVG props | <code>Omit&lt;SVGProps&lt;SVGSVGElement&gt;, 'children' \| 'role' \| 'aria-label' \| 'aria-labelledby' \| 'aria-hidden' \| 'tabIndex' \| 'focusable' \| 'dangerouslySetInnerHTML' \| 'style' \| 'width' \| 'height' \| 'viewBox' \| 'fill' \| 'stroke' \| 'strokeLinecap' \| 'strokeLinejoin'&gt;</code> | none | Props outside component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics |
 
-`label` owns the accessible name. Callers cannot override `role`, `aria-label`, `aria-labelledby`, `aria-hidden`, `tabIndex`, `focusable`, `dangerouslySetInnerHTML`, `style`, or the fixed geometry. These values are also discarded at runtime for untyped JavaScript callers. Keep Icon decorative when visible text already names the action, as in the example above.
+</div>
+
+`label` owns the accessible name. Callers cannot override `role`, `aria-label`, `aria-labelledby`, `aria-hidden`, `tabIndex`, `focusable`, `dangerouslySetInnerHTML`, `style`, `width`, `height`, `viewBox`, `fill`, `stroke`, `strokeLinecap`, `strokeLinejoin`, or the fixed geometry. These values are also discarded at runtime for untyped JavaScript callers. `strokeWidth` remains the supported presentation adjustment. Keep Icon decorative when visible text already names the action, as in the example above.
 
 ## 사용 토큰
 

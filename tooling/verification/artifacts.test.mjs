@@ -56,7 +56,7 @@ const manifestProps = {
     { name: 'label', type: 'string', required: false, defaultValue: null },
     {
       name: '...svgProps',
-      type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>",
+      type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style' | 'width' | 'height' | 'viewBox' | 'fill' | 'stroke' | 'strokeLinecap' | 'strokeLinejoin'>",
       required: false,
       defaultValue: null,
     },
@@ -171,6 +171,43 @@ function tokenValuesSha256(tokens) {
       resolvedValue,
     }));
   return sha256(JSON.stringify(canonical));
+}
+
+function parseShadow(value) {
+  const match = value.match(
+    /^(-?\d+(?:\.\d+)?)(?:px)? (-?\d+(?:\.\d+)?)px (\d+(?:\.\d+)?)px rgba\((\d+), (\d+), (\d+), (\d+(?:\.\d+)?)\)$/,
+  );
+  assert.ok(match, `Unsupported fixture shadow: ${value}`);
+  return {
+    type: 'DROP_SHADOW',
+    color: {
+      r: Number(match[4]),
+      g: Number(match[5]),
+      b: Number(match[6]),
+      a: Number(match[7]),
+    },
+    offset: { x: Number(match[1]), y: Number(match[2]) },
+    radius: Number(match[3]),
+    spread: 0,
+    visible: true,
+    blendMode: 'NORMAL',
+  };
+}
+
+function makeEffectReadback(tokens) {
+  return tokens
+    .filter(({ type }) => type === 'shadow')
+    .map((token, index) => ({
+      tokenName: token.name,
+      styleId: `effect-style:${index + 1}`,
+      name: `Shadow/${index + 1}`,
+      description: token.description,
+      effects: [parseShadow(token.resolvedValue)],
+    }));
+}
+
+function effectValuesSha256(effectReadback) {
+  return sha256(JSON.stringify(effectReadback));
 }
 
 function makeTokens() {
@@ -290,6 +327,7 @@ function makeTokenMap(tokens) {
         .map((token, index) => ({
           tokenName: token.name,
           name: `Shadow/${index + 1}`,
+          description: token.description,
           styleId: `effect-style:${index + 1}`,
           webSyntax: `var(${token.cssVariable})`,
         })),
@@ -319,6 +357,7 @@ function makeManifest() {
 }
 
 function makeVerification(tokens) {
+  const effectReadback = makeEffectReadback(tokens);
   const shared = {
     screenshotReviewed: true,
     bindingsAudited: true,
@@ -334,6 +373,8 @@ function makeVerification(tokens) {
     effectStyleCount: 2,
     pages: pageNames,
     tokenValuesSha256: tokenValuesSha256(tokens),
+    effectValuesSha256: effectValuesSha256(effectReadback),
+    effectReadback,
     pageScreenshotSha256: Object.fromEntries(
       pageNames.map((page) => [page, sha256(`screenshot:${page}`)]),
     ),
@@ -545,12 +586,14 @@ test('rejects incomplete token-map equality and WEB syntax', async (t) => {
   delete tokenMap.variables[1].collectionId;
   tokenMap.variables[2].scopes = ['ALL_SCOPES'];
   tokenMap.variables.pop();
+  tokenMap.styles.effect[0].description = 'drifted description';
   await writeFile(file, JSON.stringify(tokenMap));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('token-name mapping must equal tokens.json')));
   assert.ok(violations.some((value) => value.includes('WEB syntax mismatch')));
   assert.ok(violations.some((value) => value.includes('variable fields mismatch')));
   assert.ok(violations.some((value) => value.includes('scopes mismatch')));
+  assert.ok(violations.some((value) => value.includes('effect style description mismatch')));
 });
 
 test('rejects exact Figma counts, Icon URLs, and property definitions', async (t) => {
@@ -614,12 +657,38 @@ test('rejects token value drift from the canonical Figma digest', async (t) => {
     .includes('Figma tokenValuesSha256 must match code token values'));
 });
 
+test('rejects effect value drift from the canonical Figma digest', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'tokens.json');
+  const artifact = JSON.parse(await readFile(file, 'utf8'));
+  const shadow = artifact.tokens.find(({ name }) => name === 'elevation/1');
+  shadow.value = '0 2px 4px rgba(0, 0, 0, 0.1)';
+  shadow.resolvedValue = '0 2px 4px rgba(0, 0, 0, 0.1)';
+  await writeFile(file, JSON.stringify(artifact));
+  assert.ok((await verifyFigmaEvidence(root))
+    .includes('Figma effect readback must match code effect values'));
+});
+
+test('rejects live Figma effect readback drift even with a refreshed digest', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.effectReadback[0].effects[0].radius = 99;
+  evidence.effectValuesSha256 = effectValuesSha256(evidence.effectReadback);
+  await writeFile(file, JSON.stringify(evidence));
+  assert.ok((await verifyFigmaEvidence(root))
+    .includes('Figma effect readback must match code effect values'));
+});
+
 test('rejects malformed token and page screenshot SHA-256 evidence', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'figma', 'verification.json');
   const evidence = JSON.parse(await readFile(file, 'utf8'));
   evidence.tokenValuesSha256 = 'not-a-digest';
+  evidence.effectValuesSha256 = 'short';
   evidence.pageScreenshotSha256['01 Principles'] = 'short';
   delete evidence.pageScreenshotSha256['04.2 Badge'];
   evidence.pageScreenshotSha256.Extra = '0'.repeat(64);
@@ -628,9 +697,22 @@ test('rejects malformed token and page screenshot SHA-256 evidence', async (t) =
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.includes('Figma tokenValuesSha256 must be a 64-character hexadecimal digest'));
   assert.ok(violations.includes('Figma tokenValuesSha256 must match code token values'));
+  assert.ok(violations.includes('Figma effectValuesSha256 must be a 64-character hexadecimal digest'));
+  assert.ok(violations.includes('Figma effectValuesSha256 must match live effect readback'));
   assert.ok(violations.includes('Figma pageScreenshotSha256 must contain exactly all pages'));
   assert.ok(violations.includes('01 Principles screenshot SHA-256 must be a 64-character hexadecimal digest'));
   assert.ok(violations.includes('04.2 Badge screenshot SHA-256 is required'));
+});
+
+test('rejects duplicate Figma page screenshot digests', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.pageScreenshotSha256['01 Principles'] = evidence.pageScreenshotSha256['00 Cover'];
+  await writeFile(file, JSON.stringify(evidence));
+  assert.ok((await verifyFigmaEvidence(root))
+    .includes('Figma page screenshot SHA-256 digests must be unique'));
 });
 
 test('rejects cross-file and duplicate normalized Figma node targets', async (t) => {
