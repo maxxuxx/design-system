@@ -25,6 +25,7 @@ function metadata(name: ComponentMetadata['name'], figmaUrl = ''): ComponentMeta
     Button: 'button',
     TextField: 'text-field',
     ScrollArea: 'scroll-area',
+    Checkbox: 'checkbox',
   } as const;
   return {
     name,
@@ -56,8 +57,9 @@ describe('component manifest', () => {
     expect(buildComponentManifest([])).toEqual({ schemaVersion: 1, components: [] });
   });
 
-  it('sorts all five entries in canonical order regardless of file order', () => {
+  it('sorts all six entries in canonical order regardless of file order', () => {
     const manifest = buildComponentManifest([
+      document('Checkbox'),
       document('ScrollArea'),
       document('TextField'),
       document('Button'),
@@ -65,26 +67,27 @@ describe('component manifest', () => {
       document('Icon'),
     ]);
     expect(manifest.components.map(({ name }) => name))
-      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']);
+      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox']);
     expect(manifest.components.map(({ docsUrl }) => docsUrl)).toEqual([
       '/components/icon/',
       '/components/badge/',
       '/components/button/',
       '/components/text-field/',
       '/components/scroll-area/',
+      '/components/checkbox/',
     ]);
   });
 
   it('requires all entries before the release check can pass', () => {
     expect(() => buildComponentManifest([document('Icon')], { requireFigma: true }))
-      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea');
+      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea, Checkbox');
   });
 
   it('requires a Figma URL on every complete release entry', () => {
-    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']
+    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox']
       .map((name) => document(name as ComponentMetadata['name']));
     expect(() => buildComponentManifest(documents, { requireFigma: true }))
-      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea');
+      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox');
   });
 
   it('renders stable two-space JSON with LF and a final newline', () => {

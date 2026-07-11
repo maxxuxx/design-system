@@ -8,6 +8,7 @@ const slices = [
   { name: 'Button', slug: 'button' },
   { name: 'TextField', slug: 'text-field' },
   { name: 'ScrollArea', slug: 'scroll-area' },
+  { name: 'Checkbox', slug: 'checkbox' },
 ] as const;
 
 for (const slice of slices) {
@@ -137,4 +138,103 @@ test('TextField demo shows full-width mobile states at both control heights', as
   expect(layout.states).toEqual(['default', 'default', 'error', 'disabled']);
   expect(layout.feedbackFits).toBe(true);
   expect(layout.noPageOverflow).toBe(true);
+});
+
+test('Checkbox label rows own 44px targets around 20px and 24px indicators', async ({ page }) => {
+  await page.goto('/components/checkbox/');
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  await expect(demo).toBeVisible();
+
+  const geometry = await demo.locator('.ds-checkbox').evaluateAll((roots) => roots.map((root) => {
+    const row = root.querySelector<HTMLElement>('.ds-checkbox__row')!;
+    const input = root.querySelector<HTMLInputElement>('.ds-checkbox__input')!;
+    return {
+      inputHeight: input.getBoundingClientRect().height,
+      rowHeight: row.getBoundingClientRect().height,
+    };
+  }));
+
+  expect(geometry.length).toBeGreaterThanOrEqual(6);
+  expect(geometry.every(({ rowHeight }) => rowHeight >= 44)).toBe(true);
+  expect([...new Set(geometry.map(({ inputHeight }) => inputHeight))]
+    .sort((left, right) => left - right)).toEqual([20, 24]);
+});
+
+test('Checkbox state cascade keeps checked Error styling while hovered', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/components/checkbox/');
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  await demo.getByLabel('값').selectOption('checked');
+  await demo.getByLabel('error', { exact: true }).check();
+
+  const checkbox = demo.locator('.ds-checkbox').first();
+  const input = checkbox.locator('.ds-checkbox__input');
+  await expect(input).toBeChecked();
+  await expect(checkbox).toHaveAttribute('data-state', 'error');
+
+  const beforeHover = await input.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, border: style.borderColor };
+  });
+  await checkbox.locator('.ds-checkbox__row').hover();
+  const whileHovered = await input.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, border: style.borderColor };
+  });
+
+  expect(whileHovered).toEqual(beforeHover);
+});
+
+test('Checkbox state cascade uses system colors for Error and Disabled', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await page.goto('/components/checkbox/');
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  await demo.getByLabel('값').selectOption('checked');
+  await demo.getByLabel('error', { exact: true }).check();
+
+  const colors = await demo.evaluate((element) => {
+    const probe = document.createElement('div');
+    probe.setAttribute(
+      'style',
+      'position:absolute;color:CanvasText;background:Canvas;border:1px solid GrayText;forced-color-adjust:none',
+    );
+    document.body.append(probe);
+    const system = getComputedStyle(probe);
+    const error = getComputedStyle(
+      element.querySelector<HTMLInputElement>('.ds-checkbox[data-state="error"] .ds-checkbox__input')!,
+    );
+    const disabled = getComputedStyle(
+      element.querySelector<HTMLInputElement>('.ds-checkbox[data-state="disabled"] .ds-checkbox__input')!,
+    );
+    const result = {
+      disabled: {
+        background: disabled.backgroundColor,
+        border: disabled.borderColor,
+        color: disabled.color,
+      },
+      error: {
+        background: error.backgroundColor,
+        border: error.borderColor,
+        color: error.color,
+      },
+      system: {
+        canvas: system.backgroundColor,
+        canvasText: system.color,
+        grayText: system.borderColor,
+      },
+    };
+    probe.remove();
+    return result;
+  });
+
+  expect(colors.error).toEqual({
+    background: colors.system.canvasText,
+    border: colors.system.canvasText,
+    color: colors.system.canvas,
+  });
+  expect(colors.disabled).toEqual({
+    background: colors.system.canvas,
+    border: colors.system.grayText,
+    color: colors.system.grayText,
+  });
 });

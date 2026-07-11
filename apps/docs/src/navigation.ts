@@ -35,6 +35,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'Button', href: '/components/button/' },
       { label: 'TextField', href: '/components/text-field/' },
       { label: 'ScrollArea', href: '/components/scroll-area/' },
+      { label: 'Checkbox', href: '/components/checkbox/' },
     ],
   },
 ];

@@ -42,3 +42,12 @@ test('TextField demo input is keyboard reachable with visible focus', async ({ p
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());
 });
+
+test('Checkbox demo keeps native Space activation and visible focus', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
+  const input = page.locator('[data-component-demo="checkbox"] .ds-checkbox__input').first();
+
+  await tabTo(page, input);
+  await page.keyboard.press('Space');
+  await expect(input).toBeChecked();
+});

@@ -118,6 +118,36 @@
   align-items: center;
 }
 
+.component-demo__stage--checkbox {
+  place-items: stretch;
+}
+
+.checkbox-demo {
+  display: grid;
+  width: 100%;
+  gap: var(--ds-space-24);
+}
+
+.checkbox-demo__interactive,
+.checkbox-demo__specimen {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: var(--ds-space-8);
+}
+
+.checkbox-demo__specimens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--ds-space-12);
+}
+
+.checkbox-demo__specimen {
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
+}
+
 .scroll-area-demo {
   width: min(100%, 420px);
   height: 320px;

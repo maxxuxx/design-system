@@ -471,6 +471,108 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/scroll-area/"
+    },
+    {
+      "name": "Checkbox",
+      "slug": "checkbox",
+      "description": "독립적인 선택지를 native form behavior와 mixed state로 제공하는 checkbox control입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "unchecked",
+        "checked",
+        "indeterminate"
+      ],
+      "sizes": [
+        "small",
+        "medium"
+      ],
+      "states": [
+        "default",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "visible label과 44px pointer target, native keyboard·form semantics, ordered description/error relationships를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "checkbox와 연결되는 visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "선택을 보조하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "native input의 DOM indeterminate property를 동기화합니다."
+        },
+        {
+          "name": "size",
+          "type": "CheckboxSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small 20px 또는 medium 24px visible indicator를 선택합니다."
+        },
+        {
+          "name": "...inputProps",
+          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "owned size와 checkbox type을 제외한 native input props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/selection/small",
+        "size/selection/medium",
+        "space/2",
+        "space/4",
+        "space/8",
+        "radius/sm",
+        "font/family/sans",
+        "font/size/caption",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/line-height/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/status/danger",
+        "color/status/on-status",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/checkbox/"
     }
   ]
 }

@@ -9,6 +9,7 @@ export const COMPONENT_HTML_ROUTES: readonly (HtmlRoute & { slug: string })[] = 
   { path: '/components/icon/', heading: 'Icon', slug: 'icon' }, { path: '/components/badge/', heading: 'Badge', slug: 'badge' },
   { path: '/components/button/', heading: 'Button', slug: 'button' }, { path: '/components/text-field/', heading: 'TextField', slug: 'text-field' },
   { path: '/components/scroll-area/', heading: 'ScrollArea', slug: 'scroll-area' },
+  { path: '/components/checkbox/', heading: 'Checkbox', slug: 'checkbox' },
 ];
 export const CANONICAL_HTML_ROUTES = [...PLATFORM_HTML_ROUTES, ...COMPONENT_HTML_ROUTES] as const;
 export async function openHtmlRoute(page: Page, route: HtmlRoute): Promise<void> { const response = await page.goto(route.path, { waitUntil: 'networkidle' }); expect(response).not.toBeNull(); expect(response!.status()).toBe(200); await expect(page.getByRole('heading', { level: 1, name: route.heading, exact: true })).toBeVisible(); }

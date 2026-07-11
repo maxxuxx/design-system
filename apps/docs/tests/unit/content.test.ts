@@ -73,6 +73,7 @@ describe('MDX collection coverage', () => {
       'content/components/button.mdx',
       'content/components/text-field.mdx',
       'content/components/scroll-area.mdx',
+      'content/components/checkbox.mdx',
     ]);
 
     for (const file of files) {
@@ -105,13 +106,14 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the five component names and slugs in canonical order', () => {
+  it('locks the six component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
       'Button',
       'TextField',
       'ScrollArea',
+      'Checkbox',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -119,6 +121,72 @@ describe('component metadata contract', () => {
       'button',
       'text-field',
       'scroll-area',
+      'checkbox',
+    ]);
+  });
+
+  it('locks the Checkbox public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/checkbox.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'Checkbox',
+      slug: 'checkbox',
+      figmaUrl: '',
+      variants: ['unchecked', 'checked', 'indeterminate'],
+      sizes: ['small', 'medium'],
+      states: ['default', 'error', 'disabled'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'label', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+      { name: 'indeterminate', type: 'boolean', required: false, defaultValue: 'false' },
+      { name: 'size', type: 'CheckboxSize', required: false, defaultValue: 'medium' },
+      {
+        name: '...inputProps',
+        type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'size/selection/small',
+      'size/selection/medium',
+      'space/2',
+      'space/4',
+      'space/8',
+      'radius/sm',
+      'font/family/sans',
+      'font/size/caption',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/line-height/caption',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/border/focus',
+      'color/action/primary',
+      'color/action/primary-hover',
+      'color/action/primary-pressed',
+      'color/action/on-primary',
+      'color/status/danger',
+      'color/status/on-status',
+      'color/focus/ring',
     ]);
   });
 

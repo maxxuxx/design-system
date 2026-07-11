@@ -39,3 +39,14 @@ test('docs shell loads without browser console errors', async ({ page }) => {
 
   expect(errors).toEqual([]);
 });
+
+test('Checkbox visible label toggles its native input', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
+  const checkbox = page.locator('[data-component-demo="checkbox"] .ds-checkbox').first();
+  const input = checkbox.locator('.ds-checkbox__input');
+
+  await expect(input).toHaveAttribute('type', 'checkbox');
+  await expect(input).not.toBeChecked();
+  await checkbox.locator('.ds-checkbox__label').click();
+  await expect(input).toBeChecked();
+});
