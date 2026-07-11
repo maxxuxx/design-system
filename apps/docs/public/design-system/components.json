@@ -477,7 +477,7 @@
       "slug": "checkbox",
       "description": "독립적인 선택지를 native form behavior와 mixed state로 제공하는 checkbox control입니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=139-176",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

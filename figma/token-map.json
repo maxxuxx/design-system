@@ -26,7 +26,7 @@
         "id": "5:2",
         "name": "Default"
       },
-      "variableCount": 20
+      "variableCount": 26
     },
     {
       "name": "Typography",
@@ -546,6 +546,72 @@
         "WIDTH_HEIGHT"
       ],
       "webSyntax": "var(--ds-size-control-large)"
+    },
+    {
+      "tokenName": "size/selection/small",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:2",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-selection-small)"
+    },
+    {
+      "tokenName": "size/selection/medium",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:3",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-selection-medium)"
+    },
+    {
+      "tokenName": "size/switch/small-width",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:4",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-small-width)"
+    },
+    {
+      "tokenName": "size/switch/small-height",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:5",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-small-height)"
+    },
+    {
+      "tokenName": "size/switch/medium-width",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:6",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-medium-width)"
+    },
+    {
+      "tokenName": "size/switch/medium-height",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:7",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-medium-height)"
     },
     {
       "tokenName": "font/size/caption",

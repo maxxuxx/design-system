@@ -135,7 +135,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'Checkbox',
       slug: 'checkbox',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=139-176',
       variants: ['unchecked', 'checked', 'indeterminate'],
       sizes: ['small', 'medium'],
       states: ['default', 'error', 'disabled'],

@@ -49,10 +49,10 @@ Add six primitive dimension tokens to support the visible selection controls wit
 |---|---|---:|---|---|
 | `size/selection/small` | `--ds-size-selection-small` | `20px` | Spacing | `WIDTH_HEIGHT` |
 | `size/selection/medium` | `--ds-size-selection-medium` | `24px` | Spacing | `WIDTH_HEIGHT` |
-| `size/switch/small-width` | `--ds-size-switch-small-width` | `36px` | Spacing | `WIDTH` |
-| `size/switch/small-height` | `--ds-size-switch-small-height` | `20px` | Spacing | `HEIGHT` |
-| `size/switch/medium-width` | `--ds-size-switch-medium-width` | `44px` | Spacing | `WIDTH` |
-| `size/switch/medium-height` | `--ds-size-switch-medium-height` | `24px` | Spacing | `HEIGHT` |
+| `size/switch/small-width` | `--ds-size-switch-small-width` | `36px` | Spacing | `WIDTH_HEIGHT` |
+| `size/switch/small-height` | `--ds-size-switch-small-height` | `20px` | Spacing | `WIDTH_HEIGHT` |
+| `size/switch/medium-width` | `--ds-size-switch-medium-width` | `44px` | Spacing | `WIDTH_HEIGHT` |
+| `size/switch/medium-height` | `--ds-size-switch-medium-height` | `24px` | Spacing | `WIDTH_HEIGHT` |
 
 The source token count becomes 113. Figma keeps five collections and gains six Variables, moving from 105 to 111 Variables. The eight Text Styles and two Effect Styles remain unchanged.
 
