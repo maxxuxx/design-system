@@ -83,6 +83,7 @@ async function expectScrollAreaState(
     if (isActive) {
       expect(resolvedBlurPixels(cue.backdropFilter)).toBe(8);
       expect(cue.backgroundImage).not.toBe('none');
+      expect(cue.backgroundImage).toMatch(/\/\s*0\.36\b/);
       expect(cue.opacity).toBe('1');
     } else {
       expect(cue.backdropFilter).toBe('none');

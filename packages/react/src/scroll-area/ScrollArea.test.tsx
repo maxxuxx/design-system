@@ -438,6 +438,11 @@ describe('ScrollArea', () => {
       /\.ds-scroll-area__edge\s*\{[^}]*box-sizing: border-box;/s,
     );
     expect(componentCss).toContain('blur(var(--ds-blur-subtle))');
+    expect([
+      ...componentCss.matchAll(
+        /\.ds-scroll-area__edge--(?:top|bottom)\[data-active='true'\]\s*\{[^}]*background:\s*linear-gradient\(\s*to (?:top|bottom),\s*color-mix\(\s*in srgb,\s*var\(--ds-color-bg-surface\)\s+36%,\s*transparent\s*\),\s*transparent\s*\)\s*;?/g,
+      ),
+    ]).toHaveLength(2);
   });
 
   it('has no axe violations in an overflow state', async () => {

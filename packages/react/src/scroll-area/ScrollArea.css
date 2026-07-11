@@ -56,7 +56,11 @@
 .ds-scroll-area__edge--top[data-active='true'] {
   background: linear-gradient(
     to bottom,
-    var(--ds-color-bg-surface),
+    color-mix(
+      in srgb,
+      var(--ds-color-bg-surface) 36%,
+      transparent
+    ),
     transparent
   );
 }
@@ -64,7 +68,11 @@
 .ds-scroll-area__edge--bottom[data-active='true'] {
   background: linear-gradient(
     to top,
-    var(--ds-color-bg-surface),
+    color-mix(
+      in srgb,
+      var(--ds-color-bg-surface) 36%,
+      transparent
+    ),
     transparent
   );
 }

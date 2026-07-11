@@ -224,7 +224,8 @@ top-level overlap.
   API concerns rather than editable Figma properties
 - Specimen size: `320 × 240` per state
 - Direction cues: `0`, `1`, `2`, and `1` active edges respectively
-- Active edge height: `space/64`; background blur radius: `blur/subtle` (`8px`)
+- Active edge height: `space/64`; directional `color/bg/surface` tint opacity:
+  `36%`; background blur radius: `blur/subtle` (`8px`)
 - Navigation targets: `44 × 44`, bound to `size/control/small`; icon instances
   are `Icon/ChevronRight` at `size/icon/medium` (`20px`)
 - Top controls point up and bottom controls point down; inactive directions
