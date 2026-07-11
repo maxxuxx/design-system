@@ -14,7 +14,7 @@ Styles. Phase 2 created the ordered page structure and the first five
 documentation roots.
 Foundations visual approval was recorded at `2026-07-10T23:08:13+09:00`, and
 Phase 3 component construction covers the five v0.1 families plus Checkbox,
-RadioGroup, Switch, and Textarea.
+RadioGroup, Switch, Textarea, and Select.
 
 ## Typography
 
@@ -57,10 +57,11 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 12. `04.7 RadioGroup`
 13. `04.8 Switch`
 14. `04.9 Textarea`
-15. `90 Native Differences`
-16. `99 Deprecated`
+15. `04.10 Select`
+16. `90 Native Differences`
+17. `99 Deprecated`
 
-The required 16-page prefix is validated in this exact order. The original
+The required 17-page prefix is validated in this exact order. The original
 empty `Page 1` remains after this managed prefix and is not used by the library.
 
 ## Original Phase 2 Foundations catalog
@@ -343,13 +344,39 @@ top-level overlap.
 - Full-page screenshot target: `04.9 Textarea` (`158:2`), rendered at
   `1440 × 900`
 
-Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, Switch, and Textarea are
+## Form controls v0.2 Select validation
+
+- Component set: [Select](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72)
+- Variant count: 8
+- Axes:
+  - `Size`: `Medium`, `Large`
+  - `State`: `Default`, `Focus`, `Error`, `Disabled`
+- Component properties: `Label`, `Value`, `Description`, and `Error` (`TEXT`)
+- Closed-field width: `320px`; control heights use `size/control/medium`
+  (`48px`) and `size/control/large` (`56px`)
+- Padding: vertical `space/0`; horizontal Medium `space/16` or Large
+  `space/20`; content gap and root gap use `space/8`
+- Radius: `radius/md`; typography: `Body/Small`, `Body`, and `Caption`; label
+  weight uses `font/weight/semibold`
+- Eight 20px icons are owned `Icon/ChevronRight` instances bound to
+  `size/icon/medium`, rotated downward; disabled icon strokes use
+  `color/text/disabled`
+- Product fills, strokes, values, labels, helper/error text, and icon overrides
+  use semantic Variables only
+- Binding audit: all fields, heights, four-side padding, gaps, radius, state
+  paints, text styles, 32 text-property references, and icon links passed
+- Layout audit: content-driven roots preserve description plus Error without
+  clipping or overlap; no popup/menu/listbox node exists
+- Full-page screenshot target: `04.10 Select` (`168:2`), rendered at
+  `1440 × 760`
+
+Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, Switch, Textarea, and Select are
 validated in Figma.
 
 ## Phase 4 library verification
 
-- Final live readback: `2026-07-12T04:06:20+09:00`
-- Managed pages: all 16 current pages in the documented order
+- Final live readback: `2026-07-12T04:16:59+09:00`
+- Managed pages: all 17 current pages in the documented order
 - Final token readback: five collections, 111 Variables, eight Text Styles, and
   two Effect Styles
 - Token-map reconciliation: the regenerated live projection is byte-identical
@@ -372,11 +399,11 @@ validated in Figma.
   fields; the stored readback is also parsed and compared to the source shadow
   tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
-  Button/TextField/ScrollArea/Checkbox/RadioGroup/Switch/Textarea control target is at least
+  Button/TextField/ScrollArea/Checkbox/RadioGroup/Switch/Textarea/Select control target is at least
   44px with distinct focus, pressed, error, disabled, or direction-availability
   presentation
 - Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`,
-  ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, and Textarea `8`;
+  ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, Textarea `8`, and Select `8`;
   all properties, variants,
   semantic bindings, and React contracts passed
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
@@ -386,8 +413,8 @@ validated in Figma.
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
 - Screenshots: every managed page was captured and reviewed for legibility,
-  clipping, overlap, stale copy, and visible component coverage; all 16 SHA-256
-  fingerprints are stored in verification evidence for all 16 managed pages
+  clipping, overlap, stale copy, and visible component coverage; all 17 SHA-256
+  fingerprints are stored in verification evidence for all 17 managed pages
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
 Code Connect is explicitly `skipped-v0.1`.

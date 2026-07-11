@@ -915,7 +915,7 @@
       "slug": "select",
       "description": "닫힌 목록에서 한 값을 고르는 native single-select와 OS popup 동작을 제공합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

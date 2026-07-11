@@ -147,7 +147,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'Select',
       slug: 'select',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72',
       variants: [],
       sizes: ['medium', 'large'],
       states: ['default', 'focus', 'error', 'disabled'],
