@@ -88,7 +88,7 @@
 2. Implement a relative sizing root, native `overflow-y:auto` viewport, focus-safe scroll padding, and all-engine visual scrollbar hiding.
 3. Add absolute top/bottom layers with pointer passthrough, direction-specific gradients, and `backdrop-filter: blur(var(--ds-blur-subtle))` only when active.
 4. Add 44px circular button visuals, hover, focus-visible, disabled transparency, icon rotation, forced-colors, and reduced-motion behavior.
-5. Run React tests/checks and `pnpm lint` for the edited package.
+5. Run React tests/checks and the root `pnpm check` command; this repository does not define a lint script.
 
 ## Task 5: Add canonical docs metadata and interactive demo
 
