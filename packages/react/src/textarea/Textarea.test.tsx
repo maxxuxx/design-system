@@ -154,9 +154,11 @@ describe('Textarea', () => {
 
     expect(textarea).toBeRequired();
     expect(textarea).toHaveAttribute('maxlength', '5');
+    expect(textarea.checkValidity()).toBe(false);
     await user.type(textarea, '안녕하세요!');
     expect(textarea).toHaveValue('안녕하세요');
     expect(onChange).toHaveBeenCalled();
+    expect(textarea.checkValidity()).toBe(true);
     expect(new FormData(textarea.form!).get('inquiry')).toBe('안녕하세요');
   });
 

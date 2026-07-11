@@ -138,6 +138,11 @@
     "Badge": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=47-2",
       "variantCount": 16,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Variant", "values": ["Soft", "Solid"] },
+        { "name": "Tone", "values": ["Neutral", "Primary", "Success", "Danger"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -151,6 +156,11 @@
     "Button": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=65-56",
       "variantCount": 27,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium", "Large"] },
+        { "name": "Variant", "values": ["Fill", "Weak", "Outline"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -184,6 +194,10 @@
     "TextField": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50",
       "variantCount": 8,
+      "axes": [
+        { "name": "Size", "values": ["Medium", "Large"] },
+        { "name": "State", "values": ["Default", "Focus", "Error", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -209,6 +223,9 @@
     "ScrollArea": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6",
       "variantCount": 4,
+      "axes": [
+        { "name": "State", "values": ["No overflow", "Start", "Middle", "End"] }
+      ],
       "properties": [],
       "screenshotReviewed": true,
       "bindingsAudited": true,
@@ -217,6 +234,11 @@
     "Checkbox": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=139-176",
       "variantCount": 18,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Value", "values": ["Unchecked", "Checked", "Indeterminate"] },
+        { "name": "State", "values": ["Default", "Error", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -238,6 +260,11 @@
     "RadioGroup": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=147-272",
       "variantCount": 18,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Selection", "values": ["None", "First", "Second"] },
+        { "name": "State", "values": ["Default", "Error", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Legend",
@@ -271,6 +298,11 @@
     "Switch": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122",
       "variantCount": 12,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Value", "values": ["Off", "On"] },
+        { "name": "State", "values": ["Default", "Error", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -292,6 +324,10 @@
     "Textarea": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=158-56",
       "variantCount": 8,
+      "axes": [
+        { "name": "Size", "values": ["Medium", "Large"] },
+        { "name": "State", "values": ["Default", "Focus", "Error", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -317,6 +353,10 @@
     "Select": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72",
       "variantCount": 8,
+      "axes": [
+        { "name": "Size", "values": ["Medium", "Large"] },
+        { "name": "State", "values": ["Default", "Focus", "Error", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",

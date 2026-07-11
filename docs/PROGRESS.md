@@ -20,7 +20,7 @@
   - 5 collections, 111 Variables, 8 Text Styles, 2 Effect Styles
   - 17 managed pages
   - 5 owned Icon components와 9 component sets
-  - 모든 component URL, variant 수, property, token binding, page screenshot digest를 live readback과 대조
+  - 모든 component URL, variant 수, 축 이름·값 순서, property, token binding, page screenshot digest를 live readback과 대조
 - Form controls v0.2:
   - `Checkbox`: native checked/indeterminate, form value, 오류·비활성 우선순위, 20/24px indicator
   - `RadioGroup`: native same-name selection, controlled/uncontrolled value, required와 option-disabled 처리
@@ -30,7 +30,7 @@
 - Exact integration guardrails:
   - 113 tokens, 10 component contracts, 18 HTML routes
   - 17 Figma pages, 111 Variables, 8 Text Styles, 2 Effect Styles, 9 component sets
-  - 신규 route·manifest·prop·token·Figma record를 삭제하거나 변형하는 negative tests
+  - 신규 route·manifest·prop·token·Figma record와 variant 축 계약을 삭제하거나 변형하는 negative tests
 
 ## 마지막 검증
 
@@ -42,7 +42,7 @@
 - Docs unit: 22 tests passed
 - Guardrail/artifact: 35 tests passed
 - Static docs: 18 pages built
-- Browser: 256 passed, 113 platform-owned skipped
+- Browser: 현재 플랫폼의 기능·접근성·반응형·긴 문자열 회귀 검증 통과, 플랫폼 소유 visual comparison은 명시적으로 skip
 - Generated artifacts: current
 - Repository guardrails: 3 private workspaces, primitive color leak 0
 - Figma evidence: artifact verifier와 컴포넌트별 독립 review 통과

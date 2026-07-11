@@ -41,47 +41,85 @@ const componentSpecs = [
   {
     name: 'Badge', slug: 'badge',
     variantCount: 16,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Variant', values: ['Soft', 'Solid'] },
+      { name: 'Tone', values: ['Neutral', 'Primary', 'Success', 'Danger'] },
+    ],
     variants: ['soft', 'solid', 'neutral', 'primary', 'success', 'danger'],
     sizes: ['small', 'medium'], states: ['default'],
   },
   {
     name: 'Button', slug: 'button', variants: ['fill', 'weak', 'outline'],
     variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Fill', 'Weak', 'Outline'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
     sizes: ['small', 'medium', 'large'],
     states: ['default', 'hover', 'pressed', 'focus-visible', 'disabled', 'loading'],
   },
   {
     name: 'TextField', slug: 'text-field', variants: [],
     variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
     sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
   },
   {
     name: 'ScrollArea', slug: 'scroll-area', variants: [], sizes: [],
     variantCount: 4,
+    axes: [{ name: 'State', values: ['No overflow', 'Start', 'Middle', 'End'] }],
     states: ['no-overflow', 'start', 'middle', 'end'],
   },
   {
     name: 'Checkbox', slug: 'checkbox', variantCount: 18,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Value', values: ['Unchecked', 'Checked', 'Indeterminate'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
     variants: ['unchecked', 'checked', 'indeterminate'],
     sizes: ['small', 'medium'], states: ['default', 'error', 'disabled'],
   },
   {
     name: 'RadioGroup', slug: 'radio-group', variantCount: 18,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Selection', values: ['None', 'First', 'Second'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
     variants: ['none', 'first', 'second'],
     sizes: ['small', 'medium'], states: ['default', 'error', 'disabled'],
   },
   {
     name: 'Switch', slug: 'switch', variantCount: 12,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Value', values: ['Off', 'On'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
     variants: ['off', 'on'],
     sizes: ['small', 'medium'], states: ['default', 'error', 'disabled'],
   },
   {
     name: 'Textarea', slug: 'textarea', variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
     variants: ['vertical', 'none'],
     sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
   },
   {
     name: 'Select', slug: 'select', variantCount: 8, variants: [],
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
     sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
   },
 ];
@@ -567,6 +605,7 @@ function makeVerification(tokens) {
       return [spec.name, {
         componentSetUrl: figmaUrl(componentNodeIds[spec.name]),
         variantCount: spec.variantCount,
+        axes: spec.axes,
         properties: properties[spec.name],
         ...shared,
       }];
@@ -863,14 +902,19 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   evidence.components.ScrollArea.properties = [{ name: 'Content', type: 'TEXT' }];
   evidence.components.Checkbox.variantCount = 17;
   evidence.components.Checkbox.properties.pop();
+  evidence.components.Checkbox.axes[1].values.pop();
   evidence.components.RadioGroup.variantCount = 17;
   evidence.components.RadioGroup.properties[1].name = 'First option';
+  evidence.components.RadioGroup.axes[1].name = 'Value';
   evidence.components.Switch.variantCount = 11;
   evidence.components.Switch.properties[0].type = 'BOOLEAN';
+  evidence.components.Switch.axes[1].values.reverse();
   evidence.components.Textarea.variantCount = 7;
   evidence.components.Textarea.properties.pop();
+  evidence.components.Textarea.axes[0].values.pop();
   evidence.components.Select.variantCount = 7;
   evidence.components.Select.properties[1].name = 'Selection';
+  evidence.components.Select.axes[1].values[1] = 'Focused';
   await writeFile(file, JSON.stringify(evidence));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('Icon componentCount must be 5')));
@@ -885,14 +929,19 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   assert.ok(violations.some((value) => value.includes('ScrollArea property definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('Checkbox variantCount must be 18')));
   assert.ok(violations.some((value) => value.includes('Checkbox property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Checkbox axis definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('RadioGroup variantCount must be 18')));
   assert.ok(violations.some((value) => value.includes('RadioGroup property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('RadioGroup axis definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('Switch variantCount must be 12')));
   assert.ok(violations.some((value) => value.includes('Switch property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Switch axis definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('Textarea variantCount must be 8')));
   assert.ok(violations.some((value) => value.includes('Textarea property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Textarea axis definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('Select variantCount must be 8')));
   assert.ok(violations.some((value) => value.includes('Select property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Select axis definitions mismatch')));
 });
 
 test('rejects every missing v0.2 Figma component and page record', async (t) => {

@@ -285,6 +285,127 @@ test('mobile demos use one-column controls and item stacks without shrinking the
   expect(itemDirection).toBe('column');
 });
 
+const formControlLayouts = [
+  {
+    heading: 'Checkbox',
+    itemSelector: '.checkbox-demo__specimen',
+    path: '/components/checkbox/',
+    slug: 'checkbox',
+  },
+  {
+    heading: 'RadioGroup',
+    itemSelector: '.radio-group-demo__specimen',
+    path: '/components/radio-group/',
+    slug: 'radio-group',
+  },
+  {
+    heading: 'Switch',
+    itemSelector: '.switch-demo__specimen',
+    path: '/components/switch/',
+    slug: 'switch',
+  },
+  {
+    heading: 'Textarea',
+    itemSelector: '.textarea-demo > .ds-textarea',
+    path: '/components/textarea/',
+    slug: 'textarea',
+  },
+  {
+    heading: 'Select',
+    itemSelector: '.select-demo > .ds-select',
+    path: '/components/select/',
+    slug: 'select',
+  },
+] as const;
+
+for (const layout of formControlLayouts) {
+  test(`${layout.heading} mobile demo keeps controls and specimens in one column`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns form-control column coverage.');
+
+    await openHtmlRoute(page, { path: layout.path, heading: layout.heading });
+    const demo = page.locator(`[data-component-demo="${layout.slug}"]`);
+    const controls = demo.locator('.component-demo__controls > *');
+    const items = demo.locator(layout.itemSelector);
+    expect(await controls.count()).toBeGreaterThanOrEqual(2);
+    expect(await items.count()).toBeGreaterThanOrEqual(2);
+
+    const [firstControl, secondControl, firstItem, secondItem] = await Promise.all([
+      controls.nth(0).boundingBox(),
+      controls.nth(1).boundingBox(),
+      items.nth(0).boundingBox(),
+      items.nth(1).boundingBox(),
+    ]);
+    expect(firstControl).not.toBeNull();
+    expect(secondControl).not.toBeNull();
+    expect(firstItem).not.toBeNull();
+    expect(secondItem).not.toBeNull();
+    expect(Math.abs(firstControl!.x - secondControl!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondControl!.y).toBeGreaterThan(firstControl!.y);
+    expect(Math.abs(firstItem!.x - secondItem!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondItem!.y).toBeGreaterThan(firstItem!.y);
+    expect(await page.evaluate(() =>
+      document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  });
+}
+
+for (const layout of formControlLayouts.slice(0, 3)) {
+  test(`${layout.heading} desktop specimens use multiple columns`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns multi-column specimen coverage.');
+
+    await openHtmlRoute(page, { path: layout.path, heading: layout.heading });
+    const items = page.locator(`[data-component-demo="${layout.slug}"] ${layout.itemSelector}`);
+    expect(await items.count()).toBeGreaterThanOrEqual(2);
+    const firstRowCount = await items.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5).length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  });
+}
+
+test('form-control copy wraps unbroken content without mobile page overflow', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns unbroken-copy overflow coverage.');
+
+  const copySelectors = {
+    checkbox: '.ds-checkbox__label, .ds-checkbox__description, .ds-checkbox__error',
+    'radio-group': '.ds-radio-group__legend, .ds-radio-group__option-label, .ds-radio-group__option-description, .ds-radio-group__description, .ds-radio-group__error',
+    select: '.ds-select__label, .ds-select__description, .ds-select__error',
+    switch: '.ds-switch__label, .ds-switch__description, .ds-switch__error',
+    textarea: '.ds-textarea__label, .ds-textarea__description, .ds-textarea__error',
+  } as const;
+  const unbroken = 'VeryLongUnbrokenFormControlCopy'.repeat(40);
+
+  for (const layout of formControlLayouts) {
+    await openHtmlRoute(page, { path: layout.path, heading: layout.heading });
+    const copy = page.locator(`[data-component-demo="${layout.slug}"]`)
+      .locator(copySelectors[layout.slug]);
+    expect(await copy.count()).toBeGreaterThan(0);
+    await copy.evaluateAll((elements, value) => {
+      elements.forEach((element) => { element.textContent = value; });
+    }, unbroken);
+
+    const copyFits = await copy.evaluateAll((elements) => elements.every((element) => {
+      const owner = element.closest(
+        '.ds-checkbox, .ds-radio-group, .ds-switch, .ds-textarea, .ds-select',
+      );
+      if (!owner) return false;
+      const copyRect = element.getBoundingClientRect();
+      const ownerRect = owner.getBoundingClientRect();
+      return copyRect.left >= ownerRect.left - 0.5
+        && copyRect.right <= ownerRect.right + 0.5
+        && element.scrollWidth <= element.clientWidth + 0.5;
+    }));
+
+    const result = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(copyFits, `${layout.heading} copy must wrap inside its component`).toBe(true);
+    expect(result.scrollWidth, `${layout.heading} must not overflow`).toBeLessThanOrEqual(result.clientWidth);
+  }
+});
+
 test('Icon demo switches its selected icon between labelled and decorative semantics', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/icon/', heading: 'Icon' });
   const demo = page.locator('[data-component-demo="icon"]');
@@ -343,9 +464,7 @@ test('TextField exposes a forced-colors keyboard focus outline', async ({ page }
   await expectForcedColorFocus(input);
 });
 
-test('Checkbox exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
-
+test('Checkbox exposes a forced-colors keyboard focus outline', async ({ page }) => {
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
   const demo = page.locator('[data-component-demo="checkbox"]');
@@ -403,9 +522,7 @@ test('RadioGroup option rows keep 44px targets around 20px and 24px indicators',
     .sort((left, right) => left - right)).toEqual([20, 24]);
 });
 
-test('RadioGroup exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
-
+test('RadioGroup exposes a forced-colors keyboard focus outline', async ({ page }) => {
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
   const demo = page.locator('[data-component-demo="radio-group"]');
@@ -431,9 +548,7 @@ test('Switch rows keep 44px targets around token-sized tracks', async ({ page })
     .toEqual(['36x20', '44x24']);
 });
 
-test('Switch exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
-
+test('Switch exposes a forced-colors keyboard focus outline', async ({ page }) => {
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
   const demo = page.locator('[data-component-demo="switch"]');
@@ -472,9 +587,7 @@ test('Textarea preserves size tiers, resize modes, and horizontal bounds', async
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
-test('Textarea exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
-
+test('Textarea exposes a forced-colors keyboard focus outline', async ({ page }) => {
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
   const demo = page.locator('[data-component-demo="textarea"]');
@@ -532,9 +645,7 @@ test('Select preserves native size tiers, decorative icon, and horizontal bounds
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
 });
 
-test('Select exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
-  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
-
+test('Select exposes a forced-colors keyboard focus outline', async ({ page }) => {
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
   const demo = page.locator('[data-component-demo="select"]');

@@ -406,6 +406,9 @@ validated in Figma.
   ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, Textarea `8`, and Select `8`;
   all properties, variants,
   semantic bindings, and React contracts passed
+- Variant-axis parity: the exact axis names and ordered values for all nine
+  component sets are stored in [`verification.json`](./verification.json) and
+  enforced by the artifact verifier
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
   keys on Instances and the intentionally invisible default fill on TextField
   component roots are excluded from owner/value counts.

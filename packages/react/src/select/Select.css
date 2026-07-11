@@ -1,15 +1,18 @@
 .ds-select {
   display: grid;
   width: 100%;
+  min-width: 0;
   gap: var(--ds-space-8);
   color: var(--ds-color-text-primary);
   font-family: var(--ds-font-family-sans);
 }
 
 .ds-select__label {
+  min-width: 0;
   font-size: var(--ds-font-size-body-sm);
   font-weight: var(--ds-font-weight-semibold);
   line-height: var(--ds-font-line-height-body-sm);
+  overflow-wrap: anywhere;
 }
 
 .ds-select__field {
@@ -93,9 +96,11 @@
 
 .ds-select__description,
 .ds-select__error {
+  min-width: 0;
   margin: 0;
   font-size: var(--ds-font-size-caption);
   line-height: var(--ds-font-line-height-caption);
+  overflow-wrap: anywhere;
 }
 
 .ds-select__description {

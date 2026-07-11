@@ -53,6 +53,11 @@ const componentSpecs = [
     name: 'Badge',
     slug: 'badge',
     variantCount: 16,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Variant', values: ['Soft', 'Solid'] },
+      { name: 'Tone', values: ['Neutral', 'Primary', 'Success', 'Danger'] },
+    ],
     properties: [{ name: 'Label', type: 'TEXT' }],
     variants: ['soft', 'solid', 'neutral', 'primary', 'success', 'danger'],
     sizes: ['small', 'medium'],
@@ -62,6 +67,11 @@ const componentSpecs = [
     name: 'Button',
     slug: 'button',
     variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Fill', 'Weak', 'Outline'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Loading', type: 'BOOLEAN' },
@@ -78,6 +88,10 @@ const componentSpecs = [
     name: 'TextField',
     slug: 'text-field',
     variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Value', type: 'TEXT' },
@@ -92,6 +106,7 @@ const componentSpecs = [
     name: 'ScrollArea',
     slug: 'scroll-area',
     variantCount: 4,
+    axes: [{ name: 'State', values: ['No overflow', 'Start', 'Middle', 'End'] }],
     properties: [],
     variants: [],
     sizes: [],
@@ -101,6 +116,11 @@ const componentSpecs = [
     name: 'Checkbox',
     slug: 'checkbox',
     variantCount: 18,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Value', values: ['Unchecked', 'Checked', 'Indeterminate'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Description', type: 'TEXT' },
@@ -114,6 +134,11 @@ const componentSpecs = [
     name: 'RadioGroup',
     slug: 'radio-group',
     variantCount: 18,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Selection', values: ['None', 'First', 'Second'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
     properties: [
       { name: 'Legend', type: 'TEXT' },
       { name: 'Option 1', type: 'TEXT' },
@@ -130,6 +155,11 @@ const componentSpecs = [
     name: 'Switch',
     slug: 'switch',
     variantCount: 12,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Value', values: ['Off', 'On'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Description', type: 'TEXT' },
@@ -143,6 +173,10 @@ const componentSpecs = [
     name: 'Textarea',
     slug: 'textarea',
     variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Value', type: 'TEXT' },
@@ -157,6 +191,10 @@ const componentSpecs = [
     name: 'Select',
     slug: 'select',
     variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Value', type: 'TEXT' },
@@ -946,7 +984,7 @@ export async function verifyFigmaEvidence(root) {
     }
     const expectedEvidenceKeys = spec.name === 'Icon'
       ? ['catalogUrl', 'componentCount', 'componentUrls', 'properties', 'screenshotReviewed', 'bindingsAudited', 'propParity']
-      : ['componentSetUrl', 'variantCount', 'properties', 'screenshotReviewed', 'bindingsAudited', 'propParity'];
+      : ['componentSetUrl', 'variantCount', 'axes', 'properties', 'screenshotReviewed', 'bindingsAudited', 'propParity'];
     if (!exactKeys(component, expectedEvidenceKeys)) {
       violations.push(`${spec.name} evidence fields mismatch`);
     }
@@ -978,6 +1016,10 @@ export async function verifyFigmaEvidence(root) {
       }
     } else if (component.variantCount !== spec.variantCount) {
       violations.push(`${spec.name} variantCount must be ${spec.variantCount}`);
+    }
+
+    if (spec.name !== 'Icon' && JSON.stringify(component.axes) !== JSON.stringify(spec.axes)) {
+      violations.push(`${spec.name} axis definitions mismatch`);
     }
 
     if (JSON.stringify(component.properties) !== JSON.stringify(spec.properties)) {

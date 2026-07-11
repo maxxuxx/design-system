@@ -16,6 +16,7 @@
   font-size: var(--ds-font-size-body);
   font-weight: var(--ds-font-weight-semibold);
   line-height: var(--ds-font-line-height-body);
+  overflow-wrap: anywhere;
 }
 
 .ds-radio-group[data-size='small'] .ds-radio-group__legend {
@@ -25,9 +26,11 @@
 
 .ds-radio-group__description,
 .ds-radio-group__error {
+  min-width: 0;
   margin: 0;
   font-size: var(--ds-font-size-caption);
   line-height: var(--ds-font-line-height-caption);
+  overflow-wrap: anywhere;
 }
 
 .ds-radio-group__description {
@@ -47,7 +50,9 @@
 
 .ds-radio-group__option {
   display: flex;
+  min-width: 0;
   min-height: var(--ds-size-control-small);
+  max-width: 100%;
   align-items: center;
   gap: var(--ds-space-8);
   cursor: pointer;
@@ -138,12 +143,14 @@
 
 .ds-radio-group__option-copy {
   display: grid;
+  min-width: 0;
   padding-block: var(--ds-space-4);
 }
 
 .ds-radio-group__option-label {
   font-size: var(--ds-font-size-body);
   line-height: var(--ds-font-line-height-body);
+  overflow-wrap: anywhere;
 }
 
 .ds-radio-group[data-size='small'] .ds-radio-group__option-label {
@@ -155,6 +162,7 @@
   color: var(--ds-color-text-secondary);
   font-size: var(--ds-font-size-caption);
   line-height: var(--ds-font-line-height-caption);
+  overflow-wrap: anywhere;
 }
 
 .ds-radio-group__option[data-disabled='true'] {

@@ -161,16 +161,18 @@ describe('Checkbox', () => {
     const user = userEvent.setup();
     render(
       <form>
-        <Checkbox label="약관 동의" name="terms" value="yes" />
+        <Checkbox label="약관 동의" name="terms" required value="yes" />
       </form>,
     );
     const input = screen.getByRole<HTMLInputElement>('checkbox', { name: '약관 동의' });
 
+    expect(input.checkValidity()).toBe(false);
     expect(new FormData(input.form!).get('terms')).toBeNull();
     await user.tab();
     expect(input).toHaveFocus();
     await user.keyboard(' ');
     expect(input).toBeChecked();
+    expect(input.checkValidity()).toBe(true);
     expect(new FormData(input.form!).get('terms')).toBe('yes');
   });
 

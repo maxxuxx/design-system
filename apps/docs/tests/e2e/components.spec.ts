@@ -4,11 +4,17 @@ import { COMPONENT_HTML_ROUTES, openHtmlRoute } from './support/routes';
 
 for (const route of COMPONENT_HTML_ROUTES) {
   test(`${route.heading} renders its complete document template and demo`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') errors.push(message.text());
+    });
     await openHtmlRoute(page, route);
+    await page.waitForLoadState('networkidle');
     const headings = await page.locator('main h2').allTextContents();
     expect(headings.map((heading) => heading.trim())).toEqual(REQUIRED_COMPONENT_HEADINGS);
     await expect(page.locator(`[data-component-demo="${route.slug}"]`)).toBeVisible();
     await expect(page.getByText('preview', { exact: true }).first()).toBeVisible();
+    expect(errors, `${route.path} must not emit browser console errors`).toEqual([]);
   });
 
   test(`${route.heading} keeps code and API fields readable on mobile`, async ({ page }, testInfo) => {
@@ -27,18 +33,6 @@ for (const route of COMPONENT_HTML_ROUTES) {
     expect(cellWidths.every((width) => width >= 240)).toBe(true);
   });
 }
-
-test('docs shell loads without browser console errors', async ({ page }) => {
-  const errors: string[] = [];
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(message.text());
-  });
-
-  await openHtmlRoute(page, COMPONENT_HTML_ROUTES[0]!);
-  await page.waitForLoadState('networkidle');
-
-  expect(errors).toEqual([]);
-});
 
 test('Checkbox visible label toggles its native input', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });

@@ -143,7 +143,8 @@ describe('RadioGroup', () => {
     expect(screen.getByText('배송 방법은 필수입니다.')).toHaveAttribute('role', 'alert');
   });
 
-  it('applies required only to the first enabled option', () => {
+  it('applies required only to the first enabled option and keeps native validity', async () => {
+    const user = userEvent.setup();
     const firstDisabledOptions = [
       { value: 'none', label: '선택 안 함', disabled: true },
       { value: 'email', label: '이메일' },
@@ -164,6 +165,9 @@ describe('RadioGroup', () => {
     expect(radios[0]).not.toBeRequired();
     expect(radios[1]).toBeRequired();
     expect(radios[2]).not.toBeRequired();
+    expect((radios[1] as HTMLInputElement).checkValidity()).toBe(false);
+    await user.click(screen.getByRole('radio', { name: '문자' }));
+    expect((radios[1] as HTMLInputElement).checkValidity()).toBe(true);
   });
 
   it('supports fieldset and individual option disabled behavior', async () => {
