@@ -343,6 +343,18 @@ test('TextField exposes a forced-colors keyboard focus outline', async ({ page }
   await expectForcedColorFocus(input);
 });
 
+test('Checkbox exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  const input = demo.locator('.ds-checkbox__input').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(input);
+});
+
 test('TextField default boundary has 3:1 contrast against its adjacent surface', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns computed-color coverage.');
 

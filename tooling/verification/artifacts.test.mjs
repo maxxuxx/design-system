@@ -16,6 +16,9 @@ const routes = [
   'foundations/elevation/index.html', 'components/icon/index.html',
   'components/badge/index.html', 'components/button/index.html',
   'components/text-field/index.html', 'components/scroll-area/index.html',
+  'components/checkbox/index.html', 'components/radio-group/index.html',
+  'components/switch/index.html', 'components/textarea/index.html',
+  'components/select/index.html',
 ];
 
 const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius'];
@@ -23,7 +26,9 @@ const textStyleNames = ['Display', 'Heading', 'Title', 'Body/Large', 'Body', 'Bo
 const pageNames = [
   '00 Cover', '01 Principles', '02 Getting Started', '03 Foundations',
   '04 Components', '04.1 Icon', '04.2 Badge', '04.3 Button',
-  '04.4 TextField', '04.5 ScrollArea', '90 Native Differences', '99 Deprecated',
+  '04.4 TextField', '04.5 ScrollArea', '04.6 Checkbox', '04.7 RadioGroup',
+  '04.8 Switch', '04.9 Textarea', '04.10 Select',
+  '90 Native Differences', '99 Deprecated',
 ];
 
 const componentSpecs = [
@@ -35,21 +40,49 @@ const componentSpecs = [
   },
   {
     name: 'Badge', slug: 'badge',
+    variantCount: 16,
     variants: ['soft', 'solid', 'neutral', 'primary', 'success', 'danger'],
     sizes: ['small', 'medium'], states: ['default'],
   },
   {
     name: 'Button', slug: 'button', variants: ['fill', 'weak', 'outline'],
+    variantCount: 27,
     sizes: ['small', 'medium', 'large'],
     states: ['default', 'hover', 'pressed', 'focus-visible', 'disabled', 'loading'],
   },
   {
     name: 'TextField', slug: 'text-field', variants: [],
+    variantCount: 8,
     sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
   },
   {
     name: 'ScrollArea', slug: 'scroll-area', variants: [], sizes: [],
+    variantCount: 4,
     states: ['no-overflow', 'start', 'middle', 'end'],
+  },
+  {
+    name: 'Checkbox', slug: 'checkbox', variantCount: 18,
+    variants: ['unchecked', 'checked', 'indeterminate'],
+    sizes: ['small', 'medium'], states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'RadioGroup', slug: 'radio-group', variantCount: 18,
+    variants: ['none', 'first', 'second'],
+    sizes: ['small', 'medium'], states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'Switch', slug: 'switch', variantCount: 12,
+    variants: ['off', 'on'],
+    sizes: ['small', 'medium'], states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'Textarea', slug: 'textarea', variantCount: 8,
+    variants: ['vertical', 'none'],
+    sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
+  },
+  {
+    name: 'Select', slug: 'select', variantCount: 8, variants: [],
+    sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
   },
 ];
 
@@ -134,6 +167,81 @@ const manifestProps = {
       defaultValue: null,
     },
   ],
+  Checkbox: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'indeterminate', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'size', type: 'CheckboxSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  RadioGroup: [
+    { name: 'legend', type: 'string', required: true, defaultValue: null },
+    { name: 'name', type: 'string', required: true, defaultValue: null },
+    { name: 'options', type: 'readonly RadioGroupOption[]', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'RadioGroupSize', required: false, defaultValue: 'medium' },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: null },
+    { name: 'required', type: 'boolean', required: false, defaultValue: 'false' },
+    {
+      name: 'onChange',
+      type: 'ChangeEventHandler<HTMLInputElement>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: '...fieldsetProps',
+      type: "Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 'children' | 'onChange'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Switch: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'SwitchSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'role' | 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Textarea: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextareaSize', required: false, defaultValue: 'medium' },
+    { name: 'resize', type: 'TextareaResize', required: false, defaultValue: 'vertical' },
+    {
+      name: '...textareaProps',
+      type: "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Select: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'placeholder', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'SelectSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...selectProps',
+      type: "Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'multiple' | 'size'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
 };
 
 const properties = {
@@ -154,6 +262,36 @@ const properties = {
     { name: 'Error', type: 'TEXT' },
   ],
   ScrollArea: [],
+  Checkbox: [
+    { name: 'Label', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Error', type: 'TEXT' },
+  ],
+  RadioGroup: [
+    { name: 'Legend', type: 'TEXT' },
+    { name: 'Option 1', type: 'TEXT' },
+    { name: 'Option 2', type: 'TEXT' },
+    { name: 'Option 3', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Error', type: 'TEXT' },
+  ],
+  Switch: [
+    { name: 'Label', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Error', type: 'TEXT' },
+  ],
+  Textarea: [
+    { name: 'Label', type: 'TEXT' },
+    { name: 'Value', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Error', type: 'TEXT' },
+  ],
+  Select: [
+    { name: 'Label', type: 'TEXT' },
+    { name: 'Value', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Error', type: 'TEXT' },
+  ],
 };
 
 const componentNodeIds = {
@@ -162,6 +300,11 @@ const componentNodeIds = {
   Button: '65-56',
   TextField: '80-50',
   ScrollArea: '92-2',
+  Checkbox: '139-176',
+  RadioGroup: '147-272',
+  Switch: '153-122',
+  Textarea: '158-56',
+  Select: '168-72',
 };
 
 const iconNodeIds = ['30-4', '30-7', '30-11', '30-16', '30-20'];
@@ -172,6 +315,11 @@ const fixtureComponentTokens = {
   Button: ['size/control/1', 'color/semantic/2'],
   TextField: ['font/size/1', 'color/semantic/3'],
   ScrollArea: ['blur/subtle'],
+  Checkbox: ['size/control/9', 'color/semantic/4'],
+  RadioGroup: ['size/control/10', 'color/semantic/5'],
+  Switch: ['size/control/11', 'color/semantic/6'],
+  Textarea: ['size/control/12', 'color/semantic/7'],
+  Select: ['size/control/13', 'color/semantic/8'],
 };
 
 function figmaUrl(id) {
@@ -237,8 +385,8 @@ function effectValuesSha256(effectReadback) {
 }
 
 function makeTokens() {
-  return Array.from({ length: 107 }, (_, index) => {
-    const kind = index < 81 ? 'primitive' : 'semantic';
+  return Array.from({ length: 113 }, (_, index) => {
+    const kind = index < 87 ? 'primitive' : 'semantic';
     let name;
     let type;
     if (index < 31) {
@@ -247,32 +395,32 @@ function makeTokens() {
     } else if (index < 43) {
       name = `space/${index - 30}`;
       type = 'dimension';
-    } else if (index < 51) {
+    } else if (index < 57) {
       name = `size/control/${index - 42}`;
       type = 'dimension';
-    } else if (index < 57) {
-      name = `radius/${index - 50}`;
+    } else if (index < 63) {
+      name = `radius/${index - 56}`;
       type = 'dimension';
-    } else if (index < 65) {
-      name = `font/size/${index - 56}`;
+    } else if (index < 71) {
+      name = `font/size/${index - 62}`;
       type = 'dimension';
-    } else if (index < 73) {
-      name = `font/line-height/${index - 64}`;
+    } else if (index < 79) {
+      name = `font/line-height/${index - 70}`;
       type = 'dimension';
-    } else if (index < 77) {
-      name = `font/weight/${index - 72}`;
+    } else if (index < 83) {
+      name = `font/weight/${index - 78}`;
       type = 'fontWeight';
-    } else if (index === 77) {
+    } else if (index === 83) {
       name = 'font/family/sans';
       type = 'fontFamily';
-    } else if (index < 80) {
-      name = `elevation/${index - 77}`;
+    } else if (index < 86) {
+      name = `elevation/${index - 83}`;
       type = 'shadow';
-    } else if (index === 80) {
+    } else if (index === 86) {
       name = 'blur/subtle';
       type = 'dimension';
     } else {
-      name = index === 81 ? 'color/icon/primary' : `color/semantic/${index - 81}`;
+      name = index === 87 ? 'color/icon/primary' : `color/semantic/${index - 87}`;
       type = 'color';
     }
     const primitiveValue = type === 'fontFamily'
@@ -407,40 +555,22 @@ function makeVerification(tokens) {
     pageScreenshotSha256: Object.fromEntries(
       pageNames.map((page) => [page, sha256(`screenshot:${page}`)]),
     ),
-    components: {
-      Icon: {
+    components: Object.fromEntries(componentSpecs.map((spec) => {
+      if (spec.name === 'Icon') return ['Icon', {
         catalogUrl: figmaUrl(componentNodeIds.Icon),
         componentCount: 5,
         componentUrls: ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search']
           .map((name, index) => ({ name, url: figmaUrl(iconNodeIds[index]) })),
         properties: properties.Icon,
         ...shared,
-      },
-      Badge: {
-        componentSetUrl: figmaUrl(componentNodeIds.Badge),
-        variantCount: 16,
-        properties: properties.Badge,
+      }];
+      return [spec.name, {
+        componentSetUrl: figmaUrl(componentNodeIds[spec.name]),
+        variantCount: spec.variantCount,
+        properties: properties[spec.name],
         ...shared,
-      },
-      Button: {
-        componentSetUrl: figmaUrl(componentNodeIds.Button),
-        variantCount: 27,
-        properties: properties.Button,
-        ...shared,
-      },
-      TextField: {
-        componentSetUrl: figmaUrl(componentNodeIds.TextField),
-        variantCount: 8,
-        properties: properties.TextField,
-        ...shared,
-      },
-      ScrollArea: {
-        componentSetUrl: figmaUrl(componentNodeIds.ScrollArea),
-        variantCount: 4,
-        properties: properties.ScrollArea,
-        ...shared,
-      },
-    },
+      }];
+    })),
     foundations: {
       approved: true,
       approvedAt: '2026-07-10T11:00:00+09:00',
@@ -481,7 +611,11 @@ async function createFixture() {
       .join(' ');
     const localVariableContract = name === 'ScrollArea'
       ? '--ds-scroll-area-edge-size: var(--ds-blur-subtle); height: var(--ds-scroll-area-edge-size); '
-      : '';
+      : name === 'Switch'
+        ? '--ds-switch-track-width: var(--ds-size-control-11); '
+          + '--ds-switch-track-height: var(--ds-size-control-11); '
+          + 'width: var(--ds-switch-track-width); height: var(--ds-switch-track-height); '
+        : '';
     await writeFile(
       path.join(sourceDir, `${name}.css`),
       `.fixture { ${localVariableContract}${declarations} } /* var(--ds-commented-out-token) */`,
@@ -494,7 +628,7 @@ async function createFixture() {
   return root;
 }
 
-test('accepts a complete build, 107-token map, five-component manifest, and Figma evidence', async (t) => {
+test('accepts a complete build, 113-token map, ten-component manifest, and Figma evidence', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   assert.deepEqual(await verifyBuildArtifacts(root), []);
@@ -511,12 +645,27 @@ test('accepts equivalent Figma node URLs with additional query metadata', async 
   assert.deepEqual(await verifyFigmaEvidence(root), []);
 });
 
-test('reports a missing static route', async (t) => {
+test('reports every missing v0.2 static route', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
-  await rm(path.join(root, 'apps', 'docs', 'dist', 'components', 'scroll-area', 'index.html'));
+  const newRoutes = ['checkbox', 'radio-group', 'switch', 'textarea', 'select'];
+  await Promise.all(newRoutes.map((slug) => rm(
+    path.join(root, 'apps', 'docs', 'dist', 'components', slug, 'index.html'),
+  )));
+  const violations = await verifyBuildArtifacts(root);
+  for (const slug of newRoutes) {
+    assert.ok(violations.includes(`Missing build artifact: components/${slug}/index.html`));
+  }
+});
+
+test('rejects an extra static HTML route beyond the exact 18-route contract', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const extra = path.join(root, 'apps', 'docs', 'dist', 'components', 'invented', 'index.html');
+  await mkdir(path.dirname(extra), { recursive: true });
+  await writeFile(extra, '<!doctype html><h1>invented</h1>');
   assert.ok((await verifyBuildArtifacts(root))
-    .some((value) => value.includes('components/scroll-area/index.html')));
+    .includes('Static HTML routes must be exactly the 18 canonical routes'));
 });
 
 test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t) => {
@@ -530,8 +679,8 @@ test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t
   delete artifact.tokens[2].resolvedValue;
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.some((value) => value.includes('exactly 107 tokens')));
-  assert.ok(violations.some((value) => value.includes('exactly 81 primitive tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 113 tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 87 primitive tokens')));
   assert.ok(violations.some((value) => value.includes('exactly 26 semantic tokens')));
   assert.ok(violations.some((value) => value.includes('invalid kind')));
   assert.ok(violations.some((value) => value.includes('cssVariable mismatch')));
@@ -554,7 +703,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   artifact.components[3].figmaUrl = artifact.components[2].figmaUrl;
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.some((value) => value.includes('exactly 5 components')));
+  assert.ok(violations.some((value) => value.includes('exactly 10 components')));
   assert.ok(violations.some((value) => value.includes('Component index 0 must be Icon')));
   assert.ok(violations.some((value) => value.includes('status must be preview')));
   assert.ok(violations.some((value) => value.includes('description must be non-empty')));
@@ -562,7 +711,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   assert.ok(violations.some((value) => value.includes('variants must be a string array')));
   assert.ok(violations.some((value) => value.includes('prop 0 required must be boolean')));
   assert.ok(violations.some((value) => value.includes('tokens must be a non-empty string array')));
-  assert.ok(violations.some((value) => value.includes('five distinct Figma URLs')));
+  assert.ok(violations.some((value) => value.includes('ten distinct Figma URLs')));
 });
 
 test('rejects exact public component prop-contract drift', async (t) => {
@@ -578,6 +727,16 @@ test('rejects exact public component prop-contract drift', async (t) => {
     .find(({ name }) => name === 'type').type = 'string';
   artifact.components.find(({ name }) => name === 'ScrollArea').props
     .find(({ name }) => name === 'viewportRef').type = 'MutableRefObject<HTMLDivElement>';
+  artifact.components.find(({ name }) => name === 'Checkbox').props
+    .find(({ name }) => name === 'indeterminate').defaultValue = 'true';
+  artifact.components.find(({ name }) => name === 'RadioGroup').props
+    .find(({ name }) => name === 'options').type = 'RadioGroupOption[]';
+  artifact.components.find(({ name }) => name === 'Switch').props
+    .find(({ name }) => name === '...inputProps').type = 'InputHTMLAttributes<HTMLInputElement>';
+  artifact.components.find(({ name }) => name === 'Textarea').props
+    .find(({ name }) => name === 'resize').type = 'string';
+  artifact.components.find(({ name }) => name === 'Select').props
+    .find(({ name }) => name === '...selectProps').type = 'SelectHTMLAttributes<HTMLSelectElement>';
   await writeFile(file, JSON.stringify(artifact));
 
   const violations = await verifyBuildArtifacts(root);
@@ -585,6 +744,45 @@ test('rejects exact public component prop-contract drift', async (t) => {
   assert.ok(violations.includes('Button prop contract mismatch'));
   assert.ok(violations.includes('TextField prop contract mismatch'));
   assert.ok(violations.includes('ScrollArea prop contract mismatch'));
+  assert.ok(violations.includes('Checkbox prop contract mismatch'));
+  assert.ok(violations.includes('RadioGroup prop contract mismatch'));
+  assert.ok(violations.includes('Switch prop contract mismatch'));
+  assert.ok(violations.includes('Textarea prop contract mismatch'));
+  assert.ok(violations.includes('Select prop contract mismatch'));
+});
+
+test('rejects every missing v0.2 component manifest record', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
+  const artifact = JSON.parse(await readFile(file, 'utf8'));
+  const names = ['Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select'];
+  artifact.components = artifact.components.filter(({ name }) => !names.includes(name));
+  await writeFile(file, JSON.stringify(artifact));
+
+  const violations = await verifyBuildArtifacts(root);
+  assert.ok(violations.includes('components.json must contain exactly 10 components'));
+  names.forEach((name, offset) => {
+    assert.ok(violations.includes(`Component index ${offset + 5} must be ${name}`));
+  });
+});
+
+test('rejects token-contract drift for every new form control', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
+  const names = ['Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select'];
+  const removed = Object.fromEntries(names.map((name) => {
+    const component = manifest.components.find((entry) => entry.name === name);
+    return [name, component.tokens.shift()];
+  }));
+  await writeFile(manifestFile, JSON.stringify(manifest));
+
+  const violations = await verifyBuildArtifacts(root);
+  for (const name of names) {
+    assert.ok(violations.includes(`${name} manifest tokens omit CSS token: ${removed[name]}`));
+  }
 });
 
 test('rejects unknown, omitted, invented, and duplicate component token declarations', async (t) => {
@@ -633,12 +831,14 @@ test('rejects incomplete token-map equality and WEB syntax', async (t) => {
   tokenMap.variables[2].scopes = ['ALL_SCOPES'];
   tokenMap.variables.pop();
   tokenMap.collections.find(({ name }) => name === 'Primitives').variableCount = 31;
+  tokenMap.collections.find(({ name }) => name === 'Spacing').variableCount = 25;
   tokenMap.styles.effect[0].description = 'drifted description';
   await writeFile(file, JSON.stringify(tokenMap));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('token-name mapping must equal tokens.json')));
-  assert.ok(violations.some((value) => value.includes('exactly 105 variables')));
+  assert.ok(violations.some((value) => value.includes('exactly 111 variables')));
   assert.ok(violations.some((value) => value.includes('Primitives collection must contain exactly 32 variables')));
+  assert.ok(violations.some((value) => value.includes('Spacing collection must contain exactly 26 variables')));
   assert.ok(violations.some((value) => value.includes('Primitives variableCount must be 32')));
   assert.ok(violations.some((value) => value.includes('WEB syntax mismatch')));
   assert.ok(violations.some((value) => value.includes('variable fields mismatch')));
@@ -661,6 +861,16 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   evidence.components.TextField.properties.pop();
   evidence.components.ScrollArea.variantCount = 3;
   evidence.components.ScrollArea.properties = [{ name: 'Content', type: 'TEXT' }];
+  evidence.components.Checkbox.variantCount = 17;
+  evidence.components.Checkbox.properties.pop();
+  evidence.components.RadioGroup.variantCount = 17;
+  evidence.components.RadioGroup.properties[1].name = 'First option';
+  evidence.components.Switch.variantCount = 11;
+  evidence.components.Switch.properties[0].type = 'BOOLEAN';
+  evidence.components.Textarea.variantCount = 7;
+  evidence.components.Textarea.properties.pop();
+  evidence.components.Select.variantCount = 7;
+  evidence.components.Select.properties[1].name = 'Selection';
   await writeFile(file, JSON.stringify(evidence));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('Icon componentCount must be 5')));
@@ -673,6 +883,62 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   assert.ok(violations.some((value) => value.includes('TextField property definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('ScrollArea variantCount must be 4')));
   assert.ok(violations.some((value) => value.includes('ScrollArea property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Checkbox variantCount must be 18')));
+  assert.ok(violations.some((value) => value.includes('Checkbox property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('RadioGroup variantCount must be 18')));
+  assert.ok(violations.some((value) => value.includes('RadioGroup property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Switch variantCount must be 12')));
+  assert.ok(violations.some((value) => value.includes('Switch property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Textarea variantCount must be 8')));
+  assert.ok(violations.some((value) => value.includes('Textarea property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Select variantCount must be 8')));
+  assert.ok(violations.some((value) => value.includes('Select property definitions mismatch')));
+});
+
+test('rejects every missing v0.2 Figma component and page record', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  const records = [
+    ['Checkbox', '04.6 Checkbox'],
+    ['RadioGroup', '04.7 RadioGroup'],
+    ['Switch', '04.8 Switch'],
+    ['Textarea', '04.9 Textarea'],
+    ['Select', '04.10 Select'],
+  ];
+  for (const [name, page] of records) {
+    delete evidence.components[name];
+    delete evidence.pageScreenshotSha256[page];
+    delete evidence.pageScreenshotNodeIds[page];
+  }
+  await writeFile(file, JSON.stringify(evidence));
+
+  const violations = await verifyFigmaEvidence(root);
+  for (const [name, page] of records) {
+    assert.ok(violations.includes(`Missing Figma evidence: ${name}`));
+    assert.ok(violations.includes(`${page} screenshot SHA-256 is required`));
+    assert.ok(violations.includes(`${page} screenshot node ID is required`));
+  }
+});
+
+test('rejects exact Figma page, style, and component-set totals', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.pages = evidence.pages.filter((page) => page !== '04.10 Select');
+  evidence.textStyleCount = 7;
+  evidence.effectStyleCount = 1;
+  delete evidence.components.Select.componentSetUrl;
+  await writeFile(file, JSON.stringify(evidence));
+
+  const violations = await verifyFigmaEvidence(root);
+  assert.ok(violations.includes('Figma page list mismatch'));
+  assert.ok(violations.includes('Figma textStyleCount must be 8'));
+  assert.ok(violations.includes('Figma effectStyleCount must be 2'));
+  assert.ok(violations.includes('Figma evidence must expose exactly nine component sets'));
+  assert.ok(violations.includes('Select evidence fields mismatch'));
 });
 
 test('rejects approval, Code Connect, screenshot, hard-code, and URL mapping drift', async (t) => {
@@ -789,8 +1055,8 @@ test('rejects cross-file and duplicate normalized Figma node targets', async (t)
 
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('same Figma file')));
-  assert.ok(violations.some((value) => value.includes('five distinct manifest Figma node targets')));
-  assert.ok(violations.some((value) => value.includes('ten distinct Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('ten distinct manifest Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('fifteen distinct Figma node targets')));
 });
 
 test('rejects duplicate token-map collection, variable, and style IDs', async (t) => {
@@ -835,7 +1101,7 @@ test('rejects unexpected Figma component evidence keys', async (t) => {
   evidence.components.Tooltip = {};
   await writeFile(file, JSON.stringify(evidence));
   assert.ok((await verifyFigmaEvidence(root))
-    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField, ScrollArea'));
+    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select'));
 });
 
 test('rejects non-strict or impossible ISO timestamps', async (t) => {

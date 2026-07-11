@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -17,6 +17,11 @@ const routes = [
   'components/button/index.html',
   'components/text-field/index.html',
   'components/scroll-area/index.html',
+  'components/checkbox/index.html',
+  'components/radio-group/index.html',
+  'components/switch/index.html',
+  'components/textarea/index.html',
+  'components/select/index.html',
   'design-system/tokens.json',
   'design-system/components.json',
 ];
@@ -34,7 +39,9 @@ const textStyleNames = ['Display', 'Heading', 'Title', 'Body/Large', 'Body', 'Bo
 const pageNames = [
   '00 Cover', '01 Principles', '02 Getting Started', '03 Foundations',
   '04 Components', '04.1 Icon', '04.2 Badge', '04.3 Button',
-  '04.4 TextField', '04.5 ScrollArea', '90 Native Differences', '99 Deprecated',
+  '04.4 TextField', '04.5 ScrollArea', '04.6 Checkbox', '04.7 RadioGroup',
+  '04.8 Switch', '04.9 Textarea', '04.10 Select',
+  '90 Native Differences', '99 Deprecated',
 ];
 const componentSpecs = [
   {
@@ -89,6 +96,76 @@ const componentSpecs = [
     variants: [],
     sizes: [],
     states: ['no-overflow', 'start', 'middle', 'end'],
+  },
+  {
+    name: 'Checkbox',
+    slug: 'checkbox',
+    variantCount: 18,
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['unchecked', 'checked', 'indeterminate'],
+    sizes: ['small', 'medium'],
+    states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'RadioGroup',
+    slug: 'radio-group',
+    variantCount: 18,
+    properties: [
+      { name: 'Legend', type: 'TEXT' },
+      { name: 'Option 1', type: 'TEXT' },
+      { name: 'Option 2', type: 'TEXT' },
+      { name: 'Option 3', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['none', 'first', 'second'],
+    sizes: ['small', 'medium'],
+    states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'Switch',
+    slug: 'switch',
+    variantCount: 12,
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['off', 'on'],
+    sizes: ['small', 'medium'],
+    states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'Textarea',
+    slug: 'textarea',
+    variantCount: 8,
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Value', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['vertical', 'none'],
+    sizes: ['medium', 'large'],
+    states: ['default', 'focus', 'error', 'disabled'],
+  },
+  {
+    name: 'Select',
+    slug: 'select',
+    variantCount: 8,
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Value', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: [],
+    sizes: ['medium', 'large'],
+    states: ['default', 'focus', 'error', 'disabled'],
   },
 ];
 const componentPropContracts = {
@@ -172,14 +249,104 @@ const componentPropContracts = {
       defaultValue: null,
     },
   ],
+  Checkbox: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'indeterminate', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'size', type: 'CheckboxSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  RadioGroup: [
+    { name: 'legend', type: 'string', required: true, defaultValue: null },
+    { name: 'name', type: 'string', required: true, defaultValue: null },
+    { name: 'options', type: 'readonly RadioGroupOption[]', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'RadioGroupSize', required: false, defaultValue: 'medium' },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: null },
+    { name: 'required', type: 'boolean', required: false, defaultValue: 'false' },
+    {
+      name: 'onChange',
+      type: 'ChangeEventHandler<HTMLInputElement>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: '...fieldsetProps',
+      type: "Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 'children' | 'onChange'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Switch: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'SwitchSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'role' | 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Textarea: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextareaSize', required: false, defaultValue: 'medium' },
+    { name: 'resize', type: 'TextareaResize', required: false, defaultValue: 'vertical' },
+    {
+      name: '...textareaProps',
+      type: "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Select: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'placeholder', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'SelectSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...selectProps',
+      type: "Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'multiple' | 'size'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
 };
 const componentLocalCssVariables = {
   ScrollArea: new Set(['--ds-scroll-area-edge-size']),
+  Switch: new Set(['--ds-switch-track-height', '--ds-switch-track-width']),
 };
 const iconNames = ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search'];
+const htmlRoutes = routes.filter((route) => route.endsWith('.html'));
 
 async function json(file) {
   return JSON.parse(await readFile(file, 'utf8'));
+}
+
+async function collectHtmlRoutes(directory, prefix = '') {
+  const found = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      found.push(...await collectHtmlRoutes(path.join(directory, entry.name), relative));
+    } else if (entry.isFile() && entry.name.endsWith('.html')) {
+      found.push(relative);
+    }
+  }
+  return found.sort();
 }
 
 function exactKeys(value, expected) {
@@ -342,7 +509,7 @@ function validateTokensArtifact(artifact) {
     violations.push('tokens.json must contain tokens');
     return violations;
   }
-  if (artifact.tokens.length !== 107) violations.push('tokens.json must contain exactly 107 tokens');
+  if (artifact.tokens.length !== 113) violations.push('tokens.json must contain exactly 113 tokens');
   const names = new Set();
   const cssVariables = new Set();
   let primitiveCount = 0;
@@ -373,7 +540,7 @@ function validateTokensArtifact(artifact) {
     if (token?.kind === 'primitive') primitiveCount += 1;
     if (token?.kind === 'semantic') semanticCount += 1;
   });
-  if (primitiveCount !== 81) violations.push('tokens.json must contain exactly 81 primitive tokens');
+  if (primitiveCount !== 87) violations.push('tokens.json must contain exactly 87 primitive tokens');
   if (semanticCount !== 26) violations.push('tokens.json must contain exactly 26 semantic tokens');
   return violations;
 }
@@ -386,7 +553,7 @@ function validateComponentsArtifact(artifact) {
     violations.push('components.json must contain components');
     return violations;
   }
-  if (artifact.components.length !== 5) violations.push('components.json must contain exactly 5 components');
+  if (artifact.components.length !== 10) violations.push('components.json must contain exactly 10 components');
   const figmaUrls = [];
   componentSpecs.forEach(({ name, slug, variants, sizes, states }, index) => {
     const component = artifact.components[index];
@@ -451,8 +618,8 @@ function validateComponentsArtifact(artifact) {
       }
     }
   });
-  if (figmaUrls.length !== 5 || new Set(figmaUrls).size !== 5) {
-    violations.push('components.json must contain five distinct Figma URLs');
+  if (figmaUrls.length !== 10 || new Set(figmaUrls).size !== 10) {
+    violations.push('components.json must contain ten distinct Figma URLs');
   }
   return violations;
 }
@@ -558,7 +725,7 @@ export function verifyTokenMap(tokens, tokenMap) {
   const tokenByName = new Map(tokens.map((token) => [token.name, token]));
   const mappedNames = [...variables.map(({ tokenName }) => tokenName), ...effects.map(({ tokenName }) => tokenName)];
   const expectedNames = tokens.map(({ name }) => name);
-  if (variables.length !== 105) violations.push('token-map must contain exactly 105 variables');
+  if (variables.length !== 111) violations.push('token-map must contain exactly 111 variables');
   if (new Set(variables.map(({ variableId }) => variableId)).size !== variables.length) {
     violations.push('token-map variable IDs must be unique');
   }
@@ -568,8 +735,8 @@ export function verifyTokenMap(tokens, tokenMap) {
   if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.type === 'color').length !== 57) {
     violations.push('token-map must contain exactly 57 COLOR variables');
   }
-  if (mappedNames.length !== 107
-    || new Set(mappedNames).size !== 107
+  if (mappedNames.length !== 113
+    || new Set(mappedNames).size !== 113
     || JSON.stringify([...mappedNames].sort()) !== JSON.stringify([...expectedNames].sort())) {
     violations.push('token-map token-name mapping must equal tokens.json');
   }
@@ -608,6 +775,9 @@ export function verifyTokenMap(tokens, tokenMap) {
   }
   if (collectionByName.get('Primitives')?.variableCount !== 32) {
     violations.push('Primitives collection must contain exactly 32 variables');
+  }
+  if (collectionByName.get('Spacing')?.variableCount !== 26) {
+    violations.push('Spacing collection must contain exactly 26 variables');
   }
 
   if (JSON.stringify(tokenMap?.styles?.text?.map(({ name }) => name)) !== JSON.stringify(textStyleNames)) {
@@ -657,6 +827,14 @@ export async function verifyBuildArtifacts(root) {
     } catch {
       violations.push(`Missing build artifact: ${relative}`);
     }
+  }
+  try {
+    const actualHtmlRoutes = await collectHtmlRoutes(dist);
+    if (JSON.stringify(actualHtmlRoutes) !== JSON.stringify([...htmlRoutes].sort())) {
+      violations.push('Static HTML routes must be exactly the 18 canonical routes');
+    }
+  } catch {
+    violations.push('Static HTML route set is unreadable');
   }
   const tokens = await json(path.join(dist, 'design-system', 'tokens.json'));
   const manifest = await json(path.join(dist, 'design-system', 'components.json'));
@@ -754,6 +932,10 @@ export async function verifyFigmaEvidence(root) {
   if (!exactKeys(evidence.components, componentSpecs.map(({ name }) => name))) {
     violations.push(`Figma component keys must be exactly ${componentSpecs.map(({ name }) => name).join(', ')}`);
   }
+  const componentSetCount = Object.entries(evidence.components ?? {})
+    .filter(([name, component]) => name !== 'Icon' && nonEmpty(component?.componentSetUrl))
+    .length;
+  if (componentSetCount !== 9) violations.push('Figma evidence must expose exactly nine component sets');
 
   const manifestTargets = [];
   for (const spec of componentSpecs) {
@@ -811,16 +993,16 @@ export async function verifyFigmaEvidence(root) {
     }
   }
 
-  if (manifestTargets.length !== 5 || new Set(manifestTargets).size !== 5) {
-    violations.push('Figma evidence must expose five distinct manifest Figma node targets');
+  if (manifestTargets.length !== 10 || new Set(manifestTargets).size !== 10) {
+    violations.push('Figma evidence must expose ten distinct manifest Figma node targets');
   }
   const ownedIconTargets = evidence.components?.Icon?.componentUrls
     ?.map(({ url }) => figmaNodeTarget(url)) ?? [];
   const allEvidenceTargets = [...manifestTargets, ...ownedIconTargets];
-  if (allEvidenceTargets.length !== 10
+  if (allEvidenceTargets.length !== 15
     || allEvidenceTargets.some((value) => !value)
-    || new Set(allEvidenceTargets).size !== 10) {
-    violations.push('Figma evidence must expose ten distinct Figma node targets');
+    || new Set(allEvidenceTargets).size !== 15) {
+    violations.push('Figma evidence must expose fifteen distinct Figma node targets');
   }
   return violations.sort();
 }

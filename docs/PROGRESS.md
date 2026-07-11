@@ -1,4 +1,4 @@
-# Design System 진행상황
+# Design System v0.2 진행상황
 
 마지막 갱신: 2026-07-12 (KST)
 
@@ -6,73 +6,75 @@
 
 - 기준 브랜치: `main`
 - v0.1 병합 기준: `d958bd7` (`Merge PR #1`)
+- v0.2 구현 브랜치: `codex/form-controls-v0-2`
 - 저장소: [maxxuxx/design-system](https://github.com/maxxuxx/design-system) (`PUBLIC`)
-- 병합 PR: [#1 Complete public AI-readable design system v0.1](https://github.com/maxxuxx/design-system/pull/1)
 - Figma: [Design System v0.1](https://www.figma.com/design/hNlju4j556mzi0G515UDwE)
-- Figma ScrollArea: [component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6)
-
-새 작업은 최신 `main`을 가져온 뒤, 필요한 경우 그 지점에서 새 기능 브랜치를 만들어 시작한다.
+- v0.2 상태: 코드·문서·AI artifact·Figma library 구현과 macOS 검증 완료, Windows Chromium 신규 visual baseline 승인 대기
 
 ## 완료된 범위
 
-- `packages/tokens`: 107개 토큰의 CSS·JSON 생성 및 stale artifact 검증
-- `packages/react`: `Icon`, `Badge`, `Button`, `TextField`, `ScrollArea`
-- `apps/docs`: 13개 정적 문서 route와 AI용 `tokens.json`, `components.json`
-- Figma: Foundations, Variables, Styles, 5개 컴포넌트 문서와 variant/component set
-- ScrollArea:
-  - 우측 기본 scrollbar를 시각적으로 숨기고 native wheel·touch·keyboard scrolling 유지
-  - 이동 가능한 위·아래 방향에만 44px navigation button 활성화
-  - `color/bg/surface` 36% directional tint와 `blur/subtle` 8px background blur 적용
-  - `No overflow`, `Start`, `Middle`, `End` 상태를 코드와 Figma에서 동일하게 관리
-- 검증: 토큰·React·문서·접근성·artifact·Figma evidence·Windows visual baseline을 root `pnpm verify`와 GitHub Actions에서 확인
+- `packages/tokens`: 113개 토큰(Primitive 87, Semantic 26)의 CSS·JSON 생성 및 stale artifact 검증
+- `packages/react`: `Icon`, `Badge`, `Button`, `TextField`, `ScrollArea`, `Checkbox`, `RadioGroup`, `Switch`, `Textarea`, `Select`
+- `apps/docs`: 18개 정적 HTML route와 AI용 `tokens.json`, `components.json`
+- Figma:
+  - 5 collections, 111 Variables, 8 Text Styles, 2 Effect Styles
+  - 17 managed pages
+  - 5 owned Icon components와 9 component sets
+  - 모든 component URL, variant 수, property, token binding, page screenshot digest를 live readback과 대조
+- Form controls v0.2:
+  - `Checkbox`: native checked/indeterminate, form value, 오류·비활성 우선순위, 20/24px indicator
+  - `RadioGroup`: native same-name selection, controlled/uncontrolled value, required와 option-disabled 처리
+  - `Switch`: native checkbox form semantics와 `role="switch"`, 36×20/44×24px track
+  - `Textarea`: native typing/form value, 48/56px minimum tier, `vertical`/`none` resize
+  - `Select`: native single-select/optgroup/placeholder/form value, 48/56px tier, owned ChevronRight icon
+- Exact integration guardrails:
+  - 113 tokens, 10 component contracts, 18 HTML routes
+  - 17 Figma pages, 111 Variables, 8 Text Styles, 2 Effect Styles, 9 component sets
+  - 신규 route·manifest·prop·token·Figma record를 삭제하거나 변형하는 negative tests
 
 ## 마지막 검증
 
-- 병합된 `main`에서 `pnpm verify`: 성공
-  - React 61 tests
-  - Tokens 14 tests
-  - Docs unit 17 tests
-  - Guardrail/artifact 30 tests
-  - Browser 143 passed, 70 platform-owned skipped
-  - Static docs 13 routes
-- GitHub Actions: [main Verify run 29157275723](https://github.com/maxxuxx/design-system/actions/runs/29157275723)
-  - Ubuntu: 성공
-  - Windows: 성공
-  - Windows browser: 168 passed, 45 platform-owned skipped
+`codex/form-controls-v0-2`의 macOS 작업 환경에서 2026-07-12에 root `pnpm verify`가 성공했다.
+
+- TypeScript와 Astro: 오류 0개
+- Tokens: 15 tests passed
+- React: 124 tests passed
+- Docs unit: 22 tests passed
+- Guardrail/artifact: 35 tests passed
+- Static docs: 18 pages built
+- Browser: 256 passed, 113 platform-owned skipped
+- Generated artifacts: current
+- Repository guardrails: 3 private workspaces, primitive color leak 0
+- Figma evidence: artifact verifier와 컴포넌트별 독립 review 통과
+
+현재 환경에서 skip된 항목에는 Windows Chromium이 소유하는 visual comparison이 포함된다. 신규 5개 컴포넌트의 mobile/desktop component-slice PNG 10개는 Windows에서 생성·육안 검토·재비교한 뒤 승인해야 한다. macOS 결과를 Windows baseline 승인으로 간주하지 않는다.
 
 ## 다음 세션 시작 방법
 
 ```bash
-git switch main
-git pull --ff-only origin main
+git switch codex/form-controls-v0-2
 pnpm install --frozen-lockfile
 pnpm verify
 ```
 
-변경 작업용 브랜치가 필요하면 최신 `main`에서 생성한다.
+Windows Chromium baseline 승인:
 
-```bash
-git switch -c codex/<task-name>
-```
-
-문서 개발 서버:
-
-```bash
-pnpm --filter @maxxuxx/docs dev
+```powershell
+pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/component-slices.visual.spec.ts --update-snapshots
+pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/component-slices.visual.spec.ts
 ```
 
 주요 기준 파일:
 
-- 상위 로드맵: `docs/superpowers/plans/2026-07-10-ai-readable-design-system-v0.1.md`
-- ScrollArea 설계: `docs/superpowers/specs/2026-07-11-scroll-area-design.md`
-- ScrollArea 실행 계획: `docs/superpowers/plans/2026-07-11-scroll-area.md`
+- v0.2 설계: `docs/superpowers/specs/2026-07-12-form-controls-v0.2-design.md`
+- v0.2 실행 계획: `docs/superpowers/plans/2026-07-12-form-controls-v0.2.md`
 - Figma 상태 증거: `figma/verification.json`
+- Figma token projection: `figma/token-map.json`
 - 전체 검증 명령: root `package.json`의 `verify`
 
 ## 남은 후속 범위
 
-아래 항목은 v0.1 미완료가 아니라 의도적으로 후속으로 남긴 범위다.
-
+- Windows Chromium 신규 component-slice baseline 10개 승인과 branch CI 확인
 - Figma Code Connect
 - Svelte와 React Native 구현
 - 컴포넌트 `preview`에서 `stable`로 승격
