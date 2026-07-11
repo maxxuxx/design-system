@@ -34,6 +34,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'Badge', href: '/components/badge/' },
       { label: 'Button', href: '/components/button/' },
       { label: 'TextField', href: '/components/text-field/' },
+      { label: 'ScrollArea', href: '/components/scroll-area/' },
     ],
   },
 ];

@@ -11,8 +11,8 @@
 ## Global Constraints
 
 - 기준 설계서는 `docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md`이고 상위 실행 순서는 `docs/superpowers/plans/2026-07-10-ai-readable-design-system-v0.1.md`다.
-- 설계서와 계획서가 아직 untracked라면 base checkout에서 계획 문서만 `docs: add design system v0.1 plan`으로 로컬 커밋한 뒤 `superpowers:using-git-worktrees`로 `codex/design-system-v0.1` worktree를 만든다. Private 확인 전에는 이 bootstrap 커밋도 push하지 않는다.
-- 계획 작성 시점의 `maxxuxx/design-system` 원격은 `PUBLIC`이다. 로컬 수정과 커밋은 허용하지만 `gh repo view maxxuxx/design-system --json visibility,isPrivate`가 `{"isPrivate":true,"visibility":"PRIVATE"}`를 반환하기 전에는 어떤 `git push`도 실행하지 않는다.
+- 설계서와 계획서가 아직 untracked라면 base checkout에서 계획 문서만 `docs: add design system v0.1 plan`으로 로컬 커밋한 뒤 `superpowers:using-git-worktrees`로 `codex/design-system-v0.1` worktree를 만든다. 이 bootstrap 단계에서는 push하지 않고 branch push/integration을 상위 로드맵에 남긴다.
+- `maxxuxx/design-system` 원격은 의도적으로 `PUBLIC`이다. `gh repo view maxxuxx/design-system --json visibility,isPrivate`의 예상 결과 `{"isPrivate":false,"visibility":"PUBLIC"}`는 유효하며 로컬 수정, 커밋, 상위 로드맵의 push, v0.1 완료를 막지 않는다.
 - 루트와 `@maxxuxx/tokens`, `@maxxuxx/react`, `@maxxuxx/docs`는 모두 `"private": true`다. `npm publish`, registry 설정, Changesets, release workflow, 외부 호스팅을 추가하지 않는다.
 - pnpm workspace package 경계는 `apps/docs`, `packages/tokens`, `packages/react` 세 개뿐이다. `packages/svelte`와 `packages/react-native`는 만들지 않는다.
 - 이 계획에서는 `apps/docs/package.json`과 `packages/react/package.json`만 후속 계획의 설치 경계로 만든다. Astro/React source, Figma metadata, `tooling/verification`은 만들지 않는다.
@@ -107,7 +107,7 @@ export interface ResolvedToken extends TokenDefinition {
 - Produces: root commands `dev`, `build`, `check`, `test`, `test:e2e`, `generated:check`, `verify`.
 - Produces: package-manager and dependency versions consumed unchanged by plans 02 and 03.
 
-- [ ] **Step 1: Confirm the isolated branch and public push gate**
+- [ ] **Step 1: Confirm the isolated branch and public repository readback**
 
 Run from the worktree root:
 
@@ -124,9 +124,9 @@ Expected:
 - `git rev-parse --show-toplevel` is the isolated worktree, not the base checkout.
 - `git rev-parse --git-dir` and `git rev-parse --git-common-dir` differ, proving it is a linked worktree.
 - branch output is exactly `codex/design-system-v0.1`.
-- at plan-writing time GitHub output is `{"isPrivate":false,"visibility":"PUBLIC"}`. This blocks push, not local commits.
+- GitHub output is `{"isPrivate":false,"visibility":"PUBLIC"}`. This is the expected, valid state and does not block push or local commits.
 
-If the branch or worktree assertions fail, stop before creating files. Do not change visibility from this plan.
+If the branch or worktree assertions fail, stop before creating files. Public visibility is intentional; do not change it from this plan.
 
 - [ ] **Step 2: Create the exact root files**
 
@@ -827,8 +827,8 @@ Create `packages/tokens/src/semantic.tokens.json` with this complete content:
   { "name": "color/text/secondary", "type": "color", "kind": "semantic", "value": "{color/neutral/600}", "description": "설명과 메타데이터에 사용하는 보조 텍스트 색상입니다." },
   { "name": "color/text/disabled", "type": "color", "kind": "semantic", "value": "{color/neutral/400}", "description": "사용할 수 없는 control의 텍스트와 아이콘 색상입니다." },
   { "name": "color/text/inverse", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "어두운 surface 위 텍스트와 아이콘에 사용하는 반전 색상입니다." },
-  { "name": "color/border/default", "type": "color", "kind": "semantic", "value": "{color/neutral/200}", "description": "surface와 control의 기본 경계 색상입니다." },
-  { "name": "color/border/strong", "type": "color", "kind": "semantic", "value": "{color/neutral/300}", "description": "강조가 필요한 구분선과 control 경계 색상입니다." },
+  { "name": "color/border/default", "type": "color", "kind": "semantic", "value": "{color/neutral/500}", "description": "surface와 control의 기본 경계 색상입니다." },
+  { "name": "color/border/strong", "type": "color", "kind": "semantic", "value": "{color/neutral/600}", "description": "강조가 필요한 구분선과 control 경계 색상입니다." },
   { "name": "color/border/focus", "type": "color", "kind": "semantic", "value": "{color/blue/500}", "description": "focus된 control의 직접 경계 색상입니다." },
   { "name": "color/action/primary", "type": "color", "kind": "semantic", "value": "{color/blue/600}", "description": "페이지의 주요 action 기본 배경색입니다." },
   { "name": "color/action/primary-hover", "type": "color", "kind": "semantic", "value": "{color/blue/700}", "description": "주요 action의 pointer hover 배경색입니다." },
@@ -837,14 +837,14 @@ Create `packages/tokens/src/semantic.tokens.json` with this complete content:
   { "name": "color/action/weak", "type": "color", "kind": "semantic", "value": "{color/blue/50}", "description": "낮은 강도의 action 기본 배경색입니다." },
   { "name": "color/action/weak-hover", "type": "color", "kind": "semantic", "value": "{color/blue/100}", "description": "낮은 강도의 action hover 배경색입니다." },
   { "name": "color/action/on-weak", "type": "color", "kind": "semantic", "value": "{color/blue/700}", "description": "낮은 강도의 action 위 label과 icon 색상입니다." },
-  { "name": "color/status/danger", "type": "color", "kind": "semantic", "value": "{color/red/600}", "description": "오류와 위험 상태의 기본 강조 색상입니다." },
+  { "name": "color/status/danger", "type": "color", "kind": "semantic", "value": "{color/red/700}", "description": "오류와 위험 상태의 기본 강조 색상입니다." },
   { "name": "color/status/danger-subtle", "type": "color", "kind": "semantic", "value": "{color/red/50}", "description": "오류와 위험 상태의 약한 배경색입니다." },
-  { "name": "color/status/success", "type": "color", "kind": "semantic", "value": "{color/green/600}", "description": "성공과 완료 상태의 기본 강조 색상입니다." },
+  { "name": "color/status/success", "type": "color", "kind": "semantic", "value": "{color/green/700}", "description": "성공과 완료 상태의 기본 강조 색상입니다." },
   { "name": "color/status/success-subtle", "type": "color", "kind": "semantic", "value": "{color/green/50}", "description": "성공과 완료 상태의 약한 배경색입니다." },
   { "name": "color/status/neutral", "type": "color", "kind": "semantic", "value": "{color/neutral/700}", "description": "중립 정보 상태의 기본 강조 색상입니다." },
   { "name": "color/status/neutral-subtle", "type": "color", "kind": "semantic", "value": "{color/neutral/100}", "description": "중립 정보 상태의 약한 배경색입니다." },
   { "name": "color/status/on-status", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "강한 status 배경 위 label과 icon 색상입니다." },
-  { "name": "color/focus/ring", "type": "color", "kind": "semantic", "value": "{color/blue/200}", "description": "키보드 focus-visible 외곽 ring 색상입니다." }
+  { "name": "color/focus/ring", "type": "color", "kind": "semantic", "value": "{color/blue/600}", "description": "키보드 focus-visible 외곽 ring 색상입니다." }
 ]
 ```
 
@@ -1426,7 +1426,7 @@ Generated repair: corepack pnpm --filter @maxxuxx/tokens tokens:generate
 Generated assertion: corepack pnpm --filter @maxxuxx/tokens generated:check
 ```
 
-- [ ] **Step 3: Re-read the push gate and stop safely while public**
+- [ ] **Step 3: Re-read the Public repository state and stop at the plan ownership boundary**
 
 Run:
 
@@ -1434,9 +1434,9 @@ Run:
 gh repo view maxxuxx/design-system --json visibility,isPrivate
 ```
 
-Expected at plan-writing time: `{"isPrivate":false,"visibility":"PUBLIC"}`.
+Expected and valid: `{"isPrivate":false,"visibility":"PUBLIC"}`.
 
-If either field does not prove Private, report `Push blocked: maxxuxx/design-system is not private.` and finish the local plan without running `git push`. If a later readback returns `{"isPrivate":true,"visibility":"PRIVATE"}`, this sub-plan still leaves branch push/integration to the parent roadmap; it does not push independently.
+The Public readback above does not block parent-owned push or v0.1 completion. If either field differs, report `Repository visibility mismatch: expected PUBLIC.` and finish the local plan without changing visibility. This sub-plan always leaves branch push/integration to the parent roadmap; it does not push independently.
 
 ## Plan 01 Completion Evidence
 
@@ -1449,4 +1449,4 @@ If either field does not prove Private, report `Push blocked: maxxuxx/design-sys
 - Dist and public JSON have schema version 1, 106 entries, and matching SHA-256 hashes.
 - All generated files are LF-terminated, current, committed, and reproducible from source.
 - No npm publication, external hosting, Figma mutation, React source, Astro source, Svelte package, or React Native package was added.
-- No push occurred while the GitHub repository remained Public.
+- No push occurred from plan 01; branch push/integration remains owned by the parent roadmap.

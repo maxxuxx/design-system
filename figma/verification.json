@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 1,
+  "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
+  "verifiedAt": "2026-07-11T23:28:37+09:00",
+  "codeConnect": "skipped-v0.1",
+  "collections": [
+    "Primitives",
+    "Semantic Color",
+    "Spacing",
+    "Typography",
+    "Radius"
+  ],
+  "textStyleCount": 8,
+  "effectStyleCount": 2,
+  "pages": [
+    "00 Cover",
+    "01 Principles",
+    "02 Getting Started",
+    "03 Foundations",
+    "04 Components",
+    "04.1 Icon",
+    "04.2 Badge",
+    "04.3 Button",
+    "04.4 TextField",
+    "04.5 ScrollArea",
+    "90 Native Differences",
+    "99 Deprecated"
+  ],
+  "tokenValuesSha256": "52c1bbc62267e017de3dff501cc89580d5eaaf4dce10f692851c7d9ec0b944d3",
+  "effectValuesSha256": "e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8",
+  "effectReadback": [
+    {
+      "tokenName": "elevation/1",
+      "styleId": "S:52d62093669bbd5d8299e02d8f8d34108bc01fd7,",
+      "name": "Shadow/1",
+      "description": "인접 surface를 미세하게 구분하는 낮은 elevation입니다.",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 15,
+            "g": 23,
+            "b": 42,
+            "a": 0.06
+          },
+          "offset": {
+            "x": 0,
+            "y": 1
+          },
+          "radius": 2,
+          "spread": 0,
+          "visible": true,
+          "blendMode": "NORMAL"
+        }
+      ]
+    },
+    {
+      "tokenName": "elevation/2",
+      "styleId": "S:8eda28f1b0b823f8d64aa24ff849aaea4f7d9fa1,",
+      "name": "Shadow/2",
+      "description": "떠 있는 panel과 overlay를 구분하는 중간 elevation입니다.",
+      "effects": [
+        {
+          "type": "DROP_SHADOW",
+          "color": {
+            "r": 15,
+            "g": 23,
+            "b": 42,
+            "a": 0.1
+          },
+          "offset": {
+            "x": 0,
+            "y": 8
+          },
+          "radius": 24,
+          "spread": 0,
+          "visible": true,
+          "blendMode": "NORMAL"
+        }
+      ]
+    }
+  ],
+  "pageScreenshotSha256": {
+    "00 Cover": "c77e8b4b72feed70637ebccd24bac7443b83e6b30672faf7cd2d98f6a9361a13",
+    "01 Principles": "4002e3e8df110e06171a6b69a24e9b9dfb208eec633f2947e1470b185daa3625",
+    "02 Getting Started": "2f4295f5dbe155b152639eaa149162d52b82fbf2fc7e0cbcd670b34ee0836071",
+    "03 Foundations": "2b485fb08296d97003856a116cba19958e4edaaa0922dca25fbf36ab5f9729d3",
+    "04 Components": "748cc65b960ebc1a4bc87694a215dc173ec59d8cfa588048cf44922f03d9434c",
+    "04.1 Icon": "ef4c59b98e2884752a85a7529dd4fda0bbd2d57c6b5b97abc31aae179a9ae09d",
+    "04.2 Badge": "273987be72319f7b9e48726632074c8475b58749227b155555fe27477506bd0f",
+    "04.3 Button": "ae5b3d09b20f974fc5ea439e4e4da8c1ca6d3f4168fcd291ed7cd3788a73e2a8",
+    "04.4 TextField": "ac62db900a8c7560d993392d0173874a1db8c6da75fabc8fee489d75a8274117",
+    "04.5 ScrollArea": "a46826086c4267d6de0f613e462997b7d8a471960e8db6b0e137c40eb865ec77",
+    "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
+    "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
+  },
+  "components": {
+    "Icon": {
+      "catalogUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=31-2",
+      "componentCount": 5,
+      "componentUrls": [
+        {
+          "name": "Icon/Check",
+          "url": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-4"
+        },
+        {
+          "name": "Icon/ChevronRight",
+          "url": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-7"
+        },
+        {
+          "name": "Icon/Close",
+          "url": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-11"
+        },
+        {
+          "name": "Icon/Info",
+          "url": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-16"
+        },
+        {
+          "name": "Icon/Search",
+          "url": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=30-20"
+        }
+      ],
+      "properties": [],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Badge": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=47-2",
+      "variantCount": 16,
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Button": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=65-56",
+      "variantCount": 27,
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        },
+        {
+          "name": "Loading",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "Show leading icon",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "Show trailing icon",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "Leading icon",
+          "type": "INSTANCE_SWAP"
+        },
+        {
+          "name": "Trailing icon",
+          "type": "INSTANCE_SWAP"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "TextField": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50",
+      "variantCount": 8,
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        },
+        {
+          "name": "Value",
+          "type": "TEXT"
+        },
+        {
+          "name": "Description",
+          "type": "TEXT"
+        },
+        {
+          "name": "Error",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "ScrollArea": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6",
+      "variantCount": 4,
+      "properties": [],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    }
+  },
+  "foundations": {
+    "approved": true,
+    "approvedAt": "2026-07-10T23:08:13+09:00",
+    "tokenParity": true
+  },
+  "pageScreenshotNodeIds": {
+    "00 Cover": "10:2",
+    "01 Principles": "11:2",
+    "02 Getting Started": "11:5",
+    "03 Foundations": "11:8",
+    "04 Components": "11:11",
+    "04.1 Icon": "9:7",
+    "04.2 Badge": "9:8",
+    "04.3 Button": "9:9",
+    "04.4 TextField": "9:10",
+    "04.5 ScrollArea": "111:2",
+    "90 Native Differences": "88:2",
+    "99 Deprecated": "88:5"
+  },
+  "allPagesScreenshotReviewed": true,
+  "hardCodedProductValues": 0
+}

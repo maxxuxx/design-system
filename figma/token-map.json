@@ -8,7 +8,7 @@
         "id": "5:0",
         "name": "Default"
       },
-      "variableCount": 31
+      "variableCount": 32
     },
     {
       "name": "Semantic Color",
@@ -845,6 +845,15 @@
       "webSyntax": "var(--ds-radius-full)"
     },
     {
+      "tokenName": "blur/subtle",
+      "tokenType": "FLOAT",
+      "collection": "Primitives",
+      "collectionId": "VariableCollectionId:5:2",
+      "variableId": "VariableID:110:2",
+      "scopes": [],
+      "webSyntax": "var(--ds-blur-subtle)"
+    },
+    {
       "tokenName": "color/bg/canvas",
       "tokenType": "COLOR",
       "collection": "Semantic Color",
@@ -1185,12 +1194,14 @@
       {
         "tokenName": "elevation/1",
         "name": "Shadow/1",
+        "description": "인접 surface를 미세하게 구분하는 낮은 elevation입니다.",
         "styleId": "S:52d62093669bbd5d8299e02d8f8d34108bc01fd7,",
         "webSyntax": "var(--ds-elevation-1)"
       },
       {
         "tokenName": "elevation/2",
         "name": "Shadow/2",
+        "description": "떠 있는 panel과 overlay를 구분하는 중간 elevation입니다.",
         "styleId": "S:8eda28f1b0b823f8d64aa24ff849aaea4f7d9fa1,",
         "webSyntax": "var(--ds-elevation-2)"
       }

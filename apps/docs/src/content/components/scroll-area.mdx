@@ -1,0 +1,157 @@
+---
+name: ScrollArea
+slug: scroll-area
+description: native vertical scrolling을 유지하면서 방향별 blur cue와 이동 control을 고정해 제공하는 scroll container입니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: []
+sizes: []
+states: [no-overflow, start, middle, end]
+accessibility: 이름 있는 region, overflow에 따른 keyboard focus, localized navigation button labels, native wheel·touch·keyboard scrolling을 제공합니다.
+props:
+  - name: children
+    type: ReactNode
+    required: true
+    defaultValue: null
+    description: native viewport 안에서 스크롤되는 content입니다.
+  - name: label
+    type: string
+    required: true
+    defaultValue: null
+    description: scroll viewport region의 localized accessible name입니다.
+  - name: scrollUpLabel
+    type: string
+    required: true
+    defaultValue: null
+    description: 위쪽 navigation button의 localized accessible name입니다.
+  - name: scrollDownLabel
+    type: string
+    required: true
+    defaultValue: null
+    description: 아래쪽 navigation button의 localized accessible name입니다.
+  - name: viewportRef
+    type: Ref<HTMLDivElement>
+    required: false
+    defaultValue: null
+    description: 실제 native scrolling viewport를 가리키는 ref입니다.
+  - name: onViewportScroll
+    type: UIEventHandler<HTMLDivElement>
+    required: false
+    defaultValue: null
+    description: owned state가 동기화된 뒤 받는 native viewport scroll event handler입니다.
+  - name: ...rootProps
+    type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onScroll'>"
+    required: false
+    defaultValue: null
+    description: 크기와 layout을 소유하는 outer root에 전달되는 native div props입니다.
+tokens:
+  - size/control/small
+  - space/2
+  - space/4
+  - space/8
+  - space/64
+  - radius/full
+  - elevation/1
+  - blur/subtle
+  - color/bg/surface
+  - color/action/weak
+  - color/action/weak-hover
+  - color/action/on-weak
+  - color/border/default
+  - color/border/focus
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import ScrollAreaExample from '../../components/examples/ScrollAreaExample';
+
+## 예제
+
+<ComponentPreview title="ScrollArea 방향 상태" description="긴 콘텐츠를 native input과 방향 button으로 이동하고 짧은 콘텐츠의 no-overflow 상태를 비교합니다.">
+  <ScrollAreaExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+제한된 높이 안에서 목록이나 세로 content를 보여 주면서 wheel, trackpad, touch, keyboard scroll을 그대로 유지해야 할 때 사용합니다. 현재 위치에서 이동 가능한 방향만 blur cue와 navigation button으로 표시합니다. cue는 `color/bg/surface`를 36%만 남긴 방향성 tint 위에 8px background blur를 적용해 다음 content가 살짝 비치도록 합니다.
+
+## 사용하지 말아야 할 때
+
+페이지 자체가 자연스럽게 늘어나야 하거나 horizontal scrolling, virtualization, custom inertial physics가 필요할 때는 사용하지 않습니다. 단순히 content를 자르기 위한 용도로도 사용하지 않습니다.
+
+## 구조
+
+outer root가 크기와 overlay 위치를 소유하고, 그 안의 native `overflow-y: auto` viewport가 content를 스크롤합니다. top/bottom edge와 button은 viewport 위에 고정되며 이동할 수 없는 방향에서는 pointer input과 accessibility tree에서 비활성화됩니다.
+
+## 크기와 변형
+
+고정 size나 visual variant prop은 없습니다. `className` 또는 `style` 같은 root native props로 필요한 높이와 너비를 정합니다. 방향 button은 system의 44px small control size를 사용합니다.
+
+## 상태와 동작
+
+`no-overflow`, `start`, `middle`, `end` 네 상태가 root와 viewport의 `data-state`에 노출됩니다. button은 현재 viewport 높이의 80%만큼 이동하며 ResizeObserver와 native scroll event가 방향 상태를 다시 계산합니다.
+
+## 반응형 동작
+
+root가 부모의 available width에 맞춰 줄어들고 viewport 높이는 consumer가 정합니다. 이 예제는 desktop과 mobile 모두 320px 높이를 유지하면서 너비만 container에 맞춥니다.
+
+## 접근성
+
+viewport는 required `label`을 가진 region입니다. overflow가 있을 때 keyboard focus를 받고 native Page Up/Down, Home/End, arrow key 동작을 유지합니다. 위·아래 button label은 제품 언어에 맞게 반드시 제공하며 focus-visible, forced-colors, reduced-motion 처리를 포함합니다.
+
+## React 예제
+
+```tsx
+import { ScrollArea } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function OrderHistory() {
+  return (
+    <ScrollArea
+      label="주문 내역"
+      scrollDownLabel="다음 주문 보기"
+      scrollUpLabel="이전 주문 보기"
+      style={{ height: 320 }}
+    >
+      <OrderList />
+    </ScrollArea>
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `children` | `ReactNode` | required | native viewport 안의 scroll content |
+| `label` | `string` | required | viewport region의 localized accessible name |
+| `scrollUpLabel` | `string` | required | 위쪽 navigation button의 localized name |
+| `scrollDownLabel` | `string` | required | 아래쪽 navigation button의 localized name |
+| `viewportRef` | <code>Ref&lt;HTMLDivElement&gt;</code> | 없음 | 실제 scrolling element ref |
+| `onViewportScroll` | <code>UIEventHandler&lt;HTMLDivElement&gt;</code> | 없음 | state synchronization 뒤 호출되는 viewport scroll handler |
+| native root props | <code>Omit&lt;HTMLAttributes&lt;HTMLDivElement&gt;, 'children' \| 'onScroll'&gt;</code> | 없음 | outer sizing root의 native div props |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/small`, `space/2`, `space/4`, `space/8`, `space/64`
+- `radius/full`, `elevation/1`, `blur/subtle`
+- `color/bg/surface`, `color/action/weak`, `color/action/weak-hover`, `color/action/on-weak`
+- `color/border/default`, `color/border/focus`, `color/focus/ring`
+
+## Figma
+
+라이브 [`ScrollArea` component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6)은 `No overflow`, `Start`, `Middle`, `End` 네 state를 문서화합니다. 이동 가능한 edge만 36% directional surface tint, 8px background blur, 44px navigation button을 표시하며, 모든 색상·크기·radius·effect는 라이브러리 token 또는 style에 연결되어 있습니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

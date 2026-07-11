@@ -12,7 +12,7 @@
 
 - 기준 설계서는 `docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md`, master plan은 `docs/superpowers/plans/2026-07-10-ai-readable-design-system-v0.1.md`다.
 - 이 계획은 plan 01의 token pipeline과 plan 02의 Astro/content/manifest/Playwright infrastructure가 완료된 뒤 실행한다. 두 선행 계획의 파일을 이 계획에서 다시 설계하거나 대체하지 않는다.
-- 실행 worktree, private-repository push gate, pinned versions, private package 경계는 master plan의 Global Constraints를 그대로 따른다.
+- 실행 worktree, 의도적인 Public repository 정책, pinned versions, private package 경계는 master plan의 Global Constraints를 그대로 따른다.
 - 컴포넌트 순서는 반드시 `Icon → Badge → Button → TextField`다. 다음 slice는 이전 slice의 focused test, package check, manifest check, docs build, mobile/desktop screenshot comparison이 모두 통과한 뒤 시작한다.
 - React와 docs product CSS는 primitive color 변수 `--ds-color-neutral-*`, `--ds-color-blue-*`, `--ds-color-red-*`, `--ds-color-green-*`를 참조하지 않는다. 의미 color 변수와 plan 01의 spacing/size/radius/type 변수만 사용한다.
 - 접근성 목표는 WCAG 2.2 AA다. 네 컴포넌트 모두 native element를 유지하고, 단위 axe smoke 0건, 키보드 동작, 명시적 ARIA precedence, 44px 이상 Button touch target을 검증한다.

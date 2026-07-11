@@ -7,8 +7,8 @@
   { "name": "color/text/disabled", "type": "color", "kind": "semantic", "value": "{color/neutral/400}", "description": "사용할 수 없는 control의 텍스트와 아이콘 색상입니다." },
   { "name": "color/text/inverse", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "어두운 surface 위 텍스트와 아이콘에 사용하는 반전 색상입니다." },
   { "name": "color/icon/primary", "type": "color", "kind": "semantic", "value": "{color/neutral/900}", "description": "기능 아이콘의 기본 전경색으로 사용하는 색상입니다." },
-  { "name": "color/border/default", "type": "color", "kind": "semantic", "value": "{color/neutral/200}", "description": "surface와 control의 기본 경계 색상입니다." },
-  { "name": "color/border/strong", "type": "color", "kind": "semantic", "value": "{color/neutral/300}", "description": "강조가 필요한 구분선과 control 경계 색상입니다." },
+  { "name": "color/border/default", "type": "color", "kind": "semantic", "value": "{color/neutral/500}", "description": "surface와 control의 기본 경계 색상입니다." },
+  { "name": "color/border/strong", "type": "color", "kind": "semantic", "value": "{color/neutral/600}", "description": "강조가 필요한 구분선과 control 경계 색상입니다." },
   { "name": "color/border/focus", "type": "color", "kind": "semantic", "value": "{color/blue/500}", "description": "focus된 control의 직접 경계 색상입니다." },
   { "name": "color/action/primary", "type": "color", "kind": "semantic", "value": "{color/blue/600}", "description": "페이지의 주요 action 기본 배경색입니다." },
   { "name": "color/action/primary-hover", "type": "color", "kind": "semantic", "value": "{color/blue/700}", "description": "주요 action의 pointer hover 배경색입니다." },
@@ -17,12 +17,12 @@
   { "name": "color/action/weak", "type": "color", "kind": "semantic", "value": "{color/blue/50}", "description": "낮은 강도의 action 기본 배경색입니다." },
   { "name": "color/action/weak-hover", "type": "color", "kind": "semantic", "value": "{color/blue/100}", "description": "낮은 강도의 action hover 배경색입니다." },
   { "name": "color/action/on-weak", "type": "color", "kind": "semantic", "value": "{color/blue/700}", "description": "낮은 강도의 action 위 label과 icon 색상입니다." },
-  { "name": "color/status/danger", "type": "color", "kind": "semantic", "value": "{color/red/600}", "description": "오류와 위험 상태의 기본 강조 색상입니다." },
+  { "name": "color/status/danger", "type": "color", "kind": "semantic", "value": "{color/red/700}", "description": "오류와 위험 상태의 기본 강조 색상입니다." },
   { "name": "color/status/danger-subtle", "type": "color", "kind": "semantic", "value": "{color/red/50}", "description": "오류와 위험 상태의 약한 배경색입니다." },
-  { "name": "color/status/success", "type": "color", "kind": "semantic", "value": "{color/green/600}", "description": "성공과 완료 상태의 기본 강조 색상입니다." },
+  { "name": "color/status/success", "type": "color", "kind": "semantic", "value": "{color/green/700}", "description": "성공과 완료 상태의 기본 강조 색상입니다." },
   { "name": "color/status/success-subtle", "type": "color", "kind": "semantic", "value": "{color/green/50}", "description": "성공과 완료 상태의 약한 배경색입니다." },
   { "name": "color/status/neutral", "type": "color", "kind": "semantic", "value": "{color/neutral/700}", "description": "중립 정보 상태의 기본 강조 색상입니다." },
   { "name": "color/status/neutral-subtle", "type": "color", "kind": "semantic", "value": "{color/neutral/100}", "description": "중립 정보 상태의 약한 배경색입니다." },
   { "name": "color/status/on-status", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "강한 status 배경 위 label과 icon 색상입니다." },
-  { "name": "color/focus/ring", "type": "color", "kind": "semantic", "value": "{color/blue/200}", "description": "키보드 focus-visible 외곽 ring 색상입니다." }
+  { "name": "color/focus/ring", "type": "color", "kind": "semantic", "value": "{color/blue/600}", "description": "키보드 focus-visible 외곽 ring 색상입니다." }
 ]

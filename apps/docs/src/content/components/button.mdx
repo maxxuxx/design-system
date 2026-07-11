@@ -1,0 +1,180 @@
+---
+name: Button
+slug: button
+description: 화면의 주 행동이나 보조 행동을 native button semantics로 실행하는 action control입니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=65-56"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [fill, weak, outline]
+sizes: [small, medium, large]
+states: [default, hover, pressed, focus-visible, disabled, loading]
+accessibility: native button, keyboard activation, visible focus, effective disabled, loading aria-busy와 보존된 accessible name을 제공합니다.
+props:
+  - name: children
+    type: ReactNode
+    required: true
+    defaultValue: null
+    description: 버튼의 visible accessible label입니다.
+  - name: size
+    type: ButtonSize
+    required: false
+    defaultValue: medium
+    description: small, medium, large control height입니다.
+  - name: variant
+    type: ButtonVariant
+    required: false
+    defaultValue: fill
+    description: fill, weak, outline 시각 위계입니다.
+  - name: width
+    type: ButtonWidth
+    required: false
+    defaultValue: hug
+    description: content 너비 또는 container full width layout입니다.
+  - name: loading
+    type: boolean
+    required: false
+    defaultValue: "false"
+    description: activation을 막고 aria-busy와 spinner를 표시합니다.
+  - name: leadingIcon
+    type: "ReactElement<IconProps, typeof Icon>"
+    required: false
+    defaultValue: null
+    description: label 앞의 exact owned Icon slot입니다. 전달된 label은 제거되고 다른 element는 버립니다.
+  - name: trailingIcon
+    type: "ReactElement<IconProps, typeof Icon>"
+    required: false
+    defaultValue: null
+    description: label 뒤의 exact owned Icon slot입니다. 전달된 label은 제거되고 다른 element는 버립니다.
+  - name: ...buttonProps
+    type: "ButtonHTMLAttributes<HTMLButtonElement>"
+    required: false
+    defaultValue: null
+    description: native button props입니다. type default는 button입니다.
+tokens:
+  - size/control/small
+  - size/control/medium
+  - size/control/large
+  - size/icon/medium
+  - space/2
+  - space/4
+  - space/8
+  - space/12
+  - space/16
+  - space/20
+  - space/24
+  - radius/md
+  - radius/full
+  - font/family/sans
+  - font/size/body-sm
+  - font/size/body
+  - font/size/body-lg
+  - font/line-height/body-sm
+  - font/line-height/body
+  - font/line-height/body-lg
+  - font/weight/semibold
+  - color/bg/surface
+  - color/bg/subtle
+  - color/text/primary
+  - color/text/disabled
+  - color/action/primary
+  - color/action/primary-hover
+  - color/action/primary-pressed
+  - color/action/on-primary
+  - color/action/weak
+  - color/action/weak-hover
+  - color/action/on-weak
+  - color/border/default
+  - color/border/strong
+  - color/border/focus
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import ButtonExample from '../../components/examples/ButtonExample';
+import { Button, Icon } from '@maxxuxx/react';
+
+## 예제
+
+<ComponentPreview title="Button 상태와 조합" description="크기, 위계, 너비, loading, disabled, icon slot을 바꿔 보세요.">
+  <ButtonExample client:load />
+</ComponentPreview>
+
+<p><Button>계속</Button> <Button variant="outline">취소</Button></p>
+
+## 사용해야 할 때
+
+제출, 저장, 결제, 다음 단계처럼 사용자가 명시적으로 실행하는 주 행동과 보조 행동에 사용합니다. 한 화면의 dominant fill action은 하나를 우선합니다.
+
+## 사용하지 말아야 할 때
+
+단순 페이지 이동 text, 여러 개의 경쟁하는 primary action, 상태 label에는 사용하지 않습니다. 페이지 이동만 수행하면 의미에 맞는 link를 사용합니다.
+
+## 구조
+
+native `button` 안에 leading icon slot, label, trailing icon slot을 둡니다. loading spinner는 overlay되며 accessible label은 DOM에 남습니다.
+
+## 크기와 변형
+
+`small`, `medium`, `large`는 최소 44px, 48px, 56px 높이입니다. `fill`, `weak`, `outline` 세 위계가 있고 `width="full"`은 variant가 아닌 container layout behavior입니다.
+
+## 상태와 동작
+
+web은 hover와 focus-visible을 추가하고 공통 design state는 default, pressed, disabled입니다. `loading || disabled`가 native disabled를 만들며 loading은 `aria-busy="true"`입니다.
+
+## 반응형 동작
+
+모바일에서는 primary action에 `width="full"`을 사용할 수 있고 데스크톱에서는 기본 `hug`가 일반적입니다. 별도 mobile component를 만들지 않습니다.
+
+## 접근성
+
+native Enter/Space activation을 유지합니다. visible label을 제거하지 않고 owned `Icon`만 slot에 허용합니다. slot icon의 `label`은 복제 시 제거되어 장식용이 되고 다른 element는 runtime에서도 버립니다. loading 중에도 accessible name이 유지되며 focus-visible ring은 semantic focus token을 사용합니다.
+
+## React 예제
+
+```tsx
+import { Button, Icon } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function ContinueButton() {
+  return (
+    <Button trailingIcon={<Icon name="chevron-right" size={20} />}>
+      다음으로
+    </Button>
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `children` | `ReactNode` | required | visible accessible label |
+| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | 44/48/56px minimum height |
+| `variant` | `'fill' \| 'weak' \| 'outline'` | `'fill'` | action hierarchy |
+| `width` | `'hug' \| 'full'` | `'hug'` | intrinsic 또는 full width |
+| `loading` | `boolean` | `false` | native disabled + aria-busy + spinner |
+| `leadingIcon` | <code>ReactElement&lt;IconProps, typeof Icon&gt;</code> | 없음 | label 앞 exact owned Icon slot; cloned decorative |
+| `trailingIcon` | <code>ReactElement&lt;IconProps, typeof Icon&gt;</code> | 없음 | label 뒤 exact owned Icon slot; cloned decorative |
+| native button props | <code>ButtonHTMLAttributes&lt;HTMLButtonElement&gt;</code> | `type="button"` | native behavior와 events |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/small`, `size/control/medium`, `size/control/large`, `radius/md`
+- `color/action/*`, `color/border/*`, `color/text/disabled`, `color/bg/*`, `color/focus/ring`
+
+## Figma
+
+[Button component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=65-56)은 `Size 3 × Variant 3 × State Default/Pressed/Disabled = 27` variants를 제공합니다. `Label` TEXT, `Loading`, `Show leading icon`, `Show trailing icon` BOOLEAN, leading/trailing INSTANCE_SWAP properties를 사용하며, width는 variant가 아닌 layout guidance입니다. 모든 제품 색상과 크기·간격·radius는 semantic Variable에 연결되어 있고, [property preview](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=74-56)에서 아이콘 슬롯과 Loading overlay를 함께 확인할 수 있습니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

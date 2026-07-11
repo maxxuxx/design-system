@@ -24,6 +24,7 @@ function metadata(name: ComponentMetadata['name'], figmaUrl = ''): ComponentMeta
     Badge: 'badge',
     Button: 'button',
     TextField: 'text-field',
+    ScrollArea: 'scroll-area',
   } as const;
   return {
     name,
@@ -55,33 +56,35 @@ describe('component manifest', () => {
     expect(buildComponentManifest([])).toEqual({ schemaVersion: 1, components: [] });
   });
 
-  it('sorts entries Icon, Badge, Button, TextField regardless of file order', () => {
+  it('sorts all five entries in canonical order regardless of file order', () => {
     const manifest = buildComponentManifest([
+      document('ScrollArea'),
       document('TextField'),
       document('Button'),
       document('Badge'),
       document('Icon'),
     ]);
     expect(manifest.components.map(({ name }) => name))
-      .toEqual(['Icon', 'Badge', 'Button', 'TextField']);
+      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']);
     expect(manifest.components.map(({ docsUrl }) => docsUrl)).toEqual([
       '/components/icon/',
       '/components/badge/',
       '/components/button/',
       '/components/text-field/',
+      '/components/scroll-area/',
     ]);
   });
 
   it('requires all entries before the release check can pass', () => {
     expect(() => buildComponentManifest([document('Icon')], { requireFigma: true }))
-      .toThrow('Release manifest is missing components: Badge, Button, TextField');
+      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea');
   });
 
   it('requires a Figma URL on every complete release entry', () => {
-    const documents = ['Icon', 'Badge', 'Button', 'TextField']
+    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']
       .map((name) => document(name as ComponentMetadata['name']));
     expect(() => buildComponentManifest(documents, { requireFigma: true }))
-      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField');
+      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea');
   });
 
   it('renders stable two-space JSON with LF and a final newline', () => {

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task, then use superpowers:verification-before-completion before any success claim. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 토큰·Astro 문서·React 파일럿·Figma 산출물을 하나의 로컬 `verify` 명령과 기계 판독 가능한 증거로 검증하고, Private 확인 전 push를 차단한다.
+**Goal:** 토큰·Astro 문서·React 파일럿·Figma 산출물을 하나의 로컬 `verify` 명령과 기계 판독 가능한 증거로 검증하고, 의도적인 Public 저장소 상태를 최종 통합 조건으로 확인한다.
 
 **Architecture:** Node 표준 라이브러리 기반 guardrail 스크립트가 workspace 경계, 의미 색상 사용, 정적 build 산출물, Figma QA JSON을 검사한다. 기존 package tests와 Playwright를 순서대로 실행하고, 모든 생성 파일이 최신인지 확인한 뒤에만 v0.1 완료 상태를 기록한다.
 
@@ -16,7 +16,7 @@
 - Final component status remains `preview`; React is `preview`; Svelte and React Native remain `planned`.
 - Every component must have a non-empty Figma node URL at final verification.
 - Code Connect remains unimplemented; machine-readable evidence must use exactly `codeConnect: "skipped-v0.1"` and reject published or connected states.
-- The remote repository must read back `PRIVATE` before push. Local commits are allowed before that gate.
+- The remote repository must read back `{"isPrivate":false,"visibility":"PUBLIC"}`. This intentional Public state is valid for push and v0.1 completion.
 
 ---
 
@@ -1223,7 +1223,7 @@ git add figma/token-map.json figma/verification.json tooling/verification packag
 git commit -m "test: add complete design system artifact verification"
 ```
 
-### Task 3: Run fresh final verification and enforce privacy
+### Task 3: Run fresh final verification and confirm Public repository state
 
 **Files:**
 - Modify only after all verification passes: `docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md`
@@ -1255,7 +1255,23 @@ git log --oneline -10
 
 Expected: no uncommitted product changes, no whitespace errors, and bounded conventional commits matching the plan tasks.
 
-- [ ] **Step 4: Update spec status only from fresh evidence**
+- [ ] **Step 4: Verify the required Public repository state**
+
+Run:
+
+```powershell
+gh repo view maxxuxx/design-system --json visibility,isPrivate
+```
+
+Expected for final integration and any parent-owned push:
+
+```json
+{"isPrivate":false,"visibility":"PUBLIC"}
+```
+
+This Public readback is required and valid; it does not block push or v0.1 completion. If either field differs, report `Repository visibility mismatch: expected PUBLIC.` before marking v0.1 complete or handing off any push. Do not change visibility from this plan, and do not treat a local Git remote as visibility evidence.
+
+- [ ] **Step 5: Update spec status only after fresh evidence and the Public readback**
 
 Change `상태: 사용자 검토 요청` to `상태: v0.1 구현 및 검증 완료`. Regenerate the component manifest once more and stage the generated public `components.json` in the final evidence commit even when its bytes are unchanged from the verified build:
 
@@ -1265,19 +1281,3 @@ corepack pnpm --filter @maxxuxx/docs manifest:check
 git add docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md apps/docs/public/design-system/components.json
 git commit -m "docs: mark design system v0.1 verified"
 ```
-
-- [ ] **Step 5: Verify the remote privacy gate**
-
-Run:
-
-```powershell
-gh repo view maxxuxx/design-system --json visibility,isPrivate
-```
-
-Expected before any push:
-
-```json
-{"isPrivate":true,"visibility":"PRIVATE"}
-```
-
-If the readback is still public, stop without push and report that exact blocker. Do not treat a local Git remote as privacy evidence.

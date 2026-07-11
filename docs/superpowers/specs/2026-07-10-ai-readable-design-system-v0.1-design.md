@@ -1,6 +1,6 @@
 # AI-Readable Design System v0.1 설계서
 
-- 상태: 사용자 검토 요청
+- 상태: v0.1 구현 및 검증 완료
 - 작성일: 2026-07-10
 - 저장소: `maxxuxx/design-system`
 - 기준 경로: `C:\github\design-system`
@@ -327,15 +327,15 @@ Icon → Badge → Button → TextField
 
 ## 13. 공개 범위와 AI 접근
 
-- Git 저장소는 Private 운영을 기본으로 한다.
+- GitHub 저장소 `maxxuxx/design-system`은 의도적으로 Public으로 운영한다.
 - 문서 사이트는 v0.1에서 로컬 build까지만 검증한다.
 - 저장소에 접근 가능한 AI는 MDX, JSON, TypeScript를 직접 읽을 수 있다.
-- 웹 탐색만 가능한 AI가 Private 문서에 접근하려면 인증된 브라우저 또는 연결 도구가 필요하다.
+- 웹 탐색만 가능한 AI도 Public GitHub 저장소의 문서를 인증 없이 읽을 수 있다.
 - Private Figma는 해당 사용자 권한을 가진 Figma 연결을 통해 접근한다.
 - GitHub PAT, 배포 토큰, Figma access token 같은 인증 정보는 저장소에 커밋하지 않는다.
 - 디자인 토큰 JSON과 컴포넌트 manifest는 제품 산출물이므로 저장소에서 버전 관리한다.
 
-현재 원격 저장소가 Public이면 첫 프로젝트 작업을 push하기 전에 Private로 변경해야 한다.
+현재 원격 저장소의 Public 상태는 의도된 운영 조건이며 push나 v0.1 완료를 막지 않는다.
 
 ## 14. v0.1 완료 조건
 

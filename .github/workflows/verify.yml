@@ -1,0 +1,37 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+      - name: Install Chromium and Linux dependencies
+        if: runner.os == 'Linux'
+        run: corepack pnpm --filter @maxxuxx/docs exec playwright install --with-deps chromium
+      - name: Install Chromium
+        if: runner.os == 'Windows'
+        run: corepack pnpm --filter @maxxuxx/docs exec playwright install chromium
+      - name: Verify
+        run: corepack pnpm verify

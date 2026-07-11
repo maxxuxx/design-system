@@ -3,7 +3,7 @@ name: Icon
 slug: icon
 description: A small, accessible set of owned stroke icons.
 status: preview
-figmaUrl: ""
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=31-2"
 frameworks:
   react: preview
   svelte: planned
@@ -29,10 +29,10 @@ props:
     defaultValue: null
     description: Accessible name for a meaningful icon.
   - name: ...svgProps
-    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-hidden'>"
+    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style' | 'width' | 'height' | 'viewBox' | 'fill' | 'stroke' | 'strokeLinecap' | 'strokeLinejoin'>"
     required: false
     defaultValue: null
-    description: Native SVG props forwarded to the element.
+    description: Component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded.
 tokens:
   - size/icon/small
   - size/icon/medium
@@ -94,17 +94,24 @@ import { Icon } from '@maxxuxx/react';
 import '@maxxuxx/react/styles.css';
 
 export function SearchLabel() {
-  return <span><Icon name="search" size={20} label="Search" /> Search</span>;
+  return <span><Icon name="search" size={20} /> Search</span>;
 }
 ```
 
 ## API
+
+<div className="api-table">
 
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `name` | `IconName` | required | Supported owned glyph name |
 | `size` | `16 \| 20 \| 24` | `24` | Width and height in pixels |
 | `label` | `string` | none | Accessible name for a meaningful icon |
+| native SVG props | <code>Omit&lt;SVGProps&lt;SVGSVGElement&gt;, 'children' \| 'role' \| 'aria-label' \| 'aria-labelledby' \| 'aria-hidden' \| 'tabIndex' \| 'focusable' \| 'dangerouslySetInnerHTML' \| 'style' \| 'width' \| 'height' \| 'viewBox' \| 'fill' \| 'stroke' \| 'strokeLinecap' \| 'strokeLinejoin'&gt;</code> | none | Props outside component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics |
+
+</div>
+
+`label` owns the accessible name. Callers cannot override `role`, `aria-label`, `aria-labelledby`, `aria-hidden`, `tabIndex`, `focusable`, `dangerouslySetInnerHTML`, `style`, `width`, `height`, `viewBox`, `fill`, `stroke`, `strokeLinecap`, `strokeLinejoin`, or the fixed geometry. These values are also discarded at runtime for untyped JavaScript callers. `strokeWidth` remains the supported presentation adjustment. Keep Icon decorative when visible text already names the action, as in the example above.
 
 ## 사용 토큰
 
@@ -115,7 +122,7 @@ export function SearchLabel() {
 
 ## Figma
 
-This is the pre-Figma contract for the 24px master component. The Figma URL remains empty until the Figma library checkpoint is completed.
+The [Icon Catalog](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=31-2) contains five owned 24px masters and documented instances at 16px, 20px, and 24px. Master and instance dimensions are bound to the matching Icon size tokens, and every vector paint is bound to `color/icon/primary`.
 
 ## 지원 상태
 

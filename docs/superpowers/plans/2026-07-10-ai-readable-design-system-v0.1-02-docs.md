@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - The source of truth is `docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md` plus the locked decisions in `docs/superpowers/plans/2026-07-10-ai-readable-design-system-v0.1.md`.
-- Execute in the isolated `codex/design-system-v0.1` worktree created by `superpowers:using-git-worktrees`; never push while `gh repo view maxxuxx/design-system --json visibility` reports `PUBLIC`.
+- Execute in the isolated `codex/design-system-v0.1` worktree created by `superpowers:using-git-worktrees`; this sub-plan leaves push/integration to the parent roadmap and does not push independently. The expected `gh repo view maxxuxx/design-system --json visibility,isPrivate` readback `{"isPrivate":false,"visibility":"PUBLIC"}` is valid and not a blocker.
 - Plan 01 must already provide `@maxxuxx/tokens/tokens.css`, `@maxxuxx/tokens/tokens.json`, and `apps/docs/public/design-system/tokens.json`. The JSON envelope is `{ schemaVersion: 1, tokens: ResolvedToken[] }` and contains exactly 106 entries.
 - Plan 01 also owns the root and package manifests. This plan consumes package `@maxxuxx/docs` and does not rename or duplicate its scripts.
 - Plan 03 owns the four React implementation bodies, the four component MDX bodies, `[data-component-demo="icon|badge|button|text-field"]`, and `component-slices.visual.spec.ts`. This plan does not implement those bodies and does not define that visual spec.

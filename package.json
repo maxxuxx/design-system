@@ -12,7 +12,10 @@
     "check": "pnpm -r --if-present check",
     "test": "pnpm -r --if-present test",
     "test:e2e": "pnpm --filter @maxxuxx/docs test:e2e",
+    "test:guardrails": "node --test tooling/verification/guardrails.test.mjs tooling/verification/artifacts.test.mjs",
     "generated:check": "pnpm --filter @maxxuxx/tokens generated:check && pnpm --filter @maxxuxx/docs manifest:check",
-    "verify": "pnpm run check && pnpm run test && pnpm run generated:check && pnpm run build && pnpm run test:e2e"
+    "guardrails:check": "node tooling/verification/guardrails.mjs",
+    "artifacts:check": "node tooling/verification/artifacts.mjs",
+    "verify": "pnpm run check && pnpm run test && pnpm run test:guardrails && pnpm run generated:check && pnpm run guardrails:check && pnpm run build && pnpm run artifacts:check && pnpm run test:e2e"
   }
 }

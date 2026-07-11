@@ -1,13 +1,26 @@
 import { z } from 'astro/zod';
 
-export const COMPONENT_NAMES = ['Icon', 'Badge', 'Button', 'TextField'] as const;
-export const COMPONENT_SLUGS = ['icon', 'badge', 'button', 'text-field'] as const;
+export const COMPONENT_NAMES = [
+  'Icon',
+  'Badge',
+  'Button',
+  'TextField',
+  'ScrollArea',
+] as const;
+export const COMPONENT_SLUGS = [
+  'icon',
+  'badge',
+  'button',
+  'text-field',
+  'scroll-area',
+] as const;
 
 export const COMPONENTS = [
   { name: 'Icon', slug: 'icon' },
   { name: 'Badge', slug: 'badge' },
   { name: 'Button', slug: 'button' },
   { name: 'TextField', slug: 'text-field' },
+  { name: 'ScrollArea', slug: 'scroll-area' },
 ] as const;
 export const COMPONENT_ORDER = new Map(
   COMPONENTS.map(({ name }, index) => [name, index]),
