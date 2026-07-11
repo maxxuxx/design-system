@@ -138,7 +138,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'RadioGroup',
       slug: 'radio-group',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=147-272',
       variants: ['none', 'first', 'second'],
       sizes: ['small', 'medium'],
       states: ['default', 'error', 'disabled'],

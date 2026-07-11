@@ -579,7 +579,7 @@
       "slug": "radio-group",
       "description": "하나의 값을 고르는 visible option set을 native fieldset과 same-name radio로 제공합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=147-272",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
