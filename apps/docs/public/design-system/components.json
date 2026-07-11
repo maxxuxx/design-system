@@ -261,7 +261,7 @@
       "slug": "text-field",
       "description": "visible label과 contextual feedback으로 한 줄 text value를 받는 native input control입니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
