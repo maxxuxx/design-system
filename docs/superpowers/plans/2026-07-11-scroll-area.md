@@ -142,7 +142,7 @@
 2. Run `pnpm artifacts:test` and confirm expected count/contract failures.
 3. Update the verifier's route, page, component, prop, Figma evidence, and exact-count contracts.
 4. Generate `components.json` with `pnpm --filter @maxxuxx/docs manifest:write`.
-5. Run artifact unit tests, docs unit tests, build, and artifact checks.
+5. Run artifact unit tests, docs unit tests, and the docs build. Run the actual artifact check and record only the expected missing ScrollArea Figma URL/evidence gaps; Task 9 must clear them after the live set exists.
 
 ## Task 8: Build ScrollArea in Figma
 
