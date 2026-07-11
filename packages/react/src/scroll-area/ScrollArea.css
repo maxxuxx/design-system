@@ -35,6 +35,7 @@
   z-index: 1;
   inset-inline: 0;
   display: flex;
+  box-sizing: border-box;
   height: var(--ds-scroll-area-edge-size);
   padding-block: var(--ds-space-8);
   align-items: center;

@@ -218,8 +218,16 @@ describe('ScrollArea', () => {
 
   it('recomputes state on native viewport scroll before calling the consumer handler', () => {
     const observedTargets: Array<EventTarget | null> = [];
+    const observedStates: Array<{
+      root: string | null;
+      viewport: string | null;
+    }> = [];
     const onViewportScroll = vi.fn((event) => {
       observedTargets.push(event.currentTarget);
+      observedStates.push({
+        root: event.currentTarget.parentElement?.getAttribute('data-state') ?? null,
+        viewport: event.currentTarget.getAttribute('data-state'),
+      });
     });
     const { controller, root, viewport } = renderArea(
       { clientHeight: 200, scrollHeight: 600, scrollTop: 0 },
@@ -233,6 +241,7 @@ describe('ScrollArea', () => {
     expect(viewport).toHaveAttribute('data-state', 'middle');
     expect(onViewportScroll).toHaveBeenCalledTimes(1);
     expect(observedTargets).toEqual([viewport]);
+    expect(observedStates).toEqual([{ root: 'middle', viewport: 'middle' }]);
   });
 
   it('observes viewport and content geometry and recomputes for either target', () => {
@@ -379,6 +388,9 @@ describe('ScrollArea', () => {
     ]) {
       expect(componentCss).toContain(selector);
     }
+    expect(componentCss).toMatch(
+      /\.ds-scroll-area__edge\s*\{[^}]*box-sizing: border-box;/s,
+    );
     expect(componentCss).toContain('blur(var(--ds-blur-subtle))');
   });
 

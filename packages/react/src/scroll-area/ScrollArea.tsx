@@ -10,6 +10,7 @@ import {
   type Ref,
   type UIEventHandler,
 } from 'react';
+import { flushSync } from 'react-dom';
 import { Icon } from '../icon';
 
 export type ScrollAreaState = 'no-overflow' | 'start' | 'middle' | 'end';
@@ -117,7 +118,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
     }, [synchronizeState]);
 
     const handleViewportScroll: UIEventHandler<HTMLDivElement> = useCallback((event) => {
-      synchronizeState();
+      flushSync(synchronizeState);
       onViewportScroll?.(event);
     }, [onViewportScroll, synchronizeState]);
 
