@@ -1,0 +1,120 @@
+name: Windows docs final QA
+
+on:
+  push:
+    branches:
+      - codex/design-system-icon
+
+jobs:
+  docs-final-qa:
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.11.0
+          run_install: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+
+      - name: Verify toolchain versions
+        shell: pwsh
+        run: |
+          if ((node --version) -ne 'v24.15.0') {
+            throw "Expected Node v24.15.0, received $(node --version)."
+          }
+          if ((pnpm --version) -ne '11.11.0') {
+            throw "Expected pnpm 11.11.0, received $(pnpm --version)."
+          }
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install locked Playwright Chromium
+        run: pnpm --filter @maxxuxx/docs exec playwright install chromium
+
+      - name: Prove only twelve full-page baselines are missing
+        shell: pwsh
+        run: |
+          $logPath = Join-Path $env:RUNNER_TEMP 'missing-full-page-baselines.log'
+          pnpm --filter @maxxuxx/docs test:e2e 2>&1 | Tee-Object -FilePath $logPath
+          $exitCode = $LASTEXITCODE
+          if ($exitCode -eq 0) {
+            throw 'The first Windows run unexpectedly passed without the twelve required baselines.'
+          }
+
+          $output = Get-Content $logPath -Raw
+          $output = $output -replace "`e\[[0-9;]*[A-Za-z]", ''
+          $missingCount = ([regex]::Matches($output, "A snapshot doesn't exist at")).Count
+          if ($missingCount -ne 12) {
+            throw "Expected 12 missing-snapshot failures, received $missingCount."
+          }
+          if ($output -notmatch '(?m)^\s*12 failed\s*$') {
+            throw 'The first Windows run did not report exactly 12 failed tests.'
+          }
+          if ($output -notmatch '(?m)^\s*10 skipped\s*$') {
+            throw 'The first Windows run did not preserve exactly 10 expected skips.'
+          }
+          if ($output -notmatch '(?m)^\s*116 passed') {
+            throw 'The first Windows run did not preserve exactly 116 passing tests.'
+          }
+
+      - name: Delete files created by the missing-baseline run
+        shell: pwsh
+        run: |
+          $target = 'apps/docs/tests/e2e/__snapshots__/visual.spec'
+          Remove-Item $target -Recurse -Force -ErrorAction SilentlyContinue
+          if (Test-Path $target) {
+            throw "Failed to remove $target before approved generation."
+          }
+
+      - name: Generate twelve Windows full-page baselines
+        run: pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/visual.spec.ts --update-snapshots
+
+      - name: Verify the exact baseline file map
+        shell: pwsh
+        run: |
+          $target = 'apps/docs/tests/e2e/__snapshots__/visual.spec'
+          $expected = @(
+            'button-desktop-chromium.png'
+            'button-mobile-chromium.png'
+            'button-tablet-chromium.png'
+            'foundations-colors-desktop-chromium.png'
+            'foundations-colors-mobile-chromium.png'
+            'foundations-colors-tablet-chromium.png'
+            'home-desktop-chromium.png'
+            'home-mobile-chromium.png'
+            'home-tablet-chromium.png'
+            'text-field-desktop-chromium.png'
+            'text-field-mobile-chromium.png'
+            'text-field-tablet-chromium.png'
+          ) | Sort-Object
+          $actual = Get-ChildItem $target -File | ForEach-Object Name | Sort-Object
+          if ($actual.Count -ne 12) {
+            throw "Expected exactly 12 PNGs, received $($actual.Count): $($actual -join ', ')."
+          }
+          $difference = Compare-Object -ReferenceObject $expected -DifferenceObject $actual
+          if ($difference) {
+            throw "Windows baseline file map differs: $($difference | Out-String)."
+          }
+
+      - name: Immediately compare the generated baselines
+        run: pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/visual.spec.ts
+
+      - name: Run the complete Windows browser suite
+        run: pnpm --filter @maxxuxx/docs test:e2e
+
+      - name: Upload authoritative Windows baselines
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-docs-full-page-baselines
+          path: apps/docs/tests/e2e/__snapshots__/visual.spec/*.png
+          if-no-files-found: error
+          retention-days: 1
