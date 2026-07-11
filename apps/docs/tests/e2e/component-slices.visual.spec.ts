@@ -9,6 +9,7 @@ const slices = [
   { name: 'TextField', slug: 'text-field' },
   { name: 'ScrollArea', slug: 'scroll-area' },
   { name: 'Checkbox', slug: 'checkbox' },
+  { name: 'RadioGroup', slug: 'radio-group' },
 ] as const;
 
 for (const slice of slices) {

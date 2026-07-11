@@ -50,3 +50,16 @@ test('Checkbox visible label toggles its native input', async ({ page }) => {
   await checkbox.locator('.ds-checkbox__label').click();
   await expect(input).toBeChecked();
 });
+
+test('RadioGroup label click updates its native same-name form value', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
+  const group = page.locator('[data-component-demo="radio-group"] .ds-radio-group').first();
+  const express = group.getByRole('radio', { name: '빠른 배송' });
+
+  await expect(group).toHaveAttribute('data-state', 'default');
+  await expect(express).toHaveAttribute('name', 'delivery-demo');
+  await group.getByText('빠른 배송', { exact: true }).click();
+  await expect(express).toBeChecked();
+  expect(await express.evaluate((input: HTMLInputElement) =>
+    new FormData(input.form!).get(input.name))).toBe('express');
+});

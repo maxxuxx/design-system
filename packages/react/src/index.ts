@@ -4,3 +4,4 @@ export * from './button';
 export * from './text-field';
 export * from './scroll-area';
 export * from './checkbox';
+export * from './radio-group';

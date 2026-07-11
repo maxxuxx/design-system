@@ -51,3 +51,15 @@ test('Checkbox demo keeps native Space activation and visible focus', async ({ p
   await page.keyboard.press('Space');
   await expect(input).toBeChecked();
 });
+
+test('RadioGroup demo keeps native arrow-key selection and visible focus', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
+  const group = page.locator('[data-component-demo="radio-group"] .ds-radio-group').first();
+  const standard = group.getByRole('radio', { name: '일반 배송' });
+  const express = group.getByRole('radio', { name: '빠른 배송' });
+
+  await tabTo(page, standard);
+  await page.keyboard.press('ArrowDown');
+  await expect(express).toBeChecked();
+  await expect(express).toBeFocused();
+});

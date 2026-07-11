@@ -122,6 +122,10 @@
   place-items: stretch;
 }
 
+.component-demo__stage--radio-group {
+  place-items: stretch;
+}
+
 .checkbox-demo {
   display: grid;
   width: 100%;
@@ -134,6 +138,32 @@
   min-width: 0;
   align-content: start;
   gap: var(--ds-space-8);
+}
+
+.radio-group-demo {
+  display: grid;
+  width: 100%;
+  gap: var(--ds-space-24);
+}
+
+.radio-group-demo__interactive,
+.radio-group-demo__specimen {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: var(--ds-space-8);
+}
+
+.radio-group-demo__specimens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--ds-space-12);
+}
+
+.radio-group-demo__specimen {
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
 }
 
 .checkbox-demo__specimens {

@@ -372,6 +372,37 @@ test('TextField error gains a distinct visible style from keyboard focus', async
   expect(await errorInput.evaluate(styles)).not.toBe(before);
 });
 
+test('RadioGroup option rows keep 44px targets around 20px and 24px indicators', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
+  const demo = page.locator('[data-component-demo="radio-group"]');
+  const geometry = await demo.locator('.ds-radio-group').evaluateAll((groups) =>
+    groups.flatMap((group) => [...group.querySelectorAll<HTMLElement>('.ds-radio-group__option')]
+      .map((row) => {
+        const input = row.querySelector<HTMLInputElement>('.ds-radio-group__input')!;
+        return {
+          inputHeight: input.getBoundingClientRect().height,
+          rowHeight: row.getBoundingClientRect().height,
+        };
+      })));
+
+  expect(geometry.length).toBeGreaterThanOrEqual(12);
+  expect(geometry.every(({ rowHeight }) => rowHeight >= 44)).toBe(true);
+  expect([...new Set(geometry.map(({ inputHeight }) => inputHeight))]
+    .sort((left, right) => left - right)).toEqual([20, 24]);
+});
+
+test('RadioGroup exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
+  const demo = page.locator('[data-component-demo="radio-group"]');
+  const firstRadio = demo.locator('.ds-radio-group__input').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(firstRadio);
+});
+
 test('Badge constrains a long unbroken label without page overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns constrained-label coverage.');
 

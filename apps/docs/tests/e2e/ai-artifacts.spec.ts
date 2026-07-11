@@ -5,8 +5,8 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
   expect(response.status()).toBe(200);
   const artifact = await response.json();
   expect(artifact.schemaVersion).toBe(1);
-  expect(artifact.tokens).toHaveLength(107);
-  expect(artifact.tokens.filter(({ kind }: { kind: string }) => kind === 'primitive')).toHaveLength(81);
+  expect(artifact.tokens).toHaveLength(113);
+  expect(artifact.tokens.filter(({ kind }: { kind: string }) => kind === 'primitive')).toHaveLength(87);
   expect(artifact.tokens.filter(({ kind }: { kind: string }) => kind === 'semantic')).toHaveLength(26);
   for (const token of artifact.tokens) {
     expect(token).toEqual(expect.objectContaining({
@@ -21,19 +21,21 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
   }
 });
 
-test('components.json exposes all five release-ready component contracts', async ({ request }) => {
+test('components.json exposes all seven current component contracts', async ({ request }) => {
   const response = await request.get('/design-system/components.json');
   expect(response.status()).toBe(200);
   const artifact = await response.json();
   expect(artifact.schemaVersion).toBe(1);
   expect(artifact.components.map(({ name }: { name: string }) => name))
-    .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']);
+    .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup']);
   expect(artifact.components.map(({ docsUrl }: { docsUrl: string }) => docsUrl)).toEqual([
     '/components/icon/',
     '/components/badge/',
     '/components/button/',
     '/components/text-field/',
     '/components/scroll-area/',
+    '/components/checkbox/',
+    '/components/radio-group/',
   ]);
   const scrollArea = artifact.components.find(({ name }: { name: string }) => name === 'ScrollArea');
   expect(scrollArea.variants).toEqual([]);
@@ -72,8 +74,12 @@ test('components.json exposes all five release-ready component contracts', async
       svelte: 'planned',
       reactNative: 'planned',
     });
-    expect(component.figmaUrl).not.toBe('');
-    expect(() => new URL(component.figmaUrl)).not.toThrow();
+    if (component.name === 'RadioGroup') {
+      expect(component.figmaUrl).toBe('');
+    } else {
+      expect(component.figmaUrl).not.toBe('');
+      expect(() => new URL(component.figmaUrl)).not.toThrow();
+    }
     expect(component.description).not.toBe('');
     expect(component.accessibility).not.toBe('');
     expect(Array.isArray(component.variants)).toBe(true);

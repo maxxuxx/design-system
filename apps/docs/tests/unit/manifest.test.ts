@@ -26,6 +26,7 @@ function metadata(name: ComponentMetadata['name'], figmaUrl = ''): ComponentMeta
     TextField: 'text-field',
     ScrollArea: 'scroll-area',
     Checkbox: 'checkbox',
+    RadioGroup: 'radio-group',
   } as const;
   return {
     name,
@@ -57,8 +58,9 @@ describe('component manifest', () => {
     expect(buildComponentManifest([])).toEqual({ schemaVersion: 1, components: [] });
   });
 
-  it('sorts all six entries in canonical order regardless of file order', () => {
+  it('sorts all seven entries in canonical order regardless of file order', () => {
     const manifest = buildComponentManifest([
+      document('RadioGroup'),
       document('Checkbox'),
       document('ScrollArea'),
       document('TextField'),
@@ -67,7 +69,7 @@ describe('component manifest', () => {
       document('Icon'),
     ]);
     expect(manifest.components.map(({ name }) => name))
-      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox']);
+      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup']);
     expect(manifest.components.map(({ docsUrl }) => docsUrl)).toEqual([
       '/components/icon/',
       '/components/badge/',
@@ -75,19 +77,20 @@ describe('component manifest', () => {
       '/components/text-field/',
       '/components/scroll-area/',
       '/components/checkbox/',
+      '/components/radio-group/',
     ]);
   });
 
   it('requires all entries before the release check can pass', () => {
     expect(() => buildComponentManifest([document('Icon')], { requireFigma: true }))
-      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea, Checkbox');
+      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup');
   });
 
   it('requires a Figma URL on every complete release entry', () => {
-    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox']
+    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup']
       .map((name) => document(name as ComponentMetadata['name']));
     expect(() => buildComponentManifest(documents, { requireFigma: true }))
-      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox');
+      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup');
   });
 
   it('renders stable two-space JSON with LF and a final newline', () => {
