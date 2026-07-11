@@ -255,6 +255,83 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/button/"
+    },
+    {
+      "name": "TextField",
+      "slug": "text-field",
+      "description": "visible label과 contextual feedback으로 한 줄 text value를 받는 native input control입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [],
+      "sizes": [
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "focus",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "visible label 연결, stable description/error IDs, ordered aria-describedby, forced error aria-invalid와 alert를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "input과 연결되는 visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "input을 보조하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다."
+        },
+        {
+          "name": "size",
+          "type": "TextFieldSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "medium 또는 large control height입니다."
+        },
+        {
+          "name": "...inputProps",
+          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "numeric HTML size를 제외한 native input props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/control/large",
+        "radius/md",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/status/danger",
+        "color/status/danger-subtle",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/text-field/"
     }
   ]
 }

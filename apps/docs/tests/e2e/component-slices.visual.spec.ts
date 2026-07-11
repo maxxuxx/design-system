@@ -6,6 +6,7 @@ const slices = [
   { name: 'Icon', slug: 'icon' },
   { name: 'Badge', slug: 'badge' },
   { name: 'Button', slug: 'button' },
+  { name: 'TextField', slug: 'text-field' },
 ] as const;
 
 for (const slice of slices) {
@@ -78,4 +79,49 @@ test('Button demo includes a full-width mobile sample', async ({ page }, testInf
     return { button: buttonElement.getBoundingClientRect().width, sampleContent: sampleContentWidth };
   });
   expect(Math.abs(widths.button - widths.sampleContent)).toBeLessThanOrEqual(0.5);
+});
+
+test('TextField demo shows full-width mobile states at both control heights', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns the TextField layout contract.');
+
+  await page.goto('/components/text-field/');
+  const demo = page.locator('[data-component-demo="text-field"]');
+  const stage = demo.locator('.component-demo__stage');
+  const stack = stage.locator('.component-demo__stack');
+  const fields = stack.locator('.ds-text-field__input');
+  await expect(fields).toHaveCount(4);
+  await expect(stack.getByText('기본 도움말')).toBeVisible();
+  await expect(stack.getByText('필수 항목입니다.')).toBeVisible();
+
+  const layout = await stage.evaluate((element) => {
+    const stackElement = element.querySelector<HTMLElement>('.component-demo__stack')!;
+    const inputs = [...stackElement.querySelectorAll<HTMLInputElement>('.ds-text-field__input')];
+    const feedback = [...stackElement.querySelectorAll<HTMLElement>(
+      '.ds-text-field__description, .ds-text-field__error',
+    )];
+    const stageStyle = getComputedStyle(element);
+    const stageContentWidth = element.getBoundingClientRect().width
+      - Number.parseFloat(stageStyle.paddingLeft)
+      - Number.parseFloat(stageStyle.paddingRight)
+      - Number.parseFloat(stageStyle.borderLeftWidth)
+      - Number.parseFloat(stageStyle.borderRightWidth);
+
+    return {
+      feedbackFits: feedback.every((item) =>
+        item.scrollWidth <= item.clientWidth && item.scrollHeight <= item.clientHeight),
+      heights: inputs.map((input) => input.getBoundingClientRect().height),
+      inputWidths: inputs.map((input) => input.getBoundingClientRect().width),
+      noPageOverflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      stackWidth: stackElement.getBoundingClientRect().width,
+      stageContentWidth,
+      states: inputs.map((input) => input.dataset.state),
+    };
+  });
+
+  expect(Math.abs(layout.stackWidth - layout.stageContentWidth)).toBeLessThanOrEqual(0.5);
+  expect(layout.inputWidths.every((width) => Math.abs(width - layout.stackWidth) <= 0.5)).toBe(true);
+  expect([...new Set(layout.heights)].sort((left, right) => left - right)).toEqual([48, 56]);
+  expect(layout.states).toEqual(['default', 'default', 'error', 'disabled']);
+  expect(layout.feedbackFits).toBe(true);
+  expect(layout.noPageOverflow).toBe(true);
 });
