@@ -11,7 +11,7 @@ the source-of-truth decisions. Phase 1 created and validated the five token
 collections, 104 Variables, eight Text Styles, and two Effect Styles. Phase 2
 created the ordered page structure and the first five documentation roots.
 Foundations visual approval was recorded at `2026-07-10T23:08:13+09:00`, and
-Phase 3 component construction is now in progress.
+Phase 3 component construction is complete.
 
 ## Typography
 
@@ -179,7 +179,35 @@ top-level overlap.
 - Full-page screenshot target: `04.3 Button` (`9:9`), rendered at
   `1440 × 1040`
 
-Status: Foundations, Icon, Badge, and Button are validated. `TextField` exists
-as a page but does not contain components yet.
+## Phase 3 TextField validation
+
+- Component set: [TextField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50)
+- Variant count: 8
+- Axes:
+  - `Size`: `Medium`, `Large`
+  - `State`: `Default`, `Focus`, `Error`, `Disabled`
+- Component properties, in order: `Label` (`TEXT`), `Value` (`TEXT`),
+  `Description` (`TEXT`), and `Error` (`TEXT`)
+- State precedence: `Disabled > Error > Focus > Default`
+- Control heights: `size/control/medium` (`48px`) and
+  `size/control/large` (`56px`)
+- Default resizable width: `320px`; it is documentation guidance rather than a
+  variant or product token
+- Padding and gap: `space/16` and `space/8`; radius: `radius/md`
+- Typography: `Body/Small` plus `font/weight/semibold` for labels, `Body` for
+  values, and `Caption` for description/error feedback
+- Product fills, strokes, and text use semantic Variables only; the 1px stroke
+  is structural geometry
+- Description remains visible in every variant. Error feedback is additionally
+  visible in both Error variants, matching the React description-plus-error
+  contract.
+- Binding and property audit: all eight variants, both axes, four editable text
+  properties, heights, padding, gap, radius, typography, and state colors passed
+- Layout audit: 0 clipped helper/error labels, unnamed nodes, duplicate logical
+  keys, variant overlaps, or documentation/component-set overlaps
+- Full-page screenshot target: `04.4 TextField` (`9:10`), rendered at
+  `1440 × 704`
+
+Status: Foundations and all four v0.1 component slices are validated in Figma.
 
 Code Connect is excluded from v0.1.
