@@ -1,9 +1,13 @@
 import { createRef, useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import { expectNoAxeViolations } from '../test/accessibility';
-import { TextField } from './TextField';
+import {
+  TextField,
+  type TextFieldProps,
+  type TextFieldType,
+} from './TextField';
 
 describe('TextField', () => {
   it('associates a visible label with a generated input ID', () => {
@@ -89,6 +93,32 @@ describe('TextField', () => {
     await user.clear(controlled);
     await user.type(controlled, '변경');
     expect(controlled).toHaveValue('변경');
+  });
+
+  it('restricts the public type to text-like input types', () => {
+    expectTypeOf<NonNullable<TextFieldProps['type']>>().toEqualTypeOf<TextFieldType>();
+    expectTypeOf<TextFieldType>().toEqualTypeOf<
+      'text' | 'email' | 'password' | 'search' | 'tel' | 'url'
+    >();
+  });
+
+  it('supports every text-like input type', () => {
+    const types: TextFieldType[] = ['text', 'email', 'password', 'search', 'tel', 'url'];
+
+    for (const type of types) {
+      const { unmount } = render(<TextField label={`${type} field`} type={type} />);
+      expect(screen.getByLabelText(`${type} field`)).toHaveAttribute('type', type);
+      unmount();
+    }
+  });
+
+  it('falls back to text when an unsupported type reaches runtime', () => {
+    const unsafeProps = { type: 'checkbox' } as unknown as TextFieldProps;
+
+    render(<TextField {...unsafeProps} label="안전한 입력" />);
+
+    expect(screen.getByLabelText('안전한 입력')).toHaveAttribute('type', 'text');
+    expect(screen.getByRole('textbox', { name: '안전한 입력' })).toBeInTheDocument();
   });
 
   it('forwards disabled, required, native props, and its ref', () => {

@@ -26,7 +26,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
       data-tone={tone}
       data-variant={variant}
     >
-      {children}
+      <span className="ds-badge__label">{children}</span>
     </span>
   );
 });

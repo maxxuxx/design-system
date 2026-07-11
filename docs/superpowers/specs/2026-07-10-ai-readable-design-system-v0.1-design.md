@@ -1,6 +1,6 @@
 # AI-Readable Design System v0.1 설계서
 
-- 상태: v0.1 구현 및 검증 완료
+- 상태: 사용자 검토 요청
 - 작성일: 2026-07-10
 - 저장소: `maxxuxx/design-system`
 - 기준 경로: `C:\github\design-system`

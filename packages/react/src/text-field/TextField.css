@@ -41,13 +41,21 @@
 
 .ds-text-field__input:focus-visible {
   border-color: var(--ds-color-border-focus);
-  outline: none;
+  outline: var(--ds-space-2) solid transparent;
+  outline-offset: var(--ds-space-2);
   box-shadow: 0 0 0 var(--ds-space-4) var(--ds-color-focus-ring);
 }
 
 .ds-text-field__input[data-state='error'] {
   border-color: var(--ds-color-status-danger);
   box-shadow: 0 0 0 var(--ds-space-2) var(--ds-color-status-danger-subtle);
+}
+
+.ds-text-field__input[data-state='error']:focus-visible {
+  border-color: var(--ds-color-status-danger);
+  box-shadow:
+    0 0 0 var(--ds-space-2) var(--ds-color-status-danger-subtle),
+    0 0 0 var(--ds-space-4) var(--ds-color-focus-ring);
 }
 
 .ds-text-field__input[data-state='disabled'] {
@@ -76,5 +84,11 @@
 @media (prefers-reduced-motion: reduce) {
   .ds-text-field__input {
     transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ds-text-field__input:focus-visible {
+    outline-color: Highlight;
   }
 }

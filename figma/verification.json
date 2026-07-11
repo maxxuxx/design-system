@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-11T13:48:08+09:00",
+  "verifiedAt": "2026-07-11T15:17:40+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -25,6 +25,20 @@
     "90 Native Differences",
     "99 Deprecated"
   ],
+  "tokenValuesSha256": "819201a3c67673929fa62f6cf4f582b02223b91d62642d974b3af901c18ec03e",
+  "pageScreenshotSha256": {
+    "00 Cover": "c77e8b4b72feed70637ebccd24bac7443b83e6b30672faf7cd2d98f6a9361a13",
+    "01 Principles": "4002e3e8df110e06171a6b69a24e9b9dfb208eec633f2947e1470b185daa3625",
+    "02 Getting Started": "2f4295f5dbe155b152639eaa149162d52b82fbf2fc7e0cbcd670b34ee0836071",
+    "03 Foundations": "ddca31388c8ba17c414d6b43f57f445d279a134f363fb26030d244e994dc29ec",
+    "04 Components": "baaf97f4c54852f9f711bc75839109e09200fa92847bd6844f2d17f9bdb529ba",
+    "04.1 Icon": "ef4c59b98e2884752a85a7529dd4fda0bbd2d57c6b5b97abc31aae179a9ae09d",
+    "04.2 Badge": "273987be72319f7b9e48726632074c8475b58749227b155555fe27477506bd0f",
+    "04.3 Button": "ae5b3d09b20f974fc5ea439e4e4da8c1ca6d3f4168fcd291ed7cd3788a73e2a8",
+    "04.4 TextField": "ac62db900a8c7560d993392d0173874a1db8c6da75fabc8fee489d75a8274117",
+    "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
+    "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
+  },
   "components": {
     "Icon": {
       "catalogUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=31-2",

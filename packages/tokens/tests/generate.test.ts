@@ -41,6 +41,32 @@ async function loadDefinitions(): Promise<TokenDefinition[]> {
   return [...primitive, ...semantic];
 }
 
+function relativeLuminance(hex: string): number {
+  const channels = hex
+    .match(/[\da-f]{2}/gi)
+    ?.map((channel) => Number.parseInt(channel, 16) / 255)
+    .map((channel) =>
+      channel <= 0.04045
+        ? channel / 12.92
+        : ((channel + 0.055) / 1.055) ** 2.4,
+    );
+
+  if (!channels || channels.length !== 3) {
+    throw new Error(`Expected a six-digit hex color, received: ${hex}`);
+  }
+
+  return 0.2126 * channels[0]! + 0.7152 * channels[1]! + 0.0722 * channels[2]!;
+}
+
+function contrastRatio(first: string, second: string): number {
+  const firstLuminance = relativeLuminance(first);
+  const secondLuminance = relativeLuminance(second);
+  const lighter = Math.max(firstLuminance, secondLuminance);
+  const darker = Math.min(firstLuminance, secondLuminance);
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 async function collectSourceFiles(directory: string): Promise<string[]> {
   let entries;
   try {
@@ -127,6 +153,37 @@ describe('token generation', () => {
       'resolvedValue',
     ]);
     expect(json.endsWith('\n')).toBe(true);
+  });
+
+  it('maps control boundaries and the focus ring to the approved aliases', async () => {
+    const resolved = resolveTokens(await loadDefinitions());
+    const byName = new Map(resolved.map((token) => [token.name, token]));
+
+    expect(byName.get('color/border/default')?.value).toBe('{color/neutral/500}');
+    expect(byName.get('color/border/strong')?.value).toBe('{color/neutral/600}');
+    expect(byName.get('color/focus/ring')?.value).toBe('{color/blue/600}');
+  });
+
+  it('keeps active control boundaries and focus rings at 3:1 against their surface', async () => {
+    const resolved = resolveTokens(await loadDefinitions());
+    const byName = new Map(resolved.map((token) => [token.name, token.resolvedValue]));
+    const surface = byName.get('color/bg/surface');
+
+    if (typeof surface !== 'string') {
+      throw new Error('Missing resolved surface color.');
+    }
+
+    for (const name of [
+      'color/border/default',
+      'color/border/strong',
+      'color/focus/ring',
+    ]) {
+      const color = byName.get(name);
+      if (typeof color !== 'string') {
+        throw new Error(`Missing resolved color: ${name}`);
+      }
+      expect(contrastRatio(color, surface), name).toBeGreaterThanOrEqual(3);
+    }
   });
 
   it('uses committed CSS and JSON files as byte snapshots', async () => {

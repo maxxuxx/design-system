@@ -16,9 +16,10 @@ for (const slice of slices) {
 
     await page.goto(`/components/${slice.slug}/`);
     await expect(page.getByRole('heading', { level: 1, name: slice.name })).toBeVisible();
-    await expect(page.locator(`[data-component-demo="${slice.slug}"]`)).toBeVisible();
+    const demo = page.locator(`[data-component-demo="${slice.slug}"]`);
+    await expect(demo).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
-    await expectPageScreenshot(page, testInfo, slice.slug);
+    await expectPageScreenshot(page, testInfo, slice.slug, demo);
   });
 }
 

@@ -7,6 +7,14 @@
   border-radius: var(--ds-radius-full);
   font-family: var(--ds-font-family-sans);
   font-weight: var(--ds-font-weight-semibold);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ds-badge__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

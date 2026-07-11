@@ -40,5 +40,5 @@ test('Button demo is keyboard reachable with visible focus', async ({ page }) =>
 
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
-  await tabTo(page, page.locator('[data-component-demo="text-field"] input').first());
+  await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());
 });

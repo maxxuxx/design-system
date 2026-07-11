@@ -87,8 +87,8 @@
   --ds-color-text-disabled: var(--ds-color-neutral-400);
   --ds-color-text-inverse: var(--ds-color-neutral-0);
   --ds-color-icon-primary: var(--ds-color-neutral-900);
-  --ds-color-border-default: var(--ds-color-neutral-200);
-  --ds-color-border-strong: var(--ds-color-neutral-300);
+  --ds-color-border-default: var(--ds-color-neutral-500);
+  --ds-color-border-strong: var(--ds-color-neutral-600);
   --ds-color-border-focus: var(--ds-color-blue-500);
   --ds-color-action-primary: var(--ds-color-blue-600);
   --ds-color-action-primary-hover: var(--ds-color-blue-700);
@@ -104,5 +104,5 @@
   --ds-color-status-neutral: var(--ds-color-neutral-700);
   --ds-color-status-neutral-subtle: var(--ds-color-neutral-100);
   --ds-color-status-on-status: var(--ds-color-neutral-0);
-  --ds-color-focus-ring: var(--ds-color-blue-200);
+  --ds-color-focus-ring: var(--ds-color-blue-600);
 }

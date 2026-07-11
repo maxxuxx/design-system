@@ -10,8 +10,8 @@ const tones: BadgeTone[] = ['neutral', 'primary', 'success', 'danger'];
 
 describe('Badge', () => {
   it('uses the medium soft neutral defaults on a span', () => {
-    render(<Badge>신규</Badge>);
-    const badge = screen.getByText('신규');
+    render(<Badge data-testid="badge">신규</Badge>);
+    const badge = screen.getByTestId('badge');
 
     expect(badge.tagName).toBe('SPAN');
     expect(badge).toHaveClass('ds-badge');
@@ -27,11 +27,13 @@ describe('Badge', () => {
       for (const variant of variants) {
         for (const tone of tones) {
           const { getByText, unmount } = render(
-            <Badge size={size} tone={tone} variant={variant}>
+            <Badge data-testid="badge" size={size} tone={tone} variant={variant}>
               {`${size}-${variant}-${tone}`}
             </Badge>,
           );
-          const badge = getByText(`${size}-${variant}-${tone}`);
+          const label = getByText(`${size}-${variant}-${tone}`);
+          const badge = label.closest('.ds-badge');
+          expect(badge).not.toBeNull();
           expect(badge).toHaveAttribute('data-size', size);
           expect(badge).toHaveAttribute('data-variant', variant);
           expect(badge).toHaveAttribute('data-tone', tone);
@@ -64,6 +66,15 @@ describe('Badge', () => {
     const ref = createRef<HTMLSpanElement>();
     render(<Badge ref={ref}>상태</Badge>);
     expect(ref.current).toBeInstanceOf(HTMLSpanElement);
+  });
+
+  it('owns a label wrapper for clipping long content', () => {
+    render(<Badge data-testid="badge">매우 긴 현지화 상태 레이블</Badge>);
+    const badge = screen.getByTestId('badge');
+
+    expect(badge.querySelector('.ds-badge__label')).toHaveTextContent(
+      '매우 긴 현지화 상태 레이블',
+    );
   });
 
   it('has no axe violations', async () => {

@@ -1,10 +1,16 @@
-import { createRef } from 'react';
+import { createRef, type ReactElement } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
-import { Icon } from '../icon';
+import { describe, expect, expectTypeOf, it, vi } from 'vitest';
+import { Icon, type IconProps } from '../icon';
 import { expectNoAxeViolations } from '../test/accessibility';
-import { Button, type ButtonSize, type ButtonVariant, type ButtonWidth } from './Button';
+import {
+  Button,
+  type ButtonProps,
+  type ButtonSize,
+  type ButtonVariant,
+  type ButtonWidth,
+} from './Button';
 
 const sizes: ButtonSize[] = ['small', 'medium', 'large'];
 const variants: ButtonVariant[] = ['fill', 'weak', 'outline'];
@@ -104,6 +110,38 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: '찾기' })).toBeInTheDocument();
     expect(screen.getByTestId('leading')).toHaveAttribute('aria-hidden', 'true');
     expect(screen.getByTestId('trailing')).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  it('types icon slots as owned Icon elements', () => {
+    type OwnedIconElement = ReactElement<IconProps, typeof Icon>;
+
+    expectTypeOf<ButtonProps['leadingIcon']>().toEqualTypeOf<OwnedIconElement | undefined>();
+    expectTypeOf<ButtonProps['trailingIcon']>().toEqualTypeOf<OwnedIconElement | undefined>();
+  });
+
+  it('forces owned icons to stay decorative', () => {
+    render(
+      <Button leadingIcon={<Icon data-testid="leading" label="검색" name="search" />}>
+        찾기
+      </Button>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAccessibleName('찾기');
+    expect(screen.getByTestId('leading')).toHaveAttribute('aria-hidden', 'true');
+    expect(screen.getByTestId('leading')).not.toHaveAttribute('aria-label');
+    expect(screen.getByTestId('leading')).not.toHaveAttribute('role');
+  });
+
+  it('omits invalid icon slot elements at runtime', () => {
+    const invalidIcon = (
+      <span data-testid="invalid-icon">not an Icon</span>
+    ) as unknown as ReactElement<IconProps, typeof Icon>;
+
+    render(<Button leadingIcon={invalidIcon}>계속</Button>);
+
+    expect(screen.getByRole('button', { name: '계속' })).toBeInTheDocument();
+    expect(screen.queryByTestId('invalid-icon')).not.toBeInTheDocument();
   });
 
   it('forwards native props, an explicit type, and its ref', () => {

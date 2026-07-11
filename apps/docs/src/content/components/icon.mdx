@@ -29,10 +29,10 @@ props:
     defaultValue: null
     description: Accessible name for a meaningful icon.
   - name: ...svgProps
-    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-hidden'>"
+    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable'>"
     required: false
     defaultValue: null
-    description: Native SVG props forwarded to the element.
+    description: Component-owned geometry, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded.
 tokens:
   - size/icon/small
   - size/icon/medium
@@ -94,7 +94,7 @@ import { Icon } from '@maxxuxx/react';
 import '@maxxuxx/react/styles.css';
 
 export function SearchLabel() {
-  return <span><Icon name="search" size={20} label="Search" /> Search</span>;
+  return <span><Icon name="search" size={20} /> Search</span>;
 }
 ```
 
@@ -105,6 +105,9 @@ export function SearchLabel() {
 | `name` | `IconName` | required | Supported owned glyph name |
 | `size` | `16 \| 20 \| 24` | `24` | Width and height in pixels |
 | `label` | `string` | none | Accessible name for a meaningful icon |
+| native SVG props | <code>Omit&lt;SVGProps&lt;SVGSVGElement&gt;, 'children' \| 'role' \| 'aria-label' \| 'aria-labelledby' \| 'aria-hidden' \| 'tabIndex' \| 'focusable'&gt;</code> | none | Props outside component-owned geometry, naming, visibility, and focus semantics |
+
+`label` owns the accessible name. Callers cannot override `role`, `aria-label`, `aria-labelledby`, `aria-hidden`, `tabIndex`, `focusable`, or the fixed geometry. Keep Icon decorative when visible text already names the action, as in the example above.
 
 ## 사용 토큰
 

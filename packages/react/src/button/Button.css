@@ -2,6 +2,7 @@
   position: relative;
   display: inline-flex;
   box-sizing: border-box;
+  min-inline-size: var(--ds-size-control-small);
   align-items: center;
   justify-content: center;
   border: 1px solid transparent;
@@ -87,7 +88,8 @@
 }
 
 .ds-button:focus-visible {
-  outline: none;
+  outline: var(--ds-space-2) solid transparent;
+  outline-offset: var(--ds-space-2);
   box-shadow: 0 0 0 var(--ds-space-4) var(--ds-color-focus-ring);
 }
 
@@ -145,5 +147,11 @@
   .ds-button__spinner {
     transition: none;
     animation: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ds-button:focus-visible {
+    outline-color: Highlight;
   }
 }

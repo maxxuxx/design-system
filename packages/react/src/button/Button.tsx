@@ -1,10 +1,12 @@
 import {
+  cloneElement,
   forwardRef,
+  isValidElement,
   type ButtonHTMLAttributes,
   type ReactElement,
   type ReactNode,
 } from 'react';
-import type { IconProps } from '../icon';
+import { Icon, type IconProps } from '../icon';
 
 export type ButtonSize = 'small' | 'medium' | 'large';
 export type ButtonVariant = 'fill' | 'weak' | 'outline';
@@ -16,8 +18,21 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   width?: ButtonWidth;
   loading?: boolean;
-  leadingIcon?: ReactElement<IconProps>;
-  trailingIcon?: ReactElement<IconProps>;
+  leadingIcon?: ReactElement<IconProps, typeof Icon>;
+  trailingIcon?: ReactElement<IconProps, typeof Icon>;
+}
+
+function getOwnedIcon(
+  icon: ReactElement<IconProps, typeof Icon> | undefined,
+): ReactElement<IconProps, typeof Icon> | null {
+  if (!isValidElement<IconProps>(icon) || icon.type !== Icon) {
+    return null;
+  }
+
+  return cloneElement(icon, { label: undefined }) as ReactElement<
+    IconProps,
+    typeof Icon
+  >;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -39,6 +54,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
 ) {
   const isDisabled = disabled || loading;
   const classes = ['ds-button', className].filter(Boolean).join(' ');
+  const ownedLeadingIcon = getOwnedIcon(leadingIcon);
+  const ownedTrailingIcon = getOwnedIcon(trailingIcon);
 
   return (
     <button
@@ -54,9 +71,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       type={type}
     >
       <span className="ds-button__content">
-        {leadingIcon ? <span className="ds-button__icon">{leadingIcon}</span> : null}
+        {ownedLeadingIcon ? (
+          <span className="ds-button__icon">{ownedLeadingIcon}</span>
+        ) : null}
         <span className="ds-button__label">{children}</span>
-        {trailingIcon ? <span className="ds-button__icon">{trailingIcon}</span> : null}
+        {ownedTrailingIcon ? (
+          <span className="ds-button__icon">{ownedTrailingIcon}</span>
+        ) : null}
       </span>
       {loading ? <span aria-hidden="true" className="ds-button__spinner" /> : null}
     </button>
