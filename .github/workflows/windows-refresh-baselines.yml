@@ -33,7 +33,7 @@ jobs:
         run: corepack pnpm --filter @maxxuxx/docs exec playwright install chromium
 
       - name: Refresh all Windows baselines
-        run: corepack pnpm --filter @maxxuxx/docs test:e2e -- --update-snapshots
+        run: corepack pnpm --filter @maxxuxx/docs exec playwright test --update-snapshots
 
       - name: Verify the exact reviewed snapshot set
         shell: pwsh

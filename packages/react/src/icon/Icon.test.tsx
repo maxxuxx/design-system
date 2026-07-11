@@ -62,7 +62,11 @@ describe('Icon', () => {
 
   it('omits caller focus and alternate naming props from its public API', () => {
     type ForbiddenIconProps = Extract<
-      'aria-labelledby' | 'focusable' | 'tabIndex',
+      | 'aria-labelledby'
+      | 'dangerouslySetInnerHTML'
+      | 'focusable'
+      | 'style'
+      | 'tabIndex',
       keyof IconProps
     >;
 
@@ -83,6 +87,32 @@ describe('Icon', () => {
     expect(icon).not.toHaveAttribute('tabindex');
     expect(icon).toHaveAttribute('focusable', 'false');
     expect(icon).toHaveAccessibleName('Search');
+  });
+
+  it('discards caller-owned markup and inline presentation at runtime', () => {
+    const conflictingProps = {
+      dangerouslySetInnerHTML: {
+        __html: '<circle data-testid="injected" cx="12" cy="12" r="12" />',
+      },
+      style: {
+        fill: 'red',
+        height: 999,
+        stroke: 'blue',
+        width: 999,
+      },
+    } as unknown as IconProps;
+
+    expect(() => {
+      render(<Icon {...conflictingProps} data-testid="icon" name="search" />);
+    }).not.toThrow();
+
+    const icon = screen.getByTestId('icon');
+    expect(icon).not.toHaveAttribute('style');
+    expect(screen.queryByTestId('injected')).not.toBeInTheDocument();
+    expect(icon).toHaveAttribute('fill', 'none');
+    expect(icon).toHaveAttribute('stroke', 'currentColor');
+    expect(icon).toHaveAttribute('width', '24');
+    expect(icon).toHaveAttribute('height', '24');
   });
 
   it('forwards its ref', () => {

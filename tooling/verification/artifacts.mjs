@@ -81,6 +81,69 @@ const componentSpecs = [
     states: ['default', 'focus', 'error', 'disabled'],
   },
 ];
+const componentPropContracts = {
+  Icon: [
+    { name: 'name', type: 'IconName', required: true, defaultValue: null },
+    { name: 'size', type: 'IconSize', required: false, defaultValue: '24' },
+    { name: 'label', type: 'string', required: false, defaultValue: null },
+    {
+      name: '...svgProps',
+      type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Badge: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'size', type: 'BadgeSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'BadgeVariant', required: false, defaultValue: 'soft' },
+    { name: 'tone', type: 'BadgeTone', required: false, defaultValue: 'neutral' },
+    {
+      name: '...spanProps',
+      type: 'HTMLAttributes<HTMLSpanElement>',
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Button: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'size', type: 'ButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'ButtonVariant', required: false, defaultValue: 'fill' },
+    { name: 'width', type: 'ButtonWidth', required: false, defaultValue: 'hug' },
+    { name: 'loading', type: 'boolean', required: false, defaultValue: 'false' },
+    {
+      name: 'leadingIcon',
+      type: 'ReactElement<IconProps, typeof Icon>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: 'trailingIcon',
+      type: 'ReactElement<IconProps, typeof Icon>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: '...buttonProps',
+      type: 'ButtonHTMLAttributes<HTMLButtonElement>',
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  TextField: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextFieldSize', required: false, defaultValue: 'medium' },
+    { name: 'type', type: 'TextFieldType', required: false, defaultValue: 'text' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+};
 const iconNames = ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search'];
 
 async function json(file) {
@@ -302,6 +365,15 @@ function validateComponentsArtifact(artifact) {
         }
         if (!nonEmpty(prop?.description)) violations.push(`${name} prop ${propIndex} description must be non-empty`);
       });
+      const propContract = component.props.map(({ name: propName, type, required, defaultValue }) => ({
+        name: propName,
+        type,
+        required,
+        defaultValue,
+      }));
+      if (JSON.stringify(propContract) !== JSON.stringify(componentPropContracts[name])) {
+        violations.push(`${name} prop contract mismatch`);
+      }
     }
   });
   if (figmaUrls.length !== 4 || new Set(figmaUrls).size !== 4) {

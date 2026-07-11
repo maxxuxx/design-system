@@ -39,15 +39,15 @@ props:
     defaultValue: "false"
     description: activation을 막고 aria-busy와 spinner를 표시합니다.
   - name: leadingIcon
-    type: "ReactElement<IconProps>"
+    type: "ReactElement<IconProps, typeof Icon>"
     required: false
     defaultValue: null
-    description: label 앞의 decorative icon slot입니다.
+    description: label 앞의 exact owned Icon slot입니다. 전달된 label은 제거되고 다른 element는 버립니다.
   - name: trailingIcon
-    type: "ReactElement<IconProps>"
+    type: "ReactElement<IconProps, typeof Icon>"
     required: false
     defaultValue: null
-    description: label 뒤의 decorative icon slot입니다.
+    description: label 뒤의 exact owned Icon slot입니다. 전달된 label은 제거되고 다른 element는 버립니다.
   - name: ...buttonProps
     type: "ButtonHTMLAttributes<HTMLButtonElement>"
     required: false
@@ -130,7 +130,7 @@ web은 hover와 focus-visible을 추가하고 공통 design state는 default, pr
 
 ## 접근성
 
-native Enter/Space activation을 유지합니다. visible label을 제거하지 않고 icon은 기본 장식용입니다. loading 중에도 accessible name이 유지되며 focus-visible ring은 semantic focus token을 사용합니다.
+native Enter/Space activation을 유지합니다. visible label을 제거하지 않고 owned `Icon`만 slot에 허용합니다. slot icon의 `label`은 복제 시 제거되어 장식용이 되고 다른 element는 runtime에서도 버립니다. loading 중에도 accessible name이 유지되며 focus-visible ring은 semantic focus token을 사용합니다.
 
 ## React 예제
 
@@ -156,8 +156,8 @@ export function ContinueButton() {
 | `variant` | `'fill' \| 'weak' \| 'outline'` | `'fill'` | action hierarchy |
 | `width` | `'hug' \| 'full'` | `'hug'` | intrinsic 또는 full width |
 | `loading` | `boolean` | `false` | native disabled + aria-busy + spinner |
-| `leadingIcon` | <code>ReactElement&lt;IconProps&gt;</code> | 없음 | label 앞 owned Icon slot |
-| `trailingIcon` | <code>ReactElement&lt;IconProps&gt;</code> | 없음 | label 뒤 owned Icon slot |
+| `leadingIcon` | <code>ReactElement&lt;IconProps, typeof Icon&gt;</code> | 없음 | label 앞 exact owned Icon slot; cloned decorative |
+| `trailingIcon` | <code>ReactElement&lt;IconProps, typeof Icon&gt;</code> | 없음 | label 뒤 exact owned Icon slot; cloned decorative |
 | native button props | <code>ButtonHTMLAttributes&lt;HTMLButtonElement&gt;</code> | `type="button"` | native behavior와 events |
 
 ## 사용 토큰

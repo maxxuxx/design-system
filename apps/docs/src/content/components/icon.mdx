@@ -29,10 +29,10 @@ props:
     defaultValue: null
     description: Accessible name for a meaningful icon.
   - name: ...svgProps
-    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable'>"
+    type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>"
     required: false
     defaultValue: null
-    description: Component-owned geometry, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded.
+    description: Component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded.
 tokens:
   - size/icon/small
   - size/icon/medium
@@ -105,9 +105,9 @@ export function SearchLabel() {
 | `name` | `IconName` | required | Supported owned glyph name |
 | `size` | `16 \| 20 \| 24` | `24` | Width and height in pixels |
 | `label` | `string` | none | Accessible name for a meaningful icon |
-| native SVG props | <code>Omit&lt;SVGProps&lt;SVGSVGElement&gt;, 'children' \| 'role' \| 'aria-label' \| 'aria-labelledby' \| 'aria-hidden' \| 'tabIndex' \| 'focusable'&gt;</code> | none | Props outside component-owned geometry, naming, visibility, and focus semantics |
+| native SVG props | <code>Omit&lt;SVGProps&lt;SVGSVGElement&gt;, 'children' \| 'role' \| 'aria-label' \| 'aria-labelledby' \| 'aria-hidden' \| 'tabIndex' \| 'focusable' \| 'dangerouslySetInnerHTML' \| 'style'&gt;</code> | none | Props outside component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics |
 
-`label` owns the accessible name. Callers cannot override `role`, `aria-label`, `aria-labelledby`, `aria-hidden`, `tabIndex`, `focusable`, or the fixed geometry. Keep Icon decorative when visible text already names the action, as in the example above.
+`label` owns the accessible name. Callers cannot override `role`, `aria-label`, `aria-labelledby`, `aria-hidden`, `tabIndex`, `focusable`, `dangerouslySetInnerHTML`, `style`, or the fixed geometry. These values are also discarded at runtime for untyped JavaScript callers. Keep Icon decorative when visible text already names the action, as in the example above.
 
 ## 사용 토큰
 

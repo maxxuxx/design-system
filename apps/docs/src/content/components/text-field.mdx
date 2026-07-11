@@ -33,11 +33,16 @@ props:
     required: false
     defaultValue: medium
     description: medium 또는 large control height입니다.
+  - name: type
+    type: TextFieldType
+    required: false
+    defaultValue: text
+    description: text, email, password, search, tel, url 중 하나이며 다른 값은 runtime에서 text로 정규화됩니다.
   - name: ...inputProps
-    type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>"
+    type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>"
     required: false
     defaultValue: null
-    description: numeric HTML size를 제외한 native input props입니다.
+    description: numeric HTML size와 unrestricted native type을 제외한 native input props입니다.
 tokens:
   - size/control/medium
   - size/control/large
@@ -134,7 +139,8 @@ export function EmailField() {
 | `description` | `string` | 없음 | helper text |
 | `errorMessage` | `string` | 없음 | error ARIA와 alert text |
 | `size` | `'medium' \| 'large'` | `'medium'` | 48/56px height |
-| native input props | <code>Omit&lt;InputHTMLAttributes&lt;HTMLInputElement&gt;, 'size'&gt;</code> | 없음 | controlled/uncontrolled/native behavior |
+| `type` | `'text' \| 'email' \| 'password' \| 'search' \| 'tel' \| 'url'` | `'text'` | supported single-line input type; unsupported runtime values normalize to text |
+| native input props | <code>Omit&lt;InputHTMLAttributes&lt;HTMLInputElement&gt;, 'size' \| 'type'&gt;</code> | 없음 | controlled/uncontrolled/native behavior |
 
 ## 사용 토큰
 

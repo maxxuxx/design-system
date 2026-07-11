@@ -53,10 +53,10 @@
         },
         {
           "name": "...svgProps",
-          "type": "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable'>",
+          "type": "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>",
           "required": false,
           "defaultValue": null,
-          "description": "Component-owned geometry, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded."
+          "description": "Component-owned geometry, markup, inline presentation, naming, visibility, and focus semantics are excluded; remaining native SVG props are forwarded."
         }
       ],
       "tokens": [
@@ -225,17 +225,17 @@
         },
         {
           "name": "leadingIcon",
-          "type": "ReactElement<IconProps>",
+          "type": "ReactElement<IconProps, typeof Icon>",
           "required": false,
           "defaultValue": null,
-          "description": "label 앞의 decorative icon slot입니다."
+          "description": "label 앞의 exact owned Icon slot입니다. 전달된 label은 제거되고 다른 element는 버립니다."
         },
         {
           "name": "trailingIcon",
-          "type": "ReactElement<IconProps>",
+          "type": "ReactElement<IconProps, typeof Icon>",
           "required": false,
           "defaultValue": null,
-          "description": "label 뒤의 decorative icon slot입니다."
+          "description": "label 뒤의 exact owned Icon slot입니다. 전달된 label은 제거되고 다른 element는 버립니다."
         },
         {
           "name": "...buttonProps",
@@ -338,11 +338,18 @@
           "description": "medium 또는 large control height입니다."
         },
         {
+          "name": "type",
+          "type": "TextFieldType",
+          "required": false,
+          "defaultValue": "text",
+          "description": "text, email, password, search, tel, url 중 하나이며 다른 값은 runtime에서 text로 정규화됩니다."
+        },
+        {
           "name": "...inputProps",
-          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>",
+          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
           "required": false,
           "defaultValue": null,
-          "description": "numeric HTML size를 제외한 native input props입니다."
+          "description": "numeric HTML size와 unrestricted native type을 제외한 native input props입니다."
         }
       ],
       "tokens": [

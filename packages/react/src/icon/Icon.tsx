@@ -9,8 +9,10 @@ export interface IconProps extends Omit<
   | 'aria-label'
   | 'aria-labelledby'
   | 'children'
+  | 'dangerouslySetInnerHTML'
   | 'focusable'
   | 'role'
+  | 'style'
   | 'tabIndex'
 > {
   name: IconName;
@@ -35,6 +37,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
   return (
     <svg
       {...svgProps}
+      dangerouslySetInnerHTML={undefined}
       ref={ref}
       aria-hidden={isLabelled ? undefined : true}
       aria-label={isLabelled ? accessibleLabel : undefined}
@@ -49,6 +52,7 @@ export const Icon = forwardRef<SVGSVGElement, IconProps>(function Icon(
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={strokeWidth}
+      style={undefined}
       tabIndex={undefined}
       viewBox="0 0 24 24"
       width={size}

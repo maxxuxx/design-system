@@ -49,6 +49,70 @@ const componentSpecs = [
   },
 ];
 
+const manifestProps = {
+  Icon: [
+    { name: 'name', type: 'IconName', required: true, defaultValue: null },
+    { name: 'size', type: 'IconSize', required: false, defaultValue: '24' },
+    { name: 'label', type: 'string', required: false, defaultValue: null },
+    {
+      name: '...svgProps',
+      type: "Omit<SVGProps<SVGSVGElement>, 'children' | 'role' | 'aria-label' | 'aria-labelledby' | 'aria-hidden' | 'tabIndex' | 'focusable' | 'dangerouslySetInnerHTML' | 'style'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Badge: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'size', type: 'BadgeSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'BadgeVariant', required: false, defaultValue: 'soft' },
+    { name: 'tone', type: 'BadgeTone', required: false, defaultValue: 'neutral' },
+    {
+      name: '...spanProps',
+      type: 'HTMLAttributes<HTMLSpanElement>',
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Button: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'size', type: 'ButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'ButtonVariant', required: false, defaultValue: 'fill' },
+    { name: 'width', type: 'ButtonWidth', required: false, defaultValue: 'hug' },
+    { name: 'loading', type: 'boolean', required: false, defaultValue: 'false' },
+    {
+      name: 'leadingIcon',
+      type: 'ReactElement<IconProps, typeof Icon>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: 'trailingIcon',
+      type: 'ReactElement<IconProps, typeof Icon>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: '...buttonProps',
+      type: 'ButtonHTMLAttributes<HTMLButtonElement>',
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  TextField: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextFieldSize', required: false, defaultValue: 'medium' },
+    { name: 'type', type: 'TextFieldType', required: false, defaultValue: 'text' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+};
+
 const properties = {
   Icon: [],
   Badge: [{ name: 'Label', type: 'TEXT' }],
@@ -245,13 +309,10 @@ function makeManifest() {
     sizes,
     states,
     accessibility: `${name} accessibility contract`,
-    props: [{
-      name: 'example',
-      type: 'string',
-      required: false,
-      defaultValue: null,
-      description: 'Example property',
-    }],
+    props: manifestProps[name].map((prop) => ({
+      ...prop,
+      description: `${prop.name} property`,
+    })),
     tokens: fixtureComponentTokens[name],
     docsUrl: `/components/${slug}/`,
   }));
@@ -419,6 +480,25 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   assert.ok(violations.some((value) => value.includes('prop 0 required must be boolean')));
   assert.ok(violations.some((value) => value.includes('tokens must be a non-empty string array')));
   assert.ok(violations.some((value) => value.includes('four distinct Figma URLs')));
+});
+
+test('rejects exact public component prop-contract drift', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
+  const artifact = JSON.parse(await readFile(file, 'utf8'));
+  artifact.components.find(({ name }) => name === 'Icon').props.at(-1).type =
+    'SVGProps<SVGSVGElement>';
+  artifact.components.find(({ name }) => name === 'Button').props
+    .find(({ name }) => name === 'leadingIcon').type = 'ReactElement<IconProps>';
+  artifact.components.find(({ name }) => name === 'TextField').props
+    .find(({ name }) => name === 'type').type = 'string';
+  await writeFile(file, JSON.stringify(artifact));
+
+  const violations = await verifyBuildArtifacts(root);
+  assert.ok(violations.includes('Icon prop contract mismatch'));
+  assert.ok(violations.includes('Button prop contract mismatch'));
+  assert.ok(violations.includes('TextField prop contract mismatch'));
 });
 
 test('rejects unknown, omitted, invented, and duplicate component token declarations', async (t) => {
