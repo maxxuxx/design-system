@@ -210,4 +210,32 @@ top-level overlap.
 
 Status: Foundations and all four v0.1 component slices are validated in Figma.
 
-Code Connect is excluded from v0.1.
+## Phase 4 library verification
+
+- Final live readback: `2026-07-11T13:48:08+09:00`
+- Managed pages: all 11 required pages in the documented order
+- Final token readback: five collections, 104 Variables, eight Text Styles, and
+  two Effect Styles
+- Token-map reconciliation: the regenerated live projection is byte-identical
+  to [`token-map.json`](./token-map.json)
+- Token coverage: 106 unique source mappings, including 26 Semantic Color and
+  57 COLOR Variable rows
+- Variable integrity: five `Default` modes, exact WEB syntax and scopes, no
+  broken aliases, missing IDs, or `ALL_SCOPES`
+- Accessibility: all reviewed text/background pairs meet WCAG AA, and every
+  Button/TextField control target is at least 44px with distinct focus, pressed,
+  error, and disabled presentation
+- Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`; all
+  properties, variants, semantic bindings, and React contracts passed
+- Product-value audit: `0` visible hard-coded product paints. Inherited plugin
+  keys on Instances and the intentionally invisible default fill on TextField
+  component roots are excluded from owner/value counts.
+- Naming audit: `0` unnamed nodes and `0` duplicate owner-level logical keys
+- Empty-state documentation added and reviewed for `90 Native Differences` and
+  `99 Deprecated`
+- Screenshots: every managed page was captured at its natural dimensions and
+  reviewed for legibility, clipping, overlap, stale copy, and visible component
+  coverage
+- Machine-readable evidence: [`verification.json`](./verification.json)
+
+Code Connect is explicitly `skipped-v0.1`.
