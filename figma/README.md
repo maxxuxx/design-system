@@ -144,7 +144,42 @@ and the full-width documentation root sits at `(0, 0)` with the component set
 below it at `(64, 296)`. This preserves the compact React width model and avoids
 top-level overlap.
 
-Status: Foundations, Icon, and Badge are validated. `Button` and `TextField`
-pages exist but do not contain components yet.
+## Phase 3 Button validation
+
+- Component set: [Button](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=65-56)
+- Variant count: 27
+- Axes:
+  - `Size`: `Small`, `Medium`, `Large`
+  - `Variant`: `Fill`, `Weak`, `Outline`
+  - `State`: `Default`, `Pressed`, `Disabled`
+- Component properties, in order: `Label` (`TEXT`), `Loading` (`BOOLEAN`),
+  `Show leading icon` (`BOOLEAN`), `Show trailing icon` (`BOOLEAN`),
+  `Leading icon` (`INSTANCE_SWAP`), and `Trailing icon` (`INSTANCE_SWAP`)
+- Control heights: `size/control/small` (`44px`),
+  `size/control/medium` (`48px`), and `size/control/large` (`56px`)
+- Horizontal padding: `space/16`, `space/20`, and `space/24`; gaps use
+  `space/8`, `space/8`, and `space/12`
+- Radius: `radius/md`; icon and spinner geometry: `size/icon/medium` (`20px`)
+- Typography: `Body/Small`, `Body`, or `Body/Large` plus
+  `font/weight/semibold`
+- Product fills, strokes, labels, icon slots, loading overlay, and spinner use
+  semantic Variables only; the 1px stroke and spinner arc are structural
+  geometry
+- All five Icon masters keep their original component IDs and use one named
+  `glyph` layer. This preserves the Button foreground override through every
+  `INSTANCE_SWAP` target: Check, ChevronRight, Close, Info, and Search.
+- Loading parity: `Loading=false` shows the normal label and optional icon
+  slots; `Loading=true` shows the disabled-color overlay and centered spinner
+  while covering the normal content
+- Property preview: [Normal and Loading](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=74-56)
+- Layout audit: 0 unnamed nodes, duplicate logical keys, variant overlaps, or
+  documentation/component-set/preview overlaps
+- Binding and property audit: all 27 variants, all six custom properties, all
+  three axes, five icon swaps, and both Loading values passed
+- Full-page screenshot target: `04.3 Button` (`9:9`), rendered at
+  `1440 × 1040`
+
+Status: Foundations, Icon, Badge, and Button are validated. `TextField` exists
+as a page but does not contain components yet.
 
 Code Connect is excluded from v0.1.
