@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T03:23:02+09:00",
+  "verifiedAt": "2026-07-12T03:32:24+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -92,7 +92,7 @@
     "04.3 Button": "ae5b3d09b20f974fc5ea439e4e4da8c1ca6d3f4168fcd291ed7cd3788a73e2a8",
     "04.4 TextField": "ac62db900a8c7560d993392d0173874a1db8c6da75fabc8fee489d75a8274117",
     "04.5 ScrollArea": "a46826086c4267d6de0f613e462997b7d8a471960e8db6b0e137c40eb865ec77",
-    "04.6 Checkbox": "1deda2bd0e1ff747f9da16a95be4126594e15b86170fd65f837b083ad6197632",
+    "04.6 Checkbox": "72185543d79c8ab482e5b975d261cc47783c573f45175bf6d74f0ab8acb93b38",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },

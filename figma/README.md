@@ -254,8 +254,8 @@ top-level overlap.
   use semantic Variables only
 - State precedence: `Disabled > Error > Default`; checked/mixed remains an
   independent value axis
-- Binding audit: all indicator dimensions, target heights, gaps, radius,
-  fills, strokes, text styles, and text-property references passed
+- Binding audit: all indicator dimensions and zero padding, target heights,
+  gaps, radius, fills, strokes, text styles, and text-property references passed
 - Layout audit: all 18 variants have content-driven heights with no clipping or
   overlap; error variants preserve description plus error feedback
 - Full-page screenshot target: `04.6 Checkbox` (`138:2`), rendered at
@@ -301,7 +301,7 @@ Status: Foundations, all five v0.1 slices, and Checkbox are validated in Figma.
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
 - Screenshots: every managed page was captured and reviewed for legibility,
-  clipping, overlap, stale copy, and visible component coverage; all 12 SHA-256
+  clipping, overlap, stale copy, and visible component coverage; all 13 SHA-256
   fingerprints are stored in verification evidence for all 13 managed pages
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
