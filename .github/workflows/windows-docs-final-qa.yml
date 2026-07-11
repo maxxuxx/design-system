@@ -110,7 +110,7 @@ jobs:
         run: pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/visual.spec.ts --update-snapshots
 
       - name: Refresh only the four stale component baselines
-        run: pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/component-slices.visual.spec.ts --project=mobile-chromium --project=desktop-chromium --grep "^(Button|TextField) component slice$" --update-snapshots
+        run: pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/component-slices.visual.spec.ts --project=mobile-chromium --project=desktop-chromium --grep "Button component slice|TextField component slice" --update-snapshots
 
       - name: Verify the exact sixteen-file snapshot diff
         shell: pwsh
@@ -160,7 +160,7 @@ jobs:
       - name: Immediately compare the sixteen reviewed baselines
         run: |
           pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/visual.spec.ts
-          pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/component-slices.visual.spec.ts --project=mobile-chromium --project=desktop-chromium --grep "^(Button|TextField) component slice$"
+          pnpm --filter @maxxuxx/docs exec playwright test tests/e2e/component-slices.visual.spec.ts --project=mobile-chromium --project=desktop-chromium --grep "Button component slice|TextField component slice"
 
       - name: Run the complete Windows browser suite
         run: pnpm --filter @maxxuxx/docs test:e2e
