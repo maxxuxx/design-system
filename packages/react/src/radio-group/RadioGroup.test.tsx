@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { createRef, useState } from 'react';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -250,6 +251,24 @@ describe('RadioGroup', () => {
     await user.keyboard('{ArrowDown}');
     expect(express).toBeChecked();
     expect(express).toHaveFocus();
+  });
+
+  it('keeps generic interaction selectors below error and forced-colors specificity', () => {
+    const componentCss = readFileSync('src/radio-group/RadioGroup.css', 'utf8');
+
+    for (const selector of [
+      ':where(.ds-radio-group__option:hover) .ds-radio-group__input:where(:not(:disabled))',
+      ':where(.ds-radio-group__option:hover) .ds-radio-group__input:checked:where(:not(:disabled))',
+      '.ds-radio-group__input:where(:active:not(:disabled))',
+      '.ds-radio-group__input:checked:where(:active:not(:disabled))',
+    ]) {
+      expect(componentCss).toContain(selector);
+    }
+
+    expect(componentCss.indexOf(".ds-radio-group__input[data-state='error']"))
+      .toBeGreaterThan(componentCss.indexOf(':where(.ds-radio-group__option:hover)'));
+    expect(componentCss.indexOf('@media (forced-colors: active)'))
+      .toBeGreaterThan(componentCss.indexOf(':where(.ds-radio-group__option:hover)'));
   });
 
   it('exposes the exact public unions and option contract', () => {
