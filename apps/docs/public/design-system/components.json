@@ -154,7 +154,7 @@
       "slug": "button",
       "description": "화면의 주 행동이나 보조 행동을 native button semantics로 실행하는 action control입니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=65-56",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
