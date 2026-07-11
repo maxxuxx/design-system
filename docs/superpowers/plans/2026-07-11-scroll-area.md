@@ -51,7 +51,7 @@
 3. Add failing tests for:
 
 - `no-overflow`, `start`, `middle`, and `end` state contracts;
-- one-pixel fractional epsilon;
+- one-pixel fractional epsilon and negative/positive browser bounce values;
 - recomputation on scroll and on viewport/content observer callbacks;
 - down and up `scrollBy` calls at `clientHeight * 0.8`;
 - root `id`, `className`, native data attributes, forwarded root ref, `viewportRef`, and `onViewportScroll`;
@@ -68,7 +68,7 @@
 - Modify: `packages/react/src/scroll-area/index.ts`
 - Modify: `packages/react/src/index.ts`
 
-1. Implement `ScrollAreaProps` by omitting caller ownership of `children`, `aria-label`, `role`, and `tabIndex`.
+1. Implement `ScrollAreaProps` by omitting `children` and the root `onScroll`; require the three localized labels and expose optional `viewportRef` and `onViewportScroll`.
 2. Add `getScrollState()` using a one-pixel epsilon.
 3. Forward the component ref and native props to the outer sizing root; merge `viewportRef` onto the actual scroll viewport and keep an internal content ref.
 4. Synchronize geometry on mount, scroll, and both ResizeObserver targets, with an undefined-ResizeObserver guard.
@@ -85,7 +85,7 @@
 - Test: `packages/react/src/scroll-area/ScrollArea.test.tsx`
 
 1. Add a CSS-token contract assertion for the new blur token and required component class hooks.
-2. Implement a relative wrapper, native `overflow-y:auto` viewport, and all-engine visual scrollbar hiding.
+2. Implement a relative sizing root, native `overflow-y:auto` viewport, focus-safe scroll padding, and all-engine visual scrollbar hiding.
 3. Add absolute top/bottom layers with pointer passthrough, direction-specific gradients, and `backdrop-filter: blur(var(--ds-blur-subtle))` only when active.
 4. Add 44px circular button visuals, hover, focus-visible, disabled transparency, icon rotation, forced-colors, and reduced-motion behavior.
 5. Run React tests/checks and `pnpm lint` for the edited package.
