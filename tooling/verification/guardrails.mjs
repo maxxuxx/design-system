@@ -3,26 +3,103 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const allowedWorkspaces = new Set(['apps/docs', 'packages/tokens', 'packages/react']);
+const allowedWorkspaceDeclarations = new Set(['apps/*', 'packages/*']);
 const sourceExtensions = new Set(['.astro', '.css', '.mdx', '.ts', '.tsx']);
 const primitivePattern = /--ds-color-(?:neutral|blue|red|green)-/;
 
-async function directoryNames(root, group) {
-  const base = path.join(root, group);
+function workspaceDeclarations(source) {
+  const declarations = [];
+  let readingPackages = false;
+  for (const line of source.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!readingPackages) {
+      if (trimmed === 'packages:') readingPackages = true;
+      continue;
+    }
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const item = line.match(/^\s+-\s+(.+?)\s*$/);
+    if (!item) {
+      if (/^\S/.test(line)) break;
+      continue;
+    }
+    let declaration = item[1].replace(/\s+#.*$/, '').trim();
+    if ((declaration.startsWith("'") && declaration.endsWith("'"))
+      || (declaration.startsWith('"') && declaration.endsWith('"'))) {
+      declaration = declaration.slice(1, -1);
+    }
+    declarations.push(declaration);
+  }
+  return declarations;
+}
+
+async function workspacePackages(root, declaration) {
+  const wildcard = declaration.match(/^([^*]+)\/\*$/);
+  const directories = [];
+  if (wildcard) {
+    const group = wildcard[1];
+    if (path.isAbsolute(group) || group.split('/').includes('..')) return directories;
+    const base = path.join(root, group);
+    let entries;
+    try {
+      entries = await readdir(base, { withFileTypes: true });
+    } catch (error) {
+      if (error.code === 'ENOENT') return directories;
+      throw error;
+    }
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      directories.push(`${group}/${entry.name}`);
+    }
+  } else if (!declaration.includes('*')
+    && !path.isAbsolute(declaration)
+    && !declaration.split('/').includes('..')) {
+    directories.push(declaration);
+  }
+
+  const packages = [];
+  for (const relative of directories) {
+    try {
+      await readFile(path.join(root, relative, 'package.json'), 'utf8');
+      packages.push(relative);
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+  return packages;
+}
+
+async function declaredWorkspaceGraph(root) {
+  const source = await readFile(path.join(root, 'pnpm-workspace.yaml'), 'utf8');
+  const declarations = workspaceDeclarations(source);
+  const packages = new Set();
+  for (const declaration of declarations) {
+    for (const relative of await workspacePackages(root, declaration)) packages.add(relative);
+  }
+  return { declarations, packages: [...packages].sort() };
+}
+
+async function workspaceGraph(root, violations) {
   try {
-    const entries = await readdir(base, { withFileTypes: true });
-    return entries.filter((entry) => entry.isDirectory()).map((entry) => `${group}/${entry.name}`);
+    return await declaredWorkspaceGraph(root);
   } catch (error) {
-    if (error.code === 'ENOENT') return [];
-    throw error;
+    violations.push(`Unreadable pnpm-workspace.yaml: ${error.message}`);
+    return { declarations: [], packages: [] };
   }
 }
 
 export async function findWorkspaceViolations(root) {
-  const candidates = [
-    ...(await directoryNames(root, 'apps')),
-    ...(await directoryNames(root, 'packages')),
-  ];
   const violations = [];
+  const { declarations, packages: candidates } = await workspaceGraph(root, violations);
+  for (const expected of allowedWorkspaceDeclarations) {
+    const count = declarations.filter((value) => value === expected).length;
+    if (count === 0) violations.push(`Missing workspace declaration: ${expected}`);
+    if (count > 1) violations.push(`Duplicate workspace declaration: ${expected}`);
+  }
+  for (const declaration of declarations) {
+    if (!allowedWorkspaceDeclarations.has(declaration)) {
+      violations.push(`Unexpected workspace declaration: ${declaration}`);
+    }
+  }
   for (const expected of allowedWorkspaces) {
     if (!candidates.includes(expected)) violations.push(`Missing workspace: ${expected}`);
   }

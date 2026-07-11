@@ -97,10 +97,60 @@ function nonEmpty(value) {
   return typeof value === 'string' && value.length > 0;
 }
 
-function figmaNodeUrl(value) {
-  return nonEmpty(value)
-    && value.startsWith('https://www.figma.com/design/')
-    && value.includes('node-id=');
+function strictIsoTimestamp(value) {
+  if (typeof value !== 'string') return false;
+  const match = value.match(
+    /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d{1,3}))?(Z|([+-])(\d{2}):(\d{2}))$/,
+  );
+  if (!match) return false;
+  const [, yearText, monthText, dayText, hourText, minuteText, secondText, fraction = ''] = match;
+  const [year, month, day, hour, minute, second] = [
+    yearText, monthText, dayText, hourText, minuteText, secondText,
+  ].map(Number);
+  const millisecond = Number(fraction.padEnd(3, '0'));
+  const local = new Date(0);
+  local.setUTCFullYear(year, month - 1, day);
+  local.setUTCHours(hour, minute, second, millisecond);
+  if (local.getUTCFullYear() !== year
+    || local.getUTCMonth() !== month - 1
+    || local.getUTCDate() !== day
+    || local.getUTCHours() !== hour
+    || local.getUTCMinutes() !== minute
+    || local.getUTCSeconds() !== second
+    || local.getUTCMilliseconds() !== millisecond) return false;
+
+  let offsetMinutes = 0;
+  if (match[8] !== 'Z') {
+    const offsetHour = Number(match[10]);
+    const offsetMinute = Number(match[11]);
+    if (offsetHour > 23 || offsetMinute > 59) return false;
+    offsetMinutes = (offsetHour * 60 + offsetMinute) * (match[9] === '-' ? -1 : 1);
+  }
+  return Date.parse(value) === local.getTime() - offsetMinutes * 60_000;
+}
+
+function parseFigmaUrl(value, requireNode = false) {
+  if (!nonEmpty(value)) return null;
+  try {
+    const parsed = new URL(value);
+    const segments = parsed.pathname.split('/').filter(Boolean);
+    if (parsed.origin !== 'https://www.figma.com'
+      || segments[0] !== 'design'
+      || !segments[1]) return null;
+    const rawNodeId = parsed.searchParams.get('node-id');
+    if (requireNode && !nonEmpty(rawNodeId)) return null;
+    const nodeId = /^\d+(?:[-:]\d+)+$/.test(rawNodeId ?? '')
+      ? rawNodeId.replaceAll('-', ':')
+      : rawNodeId;
+    return { fileKey: decodeURIComponent(segments[1]), nodeId };
+  } catch {
+    return null;
+  }
+}
+
+function figmaNodeTarget(value) {
+  const parsed = parseFigmaUrl(value, true);
+  return parsed ? `${parsed.fileKey}\u0000${parsed.nodeId}` : null;
 }
 
 function expectedCollection(token) {
@@ -205,8 +255,9 @@ function validateComponentsArtifact(artifact) {
     if (component?.status !== 'preview') violations.push(`${name} status must be preview`);
     if (!nonEmpty(component?.description)) violations.push(`${name} description must be non-empty`);
     if (!nonEmpty(component?.accessibility)) violations.push(`${name} accessibility must be non-empty`);
-    if (!figmaNodeUrl(component?.figmaUrl)) violations.push(`${name} requires a Figma node URL`);
-    else figmaUrls.push(component.figmaUrl);
+    const figmaTarget = figmaNodeTarget(component?.figmaUrl);
+    if (!figmaTarget) violations.push(`${name} requires a Figma node URL`);
+    else figmaUrls.push(figmaTarget);
     if (JSON.stringify(component?.frameworks) !== JSON.stringify({
       react: 'preview',
       svelte: 'planned',
@@ -259,8 +310,9 @@ export function verifyTokenMap(tokens, tokenMap) {
   if (JSON.stringify(tokenMap?.collections?.map(({ name }) => name)) !== JSON.stringify(collectionNames)) {
     violations.push('token-map collection list mismatch');
   }
+  const collections = tokenMap?.collections ?? [];
   const collectionByName = new Map();
-  for (const collection of tokenMap?.collections ?? []) {
+  for (const collection of collections) {
     if (!exactKeys(collection, ['name', 'id', 'mode', 'variableCount'])
       || !exactKeys(collection.mode, ['id', 'name'])) {
       violations.push(`${collection.name} collection fields mismatch`);
@@ -270,6 +322,9 @@ export function verifyTokenMap(tokens, tokenMap) {
     if (!nonEmpty(collection.mode?.id) || collection.mode?.name !== 'Default') {
       violations.push(`${collection.name} Default mode evidence is invalid`);
     }
+  }
+  if (new Set(collections.map(({ id }) => id)).size !== collections.length) {
+    violations.push('token-map collection IDs must be unique');
   }
   if (!Array.isArray(tokenMap?.variables)) violations.push('token-map variables must be an array');
   if (!Array.isArray(tokenMap?.styles?.text)) violations.push('token-map text styles must be an array');
@@ -281,6 +336,9 @@ export function verifyTokenMap(tokens, tokenMap) {
   const mappedNames = [...variables.map(({ tokenName }) => tokenName), ...effects.map(({ tokenName }) => tokenName)];
   const expectedNames = tokens.map(({ name }) => name);
   if (variables.length !== 104) violations.push('token-map must contain exactly 104 variables');
+  if (new Set(variables.map(({ variableId }) => variableId)).size !== variables.length) {
+    violations.push('token-map variable IDs must be unique');
+  }
   if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.kind === 'semantic').length !== 26) {
     violations.push('token-map must contain exactly 26 Semantic Color variables');
   }
@@ -333,8 +391,15 @@ export function verifyTokenMap(tokens, tokenMap) {
     if (!exactKeys(style, ['name', 'id'])) violations.push(`${style.name} text style fields mismatch`);
     if (!nonEmpty(style.id)) violations.push(`Text style ${style.name} ID is required`);
   }
+  const textStyles = tokenMap?.styles?.text ?? [];
+  if (new Set(textStyles.map(({ id }) => id)).size !== textStyles.length) {
+    violations.push('token-map text style IDs must be unique');
+  }
   const shadowTokens = tokens.filter(({ type }) => type === 'shadow');
   if (effects.length !== shadowTokens.length) violations.push('token-map effect style count mismatch');
+  if (new Set(effects.map(({ styleId }) => styleId)).size !== effects.length) {
+    violations.push('token-map effect style IDs must be unique');
+  }
   effects.forEach((effect, index) => {
     if (!exactKeys(effect, ['tokenName', 'name', 'styleId', 'webSyntax'])) {
       violations.push(`${effect.tokenName} effect style fields mismatch`);
@@ -384,10 +449,11 @@ export async function verifyFigmaEvidence(root) {
     'pageScreenshotNodeIds', 'allPagesScreenshotReviewed', 'hardCodedProductValues',
   ])) violations.push('Figma evidence top-level fields mismatch');
   if (evidence.schemaVersion !== 1) violations.push('Figma schemaVersion must be 1');
-  if (!nonEmpty(evidence.fileUrl) || !evidence.fileUrl.startsWith('https://www.figma.com/design/')) {
-    violations.push('Figma fileUrl is invalid');
+  const figmaFile = parseFigmaUrl(evidence.fileUrl);
+  if (!figmaFile) violations.push('Figma fileUrl is invalid');
+  if (!strictIsoTimestamp(evidence.verifiedAt)) {
+    violations.push('Figma verifiedAt must be a strict ISO timestamp');
   }
-  if (!Number.isFinite(Date.parse(evidence.verifiedAt ?? ''))) violations.push('Figma verifiedAt must be an ISO timestamp');
   if (evidence.codeConnect !== 'skipped-v0.1') violations.push('Code Connect must be skipped-v0.1');
   if (JSON.stringify(evidence.collections) !== JSON.stringify(collectionNames)) violations.push('Figma collection list mismatch');
   if (evidence.textStyleCount !== 8) violations.push('Figma textStyleCount must be 8');
@@ -396,9 +462,11 @@ export async function verifyFigmaEvidence(root) {
   if (!exactKeys(evidence.foundations, ['approved', 'approvedAt', 'tokenParity'])) {
     violations.push('Foundations evidence fields mismatch');
   }
-  if (evidence.foundations?.approved !== true
-    || !Number.isFinite(Date.parse(evidence.foundations?.approvedAt ?? ''))) {
+  if (evidence.foundations?.approved !== true) {
     violations.push('Foundations approval evidence is incomplete');
+  }
+  if (!strictIsoTimestamp(evidence.foundations?.approvedAt)) {
+    violations.push('Foundations approvedAt must be a strict ISO timestamp');
   }
   if (evidence.foundations?.tokenParity !== true) violations.push('Foundations token parity must be true');
   if (evidence.allPagesScreenshotReviewed !== true) violations.push('Every Figma page screenshot must be reviewed');
@@ -411,7 +479,15 @@ export async function verifyFigmaEvidence(root) {
       violations.push(`${page} screenshot node ID is required`);
     }
   }
+  const screenshotTargetIds = pageNames.map((page) => evidence.pageScreenshotNodeIds?.[page]);
+  if (new Set(screenshotTargetIds).size !== screenshotTargetIds.length) {
+    violations.push('Figma page screenshot target IDs must be unique');
+  }
   if (evidence.hardCodedProductValues !== 0) violations.push('Figma hard-coded product values must be 0');
+
+  if (!exactKeys(evidence.components, componentSpecs.map(({ name }) => name))) {
+    violations.push('Figma component keys must be exactly Icon, Badge, Button, TextField');
+  }
 
   const manifestTargets = [];
   for (const spec of componentSpecs) {
@@ -427,18 +503,30 @@ export async function verifyFigmaEvidence(root) {
       violations.push(`${spec.name} evidence fields mismatch`);
     }
     const targetUrl = spec.name === 'Icon' ? component.catalogUrl : component.componentSetUrl;
-    if (!figmaNodeUrl(targetUrl)) violations.push(`${spec.name} Figma target URL is invalid`);
-    else manifestTargets.push(targetUrl);
+    const parsedTarget = parseFigmaUrl(targetUrl, true);
+    const target = figmaNodeTarget(targetUrl);
+    if (!parsedTarget || !target) {
+      violations.push(`${spec.name} Figma target URL is invalid`);
+    } else {
+      manifestTargets.push(target);
+      if (figmaFile && parsedTarget.fileKey !== figmaFile.fileKey) {
+        violations.push(`${spec.name} Figma target must use the same Figma file as fileUrl`);
+      }
+    }
 
     if (spec.name === 'Icon') {
       if (component.componentCount !== 5) violations.push('Icon componentCount must be 5');
       const iconUrls = component.componentUrls ?? [];
+      const iconTargets = iconUrls.map(({ url }) => figmaNodeTarget(url));
       if (iconUrls.length !== 5
         || JSON.stringify(iconUrls.map(({ name }) => name)) !== JSON.stringify(iconNames)
         || iconUrls.some((entry) => !exactKeys(entry, ['name', 'url']))
-        || new Set(iconUrls.map(({ url }) => url)).size !== 5
-        || iconUrls.some(({ url }) => !figmaNodeUrl(url))) {
+        || iconTargets.some((value) => !value)
+        || new Set(iconTargets).size !== 5) {
         violations.push('Icon componentUrls must contain five exact icons');
+      }
+      if (figmaFile && iconUrls.some(({ url }) => parseFigmaUrl(url, true)?.fileKey !== figmaFile.fileKey)) {
+        violations.push('Icon component URLs must use the same Figma file as fileUrl');
       }
     } else if (component.variantCount !== spec.variantCount) {
       violations.push(`${spec.name} variantCount must be ${spec.variantCount}`);
@@ -452,18 +540,21 @@ export async function verifyFigmaEvidence(root) {
     }
 
     const manifestEntry = manifest.components?.find((entry) => entry.slug === spec.slug);
-    if (manifestEntry?.figmaUrl !== targetUrl) {
+    if (!target || figmaNodeTarget(manifestEntry?.figmaUrl) !== target) {
       violations.push(`${spec.name} manifest Figma URL must match readback evidence`);
     }
   }
 
   if (manifestTargets.length !== 4 || new Set(manifestTargets).size !== 4) {
-    violations.push('Figma evidence must expose four distinct manifest target URLs');
+    violations.push('Figma evidence must expose four distinct manifest Figma node targets');
   }
-  const ownedIconUrls = evidence.components?.Icon?.componentUrls?.map(({ url }) => url) ?? [];
-  const allEvidenceUrls = [...manifestTargets, ...ownedIconUrls];
-  if (allEvidenceUrls.length !== 9 || new Set(allEvidenceUrls).size !== 9) {
-    violations.push('Figma evidence must expose nine distinct documentation/component node URLs');
+  const ownedIconTargets = evidence.components?.Icon?.componentUrls
+    ?.map(({ url }) => figmaNodeTarget(url)) ?? [];
+  const allEvidenceTargets = [...manifestTargets, ...ownedIconTargets];
+  if (allEvidenceTargets.length !== 9
+    || allEvidenceTargets.some((value) => !value)
+    || new Set(allEvidenceTargets).size !== 9) {
+    violations.push('Figma evidence must expose nine distinct Figma node targets');
   }
   return violations.sort();
 }

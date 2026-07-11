@@ -71,6 +71,12 @@ function figmaUrl(id) {
   return `https://www.figma.com/design/file?node-id=${encodeURIComponent(id)}`;
 }
 
+function withQuery(url, name, value) {
+  const parsed = new URL(url);
+  parsed.searchParams.set(name, value);
+  return parsed.toString();
+}
+
 function makeTokens() {
   return Array.from({ length: 106 }, (_, index) => {
     const kind = index < 80 ? 'primitive' : 'semantic';
@@ -264,7 +270,7 @@ function makeVerification() {
     },
     foundations: {
       approved: true,
-      approvedAt: '2026-07-10T02:00:00.000Z',
+      approvedAt: '2026-07-10T11:00:00+09:00',
       tokenParity: true,
     },
     pageScreenshotNodeIds: Object.fromEntries(
@@ -305,6 +311,16 @@ test('accepts a complete build, 106-token map, manifest, and Figma evidence', as
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   assert.deepEqual(await verifyBuildArtifacts(root), []);
+  assert.deepEqual(await verifyFigmaEvidence(root), []);
+});
+
+test('accepts equivalent Figma node URLs with additional query metadata', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
+  const manifest = JSON.parse(await readFile(file, 'utf8'));
+  manifest.components[0].figmaUrl = withQuery(manifest.components[0].figmaUrl, 'source', 'manifest');
+  await writeFile(file, JSON.stringify(manifest));
   assert.deepEqual(await verifyFigmaEvidence(root), []);
 });
 
@@ -422,4 +438,83 @@ test('rejects approval, Code Connect, screenshot, hard-code, and URL mapping dri
   assert.ok(violations.some((value) => value.includes('04.2 Badge screenshot node')));
   assert.ok(violations.some((value) => value.includes('hard-coded product values')));
   assert.ok(violations.some((value) => value.includes('Icon manifest Figma URL')));
+});
+
+test('rejects cross-file and duplicate normalized Figma node targets', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const evidenceFile = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(evidenceFile, 'utf8'));
+  evidence.components.Icon.componentUrls[0].url = figmaUrl('31-2');
+  evidence.components.Icon.componentUrls[1].url = withQuery(figmaUrl('31:2'), 'source', 'duplicate');
+  evidence.components.Badge.componentSetUrl = evidence.components.Badge.componentSetUrl
+    .replace('/design/file?', '/design/other-file?');
+  await writeFile(evidenceFile, JSON.stringify(evidence));
+
+  const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
+  manifest.components[1].figmaUrl = evidence.components.Badge.componentSetUrl;
+  await writeFile(manifestFile, JSON.stringify(manifest));
+
+  const violations = await verifyFigmaEvidence(root);
+  assert.ok(violations.some((value) => value.includes('same Figma file')));
+  assert.ok(violations.some((value) => value.includes('nine distinct Figma node targets')));
+});
+
+test('rejects duplicate token-map collection, variable, and style IDs', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'token-map.json');
+  const tokenMap = JSON.parse(await readFile(file, 'utf8'));
+  tokenMap.collections[1].id = tokenMap.collections[0].id;
+  for (const variable of tokenMap.variables) {
+    if (variable.collection === tokenMap.collections[1].name) {
+      variable.collectionId = tokenMap.collections[1].id;
+    }
+  }
+  tokenMap.variables[1].variableId = tokenMap.variables[0].variableId;
+  tokenMap.styles.text[1].id = tokenMap.styles.text[0].id;
+  tokenMap.styles.effect[1].styleId = tokenMap.styles.effect[0].styleId;
+  await writeFile(file, JSON.stringify(tokenMap));
+
+  const violations = await verifyFigmaEvidence(root);
+  assert.ok(violations.includes('token-map collection IDs must be unique'));
+  assert.ok(violations.includes('token-map variable IDs must be unique'));
+  assert.ok(violations.includes('token-map text style IDs must be unique'));
+  assert.ok(violations.includes('token-map effect style IDs must be unique'));
+});
+
+test('rejects duplicate Figma page screenshot target IDs', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.pageScreenshotNodeIds['01 Principles'] = evidence.pageScreenshotNodeIds['00 Cover'];
+  await writeFile(file, JSON.stringify(evidence));
+  assert.ok((await verifyFigmaEvidence(root))
+    .includes('Figma page screenshot target IDs must be unique'));
+});
+
+test('rejects unexpected Figma component evidence keys', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.components.Tooltip = {};
+  await writeFile(file, JSON.stringify(evidence));
+  assert.ok((await verifyFigmaEvidence(root))
+    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField'));
+});
+
+test('rejects non-strict or impossible ISO timestamps', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.verifiedAt = '2026-02-30T03:00:00.000Z';
+  evidence.foundations.approvedAt = '2026-07-10 02:00:00';
+  await writeFile(file, JSON.stringify(evidence));
+  const violations = await verifyFigmaEvidence(root);
+  assert.ok(violations.includes('Figma verifiedAt must be a strict ISO timestamp'));
+  assert.ok(violations.includes('Foundations approvedAt must be a strict ISO timestamp'));
 });
