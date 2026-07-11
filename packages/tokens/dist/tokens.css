@@ -50,6 +50,12 @@
   --ds-size-control-small: 44px;
   --ds-size-control-medium: 48px;
   --ds-size-control-large: 56px;
+  --ds-size-selection-small: 20px;
+  --ds-size-selection-medium: 24px;
+  --ds-size-switch-small-width: 36px;
+  --ds-size-switch-small-height: 20px;
+  --ds-size-switch-medium-width: 44px;
+  --ds-size-switch-medium-height: 24px;
   --ds-radius-none: 0px;
   --ds-radius-sm: 6px;
   --ds-radius-md: 10px;

@@ -98,7 +98,7 @@ describe('token generation', () => {
     const definitions = await loadDefinitions();
     const resolved = resolveTokens(definitions);
 
-    expect(resolved).toHaveLength(107);
+    expect(resolved).toHaveLength(113);
     expect(resolved.map((token) => token.name)).toEqual(
       definitions.map((token) => token.name),
     );
@@ -167,7 +167,7 @@ describe('token generation', () => {
       tokens: Array<Record<string, unknown>>;
     };
     expect(parsed.schemaVersion).toBe(1);
-    expect(parsed.tokens).toHaveLength(107);
+    expect(parsed.tokens).toHaveLength(113);
     expect(Object.keys(parsed.tokens[0] ?? {})).toEqual([
       'name',
       'type',
@@ -178,6 +178,26 @@ describe('token generation', () => {
       'resolvedValue',
     ]);
     expect(json.endsWith('\n')).toBe(true);
+  });
+
+  it('generates the six form-control size tokens', async () => {
+    const artifact = JSON.parse(await readFile(distJsonUrl, 'utf8')) as {
+      tokens: Array<{ name: string; resolvedValue: unknown }>;
+    };
+
+    expect(artifact.tokens).toHaveLength(113);
+    expect(
+      Object.fromEntries(
+        artifact.tokens.map((token) => [token.name, token.resolvedValue]),
+      ),
+    ).toMatchObject({
+      'size/selection/small': 20,
+      'size/selection/medium': 24,
+      'size/switch/small-width': 36,
+      'size/switch/small-height': 20,
+      'size/switch/medium-width': 44,
+      'size/switch/medium-height': 24,
+    });
   });
 
   it('maps control boundaries and the focus ring to the approved aliases', async () => {
