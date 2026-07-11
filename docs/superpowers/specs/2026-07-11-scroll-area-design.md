@@ -20,16 +20,18 @@ export type ScrollAreaState = 'no-overflow' | 'start' | 'middle' | 'end';
 
 export interface ScrollAreaProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
-  'aria-label' | 'children' | 'role' | 'tabIndex'
+  'children' | 'onScroll'
 > {
   children: ReactNode;
   label: string;
   scrollUpLabel: string;
   scrollDownLabel: string;
+  viewportRef?: Ref<HTMLDivElement>;
+  onViewportScroll?: UIEventHandler<HTMLDivElement>;
 }
 ```
 
-`ScrollArea` forwards its `HTMLDivElement` ref and remaining native props to the actual scroll viewport. `className`, `style`, `id`, and `onScroll` therefore affect the element consumers need to size, observe, or scroll programmatically. The component owns `role="region"`, `aria-label`, and keyboard focusability so the hidden scrollbar never removes native access.
+`ScrollArea` forwards its `HTMLDivElement` ref and remaining native props to the outer root. `className`, `style`, and `id` therefore size the same box that positions the blur and navigation overlays. `viewportRef` addresses the actual scrolling element for imperative `scrollTo`/`scrollBy`, and `onViewportScroll` observes its native scroll events. The component owns the viewport's `role="region"`, `aria-label`, and keyboard focusability so the hidden scrollbar never removes native access.
 
 Button labels are required instead of assuming a product language. There is no size, height, step, or horizontal-axis prop in v0.1. Consumers constrain viewport height through `className` or `style`.
 
@@ -51,7 +53,7 @@ The wrapper and viewport expose the owned state with `data-state`. Each edge exp
 - Compute `canScrollUp` from `scrollTop > 1`.
 - Compute `canScrollDown` from `scrollHeight - clientHeight - scrollTop > 1`.
 - Recompute after mount, on every native `scroll` event, and when `ResizeObserver` reports a size change for either viewport or content wrapper.
-- Preserve and invoke a consumer `onScroll` handler after the owned state has been synchronized.
+- Preserve and invoke `onViewportScroll` after the owned state has been synchronized.
 - Scroll buttons call `viewport.scrollBy()` by 80% of the current viewport height in the requested direction. CSS provides smooth behavior; `prefers-reduced-motion: reduce` changes it to immediate movement.
 - Keep native `overflow-y: auto`; never replace it with `overflow: hidden` or transform-based movement.
 - Hide only the visual scrollbar with Firefox, legacy Microsoft, and WebKit scrollbar rules.
@@ -59,8 +61,8 @@ The wrapper and viewport expose the owned state with `data-state`. Each edge exp
 ## Structure and visuals
 
 ```text
-wrapper (relative, internal chrome)
-├─ viewport (native scrolling region, forwarded ref/props)
+root (relative, forwarded ref/props, sizing box)
+├─ viewport (native scrolling region, viewportRef/onViewportScroll target)
 │  └─ content observer wrapper
 ├─ top edge (absolute, pointer-events none)
 │  └─ up button (pointer-events auto when enabled)
@@ -83,6 +85,7 @@ Reuse existing surface, action, icon, border, focus, spacing, control-size, and 
 ## Accessibility
 
 - The viewport is a named `region` and becomes keyboard-focusable when it can scroll; it uses `tabIndex=-1` when no overflow exists.
+- The viewport uses `scroll-padding-block` equal to the edge control zone so focused descendants are not positioned beneath an active overlay.
 - Both navigation controls are native `button type="button"` elements with required localized names and `aria-controls` pointing at the viewport ID.
 - Navigation icons are decorative.
 - The 44px targets meet the minimum touch target used by the system.
@@ -109,7 +112,7 @@ Add the ScrollArea MDX page, interactive demo, navigation entry, static route, a
 
 ## Verification
 
-React unit tests must cover all four states, fractional geometry, observer updates, native `onScroll`, both button directions and step size, ref/native props, owned accessibility attributes, cleanup, and axe.
+React unit tests must cover all four states, fractional and bounce geometry, observer updates, `onViewportScroll`, both button directions and step size, root and viewport refs, root/native prop ownership, owned accessibility attributes, cleanup, and axe.
 
 Browser tests must prove:
 

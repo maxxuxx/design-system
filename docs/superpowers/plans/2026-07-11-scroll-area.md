@@ -54,7 +54,7 @@
 - one-pixel fractional epsilon;
 - recomputation on scroll and on viewport/content observer callbacks;
 - down and up `scrollBy` calls at `clientHeight * 0.8`;
-- consumer `onScroll`, `id`, `className`, native data attributes, and forwarded ref;
+- root `id`, `className`, native data attributes, forwarded root ref, `viewportRef`, and `onViewportScroll`;
 - owned region name, tab index, button labels, `aria-controls`, native disabled state, and decorative icons;
 - observer disconnect and axe.
 
@@ -70,9 +70,9 @@
 
 1. Implement `ScrollAreaProps` by omitting caller ownership of `children`, `aria-label`, `role`, and `tabIndex`.
 2. Add `getScrollState()` using a one-pixel epsilon.
-3. Use a forwarded viewport ref plus an internal content ref; merge the forwarded ref without hiding the native element.
+3. Forward the component ref and native props to the outer sizing root; merge `viewportRef` onto the actual scroll viewport and keep an internal content ref.
 4. Synchronize geometry on mount, scroll, and both ResizeObserver targets, with an undefined-ResizeObserver guard.
-5. Preserve caller `onScroll` and make component-owned attributes authoritative after spread props.
+5. Preserve caller `onViewportScroll` and make viewport-owned attributes authoritative.
 6. Implement 80%-viewport `scrollBy` controls with existing decorative ChevronRight icons.
 7. Re-run the focused test until green, then run all React tests and TypeScript checks.
 
