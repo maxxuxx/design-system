@@ -44,8 +44,11 @@ jobs:
         shell: pwsh
         run: |
           $logPath = Join-Path $env:RUNNER_TEMP 'missing-full-page-baselines.log'
-          pnpm --filter @maxxuxx/docs test:e2e 2>&1 | Tee-Object -FilePath $logPath
+          $ErrorActionPreference = 'Continue'
+          & pnpm --filter @maxxuxx/docs test:e2e *> $logPath
           $exitCode = $LASTEXITCODE
+          $ErrorActionPreference = 'Stop'
+          Get-Content $logPath
           if ($exitCode -eq 0) {
             throw 'The first Windows run unexpectedly passed without the twelve required baselines.'
           }
