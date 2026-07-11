@@ -138,10 +138,8 @@ function parseFigmaUrl(value, requireNode = false) {
       || segments[0] !== 'design'
       || !segments[1]) return null;
     const rawNodeId = parsed.searchParams.get('node-id');
-    if (requireNode && !nonEmpty(rawNodeId)) return null;
-    const nodeId = /^\d+(?:[-:]\d+)+$/.test(rawNodeId ?? '')
-      ? rawNodeId.replaceAll('-', ':')
-      : rawNodeId;
+    if (requireNode && !/^\d+[-:]\d+$/.test(rawNodeId ?? '')) return null;
+    const nodeId = rawNodeId?.replace('-', ':') ?? null;
     return { fileKey: decodeURIComponent(segments[1]), nodeId };
   } catch {
     return null;
@@ -475,8 +473,11 @@ export async function verifyFigmaEvidence(root) {
     violations.push('Figma screenshot node map must contain exactly all pages');
   }
   for (const page of pageNames) {
-    if (!nonEmpty(evidence.pageScreenshotNodeIds?.[page])) {
+    const screenshotNodeId = evidence.pageScreenshotNodeIds?.[page];
+    if (!nonEmpty(screenshotNodeId)) {
       violations.push(`${page} screenshot node ID is required`);
+    } else if (!/^\d+:\d+$/.test(screenshotNodeId)) {
+      violations.push(`${page} screenshot node ID must match <number>:<number>`);
     }
   }
   const screenshotTargetIds = pageNames.map((page) => evidence.pageScreenshotNodeIds?.[page]);

@@ -67,6 +67,15 @@ const properties = {
   ],
 };
 
+const componentNodeIds = {
+  Icon: '31-2',
+  Badge: '47-2',
+  Button: '65-56',
+  TextField: '80-50',
+};
+
+const iconNodeIds = ['30-4', '30-7', '30-11', '30-16', '30-20'];
+
 function figmaUrl(id) {
   return `https://www.figma.com/design/file?node-id=${encodeURIComponent(id)}`;
 }
@@ -207,7 +216,7 @@ function makeManifest() {
     slug,
     description: `${name} purpose`,
     status: 'preview',
-    figmaUrl: figmaUrl(name === 'Icon' ? 'icon-catalog' : `${slug}-set`),
+    figmaUrl: figmaUrl(componentNodeIds[name]),
     frameworks: { react: 'preview', svelte: 'planned', reactNative: 'planned' },
     variants,
     sizes,
@@ -242,27 +251,27 @@ function makeVerification() {
     pages: pageNames,
     components: {
       Icon: {
-        catalogUrl: figmaUrl('icon-catalog'),
+        catalogUrl: figmaUrl(componentNodeIds.Icon),
         componentCount: 5,
         componentUrls: ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search']
-          .map((name, index) => ({ name, url: figmaUrl(`icon-${index + 1}`) })),
+          .map((name, index) => ({ name, url: figmaUrl(iconNodeIds[index]) })),
         properties: properties.Icon,
         ...shared,
       },
       Badge: {
-        componentSetUrl: figmaUrl('badge-set'),
+        componentSetUrl: figmaUrl(componentNodeIds.Badge),
         variantCount: 16,
         properties: properties.Badge,
         ...shared,
       },
       Button: {
-        componentSetUrl: figmaUrl('button-set'),
+        componentSetUrl: figmaUrl(componentNodeIds.Button),
         variantCount: 27,
         properties: properties.Button,
         ...shared,
       },
       TextField: {
-        componentSetUrl: figmaUrl('text-field-set'),
+        componentSetUrl: figmaUrl(componentNodeIds.TextField),
         variantCount: 8,
         properties: properties.TextField,
         ...shared,
@@ -274,7 +283,7 @@ function makeVerification() {
       tokenParity: true,
     },
     pageScreenshotNodeIds: Object.fromEntries(
-      pageNames.map((page, index) => [page, `page:${index + 1}`]),
+      pageNames.map((page, index) => [page, `${index + 10}:${index + 2}`]),
     ),
     allPagesScreenshotReviewed: true,
     hardCodedProductValues: 0,
@@ -429,7 +438,7 @@ test('rejects approval, Code Connect, screenshot, hard-code, and URL mapping dri
 
   const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
   const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
-  manifest.components[0].figmaUrl = figmaUrl('different');
+  manifest.components[0].figmaUrl = figmaUrl('999-9');
   await writeFile(manifestFile, JSON.stringify(manifest));
 
   const violations = await verifyFigmaEvidence(root);
@@ -445,8 +454,8 @@ test('rejects cross-file and duplicate normalized Figma node targets', async (t)
   t.after(() => rm(root, { recursive: true, force: true }));
   const evidenceFile = path.join(root, 'figma', 'verification.json');
   const evidence = JSON.parse(await readFile(evidenceFile, 'utf8'));
-  evidence.components.Icon.componentUrls[0].url = figmaUrl('31-2');
-  evidence.components.Icon.componentUrls[1].url = withQuery(figmaUrl('31:2'), 'source', 'duplicate');
+  evidence.components.Icon.componentUrls[0].url = figmaUrl('91-2');
+  evidence.components.Icon.componentUrls[1].url = withQuery(figmaUrl('91:2'), 'source', 'duplicate');
   evidence.components.Badge.componentSetUrl = evidence.components.Badge.componentSetUrl
     .replace('/design/file?', '/design/other-file?');
   await writeFile(evidenceFile, JSON.stringify(evidence));
@@ -517,4 +526,34 @@ test('rejects non-strict or impossible ISO timestamps', async (t) => {
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.includes('Figma verifiedAt must be a strict ISO timestamp'));
   assert.ok(violations.includes('Foundations approvedAt must be a strict ISO timestamp'));
+});
+
+test('rejects nonnumeric Figma component-set and master node IDs', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const evidenceFile = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(evidenceFile, 'utf8'));
+  evidence.components.Badge.componentSetUrl = figmaUrl('badge-set');
+  evidence.components.Icon.componentUrls[0].url = figmaUrl('icon-master');
+  await writeFile(evidenceFile, JSON.stringify(evidence));
+
+  const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
+  manifest.components[1].figmaUrl = evidence.components.Badge.componentSetUrl;
+  await writeFile(manifestFile, JSON.stringify(manifest));
+
+  const violations = await verifyFigmaEvidence(root);
+  assert.ok(violations.includes('Badge Figma target URL is invalid'));
+  assert.ok(violations.includes('Icon componentUrls must contain five exact icons'));
+});
+
+test('rejects nonnumeric Figma page screenshot node IDs', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.pageScreenshotNodeIds['00 Cover'] = 'page:1';
+  await writeFile(file, JSON.stringify(evidence));
+  assert.ok((await verifyFigmaEvidence(root))
+    .includes('00 Cover screenshot node ID must match <number>:<number>'));
 });
