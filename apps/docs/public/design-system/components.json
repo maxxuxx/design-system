@@ -387,7 +387,7 @@
       "slug": "scroll-area",
       "description": "native vertical scrolling을 유지하면서 방향별 blur cue와 이동 control을 고정해 제공하는 scroll container입니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
@@ -458,7 +458,7 @@
         "space/2",
         "space/4",
         "space/8",
-        "space/16",
+        "space/64",
         "radius/full",
         "elevation/1",
         "blur/subtle",

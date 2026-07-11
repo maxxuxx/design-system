@@ -132,7 +132,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'ScrollArea',
       slug: 'scroll-area',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6',
       variants: [],
       sizes: [],
       states: ['no-overflow', 'start', 'middle', 'end'],
@@ -171,7 +171,7 @@ describe('component metadata contract', () => {
       'space/2',
       'space/4',
       'space/8',
-      'space/16',
+      'space/64',
       'radius/full',
       'elevation/1',
       'blur/subtle',

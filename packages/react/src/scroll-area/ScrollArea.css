@@ -1,7 +1,5 @@
 .ds-scroll-area {
-  --ds-scroll-area-edge-size: calc(
-    var(--ds-size-control-small) + var(--ds-space-16)
-  );
+  --ds-scroll-area-edge-size: var(--ds-space-64);
 
   position: relative;
   min-block-size: 0;

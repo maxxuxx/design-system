@@ -81,6 +81,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
     const internalViewportRef = useRef<HTMLDivElement | null>(null);
     const contentRef = useRef<HTMLDivElement | null>(null);
     const [state, setState] = useState<ScrollAreaState>('no-overflow');
+    const committedStateRef = useRef<ScrollAreaState>(state);
     const classes = ['ds-scroll-area', className].filter(Boolean).join(' ');
     const canScrollUp = state === 'middle' || state === 'end';
     const canScrollDown = state === 'start' || state === 'middle';
@@ -96,6 +97,10 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
         setState(getScrollState(viewport));
       }
     }, []);
+
+    useLayoutEffect(() => {
+      committedStateRef.current = state;
+    }, [state]);
 
     useLayoutEffect(() => {
       const viewport = internalViewportRef.current;
@@ -118,9 +123,12 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
     }, [synchronizeState]);
 
     const handleViewportScroll: UIEventHandler<HTMLDivElement> = useCallback((event) => {
-      flushSync(synchronizeState);
+      const nextState = getScrollState(event.currentTarget);
+      if (nextState !== committedStateRef.current) {
+        flushSync(() => setState(nextState));
+      }
       onViewportScroll?.(event);
-    }, [onViewportScroll, synchronizeState]);
+    }, [onViewportScroll]);
 
     const scrollBy = useCallback((direction: -1 | 1) => {
       const viewport = internalViewportRef.current;

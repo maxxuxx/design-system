@@ -3,7 +3,7 @@ name: ScrollArea
 slug: scroll-area
 description: native vertical scrolling을 유지하면서 방향별 blur cue와 이동 control을 고정해 제공하는 scroll container입니다.
 status: preview
-figmaUrl: ""
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6"
 frameworks:
   react: preview
   svelte: planned
@@ -53,7 +53,7 @@ tokens:
   - space/2
   - space/4
   - space/8
-  - space/16
+  - space/64
   - radius/full
   - elevation/1
   - blur/subtle
@@ -141,14 +141,14 @@ export function OrderHistory() {
 
 ## 사용 토큰
 
-- `size/control/small`, `space/2`, `space/4`, `space/8`, `space/16`
+- `size/control/small`, `space/2`, `space/4`, `space/8`, `space/64`
 - `radius/full`, `elevation/1`, `blur/subtle`
 - `color/bg/surface`, `color/action/weak`, `color/action/weak-hover`, `color/action/on-weak`
 - `color/border/default`, `color/border/focus`, `color/focus/ring`
 
 ## Figma
 
-라이브 `ScrollArea` component set이 생성되고 readback 검증을 통과할 때까지 `figmaUrl`은 비워 둡니다. 예정된 set은 `No overflow`, `Start`, `Middle`, `End` 네 state를 문서화합니다.
+라이브 [`ScrollArea` component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6)은 `No overflow`, `Start`, `Middle`, `End` 네 state를 문서화합니다. 이동 가능한 edge만 8px background blur와 44px navigation button을 표시하며, 모든 색상·크기·radius·effect는 라이브러리 token 또는 style에 연결되어 있습니다.
 
 ## 지원 상태
 

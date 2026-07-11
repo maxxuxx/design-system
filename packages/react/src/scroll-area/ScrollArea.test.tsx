@@ -10,6 +10,17 @@ import {
   it,
   vi,
 } from 'vitest';
+
+const { flushSyncSpy } = vi.hoisted(() => ({
+  flushSyncSpy: vi.fn<(callback: () => unknown) => unknown>(),
+}));
+
+vi.mock('react-dom', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('react-dom')>();
+  flushSyncSpy.mockImplementation((callback) => actual.flushSync(callback));
+  return { ...actual, flushSync: flushSyncSpy };
+});
+
 import { expectNoAxeViolations } from '../test/accessibility';
 import {
   ScrollArea,
@@ -148,6 +159,7 @@ function expectState(
 
 beforeEach(() => {
   ResizeObserverDouble.instances = [];
+  flushSyncSpy.mockClear();
   vi.stubGlobal('ResizeObserver', ResizeObserverDouble);
 });
 
@@ -242,6 +254,24 @@ describe('ScrollArea', () => {
     expect(onViewportScroll).toHaveBeenCalledTimes(1);
     expect(observedTargets).toEqual([viewport]);
     expect(observedStates).toEqual([{ root: 'middle', viewport: 'middle' }]);
+  });
+
+  it('flushes synchronously only when a scroll crosses a state boundary', () => {
+    const { controller, viewport } = renderArea({
+      clientHeight: 200,
+      scrollHeight: 600,
+      scrollTop: 0,
+    });
+
+    fireEvent.scroll(viewport);
+    expect(flushSyncSpy).not.toHaveBeenCalled();
+
+    controller.geometry.scrollTop = 200;
+    fireEvent.scroll(viewport);
+    expect(flushSyncSpy).toHaveBeenCalledTimes(1);
+
+    fireEvent.scroll(viewport);
+    expect(flushSyncSpy).toHaveBeenCalledTimes(1);
   });
 
   it('observes viewport and content geometry and recomputes for either target', () => {

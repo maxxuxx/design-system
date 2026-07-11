@@ -2,16 +2,18 @@
 
 ## Target file
 
-- Location: private team Drafts
+- Location: Figma team Drafts
 - File: [Design System v0.1](https://www.figma.com/design/hNlju4j556mzi0G515UDwE)
+- Repository: [maxxuxx/design-system](https://github.com/maxxuxx/design-system) (`PUBLIC`)
 - Phase 0 approved: 2026-07-10
 
 This file is the approved target for the Figma implementation. Phase 0 resolved
 the source-of-truth decisions. Phase 1 created and validated the five token
-collections, 104 Variables, eight Text Styles, and two Effect Styles. Phase 2
-created the ordered page structure and the first five documentation roots.
+collections, now containing 105 Variables, eight Text Styles, and two Effect
+Styles. Phase 2 created the ordered page structure and the first five
+documentation roots.
 Foundations visual approval was recorded at `2026-07-10T23:08:13+09:00`, and
-Phase 3 component construction is complete.
+Phase 3 component construction is complete for all five component families.
 
 ## Typography
 
@@ -49,13 +51,14 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 7. `04.2 Badge`
 8. `04.3 Button`
 9. `04.4 TextField`
-10. `90 Native Differences`
-11. `99 Deprecated`
+10. `04.5 ScrollArea`
+11. `90 Native Differences`
+12. `99 Deprecated`
 
-The required 11-page prefix is validated in this exact order. The original
+The required 12-page prefix is validated in this exact order. The original
 empty `Page 1` remains after this managed prefix and is not used by the library.
 
-## Phase 2 Foundations catalog
+## Original Phase 2 Foundations catalog
 
 - Documentation roots: `00 Cover`, `01 Principles`, `02 Getting Started`,
   `03 Foundations`, and `04 Components`
@@ -76,15 +79,19 @@ fill so it remains visible on surface cards. The complete CSS font stack is
 displayed as text because a Figma text node accepts one installed family rather
 than a fallback stack.
 
+The later `blur/subtle` Variable brings the live file to 105 Variables. Its
+value, binding, and visual behavior are documented on `04.5 ScrollArea` and in
+the final token readback.
+
 ## Foundations approval
 
 - `approved`: `true`
 - `approvedAt`: `2026-07-10T23:08:13+09:00`
 - `tokenParity`: `true`
 
-The approved readback preserves all 104 Variables, eight Text Styles, two Effect
-Styles, explicit scopes, WEB syntax, aliases, and the full generated CSS font
-stack without missing or duplicate source items.
+The original approved readback preserves all 104 Variables, eight Text Styles,
+two Effect Styles, explicit scopes, WEB syntax, aliases, and the full generated
+CSS font stack without missing or duplicate source items.
 
 ## Phase 3 Icon validation
 
@@ -208,17 +215,37 @@ top-level overlap.
 - Full-page screenshot target: `04.4 TextField` (`9:10`), rendered at
   `1440 × 704`
 
-Status: Foundations and all four v0.1 component slices are validated in Figma.
+## Phase 3 ScrollArea validation
+
+- Component set: [ScrollArea](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6)
+- Variant count: 4
+- Axis: `State` with `No overflow`, `Start`, `Middle`, and `End`
+- Component properties: none; runtime content and localized labels remain React
+  API concerns rather than editable Figma properties
+- Specimen size: `320 × 240` per state
+- Direction cues: `0`, `1`, `2`, and `1` active edges respectively
+- Active edge height: `space/64`; background blur radius: `blur/subtle` (`8px`)
+- Navigation targets: `44 × 44`, bound to `size/control/small`; icon instances
+  are `Icon/ChevronRight` at `size/icon/medium` (`20px`)
+- Top controls point up and bottom controls point down; inactive directions
+  contain neither a blur layer nor a navigation target
+- Buttons reuse `Shadow/1`, semantic action/border Variables, and `radius/full`
+- Binding audit: no unbound visible fill, stroke, or effect values; all four
+  ChevronRight instances resolve to the owned master component
+- Full-page screenshot target: `04.5 ScrollArea` (`111:2`), rendered at
+  `1440 × 660`
+
+Status: Foundations and all five v0.1 component slices are validated in Figma.
 
 ## Phase 4 library verification
 
-- Final live readback: `2026-07-11T15:46:07+09:00`
-- Managed pages: all 11 required pages in the documented order
-- Final token readback: five collections, 104 Variables, eight Text Styles, and
+- Final live readback: `2026-07-11T22:11:57+09:00`
+- Managed pages: all 12 required pages in the documented order
+- Final token readback: five collections, 105 Variables, eight Text Styles, and
   two Effect Styles
 - Token-map reconciliation: the regenerated live projection is byte-identical
   to [`token-map.json`](./token-map.json)
-- Token coverage: 106 unique source mappings, including 26 Semantic Color and
+- Token coverage: 107 unique source mappings, including 26 Semantic Color and
   57 COLOR Variable rows
 - Variable integrity: five `Default` modes, exact WEB syntax and scopes, no
   broken aliases, missing IDs, or `ALL_SCOPES`
@@ -226,9 +253,9 @@ Status: Foundations and all four v0.1 component slices are validated in Figma.
   `color/border/strong` → `color/neutral/600`, and `color/focus/ring` →
   `color/blue/600`; the default control boundary is `3.25:1` and the focus
   ring is `5.76:1` against white
-- Live value parity: all 104 Variable source values/aliases and resolved values
+- Live value parity: all 105 Variable source values/aliases and resolved values
   match code; the canonical evidence digest is
-  `819201a3c67673929fa62f6cf4f582b02223b91d62642d974b3af901c18ec03e`
+  `52c1bbc62267e017de3dff501cc89580d5eaaf4dce10f692851c7d9ec0b944d3`
 - Effect parity: both live Effect Styles match the source shadow geometry,
   color, alpha, visibility, and blend mode; the canonical shadow evidence
   digest is `e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8`.
@@ -236,19 +263,20 @@ Status: Foundations and all four v0.1 component slices are validated in Figma.
   fields; the stored readback is also parsed and compared to the source shadow
   tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
-  Button/TextField control target is at least 44px with distinct focus, pressed,
-  error, and disabled presentation
-- Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`; all
-  properties, variants, semantic bindings, and React contracts passed
+  Button/TextField/ScrollArea control target is at least 44px with distinct
+  focus, pressed, error, disabled, or direction-availability presentation
+- Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`, and
+  ScrollArea `4`; all properties, variants, semantic bindings, and React
+  contracts passed
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
   keys on Instances and the intentionally invisible default fill on TextField
   component roots are excluded from owner/value counts.
 - Naming audit: `0` unnamed nodes and `0` duplicate owner-level logical keys
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
-- Screenshots: every managed page was captured at its natural dimensions and
-  reviewed for legibility, clipping, overlap, stale copy, and visible component
-  coverage; all 11 SHA-256 fingerprints are stored in verification evidence
+- Screenshots: every managed page was captured and reviewed for legibility,
+  clipping, overlap, stale copy, and visible component coverage; all 12 SHA-256
+  fingerprints are stored in verification evidence
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
 Code Connect is explicitly `skipped-v0.1`.

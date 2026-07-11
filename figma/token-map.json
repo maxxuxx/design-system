@@ -8,7 +8,7 @@
         "id": "5:0",
         "name": "Default"
       },
-      "variableCount": 31
+      "variableCount": 32
     },
     {
       "name": "Semantic Color",
@@ -843,6 +843,15 @@
         "CORNER_RADIUS"
       ],
       "webSyntax": "var(--ds-radius-full)"
+    },
+    {
+      "tokenName": "blur/subtle",
+      "tokenType": "FLOAT",
+      "collection": "Primitives",
+      "collectionId": "VariableCollectionId:5:2",
+      "variableId": "VariableID:110:2",
+      "scopes": [],
+      "webSyntax": "var(--ds-blur-subtle)"
     },
     {
       "tokenName": "color/bg/canvas",
