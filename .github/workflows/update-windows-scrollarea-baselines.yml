@@ -44,7 +44,7 @@ jobs:
           --project=mobile-chromium
           --project=desktop-chromium
           --grep "ScrollArea component slice"
-          --update-snapshots
+          --update-snapshots=all
 
       - name: Refresh ScrollArea full-page baselines
         run: >-
@@ -54,35 +54,26 @@ jobs:
           --project=tablet-chromium
           --project=desktop-chromium
           --grep "scroll-area matches the reviewed full-page baseline"
-          --update-snapshots
+          --update-snapshots=all
 
-      - name: Verify only allowed ScrollArea baselines changed
+      - name: Verify exactly the five ScrollArea baselines changed
         shell: pwsh
         run: |
           $snapshotRoot = 'apps/docs/tests/e2e/__snapshots__'
-          $allowed = @(
+          $expected = @(
             'apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec/scroll-area-desktop-chromium.png'
             'apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec/scroll-area-mobile-chromium.png'
             'apps/docs/tests/e2e/__snapshots__/visual.spec/scroll-area-desktop-chromium.png'
             'apps/docs/tests/e2e/__snapshots__/visual.spec/scroll-area-mobile-chromium.png'
             'apps/docs/tests/e2e/__snapshots__/visual.spec/scroll-area-tablet-chromium.png'
           ) | Sort-Object
-          $required = @(
-            'apps/docs/tests/e2e/__snapshots__/visual.spec/scroll-area-desktop-chromium.png'
-            'apps/docs/tests/e2e/__snapshots__/visual.spec/scroll-area-mobile-chromium.png'
-            'apps/docs/tests/e2e/__snapshots__/visual.spec/scroll-area-tablet-chromium.png'
-          )
           $actual = @(git status --porcelain --untracked-files=all -- $snapshotRoot |
             ForEach-Object { $_.Substring(3).Replace('\', '/') } |
             Sort-Object)
           Write-Host "Changed baselines: $($actual -join ', ')"
-          $unexpected = @($actual | Where-Object { $_ -notin $allowed })
-          $missingRequired = @($required | Where-Object { $_ -notin $actual })
-          if ($unexpected.Count -ne 0) {
-            throw "Unexpected Windows baseline changes: $($unexpected -join ', ')."
-          }
-          if ($missingRequired.Count -ne 0) {
-            throw "Required full-page baselines did not change: $($missingRequired -join ', ')."
+          $difference = Compare-Object -ReferenceObject $expected -DifferenceObject $actual
+          if ($difference) {
+            throw "Windows ScrollArea baseline changes differ: $($difference | Out-String)."
           }
 
       - name: Compare refreshed component-slice baselines
