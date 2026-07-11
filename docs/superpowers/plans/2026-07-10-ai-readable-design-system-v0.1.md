@@ -10,6 +10,7 @@
 
 ## 현재 상태와 안전 게이트
 
+- 최신 진행 기록: [`docs/PROGRESS.md`](../../PROGRESS.md)
 - 기준 설계서: `docs/superpowers/specs/2026-07-10-ai-readable-design-system-v0.1-design.md`
 - 기준 저장소: `C:\Github\design-system`
 - 원격: `maxxuxx/design-system`
