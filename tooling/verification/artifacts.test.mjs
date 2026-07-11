@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -76,6 +77,13 @@ const componentNodeIds = {
 
 const iconNodeIds = ['30-4', '30-7', '30-11', '30-16', '30-20'];
 
+const fixtureComponentTokens = {
+  Icon: ['color/icon/primary'],
+  Badge: ['space/1', 'color/semantic/1'],
+  Button: ['size/control/1', 'color/semantic/2'],
+  TextField: ['font/size/1', 'color/semantic/3'],
+};
+
 function figmaUrl(id) {
   return `https://www.figma.com/design/file?node-id=${encodeURIComponent(id)}`;
 }
@@ -84,6 +92,21 @@ function withQuery(url, name, value) {
   const parsed = new URL(url);
   parsed.searchParams.set(name, value);
   return parsed.toString();
+}
+
+function sha256(value) {
+  return createHash('sha256').update(value).digest('hex');
+}
+
+function tokenValuesSha256(tokens) {
+  const canonical = tokens
+    .filter(({ type }) => type !== 'shadow')
+    .map(({ name, value, resolvedValue }) => ({
+      tokenName: name,
+      sourceValue: value,
+      resolvedValue,
+    }));
+  return sha256(JSON.stringify(canonical));
 }
 
 function makeTokens() {
@@ -229,12 +252,12 @@ function makeManifest() {
       defaultValue: null,
       description: 'Example property',
     }],
-    tokens: [name === 'Icon' ? 'color/icon/primary' : 'color/text/primary'],
+    tokens: fixtureComponentTokens[name],
     docsUrl: `/components/${slug}/`,
   }));
 }
 
-function makeVerification() {
+function makeVerification(tokens) {
   const shared = {
     screenshotReviewed: true,
     bindingsAudited: true,
@@ -249,6 +272,10 @@ function makeVerification() {
     textStyleCount: 8,
     effectStyleCount: 2,
     pages: pageNames,
+    tokenValuesSha256: tokenValuesSha256(tokens),
+    pageScreenshotSha256: Object.fromEntries(
+      pageNames.map((page) => [page, sha256(`screenshot:${page}`)]),
+    ),
     components: {
       Icon: {
         catalogUrl: figmaUrl(componentNodeIds.Icon),
@@ -309,10 +336,21 @@ async function createFixture() {
     schemaVersion: 1,
     components: makeManifest(),
   }));
+  for (const { name, slug } of componentSpecs) {
+    const sourceDir = path.join(root, 'packages', 'react', 'src', slug);
+    await mkdir(sourceDir, { recursive: true });
+    const declarations = fixtureComponentTokens[name]
+      .map((tokenName, index) => `--fixture-${index}: var(--ds-${tokenName.replaceAll('/', '-')});`)
+      .join(' ');
+    await writeFile(
+      path.join(sourceDir, `${name}.css`),
+      `.fixture { ${declarations} } /* var(--ds-commented-out-token) */`,
+    );
+  }
   const figmaDir = path.join(root, 'figma');
   await mkdir(figmaDir, { recursive: true });
   await writeFile(path.join(figmaDir, 'token-map.json'), JSON.stringify(makeTokenMap(tokens)));
-  await writeFile(path.join(figmaDir, 'verification.json'), JSON.stringify(makeVerification()));
+  await writeFile(path.join(figmaDir, 'verification.json'), JSON.stringify(makeVerification(tokens)));
   return root;
 }
 
@@ -383,6 +421,41 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   assert.ok(violations.some((value) => value.includes('four distinct Figma URLs')));
 });
 
+test('rejects unknown, omitted, invented, and duplicate component token declarations', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+
+  const badgeCss = path.join(root, 'packages', 'react', 'src', 'badge', 'Badge.css');
+  await writeFile(badgeCss, [
+    await readFile(badgeCss, 'utf8'),
+    '.drift {',
+    '  --missing: var(--ds-space-2);',
+    '  --unknown: var(--ds-not-a-token);',
+    '}',
+  ].join('\n'));
+
+  const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
+  const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
+  const badge = manifest.components.find(({ name }) => name === 'Badge');
+  badge.tokens.push('radius/1', 'invented/token', badge.tokens[0]);
+  await writeFile(manifestFile, JSON.stringify(manifest));
+
+  const violations = await verifyBuildArtifacts(root);
+  assert.ok(violations.includes('Badge CSS references unknown token variable: --ds-not-a-token'));
+  assert.ok(violations.includes('Badge manifest tokens omit CSS token: space/2'));
+  assert.ok(violations.includes('Badge manifest tokens include unused CSS token: radius/1'));
+  assert.ok(violations.includes('Badge manifest tokens include unknown token: invented/token'));
+  assert.ok(violations.includes('Badge manifest tokens contain duplicate token: space/1'));
+});
+
+test('rejects a missing component CSS source', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await rm(path.join(root, 'packages', 'react', 'src', 'button', 'Button.css'));
+  assert.ok((await verifyBuildArtifacts(root))
+    .includes('Button CSS source is unreadable: packages/react/src/button/Button.css'));
+});
+
 test('rejects incomplete token-map equality and WEB syntax', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
@@ -447,6 +520,37 @@ test('rejects approval, Code Connect, screenshot, hard-code, and URL mapping dri
   assert.ok(violations.some((value) => value.includes('04.2 Badge screenshot node')));
   assert.ok(violations.some((value) => value.includes('hard-coded product values')));
   assert.ok(violations.some((value) => value.includes('Icon manifest Figma URL')));
+});
+
+test('rejects token value drift from the canonical Figma digest', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'tokens.json');
+  const artifact = JSON.parse(await readFile(file, 'utf8'));
+  artifact.tokens[0].value = '#445566';
+  artifact.tokens[0].resolvedValue = '#445566';
+  await writeFile(file, JSON.stringify(artifact));
+  assert.ok((await verifyFigmaEvidence(root))
+    .includes('Figma tokenValuesSha256 must match code token values'));
+});
+
+test('rejects malformed token and page screenshot SHA-256 evidence', async (t) => {
+  const root = await createFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const file = path.join(root, 'figma', 'verification.json');
+  const evidence = JSON.parse(await readFile(file, 'utf8'));
+  evidence.tokenValuesSha256 = 'not-a-digest';
+  evidence.pageScreenshotSha256['01 Principles'] = 'short';
+  delete evidence.pageScreenshotSha256['04.2 Badge'];
+  evidence.pageScreenshotSha256.Extra = '0'.repeat(64);
+  await writeFile(file, JSON.stringify(evidence));
+
+  const violations = await verifyFigmaEvidence(root);
+  assert.ok(violations.includes('Figma tokenValuesSha256 must be a 64-character hexadecimal digest'));
+  assert.ok(violations.includes('Figma tokenValuesSha256 must match code token values'));
+  assert.ok(violations.includes('Figma pageScreenshotSha256 must contain exactly all pages'));
+  assert.ok(violations.includes('01 Principles screenshot SHA-256 must be a 64-character hexadecimal digest'));
+  assert.ok(violations.includes('04.2 Badge screenshot SHA-256 is required'));
 });
 
 test('rejects cross-file and duplicate normalized Figma node targets', async (t) => {
@@ -556,4 +660,23 @@ test('rejects nonnumeric Figma page screenshot node IDs', async (t) => {
   await writeFile(file, JSON.stringify(evidence));
   assert.ok((await verifyFigmaEvidence(root))
     .includes('00 Cover screenshot node ID must match <number>:<number>'));
+});
+
+test('keeps permanent Linux and Windows verification CI', async () => {
+  const workflow = await readFile(
+    new URL('../../.github/workflows/verify.yml', import.meta.url),
+    'utf8',
+  );
+  assert.match(workflow, /push:/);
+  assert.match(workflow, /push:\s*\n\s+branches:\s*\[main\]/);
+  assert.match(workflow, /pull_request:/);
+  assert.match(workflow, /ubuntu-latest/);
+  assert.match(workflow, /windows-latest/);
+  assert.match(workflow, /runs-on:\s*\$\{\{ matrix\.os \}\}/);
+  assert.match(workflow, /pnpm\/action-setup@v4/);
+  assert.match(workflow, /node-version-file:\s*\.node-version/);
+  assert.match(workflow, /cache:\s*pnpm/);
+  assert.match(workflow, /corepack pnpm install --frozen-lockfile/);
+  assert.match(workflow, /playwright install(?: --with-deps)? chromium/);
+  assert.match(workflow, /corepack pnpm verify/);
 });

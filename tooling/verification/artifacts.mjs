@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -184,6 +185,17 @@ function expectedVariableType(token) {
   return 'FLOAT';
 }
 
+export function computeTokenValuesSha256(tokens) {
+  const canonical = tokens
+    .filter(({ type }) => type !== 'shadow')
+    .map(({ name, value, resolvedValue }) => ({
+      tokenName: name,
+      sourceValue: value,
+      resolvedValue,
+    }));
+  return createHash('sha256').update(JSON.stringify(canonical)).digest('hex');
+}
+
 function validateTokensArtifact(artifact) {
   const violations = [];
   if (!exactKeys(artifact, ['schemaVersion', 'tokens'])) violations.push('tokens.json envelope fields mismatch');
@@ -296,6 +308,64 @@ function validateComponentsArtifact(artifact) {
     violations.push('components.json must contain four distinct Figma URLs');
   }
   return violations;
+}
+
+async function validateComponentTokenCoverage(root, tokensArtifact, componentsArtifact) {
+  const violations = [];
+  const tokens = Array.isArray(tokensArtifact?.tokens) ? tokensArtifact.tokens : [];
+  const tokenByName = new Map(tokens.map((token) => [token.name, token]));
+  const tokenByCssVariable = new Map(tokens.map((token) => [token.cssVariable, token]));
+
+  for (const { name, slug } of componentSpecs) {
+    const relativeCss = `packages/react/src/${slug}/${name}.css`;
+    let source;
+    try {
+      source = await readFile(path.join(root, ...relativeCss.split('/')), 'utf8');
+    } catch {
+      violations.push(`${name} CSS source is unreadable: ${relativeCss}`);
+      continue;
+    }
+
+    const executableCss = source.replace(/\/\*[\s\S]*?\*\//g, '');
+    const cssVariables = [...new Set(
+      [...executableCss.matchAll(/var\(\s*(--ds-[A-Za-z0-9_-]+)\b/g)].map((match) => match[1]),
+    )];
+    const usedTokenNames = new Set();
+    for (const cssVariable of cssVariables) {
+      const token = tokenByCssVariable.get(cssVariable);
+      if (!token) {
+        violations.push(`${name} CSS references unknown token variable: ${cssVariable}`);
+      } else {
+        usedTokenNames.add(token.name);
+      }
+    }
+
+    const component = componentsArtifact?.components?.find((entry) => entry?.name === name);
+    if (!Array.isArray(component?.tokens)) continue;
+    const declaredTokenNames = component.tokens.filter((tokenName) => typeof tokenName === 'string');
+    const declaredTokenSet = new Set(declaredTokenNames);
+
+    for (const tokenName of declaredTokenNames) {
+      if (!tokenByName.has(tokenName)) {
+        violations.push(`${name} manifest tokens include unknown token: ${tokenName}`);
+      }
+      if (declaredTokenNames.indexOf(tokenName) !== declaredTokenNames.lastIndexOf(tokenName)) {
+        violations.push(`${name} manifest tokens contain duplicate token: ${tokenName}`);
+      }
+    }
+    for (const tokenName of usedTokenNames) {
+      if (!declaredTokenSet.has(tokenName)) {
+        violations.push(`${name} manifest tokens omit CSS token: ${tokenName}`);
+      }
+    }
+    for (const tokenName of declaredTokenSet) {
+      if (tokenByName.has(tokenName) && !usedTokenNames.has(tokenName)) {
+        violations.push(`${name} manifest tokens include unused CSS token: ${tokenName}`);
+      }
+    }
+  }
+
+  return [...new Set(violations)];
 }
 
 export function verifyTokenMap(tokens, tokenMap) {
@@ -431,6 +501,7 @@ export async function verifyBuildArtifacts(root) {
   const manifest = await json(path.join(dist, 'design-system', 'components.json'));
   violations.push(...validateTokensArtifact(tokens));
   violations.push(...validateComponentsArtifact(manifest));
+  violations.push(...await validateComponentTokenCoverage(root, tokens, manifest));
   return violations.sort();
 }
 
@@ -443,7 +514,8 @@ export async function verifyFigmaEvidence(root) {
 
   if (!exactKeys(evidence, [
     'schemaVersion', 'fileUrl', 'verifiedAt', 'codeConnect', 'collections',
-    'textStyleCount', 'effectStyleCount', 'pages', 'components', 'foundations',
+    'textStyleCount', 'effectStyleCount', 'pages', 'tokenValuesSha256',
+    'pageScreenshotSha256', 'components', 'foundations',
     'pageScreenshotNodeIds', 'allPagesScreenshotReviewed', 'hardCodedProductValues',
   ])) violations.push('Figma evidence top-level fields mismatch');
   if (evidence.schemaVersion !== 1) violations.push('Figma schemaVersion must be 1');
@@ -457,6 +529,24 @@ export async function verifyFigmaEvidence(root) {
   if (evidence.textStyleCount !== 8) violations.push('Figma textStyleCount must be 8');
   if (evidence.effectStyleCount !== 2) violations.push('Figma effectStyleCount must be 2');
   if (JSON.stringify(evidence.pages) !== JSON.stringify(pageNames)) violations.push('Figma page list mismatch');
+  if (!/^[a-f0-9]{64}$/.test(evidence.tokenValuesSha256 ?? '')) {
+    violations.push('Figma tokenValuesSha256 must be a 64-character hexadecimal digest');
+  }
+  if (evidence.tokenValuesSha256 !== computeTokenValuesSha256(tokensArtifact.tokens ?? [])) {
+    violations.push('Figma tokenValuesSha256 must match code token values');
+  }
+  if (JSON.stringify(Object.keys(evidence.pageScreenshotSha256 ?? {}).sort())
+    !== JSON.stringify([...pageNames].sort())) {
+    violations.push('Figma pageScreenshotSha256 must contain exactly all pages');
+  }
+  for (const page of pageNames) {
+    const screenshotSha256 = evidence.pageScreenshotSha256?.[page];
+    if (!nonEmpty(screenshotSha256)) {
+      violations.push(`${page} screenshot SHA-256 is required`);
+    } else if (!/^[a-f0-9]{64}$/.test(screenshotSha256)) {
+      violations.push(`${page} screenshot SHA-256 must be a 64-character hexadecimal digest`);
+    }
+  }
   if (!exactKeys(evidence.foundations, ['approved', 'approvedAt', 'tokenParity'])) {
     violations.push('Foundations evidence fields mismatch');
   }
