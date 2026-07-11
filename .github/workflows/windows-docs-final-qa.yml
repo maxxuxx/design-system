@@ -95,6 +95,7 @@ jobs:
               throw "Expected stale component-slice failure was absent: $staleCase."
             }
           }
+          exit 0
 
       - name: Delete files created by the missing-baseline run
         shell: pwsh
