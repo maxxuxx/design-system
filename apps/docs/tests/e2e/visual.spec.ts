@@ -9,6 +9,7 @@ const cases = [
   { name: 'foundations-colors', path: '/foundations/colors/', heading: '색상' },
   { name: 'button', path: '/components/button/', heading: 'Button' },
   { name: 'text-field', path: '/components/text-field/', heading: 'TextField' },
+  { name: 'scroll-area', path: '/components/scroll-area/', heading: 'ScrollArea' },
 ] as const;
 
 for (const visualCase of cases) {

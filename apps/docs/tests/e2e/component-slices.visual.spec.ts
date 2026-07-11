@@ -7,6 +7,7 @@ const slices = [
   { name: 'Badge', slug: 'badge' },
   { name: 'Button', slug: 'button' },
   { name: 'TextField', slug: 'text-field' },
+  { name: 'ScrollArea', slug: 'scroll-area' },
 ] as const;
 
 for (const slice of slices) {
