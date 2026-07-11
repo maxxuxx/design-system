@@ -349,6 +349,22 @@ describe('ScrollArea', () => {
     expect(buttons[1]?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   });
 
+  it('renders 20 pixel navigation icons', () => {
+    const { root } = renderArea({
+      clientHeight: 200,
+      scrollHeight: 600,
+      scrollTop: 200,
+    });
+    const icons = root.querySelectorAll<SVGSVGElement>('.ds-scroll-area__button .ds-icon');
+
+    expect(icons).toHaveLength(2);
+    for (const icon of icons) {
+      expect(icon).toHaveAttribute('data-size', '20');
+      expect(icon).toHaveAttribute('height', '20');
+      expect(icon).toHaveAttribute('width', '20');
+    }
+  });
+
   it('disconnects its geometry observer when unmounted', () => {
     const { unmount } = renderArea();
     const observer = ResizeObserverDouble.instances[0];

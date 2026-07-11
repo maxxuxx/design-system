@@ -167,7 +167,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
             onClick={() => scrollBy(-1)}
             type="button"
           >
-            <Icon name="chevron-right" />
+            <Icon name="chevron-right" size={20} />
           </button>
         </div>
         <div
@@ -183,7 +183,7 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
             onClick={() => scrollBy(1)}
             type="button"
           >
-            <Icon name="chevron-right" />
+            <Icon name="chevron-right" size={20} />
           </button>
         </div>
       </div>
