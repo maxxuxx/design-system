@@ -10,6 +10,7 @@ const slices = [
   { name: 'ScrollArea', slug: 'scroll-area' },
   { name: 'Checkbox', slug: 'checkbox' },
   { name: 'RadioGroup', slug: 'radio-group' },
+  { name: 'Switch', slug: 'switch' },
 ] as const;
 
 for (const slice of slices) {

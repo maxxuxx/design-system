@@ -8,6 +8,7 @@ export const COMPONENT_NAMES = [
   'ScrollArea',
   'Checkbox',
   'RadioGroup',
+  'Switch',
 ] as const;
 export const COMPONENT_SLUGS = [
   'icon',
@@ -17,6 +18,7 @@ export const COMPONENT_SLUGS = [
   'scroll-area',
   'checkbox',
   'radio-group',
+  'switch',
 ] as const;
 
 export const COMPONENTS = [
@@ -27,6 +29,7 @@ export const COMPONENTS = [
   { name: 'ScrollArea', slug: 'scroll-area' },
   { name: 'Checkbox', slug: 'checkbox' },
   { name: 'RadioGroup', slug: 'radio-group' },
+  { name: 'Switch', slug: 'switch' },
 ] as const;
 export const COMPONENT_ORDER = new Map(
   COMPONENTS.map(({ name }, index) => [name, index]),

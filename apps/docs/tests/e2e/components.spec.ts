@@ -63,3 +63,18 @@ test('RadioGroup label click updates its native same-name form value', async ({ 
   expect(await express.evaluate((input: HTMLInputElement) =>
     new FormData(input.form!).get(input.name))).toBe('express');
 });
+
+test('Switch visible label toggles its stable native switch and form value', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
+  const root = page.locator('[data-component-demo="switch"] .ds-switch').first();
+  const input = root.getByRole('switch', { name: '자동 저장' });
+  const label = root.locator('.ds-switch__label');
+
+  await expect(input).toHaveAttribute('type', 'checkbox');
+  await expect(label).toHaveText('자동 저장');
+  await label.click();
+  await expect(input).toBeChecked();
+  await expect(label).toHaveText('자동 저장');
+  expect(await input.evaluate((control: HTMLInputElement) =>
+    new FormData(control.form!).get(control.name))).toBe('enabled');
+});

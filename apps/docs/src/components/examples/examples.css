@@ -126,6 +126,10 @@
   place-items: stretch;
 }
 
+.component-demo__stage--switch {
+  place-items: stretch;
+}
+
 .checkbox-demo {
   display: grid;
   width: 100%;
@@ -152,6 +156,32 @@
   min-width: 0;
   align-content: start;
   gap: var(--ds-space-8);
+}
+
+.switch-demo {
+  display: grid;
+  width: 100%;
+  gap: var(--ds-space-24);
+}
+
+.switch-demo__interactive,
+.switch-demo__specimen {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: var(--ds-space-8);
+}
+
+.switch-demo__specimens {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--ds-space-12);
+}
+
+.switch-demo__specimen {
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
 }
 
 .radio-group-demo__specimens {

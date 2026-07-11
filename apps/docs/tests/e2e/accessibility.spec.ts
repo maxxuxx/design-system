@@ -63,3 +63,12 @@ test('RadioGroup demo keeps native arrow-key selection and visible focus', async
   await expect(express).toBeChecked();
   await expect(express).toBeFocused();
 });
+
+test('Switch demo keeps native Space activation and visible focus', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
+  const input = page.locator('[data-component-demo="switch"] .ds-switch__input').first();
+
+  await tabTo(page, input);
+  await page.keyboard.press('Space');
+  await expect(input).toBeChecked();
+});

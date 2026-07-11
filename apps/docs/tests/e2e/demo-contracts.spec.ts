@@ -403,6 +403,34 @@ test('RadioGroup exposes a forced-colors keyboard focus outline', async ({ page 
   await expectForcedColorFocus(firstRadio);
 });
 
+test('Switch rows keep 44px targets around token-sized tracks', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
+  const demo = page.locator('[data-component-demo="switch"]');
+  const geometry = await demo.locator('.ds-switch').evaluateAll((roots) => roots.map((root) => {
+    const row = root.querySelector<HTMLElement>('.ds-switch__row')!;
+    const input = root.querySelector<HTMLInputElement>('.ds-switch__input')!;
+    const rect = input.getBoundingClientRect();
+    return { rowHeight: row.getBoundingClientRect().height, width: rect.width, height: rect.height };
+  }));
+
+  expect(geometry.length).toBeGreaterThanOrEqual(5);
+  expect(geometry.every(({ rowHeight }) => rowHeight >= 44)).toBe(true);
+  expect([...new Set(geometry.map(({ width, height }) => `${width}x${height}`))].sort())
+    .toEqual(['36x20', '44x24']);
+});
+
+test('Switch exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
+  const demo = page.locator('[data-component-demo="switch"]');
+  const input = demo.locator('.ds-switch__input').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(input);
+});
+
 test('Badge constrains a long unbroken label without page overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns constrained-label coverage.');
 

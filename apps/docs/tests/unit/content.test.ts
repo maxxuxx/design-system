@@ -75,6 +75,7 @@ describe('MDX collection coverage', () => {
       'content/components/scroll-area.mdx',
       'content/components/checkbox.mdx',
       'content/components/radio-group.mdx',
+      'content/components/switch.mdx',
     ]);
 
     for (const file of files) {
@@ -107,7 +108,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the seven component names and slugs in canonical order', () => {
+  it('locks the eight component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -116,6 +117,7 @@ describe('component metadata contract', () => {
       'ScrollArea',
       'Checkbox',
       'RadioGroup',
+      'Switch',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -125,6 +127,74 @@ describe('component metadata contract', () => {
       'scroll-area',
       'checkbox',
       'radio-group',
+      'switch',
+    ]);
+  });
+
+  it('locks the Switch public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/switch.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'Switch',
+      slug: 'switch',
+      figmaUrl: '',
+      variants: ['off', 'on'],
+      sizes: ['small', 'medium'],
+      states: ['default', 'error', 'disabled'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'label', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+      { name: 'size', type: 'SwitchSize', required: false, defaultValue: 'medium' },
+      {
+        name: '...inputProps',
+        type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'role' | 'size' | 'type'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'size/switch/small-width',
+      'size/switch/small-height',
+      'size/switch/medium-width',
+      'size/switch/medium-height',
+      'space/2',
+      'space/4',
+      'space/8',
+      'radius/full',
+      'elevation/1',
+      'font/family/sans',
+      'font/size/caption',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/line-height/caption',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/border/focus',
+      'color/action/primary',
+      'color/action/primary-hover',
+      'color/action/primary-pressed',
+      'color/action/on-primary',
+      'color/status/danger',
+      'color/status/on-status',
+      'color/focus/ring',
     ]);
   });
 
