@@ -30,6 +30,11 @@ jobs:
       - name: Install Playwright Chromium
         run: pnpm --filter @maxxuxx/docs exec playwright install chromium
 
+      - name: Remove existing Windows Button baselines
+        run: |
+          Remove-Item apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec/button-mobile-chromium.png
+          Remove-Item apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec/button-desktop-chromium.png
+
       - name: Update Windows Button baselines
         run: pnpm --filter @maxxuxx/docs exec playwright test --project=mobile-chromium --project=desktop-chromium --grep "Button component slice" --update-snapshots
 
