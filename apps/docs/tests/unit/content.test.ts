@@ -5,6 +5,7 @@ import matter from 'gray-matter';
 import { describe, expect, it } from 'vitest';
 import {
   COMPONENT_NAMES,
+  COMPONENT_SLUGS,
   componentSchema,
 } from '../../src/content/component-schema';
 import {
@@ -71,6 +72,7 @@ describe('MDX collection coverage', () => {
       'content/components/badge.mdx',
       'content/components/button.mdx',
       'content/components/text-field.mdx',
+      'content/components/scroll-area.mdx',
     ]);
 
     for (const file of files) {
@@ -103,8 +105,103 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the four component names', () => {
-    expect(COMPONENT_NAMES).toEqual(['Icon', 'Badge', 'Button', 'TextField']);
+  it('locks the five component names and slugs in canonical order', () => {
+    expect(COMPONENT_NAMES).toEqual([
+      'Icon',
+      'Badge',
+      'Button',
+      'TextField',
+      'ScrollArea',
+    ]);
+    expect(COMPONENT_SLUGS).toEqual([
+      'icon',
+      'badge',
+      'button',
+      'text-field',
+      'scroll-area',
+    ]);
+  });
+
+  it('locks the ScrollArea public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/scroll-area.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'ScrollArea',
+      slug: 'scroll-area',
+      figmaUrl: '',
+      variants: [],
+      sizes: [],
+      states: ['no-overflow', 'start', 'middle', 'end'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+      { name: 'label', type: 'string', required: true, defaultValue: null },
+      { name: 'scrollUpLabel', type: 'string', required: true, defaultValue: null },
+      { name: 'scrollDownLabel', type: 'string', required: true, defaultValue: null },
+      {
+        name: 'viewportRef',
+        type: 'Ref<HTMLDivElement>',
+        required: false,
+        defaultValue: null,
+      },
+      {
+        name: 'onViewportScroll',
+        type: 'UIEventHandler<HTMLDivElement>',
+        required: false,
+        defaultValue: null,
+      },
+      {
+        name: '...rootProps',
+        type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'onScroll'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/16',
+      'radius/full',
+      'elevation/1',
+      'blur/subtle',
+      'color/bg/surface',
+      'color/action/weak',
+      'color/action/weak-hover',
+      'color/action/on-weak',
+      'color/border/default',
+      'color/border/focus',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('keeps stable ScrollArea demo test IDs for every rendered part', async () => {
+    const source = await readFile(
+      `${srcRoot}components/examples/ScrollAreaExample.tsx`,
+      'utf8',
+    );
+
+    for (const testId of [
+      'scroll-area-viewport',
+      'scroll-area-content',
+      'scroll-area-edge-up',
+      'scroll-area-edge-down',
+      'scroll-area-button-up',
+      'scroll-area-button-down',
+    ]) {
+      expect(source).toContain(`'${testId}'`);
+    }
+    expect(source).toContain('viewportRef={viewportRef}');
   });
 
   it('rejects a preview component whose React state is stable', () => {
