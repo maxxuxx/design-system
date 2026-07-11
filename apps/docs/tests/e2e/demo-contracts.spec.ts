@@ -44,6 +44,11 @@ function contrastRatio(first: string, second: string): number {
   return (lighter! + 0.05) / (darker! + 0.05);
 }
 
+function resolvedBlurPixels(value: string): number | null {
+  const match = value.match(/(?:^|\s)blur\(\s*(\d+(?:\.\d+)?)px\s*\)/);
+  return match ? Number(match[1]) : null;
+}
+
 type ScrollAreaState = 'no-overflow' | 'start' | 'middle' | 'end';
 
 async function expectScrollAreaState(
@@ -76,7 +81,7 @@ async function expectScrollAreaState(
       };
     });
     if (isActive) {
-      expect(cue.backdropFilter).not.toBe('none');
+      expect(resolvedBlurPixels(cue.backdropFilter)).toBe(8);
       expect(cue.backgroundImage).not.toBe('none');
       expect(cue.opacity).toBe('1');
     } else {
@@ -203,11 +208,26 @@ test('ScrollArea active navigation buttons are 44px targets with keyboard-visibl
   await expectMinimumTarget(buttonUp);
   await expectMinimumTarget(buttonDown);
 
+  const focusStyleSignature = (element: Element) => {
+    const style = getComputedStyle(element);
+    return {
+      boxShadow: style.boxShadow,
+      outlineColor: style.outlineColor,
+      outlineOffset: style.outlineOffset,
+      outlineStyle: style.outlineStyle,
+      outlineWidth: style.outlineWidth,
+    };
+  };
+  const unfocusedUp = await buttonUp.evaluate(focusStyleSignature);
+  const unfocusedDown = await buttonDown.evaluate(focusStyleSignature);
+
   await viewport.focus();
   await page.keyboard.press('Tab');
-  await expectVisibleFocus(buttonUp);
+  await expect(buttonUp).toBeFocused();
+  expect(await buttonUp.evaluate(focusStyleSignature)).not.toEqual(unfocusedUp);
   await page.keyboard.press('Tab');
-  await expectVisibleFocus(buttonDown);
+  await expect(buttonDown).toBeFocused();
+  expect(await buttonDown.evaluate(focusStyleSignature)).not.toEqual(unfocusedDown);
 });
 
 test('demo selects and toggle labels expose 44px targets with forced-colors focus', async ({ page }, testInfo) => {
