@@ -814,7 +814,7 @@
       "slug": "textarea",
       "description": "여러 줄 자유 입력을 native textarea의 form·keyboard·resize 동작과 함께 제공합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=158-56",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

@@ -144,7 +144,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'Textarea',
       slug: 'textarea',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=158-56',
       variants: ['vertical', 'none'],
       sizes: ['medium', 'large'],
       states: ['default', 'focus', 'error', 'disabled'],

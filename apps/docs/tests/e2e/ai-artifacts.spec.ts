@@ -21,7 +21,7 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
   }
 });
 
-test('components.json exposes all nine current component contracts', async ({ request }) => {
+test('components.json exposes all nine release-ready component contracts', async ({ request }) => {
   const response = await request.get('/design-system/components.json');
   expect(response.status()).toBe(200);
   const artifact = await response.json();
@@ -76,12 +76,8 @@ test('components.json exposes all nine current component contracts', async ({ re
       svelte: 'planned',
       reactNative: 'planned',
     });
-    if (component.name === 'Textarea') {
-      expect(component.figmaUrl).toBe('');
-    } else {
-      expect(component.figmaUrl).not.toBe('');
-      expect(() => new URL(component.figmaUrl)).not.toThrow();
-    }
+    expect(component.figmaUrl).not.toBe('');
+    expect(() => new URL(component.figmaUrl)).not.toThrow();
     expect(component.description).not.toBe('');
     expect(component.accessibility).not.toBe('');
     expect(Array.isArray(component.variants)).toBe(true);
