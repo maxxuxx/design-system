@@ -46,6 +46,7 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
     const initialOpenRef = useRef(open ?? defaultOpen);
     const suppressedToggleRef = useRef<boolean | null>(null);
     const userTogglePendingRef = useRef(false);
+    const userToggleSequenceRef = useRef(0);
     controlledOpenRef.current = open;
 
     const setDetailsRef = useCallback((node: HTMLDetailsElement | null) => {
@@ -120,8 +121,19 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
       >
         <summary
           className="ds-board-row__summary"
-          onClick={() => {
+          onClick={(event) => {
+            const nativeEvent = event.nativeEvent;
+            const sequence = userToggleSequenceRef.current + 1;
+            userToggleSequenceRef.current = sequence;
             userTogglePendingRef.current = true;
+            queueMicrotask(() => {
+              if (
+                nativeEvent.defaultPrevented
+                && userToggleSequenceRef.current === sequence
+              ) {
+                userTogglePendingRef.current = false;
+              }
+            });
           }}
         >
           {prefix !== undefined && prefix !== null ? (

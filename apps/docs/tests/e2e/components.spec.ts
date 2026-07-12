@@ -202,6 +202,32 @@ test('BoardRow preserves native click, Enter, Space, and controlled reconciliati
   await expect(controlled).not.toHaveAttribute('open');
 });
 
+test('BoardRow does not leak a canceled summary activation into controlled updates', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const controlled = demo.locator('[data-board-row-sample="controlled"]');
+  await controlled.evaluate((element) => {
+    element.addEventListener('click', (event) => event.preventDefault(), {
+      once: true,
+    });
+  });
+
+  await controlled.locator(':scope > summary').click();
+  await expect(controlled).not.toHaveAttribute('open');
+  await expect(
+    demo.getByText('제어 상태 변경: 0', { exact: true }),
+  ).toBeVisible();
+
+  await demo.getByLabel('제어된 행 열기', { exact: true }).check();
+  await expect(controlled).toHaveAttribute('open', '');
+  await expect(
+    demo.getByText('제어 상태 변경: 0', { exact: true }),
+  ).toBeVisible();
+});
+
 test('Checkbox visible label toggles its native input', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
   const checkbox = page.locator('[data-component-demo="checkbox"] .ds-checkbox').first();

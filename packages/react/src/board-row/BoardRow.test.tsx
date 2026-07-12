@@ -181,6 +181,39 @@ describe('BoardRow', () => {
     expect(onOpenChange).toHaveBeenCalledTimes(1);
   });
 
+  it('does not leak a canceled summary activation into a controlled prop update', async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    const { container, rerender } = render(
+      <BoardRow
+        onClick={(event) => event.preventDefault()}
+        onOpenChange={onOpenChange}
+        open={false}
+        title="취소 가능한 정책"
+      >
+        정책 내용
+      </BoardRow>,
+    );
+    const details = container.querySelector('details')!;
+
+    await user.click(container.querySelector('summary')!);
+    expect(details.open).toBe(false);
+    expect(onOpenChange).not.toHaveBeenCalled();
+
+    rerender(
+      <BoardRow
+        onClick={(event) => event.preventDefault()}
+        onOpenChange={onOpenChange}
+        open
+        title="취소 가능한 정책"
+      >
+        정책 내용
+      </BoardRow>,
+    );
+    await waitFor(() => expect(details.open).toBe(true));
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
   it('lets a controlled owner accept the final native state without duplicate callbacks', async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
