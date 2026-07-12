@@ -1853,7 +1853,7 @@
       "slug": "list-row",
       "description": "정보, 전체 행 동작, 화면 이동을 static div와 native button·anchor로 구분하는 flat row입니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

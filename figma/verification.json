@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T22:22:04+09:00",
+  "verifiedAt": "2026-07-12T23:09:56+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -36,6 +36,7 @@
     "04.15 BottomSheet",
     "04.16 Dialog",
     "04.17 SearchField",
+    "04.18 ListRow",
     "90 Native Differences",
     "99 Deprecated"
   ],
@@ -116,6 +117,7 @@
     "04.15 BottomSheet": "740a7f33c4d14b2f1a3915579b42396dfa0c74197fe8f846e66e5153786572d1",
     "04.16 Dialog": "c861063fbeb4ac51a97797eec1e1b9ca6905d81e24c2833e08fe9ce4fd5113eb",
     "04.17 SearchField": "e53117e1bc17ffe727c87fd42b07e13c8681e10432d781946135cc5d87b553c2",
+    "04.18 ListRow": "38f0975fdbe50d9bf1fd6982bd5d28933a79678d3c05263e31eaff0a6d57f0ff",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -514,6 +516,27 @@
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
+    },
+    "ListRow": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14",
+      "variantCount": 6,
+      "axes": [
+        { "name": "Divider", "values": ["None", "Indented"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
+      "properties": [
+        { "name": "Title", "type": "TEXT" },
+        { "name": "Description", "type": "TEXT" },
+        { "name": "Right", "type": "TEXT" },
+        { "name": "Show left", "type": "BOOLEAN" },
+        { "name": "Show description", "type": "BOOLEAN" },
+        { "name": "Show right", "type": "BOOLEAN" },
+        { "name": "Show arrow", "type": "BOOLEAN" },
+        { "name": "Left icon", "type": "INSTANCE_SWAP" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
     }
   },
   "foundations": {
@@ -544,6 +567,7 @@
     "04.15 BottomSheet": "208:19",
     "04.16 Dialog": "213:2",
     "04.17 SearchField": "230:29",
+    "04.18 ListRow": "248:6",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

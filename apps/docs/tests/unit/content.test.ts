@@ -733,7 +733,7 @@ describe('component metadata contract', () => {
     ]);
   });
 
-  it('locks the ListRow public metadata contract with an empty pre-Figma URL', async () => {
+  it('locks the ListRow public metadata contract with its live Figma URL', async () => {
     const source = await readFile(
       `${srcRoot}content/components/list-row.mdx`,
       'utf8',
@@ -743,7 +743,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'ListRow',
       slug: 'list-row',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14',
       variants: ['none', 'indented'],
       sizes: [],
       states: ['default', 'pressed', 'disabled'],
