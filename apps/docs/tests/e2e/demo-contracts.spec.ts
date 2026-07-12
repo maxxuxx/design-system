@@ -1413,3 +1413,125 @@ test('Badge constrains a long unbroken label without page overflow', async ({ pa
   expect(result.overflowX).not.toBe('visible');
   expect(result.pageFits).toBe(true);
 });
+
+test('ListRow renders static, native button, and real anchor branches without nested action controls', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/list-row/', heading: 'ListRow' });
+  const demo = page.locator('[data-component-demo="list-row"]');
+  const staticRow = demo.locator('[data-list-row-sample="static"]');
+  const buttonRow = demo.locator('[data-list-row-sample="button"]');
+  const linkRow = demo.locator('[data-list-row-sample="link"]');
+  const disabledRow = demo.locator('[data-list-row-sample="disabled"]');
+
+  await expect(staticRow).toHaveJSProperty('tagName', 'DIV');
+  await expect(staticRow.getByRole('switch', { name: '배송 알림' })).toBeVisible();
+  await expect(buttonRow).toHaveJSProperty('tagName', 'BUTTON');
+  await expect(buttonRow).toHaveAttribute('type', 'button');
+  await expect(linkRow).toHaveJSProperty('tagName', 'A');
+  await expect(linkRow).toHaveAttribute('href', '#list-row-demo-target');
+  await expect(linkRow).not.toHaveAttribute('disabled');
+  await expect(linkRow).not.toHaveAttribute('aria-disabled');
+  await expect(disabledRow).toBeDisabled();
+
+  const nestedActions = await demo.locator(
+    '[data-list-row-sample="button"], [data-list-row-sample="link"]',
+  ).evaluateAll((roots) => roots.map((root) =>
+    root.querySelectorAll(
+      'a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]):not([tabindex="0"])',
+    ).length));
+  expect(nestedActions).toEqual([0, 0]);
+
+  await buttonRow.click();
+  await buttonRow.focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Space');
+  await expect(demo.getByText(/버튼 활성화 3회/)).toBeVisible();
+});
+
+test('ListRow contains unbroken copy at 320px and 200 percent text zoom', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'mobile-chromium',
+    'Mobile owns ListRow narrow reflow coverage.',
+  );
+  await page.setViewportSize({ width: 320, height: 844 });
+  await openHtmlRoute(page, { path: '/components/list-row/', heading: 'ListRow' });
+  const longRow = page.locator(
+    '[data-component-demo="list-row"] [data-list-row-sample="long-copy"]',
+  );
+  const baselineFontSizes = await longRow.evaluate((element) => ({
+    description: Number.parseFloat(getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-list-row__description')!,
+    ).fontSize),
+    title: Number.parseFloat(getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-list-row__title')!,
+    ).fontSize),
+  }));
+  await page.addStyleTag({ content: `
+    [data-list-row-sample="long-copy"] .ds-list-row__title,
+    [data-list-row-sample="long-copy"] .ds-list-row__description {
+      font-size: 200% !important;
+      line-height: normal !important;
+    }
+  ` });
+
+  const containment = await longRow.evaluate((element) => {
+    const owner = element.parentElement!;
+    const rowRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return {
+      ownerFits: ownerRect.left >= 0 && ownerRect.right <= document.documentElement.clientWidth,
+      pageFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      rowFits: rowRect.left >= ownerRect.left - 0.5 && rowRect.right <= ownerRect.right + 0.5,
+      descriptionFontSize: Number.parseFloat(getComputedStyle(
+        element.querySelector<HTMLElement>('.ds-list-row__description')!,
+      ).fontSize),
+      titleFontSize: Number.parseFloat(getComputedStyle(
+        element.querySelector<HTMLElement>('.ds-list-row__title')!,
+      ).fontSize),
+      wraps: element.getBoundingClientRect().height > 56,
+    };
+  });
+  expect(containment.ownerFits).toBe(true);
+  expect(containment.pageFits).toBe(true);
+  expect(containment.rowFits).toBe(true);
+  expect(containment.wraps).toBe(true);
+  expect(containment.titleFontSize).toBeGreaterThanOrEqual(
+    baselineFontSizes.title * 2,
+  );
+  expect(containment.descriptionFontSize).toBeGreaterThanOrEqual(
+    baselineFontSizes.description * 2,
+  );
+});
+
+test('ListRow keeps forced-colors focus, divider, and trailing Switch ownership', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns ListRow forced-colors coverage.',
+  );
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/list-row/', heading: 'ListRow' });
+  const demo = page.locator('[data-component-demo="list-row"]');
+  const staticRow = demo.locator('[data-list-row-sample="static"]');
+  const buttonRow = demo.locator('[data-list-row-sample="button"]');
+  const staticSwitch = staticRow.getByRole('switch', { name: '배송 알림' });
+
+  await buttonRow.focus();
+  await expectForcedColorFocus(buttonRow);
+  const forcedPresentation = await staticRow.evaluate((element) => {
+    const rowStyle = getComputedStyle(element);
+    const dividerStyle = getComputedStyle(element, '::after');
+    const input = element.querySelector<HTMLInputElement>('.ds-switch__input')!;
+    return {
+      dividerColor: dividerStyle.borderBottomColor,
+      dividerStyle: dividerStyle.borderBottomStyle,
+      dividerWidth: Number.parseFloat(dividerStyle.borderBottomWidth),
+      rowForcedColorAdjust: rowStyle.forcedColorAdjust,
+      switchForcedColorAdjust: getComputedStyle(input).forcedColorAdjust,
+    };
+  });
+  expect(forcedPresentation.dividerStyle).toBe('solid');
+  expect(forcedPresentation.dividerWidth).toBeGreaterThanOrEqual(2);
+  expect(forcedPresentation.dividerColor).not.toBe('transparent');
+  expect(forcedPresentation.rowForcedColorAdjust).not.toBe('none');
+  expect(forcedPresentation.switchForcedColorAdjust).toBe('none');
+  await expect(staticSwitch).toBeVisible();
+});

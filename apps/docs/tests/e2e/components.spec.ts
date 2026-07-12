@@ -63,6 +63,21 @@ test('SearchField documents its state, positioning, and deliberate validation bo
   await expect(main).toContainText('TextField');
 });
 
+test('ListRow documents its native branch dispatch and BoardRow boundary', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/list-row/',
+    heading: 'ListRow',
+  });
+
+  const main = page.locator('main');
+  await expect(main).toContainText('static');
+  await expect(main).toContainText('native button');
+  await expect(main).toContainText('native anchor');
+  await expect(main).toContainText('fake disabled');
+  await expect(main).toContainText('nested interactive');
+  await expect(main).toContainText('BoardRow');
+});
+
 test('TextButton renders its complete document template and demo without console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

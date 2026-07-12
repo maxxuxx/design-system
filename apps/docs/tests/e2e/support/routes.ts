@@ -23,6 +23,7 @@ export const COMPONENT_HTML_ROUTES: readonly (HtmlRoute & { slug: string })[] = 
   { path: '/components/bottom-sheet/', heading: 'BottomSheet', slug: 'bottom-sheet' },
   { path: '/components/dialog/', heading: 'Dialog', slug: 'dialog' },
   { path: '/components/search-field/', heading: 'SearchField', slug: 'search-field' },
+  { path: '/components/list-row/', heading: 'ListRow', slug: 'list-row' },
 ];
 export const CANONICAL_HTML_ROUTES = [
   ...PLATFORM_HTML_ROUTES,

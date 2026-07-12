@@ -87,6 +87,7 @@ describe('MDX collection coverage', () => {
       'content/components/bottom-sheet.mdx',
       'content/components/dialog.mdx',
       'content/components/search-field.mdx',
+      'content/components/list-row.mdx',
     ]);
 
     for (const file of files) {
@@ -152,7 +153,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the seventeen component names and slugs in canonical order', () => {
+  it('locks the eighteen component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -171,6 +172,7 @@ describe('component metadata contract', () => {
       'BottomSheet',
       'Dialog',
       'SearchField',
+      'ListRow',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -190,6 +192,7 @@ describe('component metadata contract', () => {
       'bottom-sheet',
       'dialog',
       'search-field',
+      'list-row',
     ]);
   });
 
@@ -726,6 +729,81 @@ describe('component metadata contract', () => {
       'color/text/disabled',
       'color/border/default',
       'color/border/focus',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('locks the ListRow public metadata contract with an empty pre-Figma URL', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/list-row.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'ListRow',
+      slug: 'list-row',
+      figmaUrl: '',
+      variants: ['none', 'indented'],
+      sizes: [],
+      states: ['default', 'pressed', 'disabled'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'title', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'left', type: 'ReactNode', required: false, defaultValue: null },
+      { name: 'right', type: 'ReactNode', required: false, defaultValue: null },
+      {
+        name: 'divider',
+        type: "'none' | 'indented'",
+        required: false,
+        defaultValue: 'none',
+      },
+      { name: 'withArrow', type: 'boolean', required: false, defaultValue: 'false' },
+      { name: 'href', type: 'string', required: false, defaultValue: null },
+      {
+        name: 'onClick',
+        type: 'MouseEventHandler<HTMLButtonElement>',
+        required: false,
+        defaultValue: null,
+      },
+      {
+        name: '...nativeProps',
+        type: 'ListRowStaticProps | ListRowButtonProps | ListRowAnchorProps',
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/large',
+      'size/icon/medium',
+      'space/0',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/12',
+      'space/16',
+      'radius/none',
+      'font/family/sans',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/weight/medium',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'motion/duration/fast',
+      'motion/easing/standard',
+      'color/bg/surface',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/action/weak',
+      'color/action/weak-hover',
       'color/focus/ring',
     ]);
   });

@@ -588,6 +588,39 @@
   border-block-end: 1px solid var(--ds-color-border-default);
 }
 
+.component-demo__stage--list-row {
+  place-items: stretch;
+}
+
+.list-row-demo {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  gap: var(--ds-space-16);
+}
+
+.list-row-demo__status,
+.list-row-demo__target {
+  min-inline-size: var(--ds-space-0);
+  margin: var(--ds-space-0);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-caption);
+  line-height: var(--ds-font-line-height-caption);
+  overflow-wrap: anywhere;
+}
+
+.list-row-demo__group {
+  min-inline-size: var(--ds-space-0);
+  overflow: hidden;
+  background: var(--ds-color-bg-surface);
+  border: var(--ds-space-2) solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-md);
+}
+
+.list-row-demo__target:focus-visible {
+  outline: var(--ds-space-2) solid var(--ds-color-border-focus);
+  outline-offset: var(--ds-space-2);
+}
+
 @media (forced-colors: active) {
   .component-demo__control select:focus-visible,
   .component-demo__control input[type='text']:focus-visible,

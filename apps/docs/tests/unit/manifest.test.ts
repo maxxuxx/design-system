@@ -37,6 +37,7 @@ function metadata(name: ComponentMetadata['name'], figmaUrl = ''): ComponentMeta
     BottomSheet: 'bottom-sheet',
     Dialog: 'dialog',
     SearchField: 'search-field',
+    ListRow: 'list-row',
   } as const;
   return {
     name,
@@ -68,8 +69,9 @@ describe('component manifest', () => {
     expect(buildComponentManifest([])).toEqual({ schemaVersion: 1, components: [] });
   });
 
-  it('sorts all seventeen entries in canonical order regardless of file order', () => {
+  it('sorts all eighteen entries in canonical order regardless of file order', () => {
     const manifest = buildComponentManifest([
+      document('ListRow'),
       document('SearchField'),
       document('Dialog'),
       document('BottomSheet'),
@@ -89,7 +91,7 @@ describe('component manifest', () => {
       document('Icon'),
     ]);
     expect(manifest.components.map(({ name }) => name))
-      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet', 'Dialog', 'SearchField']);
+      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet', 'Dialog', 'SearchField', 'ListRow']);
     expect(manifest.components.map(({ docsUrl }) => docsUrl)).toEqual([
       '/components/icon/',
       '/components/badge/',
@@ -108,19 +110,20 @@ describe('component manifest', () => {
       '/components/bottom-sheet/',
       '/components/dialog/',
       '/components/search-field/',
+      '/components/list-row/',
     ]);
   });
 
   it('requires all entries before the release check can pass', () => {
     expect(() => buildComponentManifest([document('Icon')], { requireFigma: true }))
-      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, SearchField');
+      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, SearchField, ListRow');
   });
 
   it('requires a Figma URL on every complete release entry', () => {
-    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet', 'Dialog', 'SearchField']
+    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet', 'Dialog', 'SearchField', 'ListRow']
       .map((name) => document(name as ComponentMetadata['name']));
     expect(() => buildComponentManifest(documents, { requireFigma: true }))
-      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, SearchField');
+      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, SearchField, ListRow');
   });
 
   it('renders stable two-space JSON with LF and a final newline', () => {

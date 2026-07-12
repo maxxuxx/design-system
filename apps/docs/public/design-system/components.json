@@ -1847,6 +1847,122 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/search-field/"
+    },
+    {
+      "name": "ListRow",
+      "slug": "list-row",
+      "description": "정보, 전체 행 동작, 화면 이동을 static div와 native button·anchor로 구분하는 flat row입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "none",
+        "indented"
+      ],
+      "sizes": [],
+      "states": [
+        "default",
+        "pressed",
+        "disabled"
+      ],
+      "accessibility": "native div·button·anchor 의미, presentational left, exposed right, decorative arrow, action branch의 nested-control 금지를 보존합니다.",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "행의 주 정보이자 localizable visible copy입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "title 아래에 표시하는 선택 설명입니다."
+        },
+        {
+          "name": "left",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "assistive technology에서 숨기는 presentational leading content입니다."
+        },
+        {
+          "name": "right",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "의미를 노출하는 trailing content이며 interactive child는 static branch에만 허용됩니다."
+        },
+        {
+          "name": "divider",
+          "type": "'none' | 'indented'",
+          "required": false,
+          "defaultValue": "none",
+          "description": "행 아래에 inset divider를 표시할지 정합니다."
+        },
+        {
+          "name": "withArrow",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "회전하지 않는 owned decorative ChevronRight를 표시합니다."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "string이면 native anchor branch를 선택하며 fake disabled로 바뀌지 않습니다."
+        },
+        {
+          "name": "onClick",
+          "type": "MouseEventHandler<HTMLButtonElement>",
+          "required": false,
+          "defaultValue": null,
+          "description": "href가 없고 function이면 native button branch를 선택합니다."
+        },
+        {
+          "name": "...nativeProps",
+          "type": "ListRowStaticProps | ListRowButtonProps | ListRowAnchorProps",
+          "required": false,
+          "defaultValue": null,
+          "description": "선택된 native root의 data·aria·form·navigation props와 정확한 forwarded ref를 보존하며 style은 safe layout 값만 적용합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/large",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "radius/none",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/weight/medium",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/list-row/"
     }
   ]
 }

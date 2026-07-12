@@ -49,6 +49,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'BottomSheet', href: '/components/bottom-sheet/' },
       { label: 'Dialog', href: '/components/dialog/' },
       { label: 'SearchField', href: '/components/search-field/' },
+      { label: 'ListRow', href: '/components/list-row/' },
     ],
   },
 ];

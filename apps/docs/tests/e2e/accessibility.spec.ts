@@ -136,6 +136,21 @@ test('SearchField clear control is keyboard reachable, restores input focus, and
   await assertNoAxeViolations(page);
 });
 
+test('ListRow action branches are keyboard reachable and the static trailing Switch stays exposed', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/list-row/',
+    heading: 'ListRow',
+  });
+  const demo = page.locator('[data-component-demo="list-row"]');
+  const staticSwitch = demo.getByRole('switch', { name: '배송 알림' });
+  const button = demo.locator('[data-list-row-sample="button"]');
+
+  await expect(staticSwitch).toBeVisible();
+  await tabTo(page, button);
+  await expectVisibleFocus(button);
+  await assertNoAxeViolations(page);
+});
+
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());
