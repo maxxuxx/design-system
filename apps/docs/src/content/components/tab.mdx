@@ -3,7 +3,7 @@ name: Tab
 slug: tab
 description: 관련된 화면 구획을 자동 활성화 키보드 탐색과 연결해 같은 문맥 안에서 전환합니다.
 status: preview
-figmaUrl: ""
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59"
 frameworks:
   react: preview
   svelte: planned
@@ -170,7 +170,7 @@ export function OrderTabs() {
 
 ## Figma
 
-Tab Figma slice의 live readback 전까지 `figmaUrl`은 비워 둡니다. 예정된 component set은 `Size Small/Large × Layout Equal/Scroll × Selection First/Second/Third = 12` variants이고 `First label`, `Second label`, `Third label` TEXT properties를 가집니다. 구현 방향은 [TDS Mobile Tab reference](https://tossmini-docs.toss.im/tds-mobile/components/tab/)와 함께 검토합니다.
+Live [Tab component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59)은 `Size Small/Large × Layout Equal/Scroll × Selection First/Second/Third = 12` variants와 `First label`, `Second label`, `Third label` TEXT properties를 제공합니다. Equal은 세 항목을 균등 배치하고 Scroll은 320px viewport 안의 360px content와 token-bound edge affordance를 보여 줍니다. disabled와 긴 label overflow는 variant 축을 늘리지 않고 별도 문서 specimen으로 검증했습니다. 구현 방향은 [TDS Mobile Tab reference](https://tossmini-docs.toss.im/tds-mobile/components/tab/)와 함께 검토합니다.
 
 ## 지원 상태
 

@@ -406,7 +406,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'Tab',
       slug: 'tab',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59',
       variants: ['equal', 'scroll'],
       sizes: ['small', 'large'],
       states: [

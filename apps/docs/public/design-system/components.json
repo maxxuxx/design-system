@@ -1336,7 +1336,7 @@
       "slug": "tab",
       "description": "관련된 화면 구획을 자동 활성화 키보드 탐색과 연결해 같은 문맥 안에서 전환합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
