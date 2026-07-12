@@ -172,7 +172,7 @@ code { overflow-wrap: anywhere; }
   padding: 4px 8px;
   border-radius: var(--ds-radius-sm);
   background: var(--ds-color-bg-subtle);
-  color: var(--ds-color-text-secondary);
+  color: var(--ds-color-text-primary);
   font-size: var(--ds-font-size-caption);
   line-height: var(--ds-font-line-height-caption);
 }

@@ -3,7 +3,30 @@ import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { findPrimitiveColorReferences, findWorkspaceViolations } from './guardrails.mjs';
+import {
+  findComponentSliceContractViolations,
+  findPrimitiveColorReferences,
+  findWorkspaceViolations,
+} from './guardrails.mjs';
+
+const componentSlicesSource = `const slices = [
+  { name: 'Icon', slug: 'icon' },
+  { name: 'Badge', slug: 'badge' },
+  { name: 'Button', slug: 'button' },
+  { name: 'TextField', slug: 'text-field' },
+  { name: 'ScrollArea', slug: 'scroll-area' },
+  { name: 'Checkbox', slug: 'checkbox' },
+  { name: 'RadioGroup', slug: 'radio-group' },
+  { name: 'Switch', slug: 'switch' },
+  { name: 'Textarea', slug: 'textarea' },
+  { name: 'Select', slug: 'select' },
+  { name: 'TextButton', slug: 'text-button' },
+  { name: 'IconButton', slug: 'icon-button' },
+  { name: 'BoardRow', slug: 'board-row' },
+  { name: 'Tab', slug: 'tab' },
+  { name: 'BottomSheet', slug: 'bottom-sheet' },
+] as const;
+`;
 
 async function fixture() {
   const root = await mkdtemp(path.join(tmpdir(), 'ds-guardrail-'));
@@ -76,4 +99,38 @@ test('finds primitive colors in product code but ignores foundation visualizers'
   const violations = await findPrimitiveColorReferences(root);
   assert.equal(violations.length, 1);
   assert.match(violations[0], /button\.css/);
+});
+
+test('accepts the exact fifteen component slices and thirty Windows targets', async (t) => {
+  const root = await fixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const directory = path.join(root, 'apps', 'docs', 'tests', 'e2e');
+  await mkdir(directory, { recursive: true });
+  await writeFile(path.join(directory, 'component-slices.visual.spec.ts'), componentSlicesSource);
+
+  assert.deepEqual(await findComponentSliceContractViolations(root), []);
+});
+
+test('rejects missing, extra, or reordered component-slice targets', async (t) => {
+  const root = await fixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const directory = path.join(root, 'apps', 'docs', 'tests', 'e2e');
+  const target = path.join(directory, 'component-slices.visual.spec.ts');
+  await mkdir(directory, { recursive: true });
+
+  await writeFile(target, componentSlicesSource.replace(
+    "  { name: 'BottomSheet', slug: 'bottom-sheet' },\n",
+    '',
+  ));
+  assert.deepEqual(await findComponentSliceContractViolations(root), [
+    'Component slice list must contain exactly 15 ordered components and 30 Windows mobile/desktop targets',
+  ]);
+
+  await writeFile(target, componentSlicesSource.replace(
+    "  { name: 'Tab', slug: 'tab' },\n  { name: 'BottomSheet', slug: 'bottom-sheet' },",
+    "  { name: 'BottomSheet', slug: 'bottom-sheet' },\n  { name: 'Tab', slug: 'tab' },",
+  ));
+  assert.deepEqual(await findComponentSliceContractViolations(root), [
+    'Component slice list must contain exactly 15 ordered components and 30 Windows mobile/desktop targets',
+  ]);
 });

@@ -13,6 +13,11 @@ const slices = [
   { name: 'Switch', slug: 'switch' },
   { name: 'Textarea', slug: 'textarea' },
   { name: 'Select', slug: 'select' },
+  { name: 'TextButton', slug: 'text-button' },
+  { name: 'IconButton', slug: 'icon-button' },
+  { name: 'BoardRow', slug: 'board-row' },
+  { name: 'Tab', slug: 'tab' },
+  { name: 'BottomSheet', slug: 'bottom-sheet' },
 ] as const;
 
 for (const slice of slices) {

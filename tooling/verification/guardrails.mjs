@@ -6,6 +6,23 @@ const allowedWorkspaces = new Set(['apps/docs', 'packages/tokens', 'packages/rea
 const allowedWorkspaceDeclarations = new Set(['apps/*', 'packages/*']);
 const sourceExtensions = new Set(['.astro', '.css', '.mdx', '.ts', '.tsx']);
 const primitivePattern = /--ds-color-(?:neutral|blue|red|green)-/;
+const componentSliceContract = [
+  ['Icon', 'icon'],
+  ['Badge', 'badge'],
+  ['Button', 'button'],
+  ['TextField', 'text-field'],
+  ['ScrollArea', 'scroll-area'],
+  ['Checkbox', 'checkbox'],
+  ['RadioGroup', 'radio-group'],
+  ['Switch', 'switch'],
+  ['Textarea', 'textarea'],
+  ['Select', 'select'],
+  ['TextButton', 'text-button'],
+  ['IconButton', 'icon-button'],
+  ['BoardRow', 'board-row'],
+  ['Tab', 'tab'],
+  ['BottomSheet', 'bottom-sheet'],
+];
 
 function workspaceDeclarations(source) {
   const declarations = [];
@@ -153,18 +170,47 @@ export async function findPrimitiveColorReferences(root) {
   return violations.sort();
 }
 
+export async function findComponentSliceContractViolations(root) {
+  const file = path.join(
+    root,
+    'apps',
+    'docs',
+    'tests',
+    'e2e',
+    'component-slices.visual.spec.ts',
+  );
+  let source;
+  try {
+    source = await readFile(file, 'utf8');
+  } catch (error) {
+    return [`Unreadable component-slice visual contract: ${error.message}`];
+  }
+  const entries = [...source.matchAll(
+    /\{\s*name:\s*'([^']+)'\s*,\s*slug:\s*'([^']+)'\s*\}/g,
+  )].map((match) => [match[1], match[2]]);
+  if (JSON.stringify(entries) !== JSON.stringify(componentSliceContract)) {
+    return [
+      'Component slice list must contain exactly 15 ordered components and 30 Windows mobile/desktop targets',
+    ];
+  }
+  return [];
+}
+
 async function main() {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
   const violations = [
     ...(await findWorkspaceViolations(root)),
     ...(await findPrimitiveColorReferences(root)),
+    ...(await findComponentSliceContractViolations(root)),
   ];
   if (violations.length) {
     process.stderr.write(`${violations.join('\n')}\n`);
     process.exitCode = 1;
     return;
   }
-  process.stdout.write('Guardrails passed: 3 private workspaces, 0 primitive color leaks\n');
+  process.stdout.write(
+    'Guardrails passed: 3 private workspaces, 0 primitive color leaks, 30 Windows component-slice targets\n',
+  );
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
