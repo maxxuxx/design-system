@@ -64,6 +64,38 @@ test('BottomSheet enters focus, traps native modal focus, locks scroll, and rest
   await expect(page.getByText('마지막 종료 사유: close-button')).toBeVisible();
 });
 
+test('BottomSheet focus order includes a closed details summary but excludes its hidden controls', async ({ page }) => {
+  await openHtmlRoute(page, route);
+  const { dialog } = await openSheet(page);
+  await dialog.locator('.ds-bottom-sheet__surface').evaluate((surface) => {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    const hiddenButton = document.createElement('button');
+    const nestedDetails = document.createElement('details');
+    const nestedSummary = document.createElement('summary');
+    const nestedButton = document.createElement('button');
+    summary.textContent = '닫힌 배송 상세';
+    hiddenButton.textContent = '닫힌 상세 행동';
+    hiddenButton.type = 'button';
+    nestedSummary.textContent = '중첩 배송 상세';
+    nestedButton.textContent = '중첩 상세 행동';
+    nestedButton.type = 'button';
+    nestedDetails.append(nestedSummary, nestedButton);
+    details.append(summary, hiddenButton, nestedDetails);
+    surface.append(details);
+  });
+  const summary = dialog.locator('summary', { hasText: '닫힌 배송 상세' });
+  const close = dialog.getByRole('button', { name: '바텀시트 닫기' });
+
+  await summary.focus();
+  await expect(summary).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+
+  await close.click();
+  await expect(dialog).not.toBeAttached();
+});
+
 test('BottomSheet reports Escape, backdrop, and close-button reasons and honors nondismissible mode', async ({ page }) => {
   await openHtmlRoute(page, route);
 

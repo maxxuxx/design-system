@@ -748,9 +748,17 @@ test('BoardRow exposes a complete forced-colors interaction palette and removes 
       'position:absolute;left:-9999px;forced-color-adjust:none;color:HighlightText';
     document.body.append(probe);
     const highlightText = getComputedStyle(probe).color;
+    probe.style.color = 'CanvasText';
+    const canvasText = getComputedStyle(probe).color;
     probe.remove();
-    return { highlightText };
+    return { canvasText, highlightText };
   });
+  const openContent = demo.locator(
+    '[data-board-row-sample="long-copy"] > .ds-board-row__content',
+  );
+  await expect(openContent).toBeVisible();
+  expect(await openContent.evaluate((element) => getComputedStyle(element).color))
+    .toBe(system.canvasText);
   const readForegrounds = () => summary.evaluate((element) => ({
     arrow: getComputedStyle(
       element.querySelector<HTMLElement>('.ds-board-row__arrow')!,

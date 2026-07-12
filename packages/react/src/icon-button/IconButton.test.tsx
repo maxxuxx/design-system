@@ -85,7 +85,7 @@ describe('IconButton', () => {
     }
   });
 
-  it('forwards documented native props, ref, className, and style', () => {
+  it('forwards native props and safe layout styles without exposing owned presentation', () => {
     const ref = createRef<HTMLButtonElement>();
     render(
       <IconButton
@@ -95,7 +95,15 @@ describe('IconButton', () => {
         label="검색"
         name="search"
         ref={ref}
-        style={{ color: 'red', marginTop: 1 }}
+        style={{
+          backgroundColor: 'red',
+          color: 'red',
+          flexBasis: 1,
+          flexGrow: 1,
+          flexShrink: 1,
+          marginTop: 1,
+          minHeight: 1,
+        }}
         title="검색 열기"
         type="submit"
         value="find"
@@ -108,7 +116,13 @@ describe('IconButton', () => {
     expect(button).toHaveAttribute('type', 'submit');
     expect(button).toHaveAttribute('value', 'find');
     expect(button).toHaveClass('ds-icon-button', 'consumer-icon-button');
-    expect(button).toHaveStyle('color: rgb(255, 0, 0); margin-top: 1px');
+    expect(button).toHaveStyle('margin-top: 1px');
+    expect(button.style.backgroundColor).toBe('');
+    expect(button.style.color).toBe('');
+    expect(button.style.flexBasis).toBe('');
+    expect(button.style.flexGrow).toBe('');
+    expect(button.style.flexShrink).toBe('');
+    expect(button.style.minHeight).toBe('');
     expect(ref.current).toBe(button);
   });
 

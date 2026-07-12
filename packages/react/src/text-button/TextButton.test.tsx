@@ -83,31 +83,47 @@ describe('TextButton', () => {
     expect(ref.current).toBe(button);
   });
 
-  it('forwards native style props on both element branches', () => {
+  it('forwards safe layout styles without exposing owned geometry or state presentation', () => {
     render(
       <div>
         <TextButton
           data-testid="styled-button"
-          style={{ color: 'red', minHeight: 1 }}
+          style={{ color: 'red', marginTop: 1, minHeight: 1 }}
         >
           버튼
         </TextButton>
         <TextButton
           data-testid="styled-link"
           href="/details/"
-          style={{ color: 'red', minHeight: 1 }}
+          style={{ color: 'red', marginTop: 1, minHeight: 1 }}
         >
           링크
         </TextButton>
       </div>,
     );
 
-    expect(screen.getByTestId('styled-button')).toHaveStyle(
-      'color: rgb(255, 0, 0); min-height: 1px',
+    for (const testId of ['styled-button', 'styled-link']) {
+      const element = screen.getByTestId(testId);
+      expect(element).toHaveStyle('margin-top: 1px');
+      expect(element.style.color).toBe('');
+      expect(element.style.minHeight).toBe('');
+    }
+  });
+
+  it('keeps owned content when native dangerous HTML props are supplied', () => {
+    const injection = { __html: '<span data-injected="true">주입</span>' };
+    const { container } = render(
+      <div>
+        <TextButton dangerouslySetInnerHTML={injection}>버튼</TextButton>
+        <TextButton dangerouslySetInnerHTML={injection} href="/details/">
+          링크
+        </TextButton>
+      </div>,
     );
-    expect(screen.getByTestId('styled-link')).toHaveStyle(
-      'color: rgb(255, 0, 0); min-height: 1px',
-    );
+
+    expect(screen.getByRole('button', { name: '버튼' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '링크' })).toBeInTheDocument();
+    expect(container.querySelector('[data-injected="true"]')).toBeNull();
   });
 
   it('uses native disabled button behavior', async () => {

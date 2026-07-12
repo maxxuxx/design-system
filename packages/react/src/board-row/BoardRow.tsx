@@ -8,6 +8,7 @@ import {
   useRef,
 } from 'react';
 import { Icon } from '../icon';
+import { getSafeLayoutStyle } from '../internal/safe-layout-style';
 
 export interface BoardRowProps extends Omit<
   DetailsHTMLAttributes<HTMLDetailsElement>,
@@ -37,6 +38,7 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
       onToggle: _callerOnToggle,
       open,
       prefix,
+      style,
       title,
       ...detailsProps
     } = props as BoardRowRuntimeProps;
@@ -118,6 +120,7 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
         dangerouslySetInnerHTML={undefined}
         open={open ?? initialOpenRef.current}
         onToggle={handleToggle}
+        style={getSafeLayoutStyle(style)}
       >
         <summary
           className="ds-board-row__summary"

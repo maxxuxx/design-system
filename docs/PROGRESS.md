@@ -42,15 +42,16 @@
 
 - TypeScript와 Astro: 오류 0개, 경고 0개; 기존 Zod URL API deprecation hint 1개
 - Tokens: 25 tests passed
-- React: 201 tests passed
+- React: 203 tests passed
 - Docs unit: 31 tests passed
 - Guardrail/artifact: 37 tests passed
 - Static docs: 25 pages built
-- Browser: 426 passed, 156개의 명시적 platform/viewport-owned skip
+- Browser: 429 passed, 156개의 명시적 platform/viewport-owned skip
 - Focused 기능·접근성 묶음: 297 passed, 84개의 명시적 skip
 - Generated artifacts: current
 - Repository guardrails: 3 private workspaces, primitive color leak 0, Windows component-slice target 30개
 - Figma evidence: artifact verifier와 컴포넌트별 독립 live review 통과
+- Final code review: inline style geometry 보호, dangerous HTML 무시, forced-colors, 중첩된 닫힌 `details`를 포함한 BottomSheet focus trap 보강 후 `PASS / APPROVED`
 
 현재 환경에서 skip된 항목은 다른 viewport가 소유한 assertion과 Windows Chromium visual comparison입니다. 저장소에는 v0.1 컴포넌트 5개의 mobile/desktop baseline 10개가 있습니다. v0.2 form control 5개와 v0.3 신규 5개의 baseline은 각각 10개씩, 총 20개가 아직 Windows에서 생성·육안 검토·재비교되어야 합니다. macOS 결과를 Windows baseline 승인으로 간주하지 않습니다.
 

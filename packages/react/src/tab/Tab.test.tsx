@@ -292,7 +292,7 @@ describe('Tab', () => {
         layout="scroll"
         ref={ref}
         size="small"
-        style={{ color: 'rgb(255, 0, 0)', marginTop: 1 }}
+        style={{ backgroundColor: 'red', color: 'red', marginTop: 1, minHeight: 1 }}
       />,
     );
     const root = screen.getByRole('tablist').parentElement;
@@ -302,7 +302,26 @@ describe('Tab', () => {
     expect(root).toHaveAttribute('data-consumer', 'native');
     expect(root).toHaveAttribute('data-layout', 'scroll');
     expect(root).toHaveAttribute('data-size', 'small');
-    expect(root).toHaveStyle('color: rgb(255, 0, 0); margin-top: 1px');
+    expect(root).toHaveStyle('margin-top: 1px');
+    expect(root?.style.backgroundColor).toBe('');
+    expect(root?.style.color).toBe('');
+    expect(root?.style.minHeight).toBe('');
+  });
+
+  it('keeps owned tabs and panels when a native dangerous HTML prop is supplied', () => {
+    const { container } = render(
+      <Tab
+        ariaLabel="주입 방어 탭"
+        dangerouslySetInnerHTML={{
+          __html: '<button data-injected="true">주입</button>',
+        }}
+        items={items}
+      />,
+    );
+
+    expect(screen.getAllByRole('tab')).toHaveLength(items.length);
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('요약 패널');
+    expect(container.querySelector('[data-injected="true"]')).toBeNull();
   });
 
   it('owns equal and scroll layout hooks plus long-copy-safe panels', () => {

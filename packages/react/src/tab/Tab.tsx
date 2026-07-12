@@ -7,6 +7,7 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
+import { getSafeLayoutStyle } from '../internal/safe-layout-style';
 
 export type TabSize = 'small' | 'large';
 export type TabLayout = 'equal' | 'scroll';
@@ -94,6 +95,7 @@ export const Tab = forwardRef<HTMLDivElement, TabProps>(function Tab(
     layout = 'equal',
     onValueChange,
     size = 'large',
+    style,
     value,
     ...rootProps
   },
@@ -149,8 +151,10 @@ export const Tab = forwardRef<HTMLDivElement, TabProps>(function Tab(
       {...rootProps}
       ref={ref}
       className={classes}
+      dangerouslySetInnerHTML={undefined}
       data-layout={layout}
       data-size={size}
+      style={getSafeLayoutStyle(style)}
     >
       <div
         aria-label={ariaLabel}

@@ -45,7 +45,7 @@ describe('BoardRow', () => {
         data-testid="board-row"
         id="delivery-row"
         ref={ref}
-        style={{ marginTop: 1 }}
+        style={{ backgroundColor: 'red', color: 'red', marginTop: 1, minHeight: 1 }}
         title="배송 정보"
       >
         배송 내용
@@ -57,6 +57,9 @@ describe('BoardRow', () => {
     expect(details).toHaveAttribute('aria-label', '배송 상세');
     expect(details).toHaveClass('ds-board-row', 'consumer-row');
     expect(details).toHaveStyle('margin-top: 1px');
+    expect(details.style.backgroundColor).toBe('');
+    expect(details.style.color).toBe('');
+    expect(details.style.minHeight).toBe('');
     expect(ref.current).toBe(details);
   });
 

@@ -1087,7 +1087,7 @@
           "type": "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>",
           "required": false,
           "defaultValue": null,
-          "description": "href 분기에 맞는 native anchor 또는 button props와 ref입니다."
+          "description": "href 분기의 native events·form·data·aria props와 ref입니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
         }
       ],
       "tokens": [
@@ -1187,7 +1187,7 @@
           "type": "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'>",
           "required": false,
           "defaultValue": null,
-          "description": "style, form, disabled, event와 ref를 포함한 허용된 native button 계약입니다."
+          "description": "form, disabled, event, data·aria와 ref를 포함합니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
         }
       ],
       "tokens": [
@@ -1299,7 +1299,7 @@
           "type": "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>",
           "required": false,
           "defaultValue": null,
-          "description": "className, style, id, data와 aria 속성, ref를 포함한 허용된 native details 계약입니다."
+          "description": "className, id, data·aria 속성과 ref를 포함합니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
         }
       ],
       "tokens": [
@@ -1414,7 +1414,7 @@
           "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
           "required": false,
           "defaultValue": null,
-          "description": "className, style, id, data와 aria 속성, ref를 포함한 root div 계약입니다."
+          "description": "className, id, data·aria 속성과 ref를 포함합니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
         }
       ],
       "tokens": [

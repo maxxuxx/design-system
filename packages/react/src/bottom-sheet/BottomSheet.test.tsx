@@ -321,28 +321,51 @@ describe('BottomSheet', () => {
     ).toHaveFocus();
   });
 
-  it('wraps Tab and Shift+Tab inside the native modal focus order', async () => {
+  it('does not cancel native Tab order for arbitrary focusable sheet content', async () => {
     render(
-      <BottomSheet
-        {...defaultProps}
-        footer={<button type="button">마지막 행동</button>}
-      >
-        <button type="button">본문 행동</button>
+      <BottomSheet {...defaultProps}>
+        <details>
+          <summary>배송 상세</summary>
+          <p>상세 내용</p>
+          <button type="button">닫힌 상세 행동</button>
+          <details>
+            <summary>중첩 배송 상세</summary>
+            <button type="button">중첩 상세 행동</button>
+          </details>
+        </details>
+        <button hidden type="button">숨겨진 행동</button>
+        <fieldset disabled>
+          <button type="button">비활성 행동</button>
+        </fieldset>
       </BottomSheet>,
     );
     const dialog = await getOpenDialog();
     const close = within(dialog).getByRole('button', {
       name: defaultProps.closeLabel,
     });
-    const last = within(dialog).getByRole('button', { name: '마지막 행동' });
-
-    last.focus();
-    fireEvent.keyDown(last, { key: 'Tab' });
-    expect(close).toHaveFocus();
+    expect(within(dialog).getByText('배송 상세').closest('summary')).toBeTruthy();
 
     close.focus();
-    fireEvent.keyDown(close, { key: 'Tab', shiftKey: true });
-    expect(last).toHaveFocus();
+    const tabEvent = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'Tab',
+    });
+    close.dispatchEvent(tabEvent);
+
+    expect(tabEvent.defaultPrevented).toBe(false);
+
+    const summary = within(dialog).getByText('배송 상세').closest('summary')!;
+    summary.focus();
+    const wrapEvent = new KeyboardEvent('keydown', {
+      bubbles: true,
+      cancelable: true,
+      key: 'Tab',
+    });
+    summary.dispatchEvent(wrapEvent);
+
+    expect(wrapEvent.defaultPrevented).toBe(true);
+    expect(close).toHaveFocus();
   });
 
   it('restores the exact prior body overflow only after the last open instance releases its lock', async () => {

@@ -1,5 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { Icon, type IconName, type IconSize } from '../icon';
+import { getSafeLayoutStyle } from '../internal/safe-layout-style';
 
 export type IconButtonSize = 'small' | 'medium' | 'large';
 export type IconButtonVariant = 'clear' | 'fill' | 'outline';
@@ -28,6 +29,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       label,
       name,
       size = 'medium',
+      style,
       type = 'button',
       variant = 'clear',
       ...buttonProps
@@ -51,6 +53,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         data-size={size}
         data-variant={variant}
         disabled={disabled}
+        style={getSafeLayoutStyle(style)}
         type={type}
       >
         <Icon name={name} size={ICON_SIZE_BY_BUTTON_SIZE[size]} />

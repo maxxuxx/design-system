@@ -42,7 +42,7 @@ props:
     type: "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>"
     required: false
     defaultValue: null
-    description: href 분기에 맞는 native anchor 또는 button props와 ref입니다.
+    description: href 분기의 native events·form·data·aria props와 ref입니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다.
 tokens:
   - size/control/small
   - size/icon/small
@@ -107,7 +107,7 @@ root native `button` 또는 `a` 안에 string label이 있습니다. `arrow`만 
 
 ## 반응형 동작
 
-TextButton은 320px content에서도 label을 줄바꿈하고 container 경계를 넘지 않습니다. 같은 API가 mobile, tablet, desktop에 적용되며 caller class로 주변 layout을 확장할 수 있습니다.
+TextButton은 320px content에서도 label을 줄바꿈하고 container 경계를 넘지 않습니다. 같은 API가 mobile, tablet, desktop에 적용되며 caller class로 주변 layout을 확장할 수 있습니다. Inline `style`은 외부 배치용 margin, order, self alignment, grid placement만 보존하고 component-owned 색상, 배경, target 크기, flex sizing은 무시합니다.
 
 ## 접근성
 
@@ -144,7 +144,7 @@ export function HelpActions() {
 | `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | caption/body-small/body tier, 모두 44px minimum target |
 | `variant` | `'clear' \| 'underline' \| 'arrow'` | `'clear'` | persistent decoration 또는 owned ChevronRight |
 | `tone` | `'primary' \| 'neutral'` | `'primary'` | semantic action/text color hierarchy |
-| native props | <code>AnchorHTMLAttributes&lt;HTMLAnchorElement&gt; \| ButtonHTMLAttributes&lt;HTMLButtonElement&gt;</code> | 분기별 기본값 | anchor/button native props와 분기별 ref; button `type="button"` default |
+| native props | <code>AnchorHTMLAttributes&lt;HTMLAnchorElement&gt; \| ButtonHTMLAttributes&lt;HTMLButtonElement&gt;</code> | 분기별 기본값 | events·form·data·aria props와 분기별 ref; `style`은 외부 배치 whitelist만 보존, owned geometry/state와 dangerous HTML은 무시 |
 
 </div>
 

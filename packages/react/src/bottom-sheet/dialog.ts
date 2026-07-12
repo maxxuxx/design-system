@@ -71,32 +71,92 @@ export function showModal(dialog: HTMLDialogElement): void {
   if (!dialog.open) dialog.showModal();
 }
 
+function isTabbable(
+  dialog: HTMLDialogElement,
+  element: HTMLElement,
+): boolean {
+  if (element.tabIndex < 0 || element.matches(':disabled')) return false;
+  if (element.closest('[hidden], [inert], [aria-hidden="true"]')) return false;
+  for (
+    let ancestor = element.parentElement;
+    ancestor && ancestor !== dialog;
+    ancestor = ancestor.parentElement
+  ) {
+    if (
+      ancestor.tagName === 'DETAILS'
+      && !ancestor.hasAttribute('open')
+      && !(element.tagName === 'SUMMARY' && element.parentElement === ancestor)
+    ) return false;
+  }
+
+  const view = dialog.ownerDocument.defaultView;
+  for (
+    let current: HTMLElement | null = element;
+    current && current !== dialog;
+    current = current.parentElement
+  ) {
+    const style = view?.getComputedStyle(current);
+    if (
+      style?.display === 'none'
+      || style?.visibility === 'hidden'
+      || style?.contentVisibility === 'hidden'
+    ) return false;
+  }
+  return true;
+}
+
+function isRadioInput(element: HTMLElement): element is HTMLInputElement {
+  return element.tagName === 'INPUT'
+    && (element as HTMLInputElement).type === 'radio';
+}
+
+function getTabbableElements(dialog: HTMLDialogElement): HTMLElement[] {
+  const candidates = Array.from(
+    dialog.querySelectorAll<HTMLElement>('*'),
+  ).filter((element) => isTabbable(dialog, element));
+
+  const radioAdjusted = candidates.filter((element) => {
+    if (!isRadioInput(element) || element.name.length === 0) return true;
+    const group = candidates.filter((candidate) =>
+      isRadioInput(candidate)
+      && candidate.name === element.name
+      && candidate.form === element.form);
+    const checked = group.find((candidate) =>
+      isRadioInput(candidate) && candidate.checked);
+    return checked ? checked === element : group[0] === element;
+  });
+
+  return radioAdjusted
+    .map((element, documentOrder) => ({ documentOrder, element }))
+    .sort((left, right) => {
+      const leftIndex = left.element.tabIndex;
+      const rightIndex = right.element.tabIndex;
+      const leftPositive = leftIndex > 0;
+      const rightPositive = rightIndex > 0;
+      if (leftPositive && rightPositive && leftIndex !== rightIndex) {
+        return leftIndex - rightIndex;
+      }
+      if (leftPositive !== rightPositive) return leftPositive ? -1 : 1;
+      return left.documentOrder - right.documentOrder;
+    })
+    .map(({ element }) => element);
+}
+
 export function trapDialogTabKey(
   dialog: HTMLDialogElement,
   event: KeyboardEvent,
 ): void {
   if (event.key !== 'Tab') return;
 
-  const focusable = Array.from(dialog.querySelectorAll<HTMLElement>([
-    'a[href]',
-    'button:not([disabled])',
-    'input:not([disabled])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    '[contenteditable="true"]',
-    '[tabindex]:not([tabindex="-1"])',
-  ].join(','))).filter((element) =>
-    !element.hasAttribute('hidden')
-    && element.getAttribute('aria-hidden') !== 'true');
-
-  if (focusable.length === 0) {
+  const tabbable = getTabbableElements(dialog);
+  if (tabbable.length === 0) {
     event.preventDefault();
     dialog.focus();
     return;
   }
 
-  const first = focusable[0]!;
-  const last = focusable.at(-1)!;
+  const first = tabbable[0]!;
+  const last = tabbable.at(-1)!;
   const activeElement = dialog.ownerDocument.activeElement;
   const focusEscaped = !dialog.contains(activeElement);
 

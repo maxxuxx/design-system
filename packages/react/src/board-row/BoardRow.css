@@ -148,6 +148,7 @@
   }
 
   .ds-board-row__content {
+    color: CanvasText;
     border-color: ButtonText;
   }
 }

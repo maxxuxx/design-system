@@ -7,6 +7,7 @@ import {
   type RefAttributes,
 } from 'react';
 import { Icon } from '../icon';
+import { getSafeLayoutStyle } from '../internal/safe-layout-style';
 
 export type TextButtonSize = 'small' | 'medium' | 'large';
 export type TextButtonVariant = 'clear' | 'underline' | 'arrow';
@@ -81,6 +82,7 @@ const TextButtonImpl = forwardRef<
     const {
       disabled: _disabled,
       href,
+      style,
       ...anchorProps
     } = nativeProps as Omit<
       AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -95,10 +97,12 @@ const TextButtonImpl = forwardRef<
         {...anchorProps}
         ref={ref as ForwardedRef<HTMLAnchorElement>}
         className={classes}
+        dangerouslySetInnerHTML={undefined}
         data-size={size}
         data-tone={tone}
         data-variant={variant}
         href={href}
+        style={getSafeLayoutStyle(style)}
       >
         {content}
       </a>
@@ -107,6 +111,7 @@ const TextButtonImpl = forwardRef<
 
   const {
     href: _href,
+    style,
     type = 'button',
     ...buttonProps
   } = nativeProps as Omit<
@@ -121,9 +126,11 @@ const TextButtonImpl = forwardRef<
       {...buttonProps}
       ref={ref as ForwardedRef<HTMLButtonElement>}
       className={classes}
+      dangerouslySetInnerHTML={undefined}
       data-size={size}
       data-tone={tone}
       data-variant={variant}
+      style={getSafeLayoutStyle(style)}
       type={type}
     >
       {content}
