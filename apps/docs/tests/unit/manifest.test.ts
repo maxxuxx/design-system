@@ -62,8 +62,9 @@ describe('component manifest', () => {
     expect(buildComponentManifest([])).toEqual({ schemaVersion: 1, components: [] });
   });
 
-  it('sorts all ten entries in canonical order regardless of file order', () => {
+  it('sorts all eleven entries in canonical order regardless of file order', () => {
     const manifest = buildComponentManifest([
+      document('TextButton'),
       document('Select'),
       document('Textarea'),
       document('Switch'),
@@ -76,7 +77,7 @@ describe('component manifest', () => {
       document('Icon'),
     ]);
     expect(manifest.components.map(({ name }) => name))
-      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select']);
+      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton']);
     expect(manifest.components.map(({ docsUrl }) => docsUrl)).toEqual([
       '/components/icon/',
       '/components/badge/',
@@ -88,6 +89,7 @@ describe('component manifest', () => {
       '/components/switch/',
       '/components/textarea/',
       '/components/select/',
+      '/components/text-button/',
     ]);
   });
 

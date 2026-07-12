@@ -99,7 +99,6 @@ const TextButtonImpl = forwardRef<
         data-tone={tone}
         data-variant={variant}
         href={href}
-        style={undefined}
       >
         {content}
       </a>
@@ -125,7 +124,6 @@ const TextButtonImpl = forwardRef<
       data-size={size}
       data-tone={tone}
       data-variant={variant}
-      style={undefined}
       type={type}
     >
       {content}

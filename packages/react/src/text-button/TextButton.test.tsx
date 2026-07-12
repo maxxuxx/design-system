@@ -83,7 +83,7 @@ describe('TextButton', () => {
     expect(ref.current).toBe(button);
   });
 
-  it('keeps component-owned geometry and state presentation authoritative', () => {
+  it('forwards native style props on both element branches', () => {
     render(
       <div>
         <TextButton
@@ -102,8 +102,12 @@ describe('TextButton', () => {
       </div>,
     );
 
-    expect(screen.getByTestId('styled-button')).not.toHaveAttribute('style');
-    expect(screen.getByTestId('styled-link')).not.toHaveAttribute('style');
+    expect(screen.getByTestId('styled-button')).toHaveStyle(
+      'color: rgb(255, 0, 0); min-height: 1px',
+    );
+    expect(screen.getByTestId('styled-link')).toHaveStyle(
+      'color: rgb(255, 0, 0); min-height: 1px',
+    );
   });
 
   it('uses native disabled button behavior', async () => {
