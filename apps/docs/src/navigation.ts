@@ -31,6 +31,7 @@ export const NAVIGATION: NavigationSection[] = [
   {
     label: 'Components',
     items: [
+      { label: '전체 보기', href: '/components/' },
       { label: 'Icon', href: '/components/icon/' },
       { label: 'Badge', href: '/components/badge/' },
       { label: 'Button', href: '/components/button/' },
