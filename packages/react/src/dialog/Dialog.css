@@ -136,7 +136,6 @@
     background: Canvas;
     border-color: ButtonText;
     box-shadow: none;
-    forced-color-adjust: none;
   }
 
   .ds-dialog__description {
@@ -145,5 +144,11 @@
 
   .ds-dialog__actions {
     background: Canvas;
+  }
+
+  .ds-dialog__actions .ds-dialog__action {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
   }
 }
