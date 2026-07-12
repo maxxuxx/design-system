@@ -25,6 +25,7 @@ import {
   vi,
 } from 'vitest';
 import { expectNoAxeViolations } from '../test/accessibility';
+import { ModalDialog } from '../internal/ModalDialog';
 import {
   BottomSheet,
   type BottomSheetCloseReason,
@@ -75,6 +76,142 @@ afterEach(() => {
   });
   document.body.style.overflow = '';
   vi.useRealTimers();
+});
+
+describe('ModalDialog', () => {
+  it('cancels a stale exit when reopened and restores the original focus after the eventual close', async () => {
+    const trigger = document.createElement('button');
+    trigger.textContent = '공유 모달 열기';
+    document.body.append(trigger);
+    trigger.focus();
+    const fallbackFocusRef = createRef<HTMLButtonElement>();
+    const renderModal = (open: boolean) => (
+      <ModalDialog
+        ariaLabelledBy="shared-modal-title"
+        className="shared-modal"
+        dismissible
+        fallbackFocusRef={fallbackFocusRef}
+        onBackdrop={vi.fn()}
+        onEscape={vi.fn()}
+        open={open}
+        role="dialog"
+      >
+        <h2 id="shared-modal-title">공유 모달</h2>
+        <button ref={fallbackFocusRef} type="button">닫기</button>
+      </ModalDialog>
+    );
+    const { rerender } = render(renderModal(true));
+
+    try {
+      const dialog = await screen.findByRole('dialog', { name: '공유 모달' });
+      await waitFor(() => expect(dialog).toHaveAttribute('open'));
+      expect(document.body.style.overflow).toBe('hidden');
+      vi.useFakeTimers();
+
+      rerender(renderModal(false));
+      await act(async () => Promise.resolve());
+      expect(dialog).toHaveAttribute('data-state', 'closing');
+
+      rerender(renderModal(true));
+      await act(async () => vi.advanceTimersByTime(200));
+      expect(dialog).toHaveAttribute('data-state', 'open');
+      expect(dialog).toHaveAttribute('open');
+      expect(document.body.style.overflow).toBe('hidden');
+
+      rerender(renderModal(false));
+      await act(async () => vi.advanceTimersByTime(200));
+      expect(screen.queryByRole('dialog', { name: '공유 모달' }))
+        .not.toBeInTheDocument();
+      expect(trigger).toHaveFocus();
+    } finally {
+      trigger.remove();
+    }
+  });
+
+  it('restores the exact prior inline overflow and focus through Strict Mode cleanup', async () => {
+    document.body.style.overflow = 'scroll';
+    const trigger = document.createElement('button');
+    document.body.append(trigger);
+    trigger.focus();
+    const fallbackFocusRef = createRef<HTMLButtonElement>();
+    const view = render(
+      <StrictMode>
+        <ModalDialog
+          ariaLabelledBy="strict-modal-title"
+          className="strict-modal"
+          dismissible
+          fallbackFocusRef={fallbackFocusRef}
+          onBackdrop={vi.fn()}
+          onEscape={vi.fn()}
+          open
+          role="dialog"
+        >
+          <h2 id="strict-modal-title">엄격 모드 모달</h2>
+          <button ref={fallbackFocusRef} type="button">닫기</button>
+        </ModalDialog>
+      </StrictMode>,
+    );
+
+    await screen.findByRole('dialog', { name: '엄격 모드 모달' });
+    expect(document.body.style.overflow).toBe('hidden');
+
+    view.unmount();
+    expect(document.body.style.overflow).toBe('scroll');
+    expect(trigger).toHaveFocus();
+    trigger.remove();
+  });
+
+  it('retains the shared scroll lock until the last modal consumer closes', async () => {
+    document.body.style.overflow = 'clip';
+    const firstFallbackRef = createRef<HTMLButtonElement>();
+    const secondFallbackRef = createRef<HTMLButtonElement>();
+    const renderModals = (firstOpen: boolean, secondOpen: boolean) => (
+      <>
+        <ModalDialog
+          ariaLabelledBy="first-modal-title"
+          className="first-modal"
+          dismissible
+          fallbackFocusRef={firstFallbackRef}
+          onBackdrop={vi.fn()}
+          onEscape={vi.fn()}
+          open={firstOpen}
+          role="dialog"
+        >
+          <h2 id="first-modal-title">첫 번째 모달</h2>
+          <button ref={firstFallbackRef} type="button">첫 번째 닫기</button>
+        </ModalDialog>
+        <ModalDialog
+          ariaLabelledBy="second-modal-title"
+          className="second-modal"
+          dismissible
+          fallbackFocusRef={secondFallbackRef}
+          onBackdrop={vi.fn()}
+          onEscape={vi.fn()}
+          open={secondOpen}
+          role="dialog"
+        >
+          <h2 id="second-modal-title">두 번째 모달</h2>
+          <button ref={secondFallbackRef} type="button">두 번째 닫기</button>
+        </ModalDialog>
+      </>
+    );
+    const { rerender } = render(renderModals(true, true));
+    await screen.findByRole('dialog', { name: '첫 번째 모달' });
+    await screen.findByRole('dialog', { name: '두 번째 모달' });
+    expect(document.body.style.overflow).toBe('hidden');
+    vi.useFakeTimers();
+
+    rerender(renderModals(false, true));
+    await act(async () => vi.advanceTimersByTime(200));
+    expect(screen.queryByRole('dialog', { name: '첫 번째 모달' }))
+      .not.toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('hidden');
+
+    rerender(renderModals(false, false));
+    await act(async () => vi.advanceTimersByTime(200));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('clip');
+  });
 });
 
 describe('BottomSheet', () => {
