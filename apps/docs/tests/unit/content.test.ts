@@ -81,6 +81,7 @@ describe('MDX collection coverage', () => {
       'content/components/textarea.mdx',
       'content/components/select.mdx',
       'content/components/text-button.mdx',
+      'content/components/icon-button.mdx',
     ]);
 
     for (const file of files) {
@@ -146,7 +147,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the eleven component names and slugs in canonical order', () => {
+  it('locks the twelve component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -159,6 +160,7 @@ describe('component metadata contract', () => {
       'Textarea',
       'Select',
       'TextButton',
+      'IconButton',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -172,6 +174,7 @@ describe('component metadata contract', () => {
       'textarea',
       'select',
       'text-button',
+      'icon-button',
     ]);
   });
 
@@ -244,6 +247,75 @@ describe('component metadata contract', () => {
       'color/action/primary-pressed',
       'color/action/weak',
       'color/action/weak-hover',
+      'color/action/on-weak',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('locks the IconButton public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/icon-button.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'IconButton',
+      slug: 'icon-button',
+      figmaUrl: '',
+      variants: ['clear', 'fill', 'outline'],
+      sizes: ['small', 'medium', 'large'],
+      states: [
+        'default',
+        'hover',
+        'pressed',
+        'focus-visible',
+        'disabled',
+      ],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'label', type: 'string', required: true, defaultValue: null },
+      { name: 'name', type: 'IconName', required: true, defaultValue: null },
+      { name: 'size', type: 'IconButtonSize', required: false, defaultValue: 'medium' },
+      { name: 'variant', type: 'IconButtonVariant', required: false, defaultValue: 'clear' },
+      {
+        name: '...buttonProps',
+        type: "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'size/control/medium',
+      'size/control/large',
+      'size/icon/medium',
+      'size/icon/large',
+      'space/0',
+      'space/2',
+      'space/4',
+      'radius/full',
+      'font/family/sans',
+      'motion/duration/fast',
+      'motion/easing/standard',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/border/focus',
+      'color/border/strong',
+      'color/action/primary',
+      'color/action/primary-hover',
+      'color/action/primary-pressed',
+      'color/action/weak',
+      'color/action/weak-hover',
+      'color/action/on-primary',
       'color/action/on-weak',
       'color/focus/ring',
     ]);

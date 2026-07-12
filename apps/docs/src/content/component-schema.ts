@@ -12,6 +12,7 @@ export const COMPONENT_NAMES = [
   'Textarea',
   'Select',
   'TextButton',
+  'IconButton',
 ] as const;
 export const COMPONENT_SLUGS = [
   'icon',
@@ -25,6 +26,7 @@ export const COMPONENT_SLUGS = [
   'textarea',
   'select',
   'text-button',
+  'icon-button',
 ] as const;
 
 export const COMPONENTS = [
@@ -39,6 +41,7 @@ export const COMPONENTS = [
   { name: 'Textarea', slug: 'textarea' },
   { name: 'Select', slug: 'select' },
   { name: 'TextButton', slug: 'text-button' },
+  { name: 'IconButton', slug: 'icon-button' },
 ] as const;
 export const COMPONENT_ORDER = new Map(
   COMPONENTS.map(({ name }, index) => [name, index]),

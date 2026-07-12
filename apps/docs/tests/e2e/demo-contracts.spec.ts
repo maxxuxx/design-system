@@ -563,6 +563,116 @@ test('TextButton exposes a forced-colors keyboard focus outline', async ({ page 
   await expectForcedColorFocus(target);
 });
 
+test('IconButton exposes all icons, sizes, variants, and exact pointer boxes', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  const demo = page.locator('[data-component-demo="icon-button"]');
+  const specimens = demo.locator('[data-icon-button-specimen]');
+
+  expect(await specimens.count()).toBeGreaterThanOrEqual(15);
+  expect(
+    await specimens.evaluateAll((elements) =>
+      [...new Set(elements.map((element) =>
+        element.getAttribute('data-icon-button-name')))],
+    ),
+  ).toEqual(expect.arrayContaining([
+    'check',
+    'chevron-right',
+    'close',
+    'info',
+    'search',
+  ]));
+  expect(
+    await specimens.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-size')))],
+    ),
+  ).toEqual(expect.arrayContaining(['small', 'medium', 'large']));
+  expect(
+    await specimens.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-variant')))],
+    ),
+  ).toEqual(expect.arrayContaining(['clear', 'fill', 'outline']));
+
+  const geometry = await specimens.evaluateAll((elements) =>
+    elements.map((element) => {
+      const icon = element.querySelector<SVGElement>('.ds-icon')!;
+      const box = element.getBoundingClientRect();
+      const iconBox = icon.getBoundingClientRect();
+      return {
+        box: `${box.width}x${box.height}`,
+        icon: `${iconBox.width}x${iconBox.height}`,
+        size: element.getAttribute('data-size'),
+      };
+    }),
+  );
+  expect(
+    [...new Set(geometry.map(({ box }) => box))].sort(),
+  ).toEqual(['44x44', '48x48', '56x56']);
+  expect(
+    geometry.filter(({ size }) => size === 'small').every(({ icon }) =>
+      icon === '20x20'),
+  ).toBe(true);
+  expect(
+    geometry.filter(({ size }) => size !== 'small').every(({ icon }) =>
+      icon === '24x24'),
+  ).toBe(true);
+  for (const target of await specimens.all()) await expectMinimumTarget(target);
+});
+
+test('IconButton specimens remain responsive without page overflow', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  const demo = page.locator('[data-component-demo="icon-button"]');
+  const specimens = demo.locator('.icon-button-demo__specimen');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [first, second] = await Promise.all([
+      specimens.nth(0).boundingBox(),
+      specimens.nth(1).boundingBox(),
+    ]);
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(Math.abs(first!.x - second!.x)).toBeLessThanOrEqual(0.5);
+    expect(second!.y).toBeGreaterThan(first!.y);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const firstRowCount = await specimens.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5)
+        .length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  }
+
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('IconButton exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns forced-colors component focus.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  const demo = page.locator('[data-component-demo="icon-button"]');
+  const target = demo.locator('[data-icon-button-sample="interactive"]');
+  await demo.getByLabel('disabled', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(target);
+});
+
 test('TextField exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
 

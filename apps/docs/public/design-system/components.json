@@ -1123,6 +1123,103 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/text-button/"
+    },
+    {
+      "name": "IconButton",
+      "slug": "icon-button",
+      "description": "접근 가능한 이름과 시스템 소유 아이콘으로 compact action을 일관되게 표현합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "clear",
+        "fill",
+        "outline"
+      ],
+      "sizes": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible",
+        "disabled"
+      ],
+      "accessibility": "필수 localizable label, native button 의미, 44px 이상 pointer target, decorative owned Icon, visible focus를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "trim 후 button의 필수 aria-label로 사용하는 localizable accessible name입니다."
+        },
+        {
+          "name": "name",
+          "type": "IconName",
+          "required": true,
+          "defaultValue": null,
+          "description": "디자인 시스템이 소유하는 다섯 Icon glyph 중 하나입니다."
+        },
+        {
+          "name": "size",
+          "type": "IconButtonSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "44, 48, 56px button box와 대응하는 icon tier입니다."
+        },
+        {
+          "name": "variant",
+          "type": "IconButtonVariant",
+          "required": false,
+          "defaultValue": "clear",
+          "description": "clear, fill, outline action hierarchy입니다."
+        },
+        {
+          "name": "...buttonProps",
+          "type": "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "style, form, disabled, event와 ref를 포함한 허용된 native button 계약입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/control/medium",
+        "size/control/large",
+        "size/icon/medium",
+        "size/icon/large",
+        "space/0",
+        "space/2",
+        "space/4",
+        "radius/full",
+        "font/family/sans",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/border/strong",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-primary",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/icon-button/"
     }
   ]
 }

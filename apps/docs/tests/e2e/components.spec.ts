@@ -87,6 +87,57 @@ test('TextButton demo switches between native navigation and button semantics', 
   ).toBeDisabled();
 });
 
+test('IconButton renders its complete document template and demo without console errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  await page.waitForLoadState('networkidle');
+
+  const headings = await page.locator('main h2').allTextContents();
+  expect(headings.map((heading) => heading.trim())).toEqual(
+    REQUIRED_COMPONENT_HEADINGS,
+  );
+  await expect(
+    page.locator('[data-component-demo="icon-button"]'),
+  ).toBeVisible();
+  await expect(page.getByText('preview', { exact: true }).first()).toBeVisible();
+  expect(errors, 'IconButton docs must not emit browser console errors').toEqual([]);
+});
+
+test('IconButton demo preserves owned naming, disabled, and native form behavior', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  const demo = page.locator('[data-component-demo="icon-button"]');
+  const interactive = demo.locator(
+    '[data-icon-button-sample="interactive"]',
+  );
+
+  await expect(interactive).toHaveAttribute('type', 'button');
+  await expect(interactive).toHaveAttribute('aria-label', '검색 열기');
+  await interactive.click();
+  await expect(demo.getByText('활성화 횟수: 1')).toBeVisible();
+  await expect(demo.getByText('폼 제출 횟수: 0')).toBeVisible();
+
+  await demo.getByLabel('아이콘').selectOption('close');
+  await demo.getByLabel('크기').selectOption('large');
+  await demo.getByLabel('변형').selectOption('outline');
+  await expect(interactive).toHaveAttribute('data-size', 'large');
+  await expect(interactive).toHaveAttribute('data-variant', 'outline');
+  await expect(interactive.locator('.ds-icon')).toHaveAttribute('data-size', '24');
+
+  await demo.getByLabel('disabled', { exact: true }).check();
+  await expect(interactive).toBeDisabled();
+  await demo.locator('[data-icon-button-sample="form-submit"]').click();
+  await expect(demo.getByText('폼 제출 횟수: 1')).toBeVisible();
+});
+
 test('Checkbox visible label toggles its native input', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
   const checkbox = page.locator('[data-component-demo="checkbox"] .ds-checkbox').first();
