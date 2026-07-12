@@ -1589,7 +1589,7 @@
       "slug": "dialog",
       "description": "짧고 중요한 알림과 확인 결정을 native modal dialog와 명시적인 종료 사유로 표준화합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=219-48",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

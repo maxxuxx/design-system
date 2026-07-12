@@ -580,7 +580,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'Dialog',
       slug: 'dialog',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=219-48',
       variants: ['alert', 'confirm'],
       sizes: [],
       states: ['open', 'closing', 'disabled', 'loading'],
