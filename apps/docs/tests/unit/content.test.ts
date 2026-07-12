@@ -82,6 +82,7 @@ describe('MDX collection coverage', () => {
       'content/components/select.mdx',
       'content/components/text-button.mdx',
       'content/components/icon-button.mdx',
+      'content/components/board-row.mdx',
     ]);
 
     for (const file of files) {
@@ -147,7 +148,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the twelve component names and slugs in canonical order', () => {
+  it('locks the thirteen component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -161,6 +162,7 @@ describe('component metadata contract', () => {
       'Select',
       'TextButton',
       'IconButton',
+      'BoardRow',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -175,6 +177,7 @@ describe('component metadata contract', () => {
       'select',
       'text-button',
       'icon-button',
+      'board-row',
     ]);
   });
 
@@ -317,6 +320,75 @@ describe('component metadata contract', () => {
       'color/action/weak-hover',
       'color/action/on-primary',
       'color/action/on-weak',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('locks the BoardRow public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/board-row.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'BoardRow',
+      slug: 'board-row',
+      figmaUrl: '',
+      variants: ['closed', 'open'],
+      sizes: [],
+      states: ['default', 'hover', 'pressed', 'focus-visible'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'title', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'prefix', type: 'ReactNode', required: false, defaultValue: null },
+      { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+      { name: 'open', type: 'boolean', required: false, defaultValue: null },
+      { name: 'defaultOpen', type: 'boolean', required: false, defaultValue: 'false' },
+      {
+        name: 'onOpenChange',
+        type: '(open: boolean) => void',
+        required: false,
+        defaultValue: null,
+      },
+      {
+        name: '...detailsProps',
+        type: "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/large',
+      'size/icon/medium',
+      'space/0',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/12',
+      'space/16',
+      'radius/none',
+      'radius/md',
+      'font/family/sans',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/weight/semibold',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'motion/duration/fast',
+      'motion/easing/standard',
+      'color/bg/surface',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/border/default',
+      'color/action/weak',
+      'color/action/weak-hover',
       'color/focus/ring',
     ]);
   });

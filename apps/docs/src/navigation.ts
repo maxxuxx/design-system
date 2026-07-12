@@ -43,6 +43,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'Select', href: '/components/select/' },
       { label: 'TextButton', href: '/components/text-button/' },
       { label: 'IconButton', href: '/components/icon-button/' },
+      { label: 'BoardRow', href: '/components/board-row/' },
     ],
   },
 ];

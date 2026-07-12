@@ -1220,6 +1220,116 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/icon-button/"
+    },
+    {
+      "name": "BoardRow",
+      "slug": "board-row",
+      "description": "설정과 주문 정보처럼 한 줄의 요약과 상세 내용을 native disclosure로 연결합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "closed",
+        "open"
+      ],
+      "sizes": [],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible"
+      ],
+      "accessibility": "native details와 summary 의미, Enter·Space·click toggle, visible focus, decorative owned arrow를 보존합니다.",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "summary의 주 정보이자 localizable visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "title 아래에 표시하는 선택 설명입니다."
+        },
+        {
+          "name": "prefix",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "번호나 decorative glyph 같은 presentational leading content입니다."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "disclosure가 열릴 때 표시하는 상세 내용입니다."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": null,
+          "description": "owner가 관리하는 controlled open 상태입니다."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "uncontrolled disclosure의 초기 open 상태입니다."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "native toggle이 확정한 최종 open 상태를 전달합니다."
+        },
+        {
+          "name": "...detailsProps",
+          "type": "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "className, style, id, data와 aria 속성, ref를 포함한 허용된 native details 계약입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/large",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "radius/none",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/weight/semibold",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/border/default",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/board-row/"
     }
   ]
 }

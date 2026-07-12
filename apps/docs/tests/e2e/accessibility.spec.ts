@@ -66,6 +66,20 @@ test('IconButton route has zero axe violations and a keyboard-visible focus', as
   );
 });
 
+test('BoardRow route has zero axe violations and a keyboard-visible native summary', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  await assertNoAxeViolations(page);
+  await tabTo(
+    page,
+    page.locator(
+      '[data-component-demo="board-row"] [data-board-row-sample="uncontrolled"] > summary',
+    ),
+  );
+});
+
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());

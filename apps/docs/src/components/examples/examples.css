@@ -246,6 +246,51 @@
   border-radius: var(--ds-radius-md);
 }
 
+.component-demo__stage--board-row {
+  place-items: stretch;
+}
+
+.board-row-demo {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ds-space-16);
+}
+
+.board-row-demo__status {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  gap: var(--ds-space-12);
+}
+
+.board-row-demo__specimens {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-space-16);
+}
+
+.board-row-demo__specimen {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+  gap: var(--ds-space-8);
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
+}
+
+.board-row-demo__specimen--wide {
+  grid-column: 1 / -1;
+}
+
+.board-row-demo__content {
+  min-width: 0;
+  margin: var(--ds-space-0);
+  overflow-wrap: anywhere;
+}
+
 .checkbox-demo {
   display: grid;
   width: 100%;
@@ -391,5 +436,13 @@
 
   .icon-button-demo__specimens {
     grid-template-columns: 1fr;
+  }
+
+  .board-row-demo__specimens {
+    grid-template-columns: 1fr;
+  }
+
+  .board-row-demo__specimen--wide {
+    grid-column: auto;
   }
 }

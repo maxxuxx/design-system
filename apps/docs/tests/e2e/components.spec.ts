@@ -145,6 +145,63 @@ test('IconButton demo preserves owned naming, disabled, and native form behavior
   await expect(demo.getByText('폼 제출 횟수: 1')).toBeVisible();
 });
 
+test('BoardRow renders its complete document template and demo without console errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  await page.waitForLoadState('networkidle');
+
+  const headings = await page.locator('main h2').allTextContents();
+  expect(headings.map((heading) => heading.trim())).toEqual(
+    REQUIRED_COMPONENT_HEADINGS,
+  );
+  await expect(page.locator('[data-component-demo="board-row"]')).toBeVisible();
+  await expect(page.getByText('preview', { exact: true }).first()).toBeVisible();
+  expect(errors, 'BoardRow docs must not emit browser console errors').toEqual([]);
+});
+
+test('BoardRow preserves native click, Enter, Space, and controlled reconciliation', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const uncontrolled = demo.locator('[data-board-row-sample="uncontrolled"]');
+  const controlled = demo.locator('[data-board-row-sample="controlled"]');
+  const uncontrolledSummary = uncontrolled.locator(':scope > summary');
+  const controlledSummary = controlled.locator(':scope > summary');
+
+  await expect(uncontrolled).not.toHaveAttribute('open');
+  await uncontrolledSummary.click();
+  await expect(uncontrolled).toHaveAttribute('open', '');
+  await expect(
+    demo.getByText('비제어 상태 변경: 1', { exact: true }),
+  ).toBeVisible();
+
+  await controlledSummary.focus();
+  await page.keyboard.press('Enter');
+  await expect(controlled).toHaveAttribute('open', '');
+  await expect(
+    demo.getByText('제어 상태 변경: 1', { exact: true }),
+  ).toBeVisible();
+
+  await page.keyboard.press('Space');
+  await expect(controlled).not.toHaveAttribute('open');
+  await expect(
+    demo.getByText('제어 상태 변경: 2', { exact: true }),
+  ).toBeVisible();
+
+  await demo.getByLabel('제어된 행 열기', { exact: true }).check();
+  await expect(controlled).toHaveAttribute('open', '');
+  await demo.getByLabel('제어된 행 열기', { exact: true }).uncheck();
+  await expect(controlled).not.toHaveAttribute('open');
+});
+
 test('Checkbox visible label toggles its native input', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
   const checkbox = page.locator('[data-component-demo="checkbox"] .ds-checkbox').first();

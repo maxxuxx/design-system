@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { expectVisibleFocus } from './support/accessibility';
+import { expectVisibleFocus, tabTo } from './support/accessibility';
 import { openHtmlRoute } from './support/routes';
 
 async function expectMinimumTarget(locator: Locator, minimum = 44): Promise<void> {
@@ -653,6 +653,101 @@ test('IconButton specimens remain responsive without page overflow', async ({ pa
   expect(await page.evaluate(() =>
     document.documentElement.scrollWidth <= document.documentElement.clientWidth,
   )).toBe(true);
+});
+
+test('BoardRow owns native disclosure structure, arrow, pointer geometry, and noninteractive summaries', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const rows = demo.locator('.ds-board-row');
+  const summaries = rows.locator(':scope > .ds-board-row__summary');
+
+  expect(await rows.count()).toBeGreaterThanOrEqual(3);
+  for (const summary of await summaries.all()) {
+    const summaryBox = await summary.boundingBox();
+    const row = summary.locator('..');
+    const rowBox = await row.boundingBox();
+    const rowInnerWidth = await row.evaluate((element) => element.clientWidth);
+    expect(summaryBox).not.toBeNull();
+    expect(rowBox).not.toBeNull();
+    expect(summaryBox!.height).toBeGreaterThanOrEqual(56);
+    expect(Math.abs(summaryBox!.width - rowInnerWidth)).toBeLessThanOrEqual(0.5);
+  }
+  await expect(summaries.locator('.ds-board-row__arrow .ds-icon').first())
+    .toHaveAttribute('aria-hidden', 'true');
+  await expect(
+    summaries.locator('a, button, input, select, textarea, [tabindex]'),
+  ).toHaveCount(0);
+});
+
+test('BoardRow keeps long copy and responsive specimens inside the page', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const specimens = demo.locator('.board-row-demo__specimen');
+  const longRow = demo.locator('[data-board-row-sample="long-copy"]');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [first, second] = await Promise.all([
+      specimens.nth(0).boundingBox(),
+      specimens.nth(1).boundingBox(),
+    ]);
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(Math.abs(first!.x - second!.x)).toBeLessThanOrEqual(0.5);
+    expect(second!.y).toBeGreaterThan(first!.y);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const firstRowCount = await specimens.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5)
+        .length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  }
+
+  const longCopyFits = await longRow.evaluate((element) => {
+    const owner = element.closest<HTMLElement>('.board-row-demo__specimen');
+    if (!owner) return false;
+    const rowRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return rowRect.left >= ownerRect.left - 0.5
+      && rowRect.right <= ownerRect.right + 0.5
+      && element.scrollWidth <= element.clientWidth + 0.5;
+  });
+  expect(longCopyFits).toBe(true);
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('BoardRow exposes forced-colors focus and removes arrow motion when requested', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns BoardRow platform state coverage.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const summary = demo.locator(
+    '[data-board-row-sample="uncontrolled"] > summary',
+  );
+  await tabTo(page, summary);
+  await expectForcedColorFocus(summary);
+  await summary.click();
+  const arrow = summary.locator('.ds-board-row__arrow');
+  expect(await arrow.evaluate((element) =>
+    getComputedStyle(element).transitionDuration)).toBe('0s');
 });
 
 test('IconButton owns a complete forced-colors state palette and keyboard focus', async ({ page }, testInfo) => {

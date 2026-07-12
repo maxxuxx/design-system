@@ -10,3 +10,4 @@ export * from './textarea';
 export * from './select';
 export * from './text-button';
 export * from './icon-button';
+export * from './board-row';
