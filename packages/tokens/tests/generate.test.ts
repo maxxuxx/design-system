@@ -98,7 +98,6 @@ describe('token generation', () => {
     const definitions = await loadDefinitions();
     const resolved = resolveTokens(definitions);
 
-    expect(resolved).toHaveLength(113);
     expect(resolved.map((token) => token.name)).toEqual(
       definitions.map((token) => token.name),
     );
@@ -116,6 +115,19 @@ describe('token generation', () => {
       cssVariable: '--ds-color-icon-primary',
       resolvedValue: '#171D24',
     });
+
+    const resolveToken = (name: string): string | number | undefined =>
+      resolved.find((token) => token.name === name)?.resolvedValue;
+
+    expect(resolveToken('motion/duration/fast')).toBe('120ms');
+    expect(resolveToken('motion/duration/medium')).toBe('200ms');
+    expect(resolveToken('motion/easing/standard')).toBe(
+      'cubic-bezier(0.2, 0, 0, 1)',
+    );
+    expect(resolveToken('color/bg/scrim')).toBe(
+      'rgba(15, 23, 42, 0.56)',
+    );
+    expect(resolved).toHaveLength(118);
   });
 
   it('emits the subtle blur primitive in deterministic source order', async () => {
@@ -167,7 +179,7 @@ describe('token generation', () => {
       tokens: Array<Record<string, unknown>>;
     };
     expect(parsed.schemaVersion).toBe(1);
-    expect(parsed.tokens).toHaveLength(113);
+    expect(parsed.tokens).toHaveLength(118);
     expect(Object.keys(parsed.tokens[0] ?? {})).toEqual([
       'name',
       'type',
@@ -185,7 +197,7 @@ describe('token generation', () => {
       tokens: Array<{ name: string; resolvedValue: unknown }>;
     };
 
-    expect(artifact.tokens).toHaveLength(113);
+    expect(artifact.tokens).toHaveLength(118);
     expect(
       Object.fromEntries(
         artifact.tokens.map((token) => [token.name, token.resolvedValue]),

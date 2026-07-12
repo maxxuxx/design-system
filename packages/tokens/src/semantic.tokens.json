@@ -24,5 +24,6 @@
   { "name": "color/status/neutral", "type": "color", "kind": "semantic", "value": "{color/neutral/700}", "description": "중립 정보 상태의 기본 강조 색상입니다." },
   { "name": "color/status/neutral-subtle", "type": "color", "kind": "semantic", "value": "{color/neutral/100}", "description": "중립 정보 상태의 약한 배경색입니다." },
   { "name": "color/status/on-status", "type": "color", "kind": "semantic", "value": "{color/neutral/0}", "description": "강한 status 배경 위 label과 icon 색상입니다." },
-  { "name": "color/focus/ring", "type": "color", "kind": "semantic", "value": "{color/blue/600}", "description": "키보드 focus-visible 외곽 ring 색상입니다." }
+  { "name": "color/focus/ring", "type": "color", "kind": "semantic", "value": "{color/blue/600}", "description": "키보드 focus-visible 외곽 ring 색상입니다." },
+  { "name": "color/bg/scrim", "type": "color", "kind": "semantic", "value": "{color/neutral/900-alpha-56}", "description": "모달과 sheet 뒤 콘텐츠를 가리는 배경색입니다." }
 ]

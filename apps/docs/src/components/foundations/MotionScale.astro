@@ -1,0 +1,126 @@
+---
+import { tokenByName, tokensByPrefix } from '../../lib/token-data';
+
+const durations = tokensByPrefix('motion/duration/');
+const easing = tokenByName('motion/easing/standard');
+const scrim = tokenByName('color/bg/scrim');
+---
+
+<div class="motion-scale">
+  <div class="token-grid">
+    {durations.map((token) => (
+      <article class="token-card motion-card">
+        <strong>{token.name}</strong>
+        <code>{String(token.resolvedValue)}</code>
+        <button
+          class="motion-trigger"
+          style={`--specimen-duration:var(${token.cssVariable})`}
+          type="button"
+          aria-label={`${token.name} 모션 미리보기`}
+        >
+          <span class="motion-track" aria-hidden="true">
+            <span class="motion-dot"></span>
+          </span>
+          <span>마우스를 올리거나 키보드로 초점을 이동하세요.</span>
+        </button>
+      </article>
+    ))}
+
+    <article class="token-card motion-card">
+      <strong>{easing.name}</strong>
+      <code>{String(easing.resolvedValue)}</code>
+      <p>두 duration specimen은 이 표준 easing 곡선을 사용합니다.</p>
+    </article>
+
+    <article class="token-card motion-card">
+      <strong>{scrim.name}</strong>
+      <code>{String(scrim.resolvedValue)}</code>
+      <div class="scrim-stage">
+        <span>배경 콘텐츠</span>
+        <span class="scrim-layer">Modal scrim</span>
+      </div>
+    </article>
+  </div>
+</div>
+
+<style>
+  .motion-scale,
+  .motion-card {
+    display: grid;
+    gap: var(--ds-space-16);
+  }
+
+  .motion-card code,
+  .motion-card p {
+    margin: 0;
+    color: var(--ds-color-text-secondary);
+  }
+
+  .motion-trigger {
+    display: grid;
+    min-height: 112px;
+    gap: var(--ds-space-12);
+    padding: var(--ds-space-16);
+    cursor: pointer;
+    border: 1px solid var(--ds-color-border-default);
+    border-radius: var(--ds-radius-md);
+    background: var(--ds-color-bg-subtle);
+    color: var(--ds-color-text-secondary);
+    text-align: left;
+  }
+
+  .motion-track {
+    display: block;
+    width: min(100%, 240px);
+    height: 24px;
+    overflow: hidden;
+    border-radius: var(--ds-radius-full);
+    background: var(--ds-color-bg-surface);
+  }
+
+  .motion-dot {
+    display: block;
+    width: 24px;
+    height: 24px;
+    border-radius: var(--ds-radius-full);
+    background: var(--ds-color-action-primary);
+    transition: transform var(--specimen-duration) var(--ds-motion-easing-standard);
+  }
+
+  .motion-trigger:hover .motion-dot,
+  .motion-trigger:focus-visible .motion-dot {
+    transform: translateX(120px);
+  }
+
+  .scrim-stage {
+    position: relative;
+    display: grid;
+    min-height: 112px;
+    place-items: center;
+    overflow: hidden;
+    border-radius: var(--ds-radius-md);
+    background: var(--ds-color-bg-subtle);
+    color: var(--ds-color-text-secondary);
+  }
+
+  .scrim-layer {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--ds-color-bg-scrim);
+    color: var(--ds-color-text-inverse);
+    font-weight: var(--ds-font-weight-semibold);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .motion-dot {
+      transition: none;
+    }
+
+    .motion-trigger:hover .motion-dot,
+    .motion-trigger:focus-visible .motion-dot {
+      transform: none;
+    }
+  }
+</style>

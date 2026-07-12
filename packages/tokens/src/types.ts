@@ -3,7 +3,9 @@ export type TokenType =
   | 'dimension'
   | 'fontFamily'
   | 'fontWeight'
-  | 'shadow';
+  | 'shadow'
+  | 'duration'
+  | 'cubicBezier';
 
 export interface TokenDefinition {
   name: string;

@@ -4,6 +4,11 @@ import type { TokenDefinition } from './types.js';
 
 const aliasPattern = /^\{([^{}]+)\}$/;
 const namePattern = /^[a-z0-9]+(?:[/-][a-z0-9]+)*$/;
+const durationPattern = /^[1-9]\d*ms$/;
+const cubicBezierPattern =
+  /^cubic-bezier\(\s*([^,]+?)\s*,\s*([^,]+?)\s*,\s*([^,]+?)\s*,\s*([^,]+?)\s*\)$/;
+const cssNumberPattern =
+  /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
 
 const tokenDefinitionSchema = z
   .object({
@@ -14,6 +19,8 @@ const tokenDefinitionSchema = z
       'fontFamily',
       'fontWeight',
       'shadow',
+      'duration',
+      'cubicBezier',
     ]),
     kind: z.enum(['primitive', 'semantic']),
     value: z.union([z.string(), z.number()]),
@@ -50,6 +57,49 @@ function validatePrimitiveValue(token: TokenDefinition): void {
   if (!expectsNumber && typeof token.value !== 'string') {
     throw new Error(
       `Primitive token "${token.name}" of type ${token.type} must be a string.`,
+    );
+  }
+
+  if (
+    token.type === 'duration' &&
+    (typeof token.value !== 'string' || !durationPattern.test(token.value))
+  ) {
+    throw new Error(
+      `Primitive duration token "${token.name}" must use positive integer milliseconds.`,
+    );
+  }
+
+  if (token.type !== 'cubicBezier' || typeof token.value !== 'string') {
+    return;
+  }
+
+  const match = cubicBezierPattern.exec(token.value);
+  const coordinateSources = match?.slice(1).map((value) => value.trim());
+  const coordinates = coordinateSources?.map(Number);
+
+  if (
+    coordinateSources === undefined ||
+    coordinates === undefined ||
+    coordinateSources.some((value) => !cssNumberPattern.test(value)) ||
+    coordinates.some((value) => !Number.isFinite(value))
+  ) {
+    throw new Error(
+      `Primitive cubicBezier token "${token.name}" must contain four finite coordinates.`,
+    );
+  }
+
+  const firstX = coordinates[0];
+  const secondX = coordinates[2];
+  if (
+    firstX === undefined ||
+    secondX === undefined ||
+    firstX < 0 ||
+    firstX > 1 ||
+    secondX < 0 ||
+    secondX > 1
+  ) {
+    throw new Error(
+      `Primitive cubicBezier token "${token.name}" must keep x coordinates between 0 and 1.`,
     );
   }
 }

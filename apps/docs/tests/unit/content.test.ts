@@ -12,6 +12,7 @@ import {
   foundationSchema,
   guideSchema,
 } from '../../src/content/page-schema';
+import { NAVIGATION } from '../../src/navigation';
 import {
   REQUIRED_COMPONENT_HEADINGS,
   extractSecondLevelHeadings,
@@ -65,6 +66,7 @@ describe('MDX collection coverage', () => {
       'content/guides/principles.mdx',
       'content/foundations/colors.mdx',
       'content/foundations/elevation.mdx',
+      'content/foundations/motion.mdx',
       'content/foundations/radius.mdx',
       'content/foundations/spacing.mdx',
       'content/foundations/typography.mdx',
@@ -94,7 +96,7 @@ describe('MDX collection coverage', () => {
     }
   });
 
-  it('has both guides and all five Foundation documents', async () => {
+  it('has both guides and all six Foundation documents', async () => {
     const files = (await listMdxFiles(srcRoot))
       .map((file) => relative(srcRoot, file).replaceAll('\\', '/'));
     expect(files).toEqual(expect.arrayContaining([
@@ -102,10 +104,43 @@ describe('MDX collection coverage', () => {
       'content/guides/principles.mdx',
       'content/foundations/colors.mdx',
       'content/foundations/elevation.mdx',
+      'content/foundations/motion.mdx',
       'content/foundations/radius.mdx',
       'content/foundations/spacing.mdx',
       'content/foundations/typography.mdx',
     ]));
+  });
+
+  it('locks the Motion foundation metadata and guidance contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/foundations/motion.mdx`,
+      'utf8',
+    );
+    const parsed = matter(source);
+
+    expect(foundationSchema.parse(parsed.data)).toEqual({
+      slug: 'motion',
+      title: '모션',
+      description: '짧고 예측 가능한 전환으로 상태 변화와 공간 이동을 설명합니다.',
+      order: 6,
+      tokenPrefixes: ['motion/', 'color/bg/scrim'],
+    });
+    expect(parsed.content).toContain('motion/duration/fast');
+    expect(parsed.content).toContain('motion/duration/medium');
+    expect(parsed.content).toContain('motion/easing/standard');
+    expect(parsed.content).toContain('prefers-reduced-motion');
+    expect(parsed.content).toContain('color/bg/scrim');
+  });
+
+  it('links the Motion foundation route from navigation', () => {
+    const foundations = NAVIGATION.find(
+      (section) => section.label === 'Foundations',
+    );
+
+    expect(foundations?.items).toContainEqual({
+      label: '모션',
+      href: '/foundations/motion/',
+    });
   });
 });
 

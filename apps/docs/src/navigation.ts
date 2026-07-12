@@ -25,6 +25,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: '간격', href: '/foundations/spacing/' },
       { label: '모서리 반경', href: '/foundations/radius/' },
       { label: '고도', href: '/foundations/elevation/' },
+      { label: '모션', href: '/foundations/motion/' },
     ],
   },
   {
