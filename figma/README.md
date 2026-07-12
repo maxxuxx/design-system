@@ -427,9 +427,9 @@ Textarea, Select, and TextButton are validated in Figma.
   `color/border/strong` → `color/neutral/600`, and `color/focus/ring` →
   `color/blue/600`; the default control boundary is `3.25:1` and the focus
   ring is `5.76:1` against white
-- Live value parity: all 111 Variable source values/aliases and resolved values
+- Live value parity: all 116 Variable source values/aliases and resolved values
   match code; the canonical evidence digest is
-  `e55bbafaf807e873e8ab4dfb8894dc615cd117703ee892d45138169d19e3a0df`
+  `6552796c323819093677b58af217f94bedf69dfce9ea63c2c3bc15953bfc7018`
 - Effect parity: both live Effect Styles match the source shadow geometry,
   color, alpha, visibility, and blend mode; the canonical shadow evidence
   digest is `e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8`.
@@ -437,14 +437,14 @@ Textarea, Select, and TextButton are validated in Figma.
   fields; the stored readback is also parsed and compared to the source shadow
   tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
-  Button/TextField/ScrollArea/Checkbox/RadioGroup/Switch/Textarea/Select control target is at least
-  44px with distinct focus, pressed, error, disabled, or direction-availability
-  presentation
+  Button/TextButton/TextField/ScrollArea/Checkbox/RadioGroup/Switch/Textarea/
+  Select control target is at least 44px with distinct focus, pressed, error,
+  disabled, or direction-availability presentation
 - Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`,
-  ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, Textarea `8`, and Select `8`;
-  all properties, variants,
-  semantic bindings, and React contracts passed
-- Variant-axis parity: the exact axis names and ordered values for all nine
+  ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, Textarea `8`,
+  Select `8`, and TextButton `27`; all properties, variants, semantic bindings,
+  and React contracts passed
+- Variant-axis parity: the exact axis names and ordered values for all ten
   component sets are stored in [`verification.json`](./verification.json) and
   enforced by the artifact verifier
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
@@ -454,8 +454,8 @@ Textarea, Select, and TextButton are validated in Figma.
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
 - Screenshots: every managed page was captured and reviewed for legibility,
-  clipping, overlap, stale copy, and visible component coverage; all 17 SHA-256
-  fingerprints are stored in verification evidence for all 17 managed pages
+  clipping, overlap, stale copy, and visible component coverage; all 18 SHA-256
+  fingerprints are stored in verification evidence for all 18 managed pages
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
 Code Connect is explicitly `skipped-v0.1`.
