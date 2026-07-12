@@ -48,6 +48,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'Tab', href: '/components/tab/' },
       { label: 'BottomSheet', href: '/components/bottom-sheet/' },
       { label: 'Dialog', href: '/components/dialog/' },
+      { label: 'SearchField', href: '/components/search-field/' },
     ],
   },
 ];

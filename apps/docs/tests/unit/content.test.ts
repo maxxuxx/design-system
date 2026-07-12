@@ -86,6 +86,7 @@ describe('MDX collection coverage', () => {
       'content/components/tab.mdx',
       'content/components/bottom-sheet.mdx',
       'content/components/dialog.mdx',
+      'content/components/search-field.mdx',
     ]);
 
     for (const file of files) {
@@ -151,7 +152,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the sixteen component names and slugs in canonical order', () => {
+  it('locks the seventeen component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -169,6 +170,7 @@ describe('component metadata contract', () => {
       'Tab',
       'BottomSheet',
       'Dialog',
+      'SearchField',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -187,6 +189,7 @@ describe('component metadata contract', () => {
       'tab',
       'bottom-sheet',
       'dialog',
+      'search-field',
     ]);
   });
 
@@ -658,6 +661,71 @@ describe('component metadata contract', () => {
       'color/action/primary-hover',
       'color/action/primary-pressed',
       'color/action/on-primary',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('locks the SearchField public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/search-field.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'SearchField',
+      slug: 'search-field',
+      figmaUrl: '',
+      variants: ['empty', 'filled'],
+      sizes: [],
+      states: ['default', 'focus', 'disabled', 'readonly'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'label', type: 'string', required: true, defaultValue: null },
+      { name: 'clearLabel', type: 'string', required: true, defaultValue: null },
+      { name: 'value', type: 'string', required: false, defaultValue: null },
+      { name: 'defaultValue', type: 'string', required: false, defaultValue: null },
+      {
+        name: 'onValueChange',
+        type: '(value: string) => void',
+        required: false,
+        defaultValue: null,
+      },
+      { name: 'onClear', type: '() => void', required: false, defaultValue: null },
+      { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+      { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+      {
+        name: '...inputProps',
+        type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'children' | 'defaultValue' | 'onChange' | 'size' | 'type' | 'value'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/medium',
+      'size/control/large',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/16',
+      'radius/full',
+      'font/family/sans',
+      'font/size/body',
+      'font/line-height/body',
+      'motion/duration/fast',
+      'motion/easing/standard',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/border/focus',
       'color/focus/ring',
     ]);
   });

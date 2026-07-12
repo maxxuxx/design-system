@@ -521,6 +521,73 @@
   max-block-size: none;
 }
 
+.component-demo__stage--search-field {
+  place-items: stretch;
+}
+
+.search-field-demo__form,
+.search-field-demo__specimen {
+  display: grid;
+  min-inline-size: 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-space-8);
+}
+
+.search-field-demo__status {
+  margin: 0;
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-caption);
+  line-height: var(--ds-font-line-height-caption);
+  overflow-wrap: anywhere;
+}
+
+.search-field-demo__specimens {
+  display: grid;
+  min-inline-size: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ds-space-12);
+}
+
+.search-field-demo__specimen {
+  align-content: start;
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
+}
+
+.search-field-demo__fixed-viewport {
+  position: relative;
+  min-inline-size: 0;
+  block-size: 240px;
+  overflow: hidden;
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-lg);
+}
+
+.search-field-demo__fixed-viewport
+  .ds-search-field.search-field-demo__fixed-field[data-fixed='true']
+  .ds-search-field__bar {
+  position: absolute;
+}
+
+.search-field-demo__fixed-scroll {
+  block-size: calc(240px - var(--ds-size-control-large) - var(--ds-space-16));
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.search-field-demo__fixed-scroll:focus-visible {
+  outline: var(--ds-space-2) solid var(--ds-color-border-focus);
+  outline-offset: calc(var(--ds-space-2) * -1);
+}
+
+.search-field-demo__result {
+  padding: var(--ds-space-16);
+  color: var(--ds-color-text-primary);
+  border-block-end: 1px solid var(--ds-color-border-default);
+}
+
 @media (forced-colors: active) {
   .component-demo__control select:focus-visible,
   .component-demo__control input[type='text']:focus-visible,
@@ -572,6 +639,10 @@
 
   .dialog-demo__interactive,
   .dialog-demo__specimens {
+    grid-template-columns: 1fr;
+  }
+
+  .search-field-demo__specimens {
     grid-template-columns: 1fr;
   }
 }

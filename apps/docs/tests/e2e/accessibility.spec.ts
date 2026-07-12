@@ -118,6 +118,24 @@ test('Dialog open variants have zero axe violations with owned initial focus', a
   await confirmDialog.getByRole('button', { name: '취소' }).click();
 });
 
+test('SearchField clear control is keyboard reachable, restores input focus, and has zero axe violations', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/search-field/',
+    heading: 'SearchField',
+  });
+  const demo = page.locator('[data-component-demo="search-field"]');
+  const input = demo.getByRole('searchbox', { name: '상품 검색' });
+
+  await tabTo(page, input);
+  await input.fill('토스');
+  const clear = demo.getByRole('button', { name: '상품 검색어 지우기' });
+  await tabTo(page, clear);
+  await expectVisibleFocus(clear);
+  await page.keyboard.press('Enter');
+  await expect(input).toBeFocused();
+  await assertNoAxeViolations(page);
+});
+
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());

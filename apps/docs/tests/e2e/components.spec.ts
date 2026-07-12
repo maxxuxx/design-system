@@ -47,6 +47,22 @@ test('Dialog documents both public variants and exact close-reason unions', asyn
   await expect(main).toContainText('ConfirmDialogCloseReason');
 });
 
+test('SearchField documents its state, positioning, and deliberate validation boundary', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/search-field/',
+    heading: 'SearchField',
+  });
+
+  const main = page.locator('main');
+  await expect(main).toContainText('controlled');
+  await expect(main).toContainText('uncontrolled');
+  await expect(main).toContainText('fixed');
+  await expect(main).toContainText('takeSpace');
+  await expect(main).toContainText('onValueChange');
+  await expect(main).toContainText('onClear');
+  await expect(main).toContainText('TextField');
+});
+
 test('TextButton renders its complete document template and demo without console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

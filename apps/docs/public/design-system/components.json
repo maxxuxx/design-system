@@ -1735,6 +1735,118 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/dialog/"
+    },
+    {
+      "name": "SearchField",
+      "slug": "search-field",
+      "description": "검색어 입력, 명시적인 clear 동작, 선택적인 fixed 배치를 native search input으로 제공합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "empty",
+        "filled"
+      ],
+      "sizes": [],
+      "states": [
+        "default",
+        "focus",
+        "disabled",
+        "readonly"
+      ],
+      "accessibility": "non-empty hidden label, localizable clear label, native search semantics, 44px clear target, clear 뒤 focus 복원을 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "native search input과 연결되는 non-empty localizable accessible label입니다."
+        },
+        {
+          "name": "clearLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "filled writable 상태에서 나타나는 owned clear button의 non-empty label입니다."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "controlled string value입니다. 빈 문자열도 controlled로 판정합니다."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "uncontrolled 초기값이며 생략하면 빈 문자열입니다."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "typing과 clear가 만든 다음 string value를 전달합니다."
+        },
+        {
+          "name": "onClear",
+          "type": "() => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "clear 시 onValueChange 빈 문자열 뒤 호출됩니다."
+        },
+        {
+          "name": "fixed",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "search bar를 viewport 상단에 fixed 배치하며 portal하지 않습니다."
+        },
+        {
+          "name": "takeSpace",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "fixed일 때 ResizeObserver로 측정한 높이를 spacer로 예약합니다."
+        },
+        {
+          "name": "...inputProps",
+          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'children' | 'defaultValue' | 'onChange' | 'size' | 'type' | 'value'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "className과 safe layout style은 root에, 그 밖의 native props와 forwarded ref는 input에 적용됩니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/control/large",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/16",
+        "radius/full",
+        "font/family/sans",
+        "font/size/body",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/search-field/"
     }
   ]
 }
