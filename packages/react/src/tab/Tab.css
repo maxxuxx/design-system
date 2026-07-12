@@ -177,7 +177,7 @@
   }
 
   .ds-tab__button:focus-visible {
-    outline-color: CanvasText;
+    outline-color: HighlightText;
     box-shadow: none;
   }
 

@@ -798,15 +798,24 @@ test('Tab owns exact size, equal-width, scroll-overflow, and panel relationships
   const interactive = demo.locator('[data-tab-sample="interactive"]');
   const scroll = demo.locator('[data-tab-sample="scroll"]');
   const interactiveButtons = interactive.getByRole('tab');
+  const scrollButtons = scroll.getByRole('tab');
 
+  await demo.getByLabel('레이아웃').selectOption('scroll');
   expect(await interactiveButtons.count()).toBe(4);
   for (const button of await interactiveButtons.all()) {
     const box = await button.boundingBox();
     expect(box).not.toBeNull();
-    expect(box!.height).toBeGreaterThanOrEqual(52);
+    expect(Math.abs(box!.height - 52)).toBeLessThanOrEqual(0.5);
+  }
+  expect(await scrollButtons.count()).toBe(6);
+  for (const button of await scrollButtons.all()) {
+    const box = await button.boundingBox();
+    expect(box).not.toBeNull();
+    expect(Math.abs(box!.height - 44)).toBeLessThanOrEqual(0.5);
   }
 
   if (testInfo.project.name === 'desktop-chromium') {
+    await demo.getByLabel('레이아웃').selectOption('equal');
     const widths = await interactiveButtons.evaluateAll((elements) =>
       elements.map((element) => element.getBoundingClientRect().width));
     expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(0.5);
@@ -874,6 +883,58 @@ test('Tab contains long copy and stacks its specimens on mobile', async ({ page 
   expect(fitsOwner).toBe(true);
 });
 
+test('Tab preserves its selected indicator and horizontal containment at 200% text zoom', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  await page.addStyleTag({
+    content: `
+      [data-component-demo="tab"] .ds-tab__button {
+        font-size: 200% !important;
+        line-height: 1.5 !important;
+      }
+    `,
+  });
+
+  const longCopy = page.locator(
+    '[data-component-demo="tab"] [data-tab-sample="long-copy"]',
+  );
+  const selected = longCopy.getByRole('tab', { selected: true });
+  const metrics = await selected.evaluate((element) => {
+    const tab = element.getBoundingClientRect();
+    const label = element.querySelector<HTMLElement>('.ds-tab__label')!
+      .getBoundingClientRect();
+    const indicator = getComputedStyle(element, '::after');
+    const root = element.closest<HTMLElement>('.ds-tab')!;
+    const list = element.closest<HTMLElement>('[role="tablist"]')!;
+    return {
+      componentContained: root.scrollWidth <= root.clientWidth + 0.5,
+      indicatorBackground: indicator.backgroundColor,
+      indicatorHeight: Number.parseFloat(indicator.height),
+      labelContained:
+        label.left >= tab.left - 0.5
+        && label.right <= tab.right + 0.5
+        && label.top >= tab.top - 0.5
+        && label.bottom <= tab.bottom + 0.5,
+      listContained: list.scrollWidth <= list.clientWidth + 0.5,
+    };
+  });
+
+  expect(metrics).toEqual({
+    componentContained: true,
+    indicatorBackground: expect.not.stringMatching(
+      /^(?:transparent|rgba\([^)]*,\s*0\))$/,
+    ),
+    indicatorHeight: 2,
+    labelContained: true,
+    listContained: true,
+  });
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
 test('Tab preserves forced-colors selection and removes motion when requested', async ({ page }, testInfo) => {
   test.skip(
     testInfo.project.name !== 'desktop-chromium',
@@ -884,6 +945,19 @@ test('Tab preserves forced-colors selection and removes motion when requested', 
   await openHtmlRoute(page, {
     path: '/components/tab/',
     heading: 'Tab',
+  });
+  const system = await page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:absolute;left:-9999px;forced-color-adjust:none';
+    document.body.append(probe);
+    const colors: Record<string, string> = {};
+    for (const keyword of ['Highlight', 'HighlightText']) {
+      probe.style.color = keyword;
+      colors[keyword] = getComputedStyle(probe).color;
+    }
+    probe.remove();
+    return colors;
   });
   const selected = page.locator(
     '[data-component-demo="tab"] [data-tab-sample="interactive"] [role="tab"][aria-selected="true"]',
@@ -898,6 +972,7 @@ test('Tab preserves forced-colors selection and removes motion when requested', 
       color: style.color,
       indicatorBackground: indicator.backgroundColor,
       indicatorHeight: Number.parseFloat(indicator.height),
+      outlineColor: style.outlineColor,
       transitionDuration: style.transitionDuration,
     };
   });
@@ -905,6 +980,9 @@ test('Tab preserves forced-colors selection and removes motion when requested', 
   expect(presentation.color).not.toBe(presentation.background);
   expect(presentation.indicatorBackground).not.toMatch(/^(?:transparent|rgba\([^)]*,\s*0\))$/);
   expect(presentation.indicatorHeight).toBeGreaterThanOrEqual(2);
+  expect(presentation.outlineColor).toBe(system.HighlightText);
+  expect(contrastRatio(presentation.outlineColor, presentation.background))
+    .toBeGreaterThanOrEqual(3);
   expect(presentation.transitionDuration).toBe('0s');
 });
 
