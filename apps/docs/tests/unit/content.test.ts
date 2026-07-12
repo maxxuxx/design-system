@@ -85,6 +85,7 @@ describe('MDX collection coverage', () => {
       'content/components/board-row.mdx',
       'content/components/tab.mdx',
       'content/components/bottom-sheet.mdx',
+      'content/components/dialog.mdx',
     ]);
 
     for (const file of files) {
@@ -150,7 +151,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the fifteen component names and slugs in canonical order', () => {
+  it('locks the sixteen component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -167,6 +168,7 @@ describe('component metadata contract', () => {
       'BoardRow',
       'Tab',
       'BottomSheet',
+      'Dialog',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -184,6 +186,7 @@ describe('component metadata contract', () => {
       'board-row',
       'tab',
       'bottom-sheet',
+      'dialog',
     ]);
   });
 
@@ -563,6 +566,98 @@ describe('component metadata contract', () => {
       'color/action/weak-hover',
       'color/action/on-primary',
       'color/action/on-weak',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('locks the Dialog public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/dialog.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'Dialog',
+      slug: 'dialog',
+      figmaUrl: '',
+      variants: ['alert', 'confirm'],
+      sizes: [],
+      states: ['open', 'closing', 'disabled', 'loading'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'open', type: 'boolean', required: true, defaultValue: null },
+      { name: 'title', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'alertLabel', type: 'string', required: true, defaultValue: null },
+      { name: 'cancelLabel', type: 'string', required: true, defaultValue: null },
+      { name: 'confirmLabel', type: 'string', required: true, defaultValue: null },
+      { name: 'confirmDisabled', type: 'boolean', required: false, defaultValue: 'false' },
+      { name: 'confirmLoading', type: 'boolean', required: false, defaultValue: 'false' },
+      { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+      {
+        name: 'portalContainer',
+        type: 'HTMLElement | null',
+        required: false,
+        defaultValue: 'document.body after hydration',
+      },
+      {
+        name: 'onOpenChange',
+        type: '((open: boolean, reason: AlertDialogCloseReason) => void) | ((open: boolean, reason: ConfirmDialogCloseReason) => void)',
+        required: true,
+        defaultValue: null,
+      },
+      {
+        name: '...rootProps',
+        type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'size/control/large',
+      'size/icon/medium',
+      'space/0',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/12',
+      'space/16',
+      'space/24',
+      'space/64',
+      'radius/sm',
+      'radius/md',
+      'radius/xl',
+      'radius/full',
+      'font/family/sans',
+      'font/size/body',
+      'font/size/body-lg',
+      'font/size/title-sm',
+      'font/weight/semibold',
+      'font/line-height/body',
+      'font/line-height/body-lg',
+      'font/line-height/title-sm',
+      'elevation/2',
+      'motion/duration/fast',
+      'motion/duration/medium',
+      'motion/easing/standard',
+      'color/bg/scrim',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/action/primary',
+      'color/action/primary-hover',
+      'color/action/primary-pressed',
+      'color/action/on-primary',
       'color/focus/ring',
     ]);
   });

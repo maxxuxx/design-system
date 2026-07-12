@@ -16,6 +16,7 @@ export const COMPONENT_NAMES = [
   'BoardRow',
   'Tab',
   'BottomSheet',
+  'Dialog',
 ] as const;
 export const COMPONENT_SLUGS = [
   'icon',
@@ -33,6 +34,7 @@ export const COMPONENT_SLUGS = [
   'board-row',
   'tab',
   'bottom-sheet',
+  'dialog',
 ] as const;
 
 export const COMPONENTS = [
@@ -51,6 +53,7 @@ export const COMPONENTS = [
   { name: 'BoardRow', slug: 'board-row' },
   { name: 'Tab', slug: 'tab' },
   { name: 'BottomSheet', slug: 'bottom-sheet' },
+  { name: 'Dialog', slug: 'dialog' },
 ] as const;
 export const COMPONENT_ORDER = new Map(
   COMPONENTS.map(({ name }, index) => [name, index]),

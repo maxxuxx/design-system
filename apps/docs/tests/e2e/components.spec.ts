@@ -34,6 +34,19 @@ for (const route of COMPONENT_HTML_ROUTES) {
   });
 }
 
+test('Dialog documents both public variants and exact close-reason unions', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/dialog/',
+    heading: 'Dialog',
+  });
+
+  const main = page.locator('main');
+  await expect(main).toContainText('AlertDialog');
+  await expect(main).toContainText('ConfirmDialog');
+  await expect(main).toContainText('AlertDialogCloseReason');
+  await expect(main).toContainText('ConfirmDialogCloseReason');
+});
+
 test('TextButton renders its complete document template and demo without console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

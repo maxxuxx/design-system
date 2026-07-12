@@ -477,6 +477,50 @@
   gap: var(--ds-space-12);
 }
 
+.component-demo__stage--dialog {
+  place-items: stretch;
+}
+
+.dialog-demo__interactive {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-space-16);
+}
+
+.dialog-demo__launcher {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  align-content: start;
+  justify-items: start;
+  gap: var(--ds-space-12);
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
+}
+
+.dialog-demo__specimens {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-space-16);
+}
+
+.dialog-demo__specimen {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  align-content: start;
+  gap: var(--ds-space-8);
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
+}
+
+.dialog-demo__surface {
+  inline-size: 100%;
+  max-block-size: none;
+}
+
 @media (forced-colors: active) {
   .component-demo__control select:focus-visible,
   .component-demo__control input[type='text']:focus-visible,
@@ -524,5 +568,10 @@
 
   .tab-demo__specimen--wide {
     grid-column: auto;
+  }
+
+  .dialog-demo__interactive,
+  .dialog-demo__specimens {
+    grid-template-columns: 1fr;
   }
 }

@@ -21,6 +21,7 @@ export const COMPONENT_HTML_ROUTES: readonly (HtmlRoute & { slug: string })[] = 
   { path: '/components/board-row/', heading: 'BoardRow', slug: 'board-row' },
   { path: '/components/tab/', heading: 'Tab', slug: 'tab' },
   { path: '/components/bottom-sheet/', heading: 'BottomSheet', slug: 'bottom-sheet' },
+  { path: '/components/dialog/', heading: 'Dialog', slug: 'dialog' },
 ];
 export const CANONICAL_HTML_ROUTES = [
   ...PLATFORM_HTML_ROUTES,

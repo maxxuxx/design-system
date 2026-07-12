@@ -94,6 +94,30 @@ test('Tab route has zero axe violations and a keyboard-visible active tab', asyn
   );
 });
 
+test('Dialog open variants have zero axe violations with owned initial focus', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/dialog/',
+    heading: 'Dialog',
+  });
+
+  await page.getByRole('button', { name: '알림 열기' }).click();
+  const alertDialog = page.getByRole('alertdialog', { name: '저장되었습니다.' });
+  const alertAction = alertDialog.getByRole('button', { name: '확인' });
+  await expect(alertAction).toBeFocused();
+  await expect(alertDialog.locator('.ds-dialog__surface'))
+    .toHaveCSS('opacity', '1');
+  await assertNoAxeViolations(page);
+  await alertDialog.getByRole('button', { name: '확인' }).click();
+
+  await page.getByRole('button', { name: '확인 대화상자 열기' }).click();
+  const confirmDialog = page.getByRole('dialog', { name: '삭제할까요?' });
+  await expect(confirmDialog.getByRole('button', { name: '취소' })).toBeFocused();
+  await expect(confirmDialog.locator('.ds-dialog__surface'))
+    .toHaveCSS('opacity', '1');
+  await assertNoAxeViolations(page);
+  await confirmDialog.getByRole('button', { name: '취소' }).click();
+});
+
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());

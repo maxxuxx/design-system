@@ -1583,6 +1583,158 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/bottom-sheet/"
+    },
+    {
+      "name": "Dialog",
+      "slug": "dialog",
+      "description": "짧고 중요한 알림과 확인 결정을 native modal dialog와 명시적인 종료 사유로 표준화합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "alert",
+        "confirm"
+      ],
+      "sizes": [],
+      "states": [
+        "open",
+        "closing",
+        "disabled",
+        "loading"
+      ],
+      "accessibility": "native modal dialog, stable accessible relationships, owned initial focus, Tab containment, focus restore, Escape와 backdrop 정책을 제공합니다.",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": null,
+          "description": "owner가 관리하는 controlled open 상태입니다."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "aria-labelledby와 연결되는 localizable visible heading입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-describedby와 연결되고 길어지면 내부에서 scroll되는 설명입니다."
+        },
+        {
+          "name": "alertLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "AlertDialog가 소유하는 acknowledgement action의 localizable label입니다."
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "ConfirmDialog의 첫 번째 cancel action label입니다."
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "ConfirmDialog의 두 번째 confirm action label입니다."
+        },
+        {
+          "name": "confirmDisabled",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "confirm action만 native disabled 상태로 만듭니다."
+        },
+        {
+          "name": "confirmLoading",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "confirm action만 loading과 disabled 상태로 만듭니다."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Escape와 backdrop 종료 요청 허용 여부입니다. visible action은 항상 유지됩니다."
+        },
+        {
+          "name": "portalContainer",
+          "type": "HTMLElement | null",
+          "required": false,
+          "defaultValue": "document.body after hydration",
+          "description": "SSR 이후 native dialog Portal을 놓을 DOM container입니다."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "((open: boolean, reason: AlertDialogCloseReason) => void) | ((open: boolean, reason: ConfirmDialogCloseReason) => void)",
+          "required": true,
+          "defaultValue": null,
+          "description": "variant별 exact close reason과 요청된 다음 open 상태를 전달합니다."
+        },
+        {
+          "name": "...rootProps",
+          "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "surface root의 안전한 native attributes이며 inline style은 외부 layout 속성만 허용합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/control/large",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/24",
+        "space/64",
+        "radius/sm",
+        "radius/md",
+        "radius/xl",
+        "radius/full",
+        "font/family/sans",
+        "font/size/body",
+        "font/size/body-lg",
+        "font/size/title-sm",
+        "font/weight/semibold",
+        "font/line-height/body",
+        "font/line-height/body-lg",
+        "font/line-height/title-sm",
+        "elevation/2",
+        "motion/duration/fast",
+        "motion/duration/medium",
+        "motion/easing/standard",
+        "color/bg/scrim",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/dialog/"
     }
   ]
 }

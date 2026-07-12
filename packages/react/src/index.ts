@@ -13,3 +13,4 @@ export * from './icon-button';
 export * from './board-row';
 export * from './tab';
 export * from './bottom-sheet';
+export * from './dialog';

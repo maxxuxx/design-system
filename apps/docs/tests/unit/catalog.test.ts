@@ -22,10 +22,11 @@ const componentNames = [
   'BoardRow',
   'Tab',
   'BottomSheet',
+  'Dialog',
 ];
 
 describe('component catalog contract', () => {
-  it('places one catalog entry before all fifteen component detail links', () => {
+  it('places one catalog entry before all sixteen component detail links', () => {
     const componentSection = NAVIGATION.find(({ label }) => label === 'Components');
 
     expect(componentSection?.items).toEqual([
@@ -37,10 +38,10 @@ describe('component catalog contract', () => {
     ]);
   });
 
-  it('publishes the catalog within the exact twenty-five canonical routes', () => {
+  it('publishes the catalog within the exact twenty-six canonical routes', () => {
     expect(COMPONENT_CATALOG_ROUTE).toEqual({ path: '/components/', heading: 'Components' });
     expect(COMPONENT_HTML_ROUTES.map(({ heading }) => heading)).toEqual(componentNames);
-    expect(CANONICAL_HTML_ROUTES).toHaveLength(25);
-    expect(new Set(CANONICAL_HTML_ROUTES.map(({ path }) => path)).size).toBe(25);
+    expect(CANONICAL_HTML_ROUTES).toHaveLength(26);
+    expect(new Set(CANONICAL_HTML_ROUTES.map(({ path }) => path)).size).toBe(26);
   });
 });

@@ -1,0 +1,232 @@
+---
+name: Dialog
+slug: dialog
+description: 짧고 중요한 알림과 확인 결정을 native modal dialog와 명시적인 종료 사유로 표준화합니다.
+status: preview
+figmaUrl: ""
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [alert, confirm]
+sizes: []
+states: [open, closing, disabled, loading]
+accessibility: native modal dialog, stable accessible relationships, owned initial focus, Tab containment, focus restore, Escape와 backdrop 정책을 제공합니다.
+props:
+  - name: open
+    type: boolean
+    required: true
+    defaultValue: null
+    description: owner가 관리하는 controlled open 상태입니다.
+  - name: title
+    type: string
+    required: true
+    defaultValue: null
+    description: aria-labelledby와 연결되는 localizable visible heading입니다.
+  - name: description
+    type: string
+    required: false
+    defaultValue: null
+    description: aria-describedby와 연결되고 길어지면 내부에서 scroll되는 설명입니다.
+  - name: alertLabel
+    type: string
+    required: true
+    defaultValue: null
+    description: AlertDialog가 소유하는 acknowledgement action의 localizable label입니다.
+  - name: cancelLabel
+    type: string
+    required: true
+    defaultValue: null
+    description: ConfirmDialog의 첫 번째 cancel action label입니다.
+  - name: confirmLabel
+    type: string
+    required: true
+    defaultValue: null
+    description: ConfirmDialog의 두 번째 confirm action label입니다.
+  - name: confirmDisabled
+    type: boolean
+    required: false
+    defaultValue: "false"
+    description: confirm action만 native disabled 상태로 만듭니다.
+  - name: confirmLoading
+    type: boolean
+    required: false
+    defaultValue: "false"
+    description: confirm action만 loading과 disabled 상태로 만듭니다.
+  - name: dismissible
+    type: boolean
+    required: false
+    defaultValue: "true"
+    description: Escape와 backdrop 종료 요청 허용 여부입니다. visible action은 항상 유지됩니다.
+  - name: portalContainer
+    type: HTMLElement | null
+    required: false
+    defaultValue: document.body after hydration
+    description: SSR 이후 native dialog Portal을 놓을 DOM container입니다.
+  - name: onOpenChange
+    type: "((open: boolean, reason: AlertDialogCloseReason) => void) | ((open: boolean, reason: ConfirmDialogCloseReason) => void)"
+    required: true
+    defaultValue: null
+    description: variant별 exact close reason과 요청된 다음 open 상태를 전달합니다.
+  - name: ...rootProps
+    type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'>"
+    required: false
+    defaultValue: null
+    description: surface root의 안전한 native attributes이며 inline style은 외부 layout 속성만 허용합니다.
+tokens:
+  - size/control/small
+  - size/control/large
+  - size/icon/medium
+  - space/0
+  - space/2
+  - space/4
+  - space/8
+  - space/12
+  - space/16
+  - space/24
+  - space/64
+  - radius/sm
+  - radius/md
+  - radius/xl
+  - radius/full
+  - font/family/sans
+  - font/size/body
+  - font/size/body-lg
+  - font/size/title-sm
+  - font/weight/semibold
+  - font/line-height/body
+  - font/line-height/body-lg
+  - font/line-height/title-sm
+  - elevation/2
+  - motion/duration/fast
+  - motion/duration/medium
+  - motion/easing/standard
+  - color/bg/scrim
+  - color/bg/surface
+  - color/bg/subtle
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/border/default
+  - color/action/primary
+  - color/action/primary-hover
+  - color/action/primary-pressed
+  - color/action/on-primary
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import DialogExample from '../../components/examples/DialogExample';
+
+## 예제
+
+<ComponentPreview title="AlertDialog와 ConfirmDialog 결정 흐름" description="owned action, exact close reason, focus 복원, 긴 설명의 내부 scroll을 확인하세요.">
+  <DialogExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+`AlertDialog`는 사용자가 반드시 확인해야 하는 짧은 결과나 상태를 한 가지 acknowledgement action과 함께 전달할 때 사용합니다. `ConfirmDialog`는 취소와 진행 중 하나를 선택해야 하는 삭제, 제출, 상태 변경 같은 짧고 중요한 결정에 사용합니다.
+
+## 사용하지 말아야 할 때
+
+여러 단계를 거치는 입력, 긴 탐색, URL로 공유해야 하는 정보에는 page나 별도 flow를 사용합니다. 단순한 비차단 피드백은 Toast가 적합하고, 현재 문맥 안에서 더 많은 선택 콘텐츠가 필요하면 BottomSheet를 사용합니다. close icon, 임의 action slot, danger tone은 이 계약에 추가하지 않습니다.
+
+## 구조
+
+두 variant는 hydration 뒤 `document.body` 또는 `portalContainer`로 native `dialog`를 Portal합니다. 공통 surface는 stable ID로 연결된 visible title, 선택 description을 가진 내부 scroll body, body와 분리된 owned action 영역으로 구성됩니다. `AlertDialog`는 action 하나, `ConfirmDialog`는 cancel 다음 confirm 순서의 action 두 개를 소유합니다.
+
+## 크기와 변형
+
+surface는 viewport에서 24px 이상 떨어진 중앙에 놓이고 최대 너비는 384px입니다. Alert와 Confirm은 action 개수와 close reason 계약이 다르며 description 유무는 content가 결정합니다. Figma 계약은 `Type=Alert|Confirm × Description=Hidden|Visible` 네 variant이고 React는 별도 size prop을 노출하지 않습니다.
+
+## 상태와 동작
+
+`open`은 controlled입니다. Alert action은 `alert-button`, Confirm의 두 action은 DOM 순서대로 `cancel-button`, `confirm-button`을 전달합니다. 기본 `dismissible=true`일 때 Escape는 `escape`, 같은 pointer가 backdrop에서 시작하고 끝나면 `backdrop`을 전달합니다. `dismissible=false`는 Escape와 backdrop만 막고 visible action은 남깁니다. confirm loading은 confirm action에만 `aria-busy`와 disabled를 적용합니다.
+
+## 반응형 동작
+
+surface는 320px viewport에서도 dialog padding 안에 유지되고 action copy가 길면 각 action 안에서 줄바꿈됩니다. body의 긴 localized·unbroken description만 내부에서 scroll되며 action 영역은 계속 보입니다. mobile, tablet, desktop 모두 같은 중앙 modal geometry를 유지합니다.
+
+## 접근성
+
+Alert는 `role="alertdialog"`, Confirm은 native dialog semantics를 사용하고 두 variant 모두 `aria-modal`, `aria-labelledby`, 선택적인 `aria-describedby`를 갖습니다. Alert는 acknowledgement action, Confirm은 덜 파괴적인 cancel action으로 초기 focus를 이동합니다. Tab과 Shift+Tab은 modal 안에 머물고 exit 뒤 열기 전 active element로 focus를 복원합니다. reduced motion에서는 exit를 즉시 끝내며 forced colors에서는 system surface와 text를 사용합니다.
+
+## React 예제
+
+```tsx
+import { useState } from 'react';
+import {
+  Button,
+  ConfirmDialog,
+  type ConfirmDialogCloseReason,
+} from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function DeleteConfirmation() {
+  const [open, setOpen] = useState(false);
+
+  function handleOpenChange(
+    nextOpen: boolean,
+    reason: ConfirmDialogCloseReason,
+  ) {
+    if (reason === 'confirm-button') {
+      console.info('delete requested');
+    }
+    setOpen(nextOpen);
+  }
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>삭제</Button>
+      <ConfirmDialog
+        cancelLabel="취소"
+        confirmLabel="삭제"
+        description="삭제하면 되돌릴 수 없습니다."
+        open={open}
+        title="삭제할까요?"
+        onOpenChange={handleOpenChange}
+      />
+    </>
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `open` | `boolean` | required | controlled open state |
+| `title` | `string` | required | visible accessible heading |
+| `description` | `string` | - | 내부 scroll 가능한 accessible description |
+| `alertLabel` | `string` | Alert required | Alert acknowledgement label |
+| `cancelLabel` | `string` | Confirm required | Confirm cancel label |
+| `confirmLabel` | `string` | Confirm required | Confirm action label |
+| `confirmDisabled` | `boolean` | `false` | confirm action의 disabled 상태 |
+| `confirmLoading` | `boolean` | `false` | confirm action의 loading 상태 |
+| `dismissible` | `boolean` | `true` | Escape와 backdrop 허용 여부 |
+| `portalContainer` | `HTMLElement \| null` | `document.body` after hydration | Portal container |
+| `onOpenChange` | `Alert 또는 Confirm close reason callback` | required | exact 종료 사유를 가진 controlled request |
+| `...rootProps` | `Omit&lt;HTMLAttributes&lt;HTMLDivElement&gt;, 'children' \| 'title'&gt;` | - | surface의 safe native root attributes |
+
+</div>
+
+`AlertDialogCloseReason`은 `'alert-button' | 'backdrop' | 'escape'`이고 `ConfirmDialogCloseReason`은 `'cancel-button' | 'confirm-button' | 'backdrop' | 'escape'`입니다.
+
+## 사용 토큰
+
+- geometry: `size/control/small`, `size/control/large`, `size/icon/medium`, `space/0`, `space/2`, `space/4`, `space/8`, `space/12`, `space/16`, `space/24`, `space/64`, `radius/sm`, `radius/md`, `radius/xl`, `radius/full`
+- type와 motion: `font/family/sans`, `font/size/body`, `font/size/body-lg`, `font/size/title-sm`, `font/weight/semibold`, `font/line-height/body`, `font/line-height/body-lg`, `font/line-height/title-sm`, `elevation/2`, `motion/duration/fast`, `motion/duration/medium`, `motion/easing/standard`
+- color: `color/bg/scrim`, `color/bg/surface`, `color/bg/subtle`, `color/text/primary`, `color/text/secondary`, `color/text/disabled`, `color/border/default`, `color/action/primary`, `color/action/primary-hover`, `color/action/primary-pressed`, `color/action/on-primary`, `color/focus/ring`
+
+## Figma
+
+Figma component-set URL은 live `Dialog` set을 만든 뒤 연결하므로 현재 metadata에서는 의도적으로 비어 있습니다. 목표 set은 `Type Alert/Confirm × Description Hidden/Visible = 4` variants와 Title, Description, Alert label, Cancel label, Confirm label TEXT property, Show description BOOLEAN property를 가집니다. 구현은 [TDS Mobile Dialog overview](https://tossmini-docs.toss.im/tds-mobile/components/Dialog/dialog/), [AlertDialog reference](https://tossmini-docs.toss.im/tds-mobile/components/Dialog/alert-dialog/), [ConfirmDialog reference](https://tossmini-docs.toss.im/tds-mobile/components/Dialog/confirm-dialog/)를 참고하되, 이 저장소는 native dialog와 controlled exact-reason API를 유지합니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |
