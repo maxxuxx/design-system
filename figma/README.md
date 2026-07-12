@@ -8,13 +8,12 @@
 - Phase 0 approved: 2026-07-10
 
 This file is the approved target for the Figma implementation. Phase 0 resolved
-the source-of-truth decisions. Phase 1 created and validated the five token
-collections, now containing 111 Variables, eight Text Styles, and two Effect
-Styles. Phase 2 created the ordered page structure and the first five
+the source-of-truth decisions. The current file has six token collections,
+116 Variables, eight Text Styles, and two Effect Styles. Phase 2 created the ordered page structure and the first five
 documentation roots.
-Foundations visual approval was recorded at `2026-07-10T23:08:13+09:00`, and
+Foundations visual approval was refreshed at `2026-07-12T12:53:48+09:00`, and
 Phase 3 component construction covers the five v0.1 families plus Checkbox,
-RadioGroup, Switch, Textarea, and Select.
+RadioGroup, Switch, Textarea, Select, and TextButton.
 
 ## Typography
 
@@ -35,6 +34,7 @@ installed `IBM Plex Sans KR` family.
 - `Spacing`
 - `Typography`
 - `Radius`
+- `Motion`
 
 Every collection has one `Default` mode. Primitive colors are hidden from
 pickers, semantic colors alias primitive variables, every Variable has explicit
@@ -58,10 +58,11 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 13. `04.8 Switch`
 14. `04.9 Textarea`
 15. `04.10 Select`
-16. `90 Native Differences`
-17. `99 Deprecated`
+16. `04.11 TextButton`
+17. `90 Native Differences`
+18. `99 Deprecated`
 
-The required 17-page prefix is validated in this exact order. The original
+The current 18-page managed prefix is validated in this exact order. The original
 empty `Page 1` remains after this managed prefix and is not used by the library.
 
 ## Original Phase 2 Foundations catalog
@@ -89,13 +90,20 @@ The later `blur/subtle` Variable brings the live file to 105 Variables. Its
 value, binding, and visual behavior are documented on `04.5 ScrollArea` and in
 the final token readback.
 
+TDS-inspired mobile core v0.3 adds `color/neutral/900-alpha-56`,
+`color/bg/scrim`, `motion/duration/fast`, `motion/duration/medium`, and
+`motion/easing/standard`. The live file now has 116 Variables across six
+collections. The new Motion section in `03 Foundations` documents both
+durations, the standard easing curve, reduced-motion intent, and the semantic
+scrim binding.
+
 ## Foundations approval
 
 - `approved`: `true`
-- `approvedAt`: `2026-07-10T23:08:13+09:00`
+- `approvedAt`: `2026-07-12T12:53:48+09:00`
 - `tokenParity`: `true`
 
-The original approved readback preserves all 104 Variables, eight Text Styles,
+The current approved readback preserves all 116 Variables, eight Text Styles,
 two Effect Styles, explicit scopes, WEB syntax, aliases, and the full generated
 CSS font stack without missing or duplicate source items.
 
@@ -191,6 +199,36 @@ top-level overlap.
   three axes, five icon swaps, and both Loading values passed
 - Full-page screenshot target: `04.3 Button` (`9:9`), rendered at
   `1440 × 1040`
+
+## TDS-inspired mobile core v0.3 TextButton validation
+
+- Component set: [TextButton](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121)
+- Variant count: 27
+- Axes:
+  - `Size`: `Small`, `Medium`, `Large`
+  - `Variant`: `Clear`, `Underline`, `Arrow`
+  - `State`: `Default`, `Pressed`, `Disabled`
+- Component property: `Label` (`TEXT`, default `Text Button`)
+- Control heights: `size/control/small` (`44px`),
+  `size/control/medium` (`48px`), and `size/control/large` (`56px`)
+- Horizontal padding: `space/8`, `space/12`, and `space/16`; gap: `space/4`;
+  radius: `radius/sm`
+- Typography: `Caption`, `Body/Small`, and `Body` plus
+  `font/weight/semibold`
+- Default, pressed, and disabled product colors use only semantic Variables;
+  all 27 height, fill, padding, gap, radius, label-color, and weight bindings
+  passed
+- Underline variants use one token-bound structural underline layer. This
+  preserves a visible underline while avoiding Figma's synchronization of a
+  shared TEXT property's text decoration across every variant master.
+- Arrow variants contain exactly one owned `Icon/ChevronRight` instance at
+  `size/icon/small`; Clear and Underline contain no icon instance
+- Anchor visited state is documented as browser content state and is not a
+  Figma variant axis
+- Layout audit: zero overlaps, clipping failures, unnamed nodes, or targets
+  below `44px`
+- Full-page screenshot target: `04.11 TextButton` (`182:2`), rendered at
+  `1440 × 1124`
 
 ## Phase 3 TextField validation
 
@@ -370,20 +408,20 @@ top-level overlap.
 - Full-page screenshot target: `04.10 Select` (`168:2`), rendered at
   `1440 × 760`
 
-Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, Switch, Textarea, and Select are
-validated in Figma.
+Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, Switch,
+Textarea, Select, and TextButton are validated in Figma.
 
 ## Phase 4 library verification
 
-- Final live readback: `2026-07-12T04:16:59+09:00`
-- Managed pages: all 17 current pages in the documented order
-- Final token readback: five collections, 111 Variables, eight Text Styles, and
+- Current live readback: `2026-07-12T12:53:48+09:00`
+- Managed pages: all 18 current pages in the documented order
+- Current token readback: six collections, 116 Variables, eight Text Styles, and
   two Effect Styles
 - Token-map reconciliation: the regenerated live projection is byte-identical
   to [`token-map.json`](./token-map.json)
-- Token coverage: 113 unique source mappings, including 26 Semantic Color and
-  57 COLOR Variable rows
-- Variable integrity: five `Default` modes, exact WEB syntax and scopes, no
+- Token coverage: 118 unique source mappings, including 27 Semantic Color and
+  59 COLOR Variable rows
+- Variable integrity: six `Default` modes, exact WEB syntax and scopes, no
   broken aliases, missing IDs, or `ALL_SCOPES`
 - WCAG boundary aliases: `color/border/default` → `color/neutral/500`,
   `color/border/strong` → `color/neutral/600`, and `color/focus/ring` →

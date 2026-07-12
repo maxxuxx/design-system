@@ -1,14 +1,15 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T04:16:59+09:00",
+  "verifiedAt": "2026-07-12T12:53:48+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
     "Semantic Color",
     "Spacing",
     "Typography",
-    "Radius"
+    "Radius",
+    "Motion"
   ],
   "textStyleCount": 8,
   "effectStyleCount": 2,
@@ -28,10 +29,11 @@
     "04.8 Switch",
     "04.9 Textarea",
     "04.10 Select",
+    "04.11 TextButton",
     "90 Native Differences",
     "99 Deprecated"
   ],
-  "tokenValuesSha256": "e55bbafaf807e873e8ab4dfb8894dc615cd117703ee892d45138169d19e3a0df",
+  "tokenValuesSha256": "6552796c323819093677b58af217f94bedf69dfce9ea63c2c3bc15953bfc7018",
   "effectValuesSha256": "e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8",
   "effectReadback": [
     {
@@ -89,7 +91,7 @@
     "00 Cover": "c77e8b4b72feed70637ebccd24bac7443b83e6b30672faf7cd2d98f6a9361a13",
     "01 Principles": "4002e3e8df110e06171a6b69a24e9b9dfb208eec633f2947e1470b185daa3625",
     "02 Getting Started": "2f4295f5dbe155b152639eaa149162d52b82fbf2fc7e0cbcd670b34ee0836071",
-    "03 Foundations": "2b485fb08296d97003856a116cba19958e4edaaa0922dca25fbf36ab5f9729d3",
+    "03 Foundations": "be3abf4369d6b466082c18a2ebfaebc65835e9cbaa4a2d243e38393d70a84fc1",
     "04 Components": "748cc65b960ebc1a4bc87694a215dc173ec59d8cfa588048cf44922f03d9434c",
     "04.1 Icon": "ef4c59b98e2884752a85a7529dd4fda0bbd2d57c6b5b97abc31aae179a9ae09d",
     "04.2 Badge": "273987be72319f7b9e48726632074c8475b58749227b155555fe27477506bd0f",
@@ -101,6 +103,7 @@
     "04.8 Switch": "88e54ade7faafefda00a8378214e7a9d2b8e52ef86ec76982984f0bb0f97b6d5",
     "04.9 Textarea": "3254f47a9b5317cdbb34228a73bdf4c50005ffb92789034a905d6ca02c3a02cd",
     "04.10 Select": "e597e4ac9209c26e34c394df64757b60bb39c940fee8ed77f80a96fd22a6424f",
+    "04.11 TextButton": "3e09fe0e6e2fdf0d70953dcce64780539390aa330a6f41589e11aa56e6e8619d",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -378,11 +381,29 @@
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
+    },
+    "TextButton": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121",
+      "variantCount": 27,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium", "Large"] },
+        { "name": "Variant", "values": ["Clear", "Underline", "Arrow"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
     }
   },
   "foundations": {
     "approved": true,
-    "approvedAt": "2026-07-10T23:08:13+09:00",
+    "approvedAt": "2026-07-12T12:53:48+09:00",
     "tokenParity": true
   },
   "pageScreenshotNodeIds": {
@@ -401,6 +422,7 @@
     "04.8 Switch": "151:2",
     "04.9 Textarea": "158:2",
     "04.10 Select": "168:2",
+    "04.11 TextButton": "182:2",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

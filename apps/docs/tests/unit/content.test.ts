@@ -188,7 +188,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'TextButton',
       slug: 'text-button',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121',
       variants: ['clear', 'underline', 'arrow'],
       sizes: ['small', 'medium', 'large'],
       states: [

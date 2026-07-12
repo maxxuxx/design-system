@@ -1021,7 +1021,7 @@
       "slug": "text-button",
       "description": "텍스트 위계와 native button 또는 anchor 의미로 가벼운 행동과 이동을 표현합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

@@ -8,7 +8,7 @@
         "id": "5:0",
         "name": "Default"
       },
-      "variableCount": 32
+      "variableCount": 33
     },
     {
       "name": "Semantic Color",
@@ -17,7 +17,7 @@
         "id": "5:1",
         "name": "Default"
       },
-      "variableCount": 26
+      "variableCount": 27
     },
     {
       "name": "Spacing",
@@ -45,6 +45,15 @@
         "name": "Default"
       },
       "variableCount": 6
+    },
+    {
+      "name": "Motion",
+      "id": "VariableCollectionId:177:2",
+      "mode": {
+        "id": "177:0",
+        "name": "Default"
+      },
+      "variableCount": 3
     }
   ],
   "variables": [
@@ -146,6 +155,15 @@
       "variableId": "VariableID:6:12",
       "scopes": [],
       "webSyntax": "var(--ds-color-neutral-900)"
+    },
+    {
+      "tokenName": "color/neutral/900-alpha-56",
+      "tokenType": "COLOR",
+      "collection": "Primitives",
+      "collectionId": "VariableCollectionId:5:2",
+      "variableId": "VariableID:177:3",
+      "scopes": [],
+      "webSyntax": "var(--ds-color-neutral-900-alpha-56)"
     },
     {
       "tokenName": "color/blue/50",
@@ -920,6 +938,33 @@
       "webSyntax": "var(--ds-blur-subtle)"
     },
     {
+      "tokenName": "motion/duration/fast",
+      "tokenType": "FLOAT",
+      "collection": "Motion",
+      "collectionId": "VariableCollectionId:177:2",
+      "variableId": "VariableID:177:4",
+      "scopes": [],
+      "webSyntax": "var(--ds-motion-duration-fast)"
+    },
+    {
+      "tokenName": "motion/duration/medium",
+      "tokenType": "FLOAT",
+      "collection": "Motion",
+      "collectionId": "VariableCollectionId:177:2",
+      "variableId": "VariableID:177:5",
+      "scopes": [],
+      "webSyntax": "var(--ds-motion-duration-medium)"
+    },
+    {
+      "tokenName": "motion/easing/standard",
+      "tokenType": "STRING",
+      "collection": "Motion",
+      "collectionId": "VariableCollectionId:177:2",
+      "variableId": "VariableID:177:6",
+      "scopes": [],
+      "webSyntax": "var(--ds-motion-easing-standard)"
+    },
+    {
       "tokenName": "color/bg/canvas",
       "tokenType": "COLOR",
       "collection": "Semantic Color",
@@ -1219,6 +1264,18 @@
         "STROKE_COLOR"
       ],
       "webSyntax": "var(--ds-color-focus-ring)"
+    },
+    {
+      "tokenName": "color/bg/scrim",
+      "tokenType": "COLOR",
+      "collection": "Semantic Color",
+      "collectionId": "VariableCollectionId:5:3",
+      "variableId": "VariableID:177:7",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL"
+      ],
+      "webSyntax": "var(--ds-color-bg-scrim)"
     }
   ],
   "styles": {
