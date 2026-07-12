@@ -118,6 +118,21 @@ test('Dialog open variants have zero axe violations with owned initial focus', a
   await confirmDialog.getByRole('button', { name: '취소' }).click();
 });
 
+test('Toast live feedback has zero axe violations and preserves trigger focus', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/toast/',
+    heading: 'Toast',
+  });
+  const trigger = page.getByRole('button', { name: '실행 취소 알림' });
+  await trigger.focus();
+  await trigger.click();
+
+  await expect(trigger).toBeFocused();
+  await expect(page.getByRole('status')).toContainText('작업을 실행했습니다.');
+  await assertNoAxeViolations(page);
+  await tabTo(page, page.getByRole('button', { name: '되돌리기' }));
+});
+
 test('SearchField clear control is keyboard reachable, restores input focus, and has zero axe violations', async ({ page }) => {
   await openHtmlRoute(page, {
     path: '/components/search-field/',

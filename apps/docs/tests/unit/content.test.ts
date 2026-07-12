@@ -88,6 +88,7 @@ describe('MDX collection coverage', () => {
       'content/components/dialog.mdx',
       'content/components/search-field.mdx',
       'content/components/list-row.mdx',
+      'content/components/toast.mdx',
     ]);
 
     for (const file of files) {
@@ -153,7 +154,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the eighteen component names and slugs in canonical order', () => {
+  it('locks the nineteen component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -173,6 +174,7 @@ describe('component metadata contract', () => {
       'Dialog',
       'SearchField',
       'ListRow',
+      'Toast',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -193,6 +195,7 @@ describe('component metadata contract', () => {
       'dialog',
       'search-field',
       'list-row',
+      'toast',
     ]);
   });
 
@@ -806,6 +809,99 @@ describe('component metadata contract', () => {
       'color/action/weak-hover',
       'color/focus/ring',
     ]);
+  });
+
+  it('locks the Toast provider and queue metadata with its pending Figma URL', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/toast.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'Toast',
+      slug: 'toast',
+      figmaUrl: '',
+      variants: [
+        'neutral',
+        'success',
+        'danger',
+        'action-hidden',
+        'action-visible',
+      ],
+      sizes: [],
+      states: ['visible', 'queued', 'paused', 'persistent'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+      {
+        name: 'portalContainer',
+        type: 'HTMLElement | null',
+        required: false,
+        defaultValue: 'document.body after hydration',
+      },
+      { name: 'message', type: 'string', required: true, defaultValue: null },
+      { name: 'tone', type: 'ToastTone', required: false, defaultValue: 'neutral' },
+      { name: 'icon', type: 'IconName', required: false, defaultValue: null },
+      {
+        name: 'duration',
+        type: 'number',
+        required: false,
+        defaultValue: '3000 or 5000 with action',
+      },
+      {
+        name: 'position',
+        type: 'ToastPosition',
+        required: false,
+        defaultValue: 'bottom',
+      },
+      { name: 'action', type: 'ToastAction', required: false, defaultValue: null },
+      {
+        name: 'show',
+        type: '(options: ToastOptions) => string',
+        required: true,
+        defaultValue: null,
+      },
+      {
+        name: 'dismiss',
+        type: '(id: string) => void',
+        required: true,
+        defaultValue: null,
+      },
+      { name: 'clear', type: '() => void', required: true, defaultValue: null },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/medium',
+      'size/icon/medium',
+      'space/0',
+      'space/2',
+      'space/8',
+      'space/12',
+      'space/16',
+      'space/64',
+      'radius/md',
+      'font/family/sans',
+      'font/size/body-sm',
+      'font/line-height/body-sm',
+      'elevation/2',
+      'motion/duration/fast',
+      'motion/easing/standard',
+      'color/status/neutral',
+      'color/status/success',
+      'color/status/danger',
+      'color/status/on-status',
+      'color/focus/ring',
+    ]);
+    expect(matter(source).content).toContain('ToastProvider');
+    expect(matter(source).content).toContain('useToast');
+    expect(matter(source).content).toContain('FIFO');
+    expect(matter(source).content).toContain('duration=0');
+    expect(matter(source).content).toContain('top Toast');
   });
 
   it('locks the Select public metadata contract', async () => {

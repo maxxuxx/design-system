@@ -51,6 +51,33 @@ function resolvedBlurPixels(value: string): number | null {
 
 type ScrollAreaState = 'no-overflow' | 'start' | 'middle' | 'end';
 
+test('Toast demo controls and action expose 44px native targets', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns Toast target coverage.');
+  await openHtmlRoute(page, { path: '/components/toast/', heading: 'Toast' });
+  const demo = page.locator('[data-component-demo="toast"]');
+  const controls = demo.locator('[data-toast-trigger]');
+  await expect(controls).toHaveCount(8);
+  for (const control of await controls.all()) await expectMinimumTarget(control);
+
+  await demo.getByRole('button', { name: '실행 취소 알림' }).click();
+  await expectMinimumTarget(page.getByRole('button', { name: '되돌리기' }));
+});
+
+test('Toast in-flow specimens stay contained at 320px', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns Toast containment coverage.');
+  await page.setViewportSize({ width: 320, height: 720 });
+  await openHtmlRoute(page, { path: '/components/toast/', heading: 'Toast' });
+  const specimens = page.locator('[data-toast-specimen]');
+  await expect(specimens).toHaveCount(3);
+  const contained = await specimens.evaluateAll((elements) =>
+    elements.every((element) => {
+      const box = element.getBoundingClientRect();
+      return box.left >= 0 && box.right <= document.documentElement.clientWidth;
+    }),
+  );
+  expect(contained).toBe(true);
+});
+
 async function expectScrollAreaState(
   root: Locator,
   viewport: Locator,

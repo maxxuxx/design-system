@@ -621,6 +621,56 @@
   outline-offset: var(--ds-space-2);
 }
 
+.component-demo__stage--toast {
+  place-items: stretch;
+}
+
+.toast-demo {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  gap: var(--ds-space-16);
+}
+
+.toast-demo__status {
+  min-inline-size: var(--ds-space-0);
+  margin: var(--ds-space-0);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-caption);
+  line-height: var(--ds-font-line-height-caption);
+  overflow-wrap: anywhere;
+}
+
+.toast-demo__controls {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--ds-space-8);
+}
+
+.toast-demo__controls .ds-button {
+  inline-size: 100%;
+}
+
+.toast-demo__specimens {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ds-space-12);
+}
+
+.toast-demo__specimen.ds-toast {
+  inline-size: 100%;
+  max-inline-size: none;
+}
+
+.toast-demo__specimen-action {
+  min-inline-size: var(--ds-space-0);
+  flex: 0 0 auto;
+  color: inherit;
+  font-weight: var(--ds-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
 @media (forced-colors: active) {
   .component-demo__control select:focus-visible,
   .component-demo__control input[type='text']:focus-visible,
@@ -676,6 +726,10 @@
   }
 
   .search-field-demo__specimens {
+    grid-template-columns: 1fr;
+  }
+
+  .toast-demo__specimens {
     grid-template-columns: 1fr;
   }
 }

@@ -16,3 +16,4 @@ export * from './bottom-sheet';
 export * from './dialog';
 export * from './search-field';
 export * from './list-row';
+export * from './toast';

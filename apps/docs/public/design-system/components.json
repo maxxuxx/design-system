@@ -1963,6 +1963,135 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/list-row/"
+    },
+    {
+      "name": "Toast",
+      "slug": "toast",
+      "description": "짧은 비모달 피드백을 한 번에 하나씩 portal에 표시하고 FIFO queue로 순서를 보존하는 provider입니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "neutral",
+        "success",
+        "danger",
+        "action-hidden",
+        "action-visible"
+      ],
+      "sizes": [],
+      "states": [
+        "visible",
+        "queued",
+        "paused",
+        "persistent"
+      ],
+      "accessibility": "neutral·success는 polite atomic status, danger는 assertive atomic alert이며 focus·scroll·inert 상태를 변경하지 않습니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "Toast context를 사용하는 application subtree입니다."
+        },
+        {
+          "name": "portalContainer",
+          "type": "HTMLElement | null",
+          "required": false,
+          "defaultValue": "document.body after hydration",
+          "description": "SSR-safe portal 목적지이며 변경되어도 진행 중 timer를 재시작하지 않습니다."
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "trim 후 비어 있지 않아야 하는 localizable visible copy입니다."
+        },
+        {
+          "name": "tone",
+          "type": "ToastTone",
+          "required": false,
+          "defaultValue": "neutral",
+          "description": "neutral, success, danger live-region tone을 정합니다."
+        },
+        {
+          "name": "icon",
+          "type": "IconName",
+          "required": false,
+          "defaultValue": null,
+          "description": "accessible name에서 제외되는 owned decorative Icon입니다."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "defaultValue": "3000 or 5000 with action",
+          "description": "finite non-negative milliseconds이며 0은 persistent입니다."
+        },
+        {
+          "name": "position",
+          "type": "ToastPosition",
+          "required": false,
+          "defaultValue": "bottom",
+          "description": "top 또는 bottom safe-area 위치이며 top Toast에는 action을 허용하지 않습니다."
+        },
+        {
+          "name": "action",
+          "type": "ToastAction",
+          "required": false,
+          "defaultValue": null,
+          "description": "bottom에서만 허용되는 non-empty label과 callable onPress입니다."
+        },
+        {
+          "name": "show",
+          "type": "(options: ToastOptions) => string",
+          "required": true,
+          "defaultValue": null,
+          "description": "검증된 Toast를 FIFO queue에 추가하고 stable monotonic ID를 반환합니다."
+        },
+        {
+          "name": "dismiss",
+          "type": "(id: string) => void",
+          "required": true,
+          "defaultValue": null,
+          "description": "visible 또는 queued ID를 action 호출 없이 제거합니다."
+        },
+        {
+          "name": "clear",
+          "type": "() => void",
+          "required": true,
+          "defaultValue": null,
+          "description": "visible과 queued Toast를 모두 action 호출 없이 제거합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/64",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/line-height/body-sm",
+        "elevation/2",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/status/neutral",
+        "color/status/success",
+        "color/status/danger",
+        "color/status/on-status",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/toast/"
     }
   ]
 }

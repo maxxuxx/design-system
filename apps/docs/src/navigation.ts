@@ -50,6 +50,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'Dialog', href: '/components/dialog/' },
       { label: 'SearchField', href: '/components/search-field/' },
       { label: 'ListRow', href: '/components/list-row/' },
+      { label: 'Toast', href: '/components/toast/' },
     ],
   },
 ];

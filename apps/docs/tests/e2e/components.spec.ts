@@ -78,6 +78,23 @@ test('ListRow documents its native branch dispatch and BoardRow boundary', async
   await expect(main).toContainText('BoardRow');
 });
 
+test('Toast documents its provider, FIFO, pause, and non-modal boundaries', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/toast/',
+    heading: 'Toast',
+  });
+
+  const main = page.locator('main');
+  await expect(main).toContainText('ToastProvider');
+  await expect(main).toContainText('useToast');
+  await expect(main).toContainText('FIFO');
+  await expect(main).toContainText('duration=0');
+  await expect(main).toContainText('pointer');
+  await expect(main).toContainText('focus');
+  await expect(main).toContainText('document');
+  await expect(main).toContainText('non-modal');
+});
+
 test('TextButton renders its complete document template and demo without console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {
