@@ -675,7 +675,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'SearchField',
       slug: 'search-field',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19',
       variants: ['empty', 'filled'],
       sizes: [],
       states: ['default', 'focus', 'disabled', 'readonly'],

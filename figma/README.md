@@ -14,7 +14,7 @@ documentation roots.
 Foundations visual approval was refreshed at `2026-07-12T12:53:48+09:00`, and
 Phase 3 component construction covers the five v0.1 families plus Checkbox,
 RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, and
-BottomSheet. The v0.4 workflow slice now also includes Dialog.
+BottomSheet. The v0.4 workflow slice now also includes Dialog and SearchField.
 
 ## Typography
 
@@ -65,10 +65,11 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 19. `04.14 Tab`
 20. `04.15 BottomSheet`
 21. `04.16 Dialog`
-22. `90 Native Differences`
-23. `99 Deprecated`
+22. `04.17 SearchField`
+23. `90 Native Differences`
+24. `99 Deprecated`
 
-The current 23-page managed prefix is validated in this exact order. The original
+The current 24-page managed prefix is validated in this exact order. The original
 empty `Page 1` remains after this managed prefix and is not used by the library.
 
 ## Original Phase 2 Foundations catalog
@@ -379,6 +380,36 @@ top-level overlap.
   `1440 × 2120`; SHA-256
   `c861063fbeb4ac51a97797eec1e1b9ca6905d81e24c2833e08fe9ce4fd5113eb`
 
+## TDS-inspired mobile workflows v0.4 SearchField validation
+
+- Component set: [SearchField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19)
+- Variant count: 8
+- Axes:
+  - `Value`: `Empty`, `Filled`
+  - `State`: `Default`, `Focus`, `Disabled`, `ReadOnly`
+- Component properties, in order: `Placeholder` and `Value` (`TEXT`). The
+  `Value` TEXT property is distinct from the `Value` variant axis by name plus
+  property type, with eight live references for each TEXT property
+- Every master is `320 × 56px`, binds height to `size/control/large`, uses
+  `space/4` padding and gap, and binds all four corners to `radius/md`
+- Every variant owns a `20 × 20px` `Icon/Search` instance linked to master
+  `30:20` and a `20 × 20px` `Icon/Close` instance linked to master `30:11`.
+  Both sit in `48 × 48px` targets bound to `size/control/medium`
+- Search is always visible. Close is visible only for Filled + Default/Focus;
+  Filled + Disabled/ReadOnly and all Empty variants retain the owned instance
+  but hide its target
+- Default, Focus, Disabled, and ReadOnly surface, border, text, icon, focus-ring,
+  spacing, size, radius, and Body Style bindings passed. Raw SOLID fallbacks
+  were reconciled to their resolved Variable colors without removing bindings
+- Layout audit: zero clipping, overlap, out-of-bounds targets, duplicate logical
+  keys, paint-resolution mismatches, or unbound visible product paints. Every
+  Search and Close target exceeds the `44 × 44px` minimum
+- Fixed positioning and `takeSpace` remain documented React behavior rather than
+  extra variant axes
+- Full-page screenshot target: `04.17 SearchField` (`230:29`), rendered at
+  `1440 × 436`; SHA-256
+  `e53117e1bc17ffe727c87fd42b07e13c8681e10432d781946135cc5d87b553c2`
+
 ## Phase 3 TextField validation
 
 - Component set: [TextField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50)
@@ -558,13 +589,13 @@ top-level overlap.
   `1440 × 760`
 
 Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, Switch,
-Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, and Dialog
-are validated in Figma.
+Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, and
+SearchField are validated in Figma.
 
 ## Phase 4 library verification
 
-- Current live readback: `2026-07-12T21:24:35+09:00`
-- Managed pages: all 23 current pages in the documented order
+- Current live readback: `2026-07-12T22:22:04+09:00`
+- Managed pages: all 24 current pages in the documented order
 - Current token readback: six collections, 116 Variables, eight Text Styles, and
   two Effect Styles
 - Token-map reconciliation: the regenerated live projection is byte-identical
@@ -588,17 +619,17 @@ are validated in Figma.
   tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
   Button/TextButton/IconButton/TextField/ScrollArea/Checkbox/RadioGroup/
-  Switch/Textarea/Select/BoardRow/Tab/BottomSheet/Dialog control target is at least
-  44px with distinct focus, pressed, error, disabled, or
+  Switch/Textarea/Select/BoardRow/Tab/BottomSheet/Dialog/SearchField control
+  target is at least 44px with distinct focus, pressed, error, disabled, or
   direction-availability presentation
 - Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`,
   ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, Textarea `8`,
-  Select `8`, TextButton `27`, IconButton `27`, BoardRow `4`, Tab `12`, and
-  BottomSheet `4`, Dialog `4`; all properties, variants, semantic bindings, and React
-  contracts passed
-- Variant-axis parity: the exact axis names and ordered values for all fifteen
-  component sets are stored in [`verification.json`](./verification.json) and
-  enforced by the artifact verifier
+  Select `8`, TextButton `27`, IconButton `27`, BoardRow `4`, Tab `12`,
+  BottomSheet `4`, Dialog `4`, and SearchField `8`; all properties, variants,
+  semantic bindings, and React contracts passed
+- Variant-axis parity: the exact axis names and ordered values for all sixteen
+  component sets are stored in [`verification.json`](./verification.json).
+  Task 12 owns the aggregate verifier expansion to the final v0.4 totals
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
   keys on Instances and the intentionally invisible default fill on TextField
   component roots are excluded from owner/value counts.
@@ -606,8 +637,8 @@ are validated in Figma.
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
 - Screenshots: every managed page was captured and reviewed for legibility,
-  clipping, overlap, stale copy, and visible component coverage; all 23 SHA-256
-  fingerprints are stored in verification evidence for all 23 managed pages
+  clipping, overlap, stale copy, and visible component coverage; all 24 SHA-256
+  fingerprints are stored in verification evidence for all 24 managed pages
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
 Code Connect is explicitly `skipped-v0.1`.

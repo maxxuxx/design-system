@@ -3,7 +3,7 @@ name: SearchField
 slug: search-field
 description: 검색어 입력, 명시적인 clear 동작, 선택적인 fixed 배치를 native search input으로 제공합니다.
 status: preview
-figmaUrl: ""
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19"
 frameworks:
   react: preview
   svelte: planned
@@ -168,7 +168,7 @@ export function ProductSearch() {
 
 ## Figma
 
-Figma component-set URL은 Task 5의 live readback 전까지 의도적으로 비워 둡니다. 예정 계약은 `Value Empty/Filled × State Default/Focus/Disabled/ReadOnly = 8` variants, Placeholder와 Value TEXT properties입니다. [TDS Mobile SearchField](https://tossmini-docs.toss.im/tds-mobile/components/search-field/)를 참고하되 이 저장소는 native form과 controlled/uncontrolled web 계약을 유지합니다.
+[live `SearchField` component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19)은 `Value Empty/Filled × State Default/Focus/Disabled/ReadOnly = 8` variants와 Placeholder, Value TEXT properties를 가집니다. 모든 variant는 owned `Icon/Search`와 `Icon/Close` instance를 유지하고, Close는 Filled + Default/Focus에서만 보입니다. fixed와 `takeSpace`는 구현 동작으로 문서화하며 variant axis로 만들지 않습니다. [TDS Mobile SearchField](https://tossmini-docs.toss.im/tds-mobile/components/search-field/)를 참고하되 이 저장소는 native form과 controlled/uncontrolled web 계약을 유지합니다.
 
 ## 지원 상태
 

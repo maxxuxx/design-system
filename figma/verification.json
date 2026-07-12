@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T21:24:35+09:00",
+  "verifiedAt": "2026-07-12T22:22:04+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -35,6 +35,7 @@
     "04.14 Tab",
     "04.15 BottomSheet",
     "04.16 Dialog",
+    "04.17 SearchField",
     "90 Native Differences",
     "99 Deprecated"
   ],
@@ -114,6 +115,7 @@
     "04.14 Tab": "eafc4a14e547ff3fdc8d3c13d0f6d7451b64e298479ecb547e8fa73df89cf539",
     "04.15 BottomSheet": "740a7f33c4d14b2f1a3915579b42396dfa0c74197fe8f846e66e5153786572d1",
     "04.16 Dialog": "c861063fbeb4ac51a97797eec1e1b9ca6905d81e24c2833e08fe9ce4fd5113eb",
+    "04.17 SearchField": "e53117e1bc17ffe727c87fd42b07e13c8681e10432d781946135cc5d87b553c2",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -497,6 +499,21 @@
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
+    },
+    "SearchField": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19",
+      "variantCount": 8,
+      "axes": [
+        { "name": "Value", "values": ["Empty", "Filled"] },
+        { "name": "State", "values": ["Default", "Focus", "Disabled", "ReadOnly"] }
+      ],
+      "properties": [
+        { "name": "Placeholder", "type": "TEXT" },
+        { "name": "Value", "type": "TEXT" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
     }
   },
   "foundations": {
@@ -526,6 +543,7 @@
     "04.14 Tab": "200:2",
     "04.15 BottomSheet": "208:19",
     "04.16 Dialog": "213:2",
+    "04.17 SearchField": "230:29",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

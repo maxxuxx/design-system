@@ -1741,7 +1741,7 @@
       "slug": "search-field",
       "description": "검색어 입력, 명시적인 clear 동작, 선택적인 fixed 배치를 native search input으로 제공합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
