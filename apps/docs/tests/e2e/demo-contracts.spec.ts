@@ -952,7 +952,12 @@ test('Tab preserves forced-colors selection and removes motion when requested', 
       'position:absolute;left:-9999px;forced-color-adjust:none';
     document.body.append(probe);
     const colors: Record<string, string> = {};
-    for (const keyword of ['Highlight', 'HighlightText']) {
+    for (const keyword of [
+      'Canvas',
+      'CanvasText',
+      'Highlight',
+      'HighlightText',
+    ]) {
       probe.style.color = keyword;
       colors[keyword] = getComputedStyle(probe).color;
     }
@@ -984,6 +989,29 @@ test('Tab preserves forced-colors selection and removes motion when requested', 
   expect(contrastRatio(presentation.outlineColor, presentation.background))
     .toBeGreaterThanOrEqual(3);
   expect(presentation.transitionDuration).toBe('0s');
+
+  const unselected = page.locator(
+    '[data-component-demo="tab"] [data-tab-sample="interactive"] [role="tab"][aria-selected="false"]:not(:disabled)',
+  ).first();
+  await unselected.evaluate((element) => element.focus());
+  await expect(unselected).toBeFocused();
+  expect(await unselected.evaluate((element) => element.matches(':focus-visible')))
+    .toBe(true);
+  const unselectedFocus = await unselected.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      outlineColor: style.outlineColor,
+    };
+  });
+  expect(unselectedFocus).toEqual({
+    background: system.Canvas,
+    outlineColor: system.CanvasText,
+  });
+  expect(contrastRatio(
+    unselectedFocus.outlineColor,
+    unselectedFocus.background,
+  )).toBeGreaterThanOrEqual(3);
 });
 
 test('IconButton owns a complete forced-colors state palette and keyboard focus', async ({ page }, testInfo) => {
