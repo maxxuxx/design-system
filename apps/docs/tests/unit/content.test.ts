@@ -84,6 +84,7 @@ describe('MDX collection coverage', () => {
       'content/components/icon-button.mdx',
       'content/components/board-row.mdx',
       'content/components/tab.mdx',
+      'content/components/bottom-sheet.mdx',
     ]);
 
     for (const file of files) {
@@ -149,7 +150,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the fourteen component names and slugs in canonical order', () => {
+  it('locks the fifteen component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -165,6 +166,7 @@ describe('component metadata contract', () => {
       'IconButton',
       'BoardRow',
       'Tab',
+      'BottomSheet',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -181,6 +183,7 @@ describe('component metadata contract', () => {
       'icon-button',
       'board-row',
       'tab',
+      'bottom-sheet',
     ]);
   });
 
@@ -468,6 +471,97 @@ describe('component metadata contract', () => {
       'color/action/primary',
       'color/action/weak',
       'color/action/weak-hover',
+      'color/action/on-weak',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('locks the BottomSheet public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/bottom-sheet.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'BottomSheet',
+      slug: 'bottom-sheet',
+      figmaUrl: '',
+      variants: ['content', 'full'],
+      sizes: [],
+      states: ['open', 'closing'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'open', type: 'boolean', required: true, defaultValue: null },
+      {
+        name: 'onOpenChange',
+        type: '(open: boolean, reason: BottomSheetCloseReason) => void',
+        required: true,
+        defaultValue: null,
+      },
+      { name: 'title', type: 'string', required: true, defaultValue: null },
+      { name: 'description', type: 'string', required: false, defaultValue: null },
+      { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+      { name: 'footer', type: 'ReactNode', required: false, defaultValue: null },
+      { name: 'closeLabel', type: 'string', required: true, defaultValue: null },
+      { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+      {
+        name: 'portalContainer',
+        type: 'HTMLElement | null',
+        required: false,
+        defaultValue: 'document.body after hydration',
+      },
+      {
+        name: 'initialFocusRef',
+        type: 'RefObject<HTMLElement | null>',
+        required: false,
+        defaultValue: 'owned close button',
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'size/icon/medium',
+      'space/0',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/12',
+      'space/16',
+      'space/24',
+      'space/64',
+      'radius/xl',
+      'font/family/sans',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/size/title-sm',
+      'font/weight/semibold',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'font/line-height/title-sm',
+      'elevation/2',
+      'motion/duration/fast',
+      'motion/duration/medium',
+      'motion/easing/standard',
+      'color/bg/scrim',
+      'color/bg/surface',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/border/focus',
+      'color/border/strong',
+      'color/action/primary',
+      'color/action/primary-hover',
+      'color/action/primary-pressed',
+      'color/action/weak',
+      'color/action/weak-hover',
+      'color/action/on-primary',
       'color/action/on-weak',
       'color/focus/ring',
     ]);

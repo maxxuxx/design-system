@@ -1446,6 +1446,143 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/tab/"
+    },
+    {
+      "name": "BottomSheet",
+      "slug": "bottom-sheet",
+      "description": "모바일 선택과 확인 흐름을 native modal dialog, focus 관리, scroll lock으로 표준화합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "content",
+        "full"
+      ],
+      "sizes": [],
+      "states": [
+        "open",
+        "closing"
+      ],
+      "accessibility": "native modal dialog, owned accessible name, focus entry·containment·restore, Escape와 close button, scroll lock을 제공합니다.",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": null,
+          "description": "owner가 관리하는 controlled open 상태입니다."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean, reason: BottomSheetCloseReason) => void",
+          "required": true,
+          "defaultValue": null,
+          "description": "backdrop, close-button, escape 종료 요청과 다음 상태를 전달합니다."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "aria-labelledby와 연결되는 localizable visible heading입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-describedby와 연결되는 선택 설명입니다."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "독립적으로 scroll되는 sheet 본문입니다."
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "본문 scroll과 분리되어 계속 보이는 선택 footer입니다."
+        },
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "owned Close IconButton의 localizable accessible name입니다."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Escape와 backdrop 종료 요청 허용 여부입니다. close button은 항상 유지됩니다."
+        },
+        {
+          "name": "portalContainer",
+          "type": "HTMLElement | null",
+          "required": false,
+          "defaultValue": "document.body after hydration",
+          "description": "SSR 이후 dialog Portal을 놓을 DOM container입니다."
+        },
+        {
+          "name": "initialFocusRef",
+          "type": "RefObject<HTMLElement | null>",
+          "required": false,
+          "defaultValue": "owned close button",
+          "description": "dialog 내부의 유효한 초기 focus 대상입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/24",
+        "space/64",
+        "radius/xl",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/size/title-sm",
+        "font/weight/semibold",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "font/line-height/title-sm",
+        "elevation/2",
+        "motion/duration/fast",
+        "motion/duration/medium",
+        "motion/easing/standard",
+        "color/bg/scrim",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/border/strong",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-primary",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/bottom-sheet/"
     }
   ]
 }

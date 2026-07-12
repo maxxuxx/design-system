@@ -1,0 +1,168 @@
+.ds-bottom-sheet {
+  position: fixed;
+  inset: var(--ds-space-0);
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: none;
+  block-size: 100%;
+  max-block-size: none;
+  margin: var(--ds-space-0);
+  padding: var(--ds-space-24) var(--ds-space-0) var(--ds-space-0);
+  place-items: end center;
+  color: var(--ds-color-text-primary);
+  font-family: var(--ds-font-family-sans);
+  background: transparent;
+  border: var(--ds-space-0);
+  overflow: hidden;
+}
+
+.ds-bottom-sheet[open] {
+  display: grid;
+}
+
+.ds-bottom-sheet::backdrop {
+  background: var(--ds-color-bg-scrim);
+  transition: background-color var(--ds-motion-duration-medium)
+    var(--ds-motion-easing-standard);
+}
+
+.ds-bottom-sheet__surface {
+  display: flex;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: calc(var(--ds-space-64) * 10);
+  max-block-size: calc(100dvh - var(--ds-space-24));
+  min-block-size: var(--ds-space-0);
+  flex-direction: column;
+  color: var(--ds-color-text-primary);
+  background: var(--ds-color-bg-surface);
+  border: var(--ds-space-2) solid var(--ds-color-border-default);
+  border-block-end: var(--ds-space-0);
+  border-start-start-radius: var(--ds-radius-xl);
+  border-start-end-radius: var(--ds-radius-xl);
+  box-shadow: var(--ds-elevation-2);
+  opacity: 1;
+  overflow: hidden;
+  transform: translateY(0);
+  transition:
+    opacity var(--ds-motion-duration-medium) var(--ds-motion-easing-standard),
+    transform var(--ds-motion-duration-medium) var(--ds-motion-easing-standard);
+}
+
+.ds-bottom-sheet[data-state='closing']::backdrop {
+  background: transparent;
+}
+
+.ds-bottom-sheet[data-state='closing'] .ds-bottom-sheet__surface {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+@starting-style {
+  .ds-bottom-sheet[data-state='open']::backdrop {
+    background: transparent;
+  }
+
+  .ds-bottom-sheet[data-state='open'] .ds-bottom-sheet__surface {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+.ds-bottom-sheet__header {
+  display: flex;
+  min-inline-size: var(--ds-space-0);
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: var(--ds-space-12);
+  padding: var(--ds-space-16) var(--ds-space-16) var(--ds-space-8)
+    var(--ds-space-24);
+}
+
+.ds-bottom-sheet__heading-copy {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  flex: 1 1 auto;
+  gap: var(--ds-space-4);
+  padding-block: var(--ds-space-8);
+  overflow-wrap: anywhere;
+}
+
+.ds-bottom-sheet__title,
+.ds-bottom-sheet__description,
+.ds-bottom-sheet__body {
+  min-inline-size: var(--ds-space-0);
+  margin: var(--ds-space-0);
+  overflow-wrap: anywhere;
+}
+
+.ds-bottom-sheet__title {
+  font-size: var(--ds-font-size-title-sm);
+  font-weight: var(--ds-font-weight-semibold);
+  line-height: var(--ds-font-line-height-title-sm);
+}
+
+.ds-bottom-sheet__description {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-body-sm);
+  line-height: var(--ds-font-line-height-body-sm);
+}
+
+.ds-bottom-sheet__close {
+  flex: 0 0 auto;
+}
+
+.ds-bottom-sheet__body {
+  min-block-size: var(--ds-space-0);
+  flex: 1 1 auto;
+  padding: var(--ds-space-8) var(--ds-space-24) var(--ds-space-24);
+  font-size: var(--ds-font-size-body);
+  line-height: var(--ds-font-line-height-body);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.ds-bottom-sheet__footer {
+  position: sticky;
+  inset-block-end: var(--ds-space-0);
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--ds-space-12);
+  padding: var(--ds-space-16) var(--ds-space-24) var(--ds-space-24);
+  background: var(--ds-color-bg-surface);
+  border-block-start: var(--ds-space-2) solid var(--ds-color-border-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-bottom-sheet::backdrop,
+  .ds-bottom-sheet__surface {
+    transition: none;
+  }
+
+  .ds-bottom-sheet[data-state='closing'] .ds-bottom-sheet__surface {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ds-bottom-sheet::backdrop {
+    background: Canvas;
+  }
+
+  .ds-bottom-sheet__surface {
+    color: CanvasText;
+    background: Canvas;
+    border-color: ButtonText;
+    box-shadow: none;
+    forced-color-adjust: none;
+  }
+
+  .ds-bottom-sheet__description {
+    color: CanvasText;
+  }
+
+  .ds-bottom-sheet__footer {
+    background: Canvas;
+    border-color: ButtonText;
+  }
+}

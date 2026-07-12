@@ -450,6 +450,33 @@
   line-height: var(--ds-font-line-height-caption);
 }
 
+.component-demo__stage--bottom-sheet {
+  place-items: stretch;
+}
+
+.bottom-sheet-demo__launcher {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  justify-items: start;
+  gap: var(--ds-space-12);
+}
+
+.bottom-sheet-demo__guidance,
+.bottom-sheet-demo__body p {
+  min-inline-size: var(--ds-space-0);
+  margin: var(--ds-space-0);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-body-sm);
+  line-height: var(--ds-font-line-height-body-sm);
+  overflow-wrap: anywhere;
+}
+
+.bottom-sheet-demo__body {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  gap: var(--ds-space-12);
+}
+
 @media (forced-colors: active) {
   .component-demo__control select:focus-visible,
   .component-demo__control input[type='text']:focus-visible,
