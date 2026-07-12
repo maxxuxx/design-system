@@ -44,6 +44,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'TextButton', href: '/components/text-button/' },
       { label: 'IconButton', href: '/components/icon-button/' },
       { label: 'BoardRow', href: '/components/board-row/' },
+      { label: 'Tab', href: '/components/tab/' },
     ],
   },
 ];

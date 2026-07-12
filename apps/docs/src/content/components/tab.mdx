@@ -1,0 +1,179 @@
+---
+name: Tab
+slug: tab
+description: 관련된 화면 구획을 자동 활성화 키보드 탐색과 연결해 같은 문맥 안에서 전환합니다.
+status: preview
+figmaUrl: ""
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [equal, scroll]
+sizes: [small, large]
+states: [default, hover, pressed, focus-visible, selected, disabled]
+accessibility: named tablist, roving tabindex, Arrow·Home·End automatic activation, stable tab·panel 관계와 visible focus를 제공합니다.
+props:
+  - name: ariaLabel
+    type: string
+    required: true
+    defaultValue: null
+    description: tablist의 목적을 설명하는 localizable accessible name입니다.
+  - name: items
+    type: readonly TabItem[]
+    required: true
+    defaultValue: null
+    description: 고유한 non-empty value, visible label, panel content와 선택적 disabled 상태입니다.
+  - name: value
+    type: string
+    required: false
+    defaultValue: null
+    description: enabled item을 가리키는 controlled selection입니다.
+  - name: defaultValue
+    type: string
+    required: false
+    defaultValue: first enabled
+    description: uncontrolled selection의 초기 enabled value입니다.
+  - name: onValueChange
+    type: "(value: string) => void"
+    required: false
+    defaultValue: null
+    description: pointer 또는 자동 활성화 키보드 탐색이 선택한 enabled value를 전달합니다.
+  - name: size
+    type: TabSize
+    required: false
+    defaultValue: large
+    description: small 44px 또는 large 52px tab 높이입니다.
+  - name: layout
+    type: TabLayout
+    required: false
+    defaultValue: equal
+    description: 두 개에서 네 개를 균등 배치하거나 content-width native scroll을 사용합니다.
+  - name: ...divProps
+    type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>"
+    required: false
+    defaultValue: null
+    description: className, style, id, data와 aria 속성, ref를 포함한 root div 계약입니다.
+tokens:
+  - size/control/small
+  - space/0
+  - space/2
+  - space/8
+  - space/16
+  - space/24
+  - radius/none
+  - radius/sm
+  - font/family/sans
+  - font/size/body-sm
+  - font/size/body
+  - font/weight/semibold
+  - font/line-height/body-sm
+  - font/line-height/body
+  - motion/duration/fast
+  - motion/easing/standard
+  - color/bg/surface
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/border/default
+  - color/action/primary
+  - color/action/weak
+  - color/action/weak-hover
+  - color/action/on-weak
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import TabExample from '../../components/examples/TabExample';
+
+## 예제
+
+<ComponentPreview title="Tab 자동 활성화, 균등 배치, native scroll" description="Arrow·Home·End 탐색, disabled skip, controlled selection, overflow와 긴 문자열을 확인하세요.">
+  <TabExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+같은 정보 구조 안에서 요약·내역·설정처럼 서로 관련된 패널을 즉시 비교하거나 전환할 때 사용합니다. 현재 선택을 유지한 채 페이지 이동 없이 패널만 바뀌는 문맥에 적합합니다.
+
+## 사용하지 말아야 할 때
+
+선택이 URL과 브라우저 history를 바꿔야 한다면 navigation link를 사용합니다. 세로 orientation, notification dot, manual activation, route 통합을 임의로 추가하지 않습니다. 사용자가 동시에 비교해야 하는 form 선택지는 RadioGroup을 사용합니다.
+
+## 구조
+
+root div 안에 이름이 있는 horizontal `tablist`, native button `tab`, 각 button과 ID로 연결된 `tabpanel`이 있습니다. 모든 panel은 관계를 유지한 채 selected panel만 표시됩니다. label과 content는 item 데이터가 소유합니다.
+
+## 크기와 변형
+
+`small`은 44px, 기본 `large`는 52px 높이입니다. 기본 `equal`은 두 개에서 네 개 tab을 동일한 너비로 배치하며 다섯 개 이상은 문서화된 misuse입니다. `scroll`은 content width와 native horizontal scroll, 오른쪽 edge affordance를 사용합니다.
+
+## 상태와 동작
+
+기본값은 첫 enabled item입니다. `value`와 `onValueChange`로 controlled, `defaultValue`로 uncontrolled selection을 구성합니다. Left·Right Arrow는 enabled tab 사이를 순환하며 focus와 selection을 함께 옮깁니다. Home과 End도 첫째·마지막 enabled tab을 자동 선택합니다. manual activation mode는 제공하지 않습니다.
+
+## 반응형 동작
+
+`equal` label은 좁은 container와 text zoom에서 줄바꿈되고 `scroll`은 page가 아니라 tablist만 가로로 scroll됩니다. 긴 unbroken label과 panel content도 component 경계를 넘지 않습니다. 문서 specimen은 넓은 화면에서 두 열, mobile에서 한 열입니다.
+
+## 접근성
+
+`ariaLabel`이 tablist의 accessible name을 제공합니다. 안정적인 ID가 `aria-controls`와 `aria-labelledby`를 연결합니다. roving tabindex로 selected tab만 `tabIndex=0`이며 disabled tab은 pointer와 keyboard 대상에서 제외됩니다. panel로 focus를 강제로 이동하지 않고 normal·forced-colors에서 focus와 selected indicator를 보존합니다.
+
+## React 예제
+
+```tsx
+import { useState } from 'react';
+import { Tab, type TabItem } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+const items = [
+  { value: 'summary', label: '요약', content: <OrderSummary /> },
+  { value: 'history', label: '내역', content: <OrderHistory /> },
+  { value: 'receipt', label: '영수증', content: <Receipt />, disabled: true },
+] satisfies readonly TabItem[];
+
+export function OrderTabs() {
+  const [value, setValue] = useState('summary');
+  return (
+    <Tab
+      ariaLabel="주문 정보"
+      items={items}
+      value={value}
+      onValueChange={setValue}
+    />
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `ariaLabel` | `string` | required | tablist의 localizable accessible name |
+| `items` | `readonly TabItem[]` | required | unique non-empty value, label, content, optional disabled |
+| `value` | `string` | - | controlled enabled value |
+| `defaultValue` | `string` | first enabled | uncontrolled 초기 enabled value |
+| `onValueChange` | `(value: string) => void` | - | pointer·keyboard automatic selection callback |
+| `size` | `'small' \| 'large'` | `'large'` | 44px 또는 52px tab 높이 |
+| `layout` | `'equal' \| 'scroll'` | `'equal'` | 동일 너비 또는 content-width native scroll |
+| native props | <code>Omit&lt;HTMLAttributes&lt;HTMLDivElement&gt;, 'children' \| 'defaultValue' \| 'onChange'&gt;</code> | - | root div props, style, data, aria, ref |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/small`, `space/0`, `space/2`, `space/8`, `space/16`, `space/24`, `radius/none`, `radius/sm`
+- `font/family/sans`, `font/size/body-sm`, `font/size/body`, `font/weight/semibold`, `font/line-height/body-sm`, `font/line-height/body`
+- `motion/duration/fast`, `motion/easing/standard`, `color/bg/surface`, `color/text/*`, `color/border/default`, `color/action/*`, `color/focus/ring`
+
+## Figma
+
+Tab Figma slice의 live readback 전까지 `figmaUrl`은 비워 둡니다. 예정된 component set은 `Size Small/Large × Layout Equal/Scroll × Selection First/Second/Third = 12` variants이고 `First label`, `Second label`, `Third label` TEXT properties를 가집니다. 구현 방향은 [TDS Mobile Tab reference](https://tossmini-docs.toss.im/tds-mobile/components/tab/)와 함께 검토합니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

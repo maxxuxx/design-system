@@ -83,6 +83,7 @@ describe('MDX collection coverage', () => {
       'content/components/text-button.mdx',
       'content/components/icon-button.mdx',
       'content/components/board-row.mdx',
+      'content/components/tab.mdx',
     ]);
 
     for (const file of files) {
@@ -148,7 +149,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the thirteen component names and slugs in canonical order', () => {
+  it('locks the fourteen component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -163,6 +164,7 @@ describe('component metadata contract', () => {
       'TextButton',
       'IconButton',
       'BoardRow',
+      'Tab',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -178,6 +180,7 @@ describe('component metadata contract', () => {
       'text-button',
       'icon-button',
       'board-row',
+      'tab',
     ]);
   });
 
@@ -389,6 +392,83 @@ describe('component metadata contract', () => {
       'color/border/default',
       'color/action/weak',
       'color/action/weak-hover',
+      'color/focus/ring',
+    ]);
+  });
+
+  it('locks the Tab public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/tab.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'Tab',
+      slug: 'tab',
+      figmaUrl: '',
+      variants: ['equal', 'scroll'],
+      sizes: ['small', 'large'],
+      states: [
+        'default',
+        'hover',
+        'pressed',
+        'focus-visible',
+        'selected',
+        'disabled',
+      ],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'ariaLabel', type: 'string', required: true, defaultValue: null },
+      { name: 'items', type: 'readonly TabItem[]', required: true, defaultValue: null },
+      { name: 'value', type: 'string', required: false, defaultValue: null },
+      { name: 'defaultValue', type: 'string', required: false, defaultValue: 'first enabled' },
+      {
+        name: 'onValueChange',
+        type: '(value: string) => void',
+        required: false,
+        defaultValue: null,
+      },
+      { name: 'size', type: 'TabSize', required: false, defaultValue: 'large' },
+      { name: 'layout', type: 'TabLayout', required: false, defaultValue: 'equal' },
+      {
+        name: '...divProps',
+        type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'space/0',
+      'space/2',
+      'space/8',
+      'space/16',
+      'space/24',
+      'radius/none',
+      'radius/sm',
+      'font/family/sans',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/weight/semibold',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'motion/duration/fast',
+      'motion/easing/standard',
+      'color/bg/surface',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/border/default',
+      'color/action/primary',
+      'color/action/weak',
+      'color/action/weak-hover',
+      'color/action/on-weak',
       'color/focus/ring',
     ]);
   });

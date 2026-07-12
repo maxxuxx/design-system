@@ -80,6 +80,20 @@ test('BoardRow route has zero axe violations and a keyboard-visible native summa
   );
 });
 
+test('Tab route has zero axe violations and a keyboard-visible active tab', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  await assertNoAxeViolations(page);
+  await tabTo(
+    page,
+    page.locator(
+      '[data-component-demo="tab"] [data-tab-sample="interactive"] [role="tab"][aria-selected="true"]',
+    ),
+  );
+});
+
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());

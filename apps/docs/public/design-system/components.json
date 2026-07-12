@@ -1330,6 +1330,122 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/board-row/"
+    },
+    {
+      "name": "Tab",
+      "slug": "tab",
+      "description": "관련된 화면 구획을 자동 활성화 키보드 탐색과 연결해 같은 문맥 안에서 전환합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "equal",
+        "scroll"
+      ],
+      "sizes": [
+        "small",
+        "large"
+      ],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible",
+        "selected",
+        "disabled"
+      ],
+      "accessibility": "named tablist, roving tabindex, Arrow·Home·End automatic activation, stable tab·panel 관계와 visible focus를 제공합니다.",
+      "props": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "tablist의 목적을 설명하는 localizable accessible name입니다."
+        },
+        {
+          "name": "items",
+          "type": "readonly TabItem[]",
+          "required": true,
+          "defaultValue": null,
+          "description": "고유한 non-empty value, visible label, panel content와 선택적 disabled 상태입니다."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "enabled item을 가리키는 controlled selection입니다."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "defaultValue": "first enabled",
+          "description": "uncontrolled selection의 초기 enabled value입니다."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "pointer 또는 자동 활성화 키보드 탐색이 선택한 enabled value를 전달합니다."
+        },
+        {
+          "name": "size",
+          "type": "TabSize",
+          "required": false,
+          "defaultValue": "large",
+          "description": "small 44px 또는 large 52px tab 높이입니다."
+        },
+        {
+          "name": "layout",
+          "type": "TabLayout",
+          "required": false,
+          "defaultValue": "equal",
+          "description": "두 개에서 네 개를 균등 배치하거나 content-width native scroll을 사용합니다."
+        },
+        {
+          "name": "...divProps",
+          "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "className, style, id, data와 aria 속성, ref를 포함한 root div 계약입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "space/0",
+        "space/2",
+        "space/8",
+        "space/16",
+        "space/24",
+        "radius/none",
+        "radius/sm",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/weight/semibold",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/action/primary",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/tab/"
     }
   ]
 }

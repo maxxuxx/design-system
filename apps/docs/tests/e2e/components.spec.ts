@@ -202,6 +202,67 @@ test('BoardRow preserves native click, Enter, Space, and controlled reconciliati
   await expect(controlled).not.toHaveAttribute('open');
 });
 
+test('Tab renders its complete document template and demo without console errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  await page.waitForLoadState('networkidle');
+
+  const headings = await page.locator('main h2').allTextContents();
+  expect(headings.map((heading) => heading.trim())).toEqual(
+    REQUIRED_COMPONENT_HEADINGS,
+  );
+  await expect(page.locator('[data-component-demo="tab"]')).toBeVisible();
+  await expect(page.getByText('preview', { exact: true }).first()).toBeVisible();
+  expect(errors, 'Tab docs must not emit browser console errors').toEqual([]);
+});
+
+test('Tab automatically activates with Arrow, Home, End, and pointer input', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  const demo = page.locator('[data-component-demo="tab"]');
+  const root = demo.locator('[data-tab-sample="interactive"]');
+  const overview = root.getByRole('tab', { name: '요약' });
+  const history = root.getByRole('tab', { name: '내역' });
+  const receipts = root.getByRole('tab', { name: '영수증' });
+  const settings = root.getByRole('tab', { name: '설정' });
+
+  await expect(root.getByRole('tablist', { name: '주문 정보' })).toBeVisible();
+  await expect(overview).toHaveAttribute('aria-selected', 'true');
+  await expect(root.getByRole('tabpanel')).toContainText('요약 패널');
+  await overview.focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(history).toBeFocused();
+  await expect(history).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('ArrowRight');
+  await expect(settings).toBeFocused();
+  await expect(settings).toHaveAttribute('aria-selected', 'true');
+  await page.keyboard.press('Home');
+  await expect(overview).toBeFocused();
+  await page.keyboard.press('End');
+  await expect(settings).toBeFocused();
+  await expect(receipts).toBeDisabled();
+  await receipts.click({ force: true });
+  await expect(settings).toHaveAttribute('aria-selected', 'true');
+
+  await history.click();
+  await expect(history).toHaveAttribute('aria-selected', 'true');
+  await expect(root.getByRole('tabpanel')).toContainText('내역 패널');
+  await expect(root.locator('[role="tabpanel"]:not([hidden])')).toHaveCount(1);
+
+  await demo.getByLabel('크기').selectOption('small');
+  await demo.getByLabel('레이아웃').selectOption('scroll');
+  await expect(root).toHaveAttribute('data-size', 'small');
+  await expect(root).toHaveAttribute('data-layout', 'scroll');
+});
+
 test('BoardRow does not leak a canceled summary activation into controlled updates', async ({ page }) => {
   await openHtmlRoute(page, {
     path: '/components/board-row/',

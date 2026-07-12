@@ -789,6 +789,125 @@ test('BoardRow exposes a complete forced-colors interaction palette and removes 
     getComputedStyle(element).transitionDuration)).toBe('0s');
 });
 
+test('Tab owns exact size, equal-width, scroll-overflow, and panel relationships', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  const demo = page.locator('[data-component-demo="tab"]');
+  const interactive = demo.locator('[data-tab-sample="interactive"]');
+  const scroll = demo.locator('[data-tab-sample="scroll"]');
+  const interactiveButtons = interactive.getByRole('tab');
+
+  expect(await interactiveButtons.count()).toBe(4);
+  for (const button of await interactiveButtons.all()) {
+    const box = await button.boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.height).toBeGreaterThanOrEqual(52);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const widths = await interactiveButtons.evaluateAll((elements) =>
+      elements.map((element) => element.getBoundingClientRect().width));
+    expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(0.5);
+  }
+
+  const relationships = await interactive.evaluate((root) => {
+    const tabs = [...root.querySelectorAll<HTMLElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    return {
+      valid: tabs.every((tab, index) => {
+        const panel = panels[index];
+        return panel !== undefined
+          && tab.getAttribute('aria-controls') === panel.id
+          && panel.getAttribute('aria-labelledby') === tab.id;
+      }),
+      visiblePanels: panels.filter((panel) => !panel.hidden).length,
+    };
+  });
+  expect(relationships).toEqual({ valid: true, visiblePanels: 1 });
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const nativeOverflow = await scroll.getByRole('tablist').evaluate((list) => ({
+      clientWidth: list.clientWidth,
+      overflowX: getComputedStyle(list).overflowX,
+      scrollWidth: list.scrollWidth,
+    }));
+    expect(nativeOverflow.scrollWidth).toBeGreaterThan(nativeOverflow.clientWidth);
+    expect(nativeOverflow.overflowX).toBe('auto');
+  }
+
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('Tab contains long copy and stacks its specimens on mobile', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  const demo = page.locator('[data-component-demo="tab"]');
+  const specimens = demo.locator('.tab-demo__specimen');
+  const longCopy = demo.locator('[data-tab-sample="long-copy"]');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [first, second] = await Promise.all([
+      specimens.nth(0).boundingBox(),
+      specimens.nth(1).boundingBox(),
+    ]);
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(Math.abs(first!.x - second!.x)).toBeLessThanOrEqual(0.5);
+    expect(second!.y).toBeGreaterThan(first!.y);
+  }
+
+  const fitsOwner = await longCopy.evaluate((element) => {
+    const owner = element.closest<HTMLElement>('.tab-demo__specimen');
+    if (!owner) return false;
+    const elementRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return elementRect.left >= ownerRect.left - 0.5
+      && elementRect.right <= ownerRect.right + 0.5
+      && element.scrollWidth <= element.clientWidth + 0.5;
+  });
+  expect(fitsOwner).toBe(true);
+});
+
+test('Tab preserves forced-colors selection and removes motion when requested', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns Tab platform state coverage.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  const selected = page.locator(
+    '[data-component-demo="tab"] [data-tab-sample="interactive"] [role="tab"][aria-selected="true"]',
+  );
+  await tabTo(page, selected);
+  await expectForcedColorFocus(selected);
+  const presentation = await selected.evaluate((element) => {
+    const style = getComputedStyle(element);
+    const indicator = getComputedStyle(element, '::after');
+    return {
+      background: style.backgroundColor,
+      color: style.color,
+      indicatorBackground: indicator.backgroundColor,
+      indicatorHeight: Number.parseFloat(indicator.height),
+      transitionDuration: style.transitionDuration,
+    };
+  });
+  expect(presentation.background).not.toMatch(/^(?:transparent|rgba\([^)]*,\s*0\))$/);
+  expect(presentation.color).not.toBe(presentation.background);
+  expect(presentation.indicatorBackground).not.toMatch(/^(?:transparent|rgba\([^)]*,\s*0\))$/);
+  expect(presentation.indicatorHeight).toBeGreaterThanOrEqual(2);
+  expect(presentation.transitionDuration).toBe('0s');
+});
+
 test('IconButton owns a complete forced-colors state palette and keyboard focus', async ({ page }, testInfo) => {
   test.skip(
     testInfo.project.name !== 'desktop-chromium',
