@@ -1226,7 +1226,7 @@
       "slug": "board-row",
       "description": "설정과 주문 정보처럼 한 줄의 요약과 상세 내용을 native disclosure로 연결합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

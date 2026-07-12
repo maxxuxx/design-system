@@ -13,7 +13,7 @@ the source-of-truth decisions. The current file has six token collections,
 documentation roots.
 Foundations visual approval was refreshed at `2026-07-12T12:53:48+09:00`, and
 Phase 3 component construction covers the five v0.1 families plus Checkbox,
-RadioGroup, Switch, Textarea, Select, TextButton, and IconButton.
+RadioGroup, Switch, Textarea, Select, TextButton, IconButton, and BoardRow.
 
 ## Typography
 
@@ -60,10 +60,11 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 15. `04.10 Select`
 16. `04.11 TextButton`
 17. `04.12 IconButton`
-18. `90 Native Differences`
-19. `99 Deprecated`
+18. `04.13 BoardRow`
+19. `90 Native Differences`
+20. `99 Deprecated`
 
-The current 19-page managed prefix is validated in this exact order. The original
+The current 20-page managed prefix is validated in this exact order. The original
 empty `Page 1` remains after this managed prefix and is not used by the library.
 
 ## Original Phase 2 Foundations catalog
@@ -256,6 +257,30 @@ top-level overlap.
 - Full-page screenshot target: `04.12 IconButton` (`189:17`), rendered at
   `1440 × 1124`
 
+## TDS-inspired mobile core v0.3 BoardRow validation
+
+- Component set: [BoardRow](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38)
+- Variant count: 4
+- Axes:
+  - `Value`: `Closed`, `Open`
+  - `State`: `Default`, `Pressed`
+- Component properties: `Title`, `Description`, and `Prefix` (`TEXT`), plus
+  `Show description` and `Show prefix` (`BOOLEAN`)
+- Summary minimum: token-bound `size/control/large` (`56px`); the default
+  two-line specimen resolves to a content-driven `62px` header
+- Open-only content resolves to `56px`, producing a `118px` open master without
+  clipping; no unknown-height motion is represented
+- Every arrow is an owned `Icon/ChevronRight` instance bound to
+  `size/icon/medium`; Open uses the reviewed `+90°` collapse affordance
+- Surface, border, pressed, text, icon, padding, gap, radius, minimum-height,
+  and divider geometry bindings passed for all four variants
+- Property-reference audit passed all 20 text and visibility references
+- Layout audit: zero overlaps, clipping failures, out-of-bounds children,
+  unnamed nodes, or unbound visible product paints
+- Full-page screenshot target: `04.13 BoardRow` (`195:2`), rendered at
+  `1440 × 720`; SHA-256
+  `dc767d45ae6861b9a94ed53514979dadc761a46ddcf74f5dee5af2addd0d17d8`
+
 ## Phase 3 TextField validation
 
 - Component set: [TextField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50)
@@ -435,12 +460,12 @@ top-level overlap.
   `1440 × 760`
 
 Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, Switch,
-Textarea, Select, TextButton, and IconButton are validated in Figma.
+Textarea, Select, TextButton, IconButton, and BoardRow are validated in Figma.
 
 ## Phase 4 library verification
 
-- Current live readback: `2026-07-12T13:18:50+09:00`
-- Managed pages: all 19 current pages in the documented order
+- Current live readback: `2026-07-12T13:54:48+09:00`
+- Managed pages: all 20 current pages in the documented order
 - Current token readback: six collections, 116 Variables, eight Text Styles, and
   two Effect Styles
 - Token-map reconciliation: the regenerated live projection is byte-identical
@@ -464,13 +489,13 @@ Textarea, Select, TextButton, and IconButton are validated in Figma.
   tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
   Button/TextButton/IconButton/TextField/ScrollArea/Checkbox/RadioGroup/
-  Switch/Textarea/Select control target is at least 44px with distinct focus,
+  Switch/Textarea/Select/BoardRow control target is at least 44px with distinct focus,
   pressed, error, disabled, or direction-availability presentation
 - Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`,
   ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, Textarea `8`,
-  Select `8`, TextButton `27`, and IconButton `27`; all properties, variants,
-  semantic bindings, and React contracts passed
-- Variant-axis parity: the exact axis names and ordered values for all eleven
+  Select `8`, TextButton `27`, IconButton `27`, and BoardRow `4`; all
+  properties, variants, semantic bindings, and React contracts passed
+- Variant-axis parity: the exact axis names and ordered values for all twelve
   component sets are stored in [`verification.json`](./verification.json) and
   enforced by the artifact verifier
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
@@ -480,8 +505,8 @@ Textarea, Select, TextButton, and IconButton are validated in Figma.
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
 - Screenshots: every managed page was captured and reviewed for legibility,
-  clipping, overlap, stale copy, and visible component coverage; all 19 SHA-256
-  fingerprints are stored in verification evidence for all 19 managed pages
+  clipping, overlap, stale copy, and visible component coverage; all 20 SHA-256
+  fingerprints are stored in verification evidence for all 20 managed pages
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
 Code Connect is explicitly `skipped-v0.1`.

@@ -3,7 +3,7 @@ name: BoardRow
 slug: board-row
 description: 설정과 주문 정보처럼 한 줄의 요약과 상세 내용을 native disclosure로 연결합니다.
 status: preview
-figmaUrl: ""
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38"
 frameworks:
   react: preview
   svelte: planned
@@ -167,7 +167,7 @@ export function OrderDetails() {
 
 ## Figma
 
-BoardRow Figma slice의 live readback 전까지 `figmaUrl`은 비워 둡니다. 예정된 component set은 `Value Closed/Open × State Default/Pressed = 4` variants이고 `Title`, `Description`, `Prefix` TEXT 및 `Show description`, `Show prefix` BOOLEAN properties를 가집니다. 구현 방향은 [TDS Mobile BoardRow reference](https://tossmini-docs.toss.im/tds-mobile/components/board-row/)와 함께 검토합니다.
+Live [BoardRow component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38)은 `Value Closed/Open × State Default/Pressed = 4` variants와 `Title`, `Description`, `Prefix` TEXT, `Show description`, `Show prefix` BOOLEAN properties를 제공합니다. Open variant만 content region을 보이고 owned ChevronRight를 회전하며, summary는 token-bound 56px minimum과 content-driven height를 유지합니다. 구현 방향은 [TDS Mobile BoardRow reference](https://tossmini-docs.toss.im/tds-mobile/components/board-row/)와 함께 검토합니다.
 
 ## 지원 상태
 

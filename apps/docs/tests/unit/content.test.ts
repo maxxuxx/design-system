@@ -337,7 +337,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'BoardRow',
       slug: 'board-row',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38',
       variants: ['closed', 'open'],
       sizes: [],
       states: ['default', 'hover', 'pressed', 'focus-visible'],
