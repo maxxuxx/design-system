@@ -12,6 +12,8 @@ const routes = [
   'foundations/spacing/index.html',
   'foundations/radius/index.html',
   'foundations/elevation/index.html',
+  'foundations/motion/index.html',
+  'components/index.html',
   'components/icon/index.html',
   'components/badge/index.html',
   'components/button/index.html',
@@ -22,25 +24,51 @@ const routes = [
   'components/switch/index.html',
   'components/textarea/index.html',
   'components/select/index.html',
+  'components/text-button/index.html',
+  'components/icon-button/index.html',
+  'components/board-row/index.html',
+  'components/tab/index.html',
+  'components/bottom-sheet/index.html',
   'design-system/tokens.json',
   'design-system/components.json',
 ];
 
 const tokenKeys = ['cssVariable', 'description', 'kind', 'name', 'resolvedValue', 'type', 'value'];
-const tokenTypes = new Set(['color', 'dimension', 'fontFamily', 'fontWeight', 'shadow']);
+const tokenTypes = new Set([
+  'color', 'cubicBezier', 'dimension', 'duration', 'fontFamily', 'fontWeight', 'shadow',
+]);
+const tokenTypeCounts = {
+  color: 59,
+  cubicBezier: 1,
+  dimension: 49,
+  duration: 2,
+  fontFamily: 1,
+  fontWeight: 4,
+  shadow: 2,
+};
 const tokenKinds = new Set(['primitive', 'semantic']);
 const componentKeys = [
   'accessibility', 'description', 'docsUrl', 'figmaUrl', 'frameworks', 'name',
   'props', 'sizes', 'slug', 'states', 'status', 'tokens', 'variants',
 ];
 const propKeys = ['defaultValue', 'description', 'name', 'required', 'type'];
-const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius'];
+const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius', 'Motion'];
+const collectionVariableCounts = {
+  Primitives: 33,
+  'Semantic Color': 27,
+  Spacing: 26,
+  Typography: 21,
+  Radius: 6,
+  Motion: 3,
+};
 const textStyleNames = ['Display', 'Heading', 'Title', 'Body/Large', 'Body', 'Body/Small', 'Caption', 'Label'];
 const pageNames = [
   '00 Cover', '01 Principles', '02 Getting Started', '03 Foundations',
   '04 Components', '04.1 Icon', '04.2 Badge', '04.3 Button',
   '04.4 TextField', '04.5 ScrollArea', '04.6 Checkbox', '04.7 RadioGroup',
   '04.8 Switch', '04.9 Textarea', '04.10 Select',
+  '04.11 TextButton', '04.12 IconButton', '04.13 BoardRow', '04.14 Tab',
+  '04.15 BottomSheet',
   '90 Native Differences', '99 Deprecated',
 ];
 const componentSpecs = [
@@ -205,6 +233,88 @@ const componentSpecs = [
     sizes: ['medium', 'large'],
     states: ['default', 'focus', 'error', 'disabled'],
   },
+  {
+    name: 'TextButton',
+    slug: 'text-button',
+    variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Clear', 'Underline', 'Arrow'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    properties: [{ name: 'Label', type: 'TEXT' }],
+    variants: ['clear', 'underline', 'arrow'],
+    sizes: ['small', 'medium', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'visited', 'disabled'],
+  },
+  {
+    name: 'IconButton',
+    slug: 'icon-button',
+    variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Clear', 'Fill', 'Outline'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    properties: [{ name: 'Icon', type: 'INSTANCE_SWAP' }],
+    variants: ['clear', 'fill', 'outline'],
+    sizes: ['small', 'medium', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'disabled'],
+  },
+  {
+    name: 'BoardRow',
+    slug: 'board-row',
+    variantCount: 4,
+    axes: [
+      { name: 'Value', values: ['Closed', 'Open'] },
+      { name: 'State', values: ['Default', 'Pressed'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Prefix', type: 'TEXT' },
+      { name: 'Show description', type: 'BOOLEAN' },
+      { name: 'Show prefix', type: 'BOOLEAN' },
+    ],
+    variants: ['closed', 'open'],
+    sizes: [],
+    states: ['default', 'hover', 'pressed', 'focus-visible'],
+  },
+  {
+    name: 'Tab',
+    slug: 'tab',
+    variantCount: 12,
+    axes: [
+      { name: 'Size', values: ['Small', 'Large'] },
+      { name: 'Layout', values: ['Equal', 'Scroll'] },
+      { name: 'Selection', values: ['First', 'Second', 'Third'] },
+    ],
+    properties: [
+      { name: 'First label', type: 'TEXT' },
+      { name: 'Second label', type: 'TEXT' },
+      { name: 'Third label', type: 'TEXT' },
+    ],
+    variants: ['equal', 'scroll'],
+    sizes: ['small', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'selected', 'disabled'],
+  },
+  {
+    name: 'BottomSheet',
+    slug: 'bottom-sheet',
+    variantCount: 4,
+    axes: [
+      { name: 'Height', values: ['Content', 'Full'] },
+      { name: 'Footer', values: ['Hidden', 'Visible'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Show description', type: 'BOOLEAN' },
+    ],
+    variants: ['content', 'full'],
+    sizes: [],
+    states: ['open', 'closing'],
+  },
 ];
 const componentPropContracts = {
   Icon: [
@@ -362,10 +472,114 @@ const componentPropContracts = {
       defaultValue: null,
     },
   ],
+  TextButton: [
+    { name: 'children', type: 'string', required: true, defaultValue: null },
+    { name: 'href', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'TextButtonVariant', required: false, defaultValue: 'clear' },
+    { name: 'tone', type: 'TextButtonTone', required: false, defaultValue: 'primary' },
+    {
+      name: '...nativeProps',
+      type: "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  IconButton: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'name', type: 'IconName', required: true, defaultValue: null },
+    { name: 'size', type: 'IconButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'IconButtonVariant', required: false, defaultValue: 'clear' },
+    {
+      name: '...buttonProps',
+      type: "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  BoardRow: [
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'prefix', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'open', type: 'boolean', required: false, defaultValue: null },
+    { name: 'defaultOpen', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'onOpenChange', type: '(open: boolean) => void', required: false, defaultValue: null },
+    {
+      name: '...detailsProps',
+      type: "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Tab: [
+    { name: 'ariaLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'items', type: 'readonly TabItem[]', required: true, defaultValue: null },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: 'first enabled' },
+    { name: 'onValueChange', type: '(value: string) => void', required: false, defaultValue: null },
+    { name: 'size', type: 'TabSize', required: false, defaultValue: 'large' },
+    { name: 'layout', type: 'TabLayout', required: false, defaultValue: 'equal' },
+    {
+      name: '...divProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  BottomSheet: [
+    { name: 'open', type: 'boolean', required: true, defaultValue: null },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean, reason: BottomSheetCloseReason) => void',
+      required: true,
+      defaultValue: null,
+    },
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'footer', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'closeLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    {
+      name: 'initialFocusRef',
+      type: 'RefObject<HTMLElement | null>',
+      required: false,
+      defaultValue: 'owned close button',
+    },
+  ],
 };
 const componentLocalCssVariables = {
   ScrollArea: new Set(['--ds-scroll-area-edge-size']),
   Switch: new Set(['--ds-switch-track-height', '--ds-switch-track-width']),
+};
+const componentTransitiveTokens = {
+  TextButton: new Set(['size/icon/small']),
+  IconButton: new Set(['size/icon/medium', 'size/icon/large']),
+  BoardRow: new Set(['size/icon/medium']),
+  BottomSheet: new Set([
+    'color/action/on-primary',
+    'color/action/on-weak',
+    'color/action/primary',
+    'color/action/primary-hover',
+    'color/action/primary-pressed',
+    'color/action/weak',
+    'color/action/weak-hover',
+    'color/bg/subtle',
+    'color/border/focus',
+    'color/border/strong',
+    'color/focus/ring',
+    'color/text/disabled',
+    'motion/duration/fast',
+    'size/control/small',
+    'size/icon/medium',
+  ]),
 };
 const iconNames = ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search'];
 const htmlRoutes = routes.filter((route) => route.endsWith('.html'));
@@ -454,6 +668,7 @@ function figmaNodeTarget(value) {
 
 function expectedCollection(token) {
   if (token.kind === 'semantic') return 'Semantic Color';
+  if (token.name.startsWith('motion/')) return 'Motion';
   if (token.name.startsWith('space/') || token.name.startsWith('size/')) return 'Spacing';
   if (token.name.startsWith('font/')) return 'Typography';
   if (token.name.startsWith('radius/')) return 'Radius';
@@ -462,7 +677,7 @@ function expectedCollection(token) {
 
 function expectedScopes(token) {
   const collection = expectedCollection(token);
-  if (collection === 'Primitives') return [];
+  if (collection === 'Primitives' || collection === 'Motion') return [];
   if (collection === 'Radius') return ['CORNER_RADIUS'];
   if (collection === 'Spacing') {
     return token.name.startsWith('size/') ? ['WIDTH_HEIGHT'] : ['GAP'];
@@ -481,7 +696,7 @@ function expectedScopes(token) {
 
 function expectedVariableType(token) {
   if (token.type === 'color') return 'COLOR';
-  if (token.type === 'fontFamily') return 'STRING';
+  if (token.type === 'fontFamily' || token.type === 'cubicBezier') return 'STRING';
   return 'FLOAT';
 }
 
@@ -547,9 +762,10 @@ function validateTokensArtifact(artifact) {
     violations.push('tokens.json must contain tokens');
     return violations;
   }
-  if (artifact.tokens.length !== 113) violations.push('tokens.json must contain exactly 113 tokens');
+  if (artifact.tokens.length !== 118) violations.push('tokens.json must contain exactly 118 tokens');
   const names = new Set();
   const cssVariables = new Set();
+  const types = new Map();
   let primitiveCount = 0;
   let semanticCount = 0;
   artifact.tokens.forEach((token, index) => {
@@ -577,9 +793,15 @@ function validateTokensArtifact(artifact) {
     cssVariables.add(token?.cssVariable);
     if (token?.kind === 'primitive') primitiveCount += 1;
     if (token?.kind === 'semantic') semanticCount += 1;
+    if (tokenTypes.has(token?.type)) types.set(token.type, (types.get(token.type) ?? 0) + 1);
   });
-  if (primitiveCount !== 87) violations.push('tokens.json must contain exactly 87 primitive tokens');
-  if (semanticCount !== 26) violations.push('tokens.json must contain exactly 26 semantic tokens');
+  if (primitiveCount !== 91) violations.push('tokens.json must contain exactly 91 primitive tokens');
+  if (semanticCount !== 27) violations.push('tokens.json must contain exactly 27 semantic tokens');
+  for (const [type, expected] of Object.entries(tokenTypeCounts)) {
+    if ((types.get(type) ?? 0) !== expected) {
+      violations.push(`tokens.json must contain exactly ${expected} ${type} token${expected === 1 ? '' : 's'}`);
+    }
+  }
   return violations;
 }
 
@@ -591,7 +813,7 @@ function validateComponentsArtifact(artifact) {
     violations.push('components.json must contain components');
     return violations;
   }
-  if (artifact.components.length !== 10) violations.push('components.json must contain exactly 10 components');
+  if (artifact.components.length !== 15) violations.push('components.json must contain exactly 15 components');
   const figmaUrls = [];
   componentSpecs.forEach(({ name, slug, variants, sizes, states }, index) => {
     const component = artifact.components[index];
@@ -656,8 +878,8 @@ function validateComponentsArtifact(artifact) {
       }
     }
   });
-  if (figmaUrls.length !== 10 || new Set(figmaUrls).size !== 10) {
-    violations.push('components.json must contain ten distinct Figma URLs');
+  if (figmaUrls.length !== 15 || new Set(figmaUrls).size !== 15) {
+    violations.push('components.json must contain fifteen distinct Figma URLs');
   }
   return violations;
 }
@@ -704,6 +926,7 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
     if (!Array.isArray(component?.tokens)) continue;
     const declaredTokenNames = component.tokens.filter((tokenName) => typeof tokenName === 'string');
     const declaredTokenSet = new Set(declaredTokenNames);
+    const transitiveTokenSet = componentTransitiveTokens[name] ?? new Set();
 
     for (const tokenName of declaredTokenNames) {
       if (!tokenByName.has(tokenName)) {
@@ -719,7 +942,9 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
       }
     }
     for (const tokenName of declaredTokenSet) {
-      if (tokenByName.has(tokenName) && !usedTokenNames.has(tokenName)) {
+      if (tokenByName.has(tokenName)
+        && !usedTokenNames.has(tokenName)
+        && !transitiveTokenSet.has(tokenName)) {
         violations.push(`${name} manifest tokens include unused CSS token: ${tokenName}`);
       }
     }
@@ -763,18 +988,18 @@ export function verifyTokenMap(tokens, tokenMap) {
   const tokenByName = new Map(tokens.map((token) => [token.name, token]));
   const mappedNames = [...variables.map(({ tokenName }) => tokenName), ...effects.map(({ tokenName }) => tokenName)];
   const expectedNames = tokens.map(({ name }) => name);
-  if (variables.length !== 111) violations.push('token-map must contain exactly 111 variables');
+  if (variables.length !== 116) violations.push('token-map must contain exactly 116 variables');
   if (new Set(variables.map(({ variableId }) => variableId)).size !== variables.length) {
     violations.push('token-map variable IDs must be unique');
   }
-  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.kind === 'semantic').length !== 26) {
-    violations.push('token-map must contain exactly 26 Semantic Color variables');
+  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.kind === 'semantic').length !== 27) {
+    violations.push('token-map must contain exactly 27 Semantic Color variables');
   }
-  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.type === 'color').length !== 57) {
-    violations.push('token-map must contain exactly 57 COLOR variables');
+  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.type === 'color').length !== 59) {
+    violations.push('token-map must contain exactly 59 COLOR variables');
   }
-  if (mappedNames.length !== 113
-    || new Set(mappedNames).size !== 113
+  if (mappedNames.length !== 118
+    || new Set(mappedNames).size !== 118
     || JSON.stringify([...mappedNames].sort()) !== JSON.stringify([...expectedNames].sort())) {
     violations.push('token-map token-name mapping must equal tokens.json');
   }
@@ -811,11 +1036,10 @@ export function verifyTokenMap(tokens, tokenMap) {
       violations.push(`${collection.name} variableCount must be ${actual}`);
     }
   }
-  if (collectionByName.get('Primitives')?.variableCount !== 32) {
-    violations.push('Primitives collection must contain exactly 32 variables');
-  }
-  if (collectionByName.get('Spacing')?.variableCount !== 26) {
-    violations.push('Spacing collection must contain exactly 26 variables');
+  for (const [name, expected] of Object.entries(collectionVariableCounts)) {
+    if (collectionByName.get(name)?.variableCount !== expected) {
+      violations.push(`${name} collection must contain exactly ${expected} variables`);
+    }
   }
 
   if (JSON.stringify(tokenMap?.styles?.text?.map(({ name }) => name)) !== JSON.stringify(textStyleNames)) {
@@ -869,7 +1093,7 @@ export async function verifyBuildArtifacts(root) {
   try {
     const actualHtmlRoutes = await collectHtmlRoutes(dist);
     if (JSON.stringify(actualHtmlRoutes) !== JSON.stringify([...htmlRoutes].sort())) {
-      violations.push('Static HTML routes must be exactly the 18 canonical routes');
+      violations.push('Static HTML routes must be exactly the 25 canonical routes');
     }
   } catch {
     violations.push('Static HTML route set is unreadable');
@@ -973,7 +1197,7 @@ export async function verifyFigmaEvidence(root) {
   const componentSetCount = Object.entries(evidence.components ?? {})
     .filter(([name, component]) => name !== 'Icon' && nonEmpty(component?.componentSetUrl))
     .length;
-  if (componentSetCount !== 9) violations.push('Figma evidence must expose exactly nine component sets');
+  if (componentSetCount !== 14) violations.push('Figma evidence must expose exactly fourteen component sets');
 
   const manifestTargets = [];
   for (const spec of componentSpecs) {
@@ -1035,16 +1259,16 @@ export async function verifyFigmaEvidence(root) {
     }
   }
 
-  if (manifestTargets.length !== 10 || new Set(manifestTargets).size !== 10) {
-    violations.push('Figma evidence must expose ten distinct manifest Figma node targets');
+  if (manifestTargets.length !== 15 || new Set(manifestTargets).size !== 15) {
+    violations.push('Figma evidence must expose fifteen distinct manifest Figma node targets');
   }
   const ownedIconTargets = evidence.components?.Icon?.componentUrls
     ?.map(({ url }) => figmaNodeTarget(url)) ?? [];
   const allEvidenceTargets = [...manifestTargets, ...ownedIconTargets];
-  if (allEvidenceTargets.length !== 15
+  if (allEvidenceTargets.length !== 20
     || allEvidenceTargets.some((value) => !value)
-    || new Set(allEvidenceTargets).size !== 15) {
-    violations.push('Figma evidence must expose fifteen distinct Figma node targets');
+    || new Set(allEvidenceTargets).size !== 20) {
+    violations.push('Figma evidence must expose twenty distinct Figma node targets');
   }
   return violations.sort();
 }

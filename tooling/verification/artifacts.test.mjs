@@ -13,21 +13,26 @@ const routes = [
   'index.html', 'principles/index.html', 'getting-started/index.html',
   'foundations/colors/index.html', 'foundations/typography/index.html',
   'foundations/spacing/index.html', 'foundations/radius/index.html',
-  'foundations/elevation/index.html', 'components/icon/index.html',
+  'foundations/elevation/index.html', 'foundations/motion/index.html',
+  'components/index.html', 'components/icon/index.html',
   'components/badge/index.html', 'components/button/index.html',
   'components/text-field/index.html', 'components/scroll-area/index.html',
   'components/checkbox/index.html', 'components/radio-group/index.html',
   'components/switch/index.html', 'components/textarea/index.html',
-  'components/select/index.html',
+  'components/select/index.html', 'components/text-button/index.html',
+  'components/icon-button/index.html', 'components/board-row/index.html',
+  'components/tab/index.html', 'components/bottom-sheet/index.html',
 ];
 
-const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius'];
+const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius', 'Motion'];
 const textStyleNames = ['Display', 'Heading', 'Title', 'Body/Large', 'Body', 'Body/Small', 'Caption', 'Label'];
 const pageNames = [
   '00 Cover', '01 Principles', '02 Getting Started', '03 Foundations',
   '04 Components', '04.1 Icon', '04.2 Badge', '04.3 Button',
   '04.4 TextField', '04.5 ScrollArea', '04.6 Checkbox', '04.7 RadioGroup',
   '04.8 Switch', '04.9 Textarea', '04.10 Select',
+  '04.11 TextButton', '04.12 IconButton', '04.13 BoardRow', '04.14 Tab',
+  '04.15 BottomSheet',
   '90 Native Differences', '99 Deprecated',
 ];
 
@@ -121,6 +126,55 @@ const componentSpecs = [
       { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
     ],
     sizes: ['medium', 'large'], states: ['default', 'focus', 'error', 'disabled'],
+  },
+  {
+    name: 'TextButton', slug: 'text-button', variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Clear', 'Underline', 'Arrow'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    variants: ['clear', 'underline', 'arrow'],
+    sizes: ['small', 'medium', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'visited', 'disabled'],
+  },
+  {
+    name: 'IconButton', slug: 'icon-button', variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Clear', 'Fill', 'Outline'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    variants: ['clear', 'fill', 'outline'],
+    sizes: ['small', 'medium', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'disabled'],
+  },
+  {
+    name: 'BoardRow', slug: 'board-row', variantCount: 4,
+    axes: [
+      { name: 'Value', values: ['Closed', 'Open'] },
+      { name: 'State', values: ['Default', 'Pressed'] },
+    ],
+    variants: ['closed', 'open'], sizes: [],
+    states: ['default', 'hover', 'pressed', 'focus-visible'],
+  },
+  {
+    name: 'Tab', slug: 'tab', variantCount: 12,
+    axes: [
+      { name: 'Size', values: ['Small', 'Large'] },
+      { name: 'Layout', values: ['Equal', 'Scroll'] },
+      { name: 'Selection', values: ['First', 'Second', 'Third'] },
+    ],
+    variants: ['equal', 'scroll'], sizes: ['small', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'selected', 'disabled'],
+  },
+  {
+    name: 'BottomSheet', slug: 'bottom-sheet', variantCount: 4,
+    axes: [
+      { name: 'Height', values: ['Content', 'Full'] },
+      { name: 'Footer', values: ['Hidden', 'Visible'] },
+    ],
+    variants: ['content', 'full'], sizes: [], states: ['open', 'closing'],
   },
 ];
 
@@ -280,6 +334,88 @@ const manifestProps = {
       defaultValue: null,
     },
   ],
+  TextButton: [
+    { name: 'children', type: 'string', required: true, defaultValue: null },
+    { name: 'href', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'TextButtonVariant', required: false, defaultValue: 'clear' },
+    { name: 'tone', type: 'TextButtonTone', required: false, defaultValue: 'primary' },
+    {
+      name: '...nativeProps',
+      type: "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  IconButton: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'name', type: 'IconName', required: true, defaultValue: null },
+    { name: 'size', type: 'IconButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'IconButtonVariant', required: false, defaultValue: 'clear' },
+    {
+      name: '...buttonProps',
+      type: "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  BoardRow: [
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'prefix', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'open', type: 'boolean', required: false, defaultValue: null },
+    { name: 'defaultOpen', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'onOpenChange', type: '(open: boolean) => void', required: false, defaultValue: null },
+    {
+      name: '...detailsProps',
+      type: "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Tab: [
+    { name: 'ariaLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'items', type: 'readonly TabItem[]', required: true, defaultValue: null },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: 'first enabled' },
+    { name: 'onValueChange', type: '(value: string) => void', required: false, defaultValue: null },
+    { name: 'size', type: 'TabSize', required: false, defaultValue: 'large' },
+    { name: 'layout', type: 'TabLayout', required: false, defaultValue: 'equal' },
+    {
+      name: '...divProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  BottomSheet: [
+    { name: 'open', type: 'boolean', required: true, defaultValue: null },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean, reason: BottomSheetCloseReason) => void',
+      required: true,
+      defaultValue: null,
+    },
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'footer', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'closeLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    {
+      name: 'initialFocusRef',
+      type: 'RefObject<HTMLElement | null>',
+      required: false,
+      defaultValue: 'owned close button',
+    },
+  ],
 };
 
 const properties = {
@@ -330,6 +466,25 @@ const properties = {
     { name: 'Description', type: 'TEXT' },
     { name: 'Error', type: 'TEXT' },
   ],
+  TextButton: [{ name: 'Label', type: 'TEXT' }],
+  IconButton: [{ name: 'Icon', type: 'INSTANCE_SWAP' }],
+  BoardRow: [
+    { name: 'Title', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Prefix', type: 'TEXT' },
+    { name: 'Show description', type: 'BOOLEAN' },
+    { name: 'Show prefix', type: 'BOOLEAN' },
+  ],
+  Tab: [
+    { name: 'First label', type: 'TEXT' },
+    { name: 'Second label', type: 'TEXT' },
+    { name: 'Third label', type: 'TEXT' },
+  ],
+  BottomSheet: [
+    { name: 'Title', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Show description', type: 'BOOLEAN' },
+  ],
 };
 
 const componentNodeIds = {
@@ -343,6 +498,11 @@ const componentNodeIds = {
   Switch: '153-122',
   Textarea: '158-56',
   Select: '168-72',
+  TextButton: '182-121',
+  IconButton: '190-134',
+  BoardRow: '197-38',
+  Tab: '202-59',
+  BottomSheet: '209-66',
 };
 
 const iconNodeIds = ['30-4', '30-7', '30-11', '30-16', '30-20'];
@@ -350,15 +510,34 @@ const iconNodeIds = ['30-4', '30-7', '30-11', '30-16', '30-20'];
 const fixtureComponentTokens = {
   Icon: ['color/icon/primary'],
   Badge: ['space/1', 'color/semantic/1'],
-  Button: ['size/control/1', 'color/semantic/2'],
+  Button: ['size/control/small', 'color/semantic/2'],
   TextField: ['font/size/1', 'color/semantic/3'],
   ScrollArea: ['blur/subtle'],
-  Checkbox: ['size/control/9', 'color/semantic/4'],
-  RadioGroup: ['size/control/10', 'color/semantic/5'],
-  Switch: ['size/control/11', 'color/semantic/6'],
-  Textarea: ['size/control/12', 'color/semantic/7'],
-  Select: ['size/control/13', 'color/semantic/8'],
+  Checkbox: ['size/selection/small', 'color/semantic/4'],
+  RadioGroup: ['size/selection/medium', 'color/semantic/5'],
+  Switch: ['size/switch/small-width', 'color/semantic/6'],
+  Textarea: ['size/control/medium', 'color/semantic/7'],
+  Select: ['size/control/large', 'color/semantic/8'],
+  TextButton: ['size/control/small', 'color/semantic/9'],
+  IconButton: ['size/control/medium', 'color/semantic/10'],
+  BoardRow: ['size/control/large', 'color/semantic/11'],
+  Tab: ['size/control/small', 'color/semantic/12'],
+  BottomSheet: ['motion/duration/fast', 'motion/easing/standard', 'color/semantic/13'],
 };
+const fixtureTransitiveTokens = {
+  TextButton: ['size/icon/small'],
+  IconButton: ['size/icon/medium', 'size/icon/large'],
+  BoardRow: ['size/icon/medium'],
+  BottomSheet: ['size/control/small', 'size/icon/medium'],
+};
+const sizeTokenNames = [
+  'size/icon/small', 'size/icon/medium', 'size/icon/large',
+  'size/badge/small', 'size/badge/medium',
+  'size/control/small', 'size/control/medium', 'size/control/large',
+  'size/selection/small', 'size/selection/medium',
+  'size/switch/small-width', 'size/switch/small-height',
+  'size/switch/medium-width', 'size/switch/medium-height',
+];
 
 function figmaUrl(id) {
   return `https://www.figma.com/design/file?node-id=${encodeURIComponent(id)}`;
@@ -423,48 +602,58 @@ function effectValuesSha256(effectReadback) {
 }
 
 function makeTokens() {
-  return Array.from({ length: 113 }, (_, index) => {
-    const kind = index < 87 ? 'primitive' : 'semantic';
+  return Array.from({ length: 118 }, (_, index) => {
+    const kind = index < 91 ? 'primitive' : 'semantic';
     let name;
     let type;
-    if (index < 31) {
+    if (index < 32) {
       name = `color/primitive/${index + 1}`;
       type = 'color';
-    } else if (index < 43) {
-      name = `space/${index - 30}`;
+    } else if (index < 44) {
+      name = `space/${index - 31}`;
       type = 'dimension';
-    } else if (index < 57) {
-      name = `size/control/${index - 42}`;
+    } else if (index < 58) {
+      name = sizeTokenNames[index - 44];
       type = 'dimension';
-    } else if (index < 63) {
-      name = `radius/${index - 56}`;
+    } else if (index < 64) {
+      name = `radius/${index - 57}`;
       type = 'dimension';
-    } else if (index < 71) {
-      name = `font/size/${index - 62}`;
+    } else if (index < 72) {
+      name = `font/size/${index - 63}`;
       type = 'dimension';
-    } else if (index < 79) {
-      name = `font/line-height/${index - 70}`;
+    } else if (index < 80) {
+      name = `font/line-height/${index - 71}`;
       type = 'dimension';
-    } else if (index < 83) {
-      name = `font/weight/${index - 78}`;
+    } else if (index < 84) {
+      name = `font/weight/${index - 79}`;
       type = 'fontWeight';
-    } else if (index === 83) {
+    } else if (index === 84) {
       name = 'font/family/sans';
       type = 'fontFamily';
-    } else if (index < 86) {
-      name = `elevation/${index - 83}`;
+    } else if (index < 87) {
+      name = `elevation/${index - 84}`;
       type = 'shadow';
-    } else if (index === 86) {
+    } else if (index === 87) {
       name = 'blur/subtle';
       type = 'dimension';
+    } else if (index < 90) {
+      name = `motion/duration/${index === 88 ? 'fast' : 'medium'}`;
+      type = 'duration';
+    } else if (index === 90) {
+      name = 'motion/easing/standard';
+      type = 'cubicBezier';
     } else {
-      name = index === 87 ? 'color/icon/primary' : `color/semantic/${index - 87}`;
+      name = index === 91 ? 'color/icon/primary' : `color/semantic/${index - 91}`;
       type = 'color';
     }
     const primitiveValue = type === 'fontFamily'
       ? '"IBM Plex Sans KR", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
       : type === 'fontWeight'
         ? 600
+        : type === 'duration'
+          ? index === 88 ? '120ms' : '200ms'
+          : type === 'cubicBezier'
+            ? 'cubic-bezier(0.2, 0, 0, 1)'
         : type === 'dimension'
       ? index + 1
       : type === 'shadow'
@@ -474,7 +663,7 @@ function makeTokens() {
       name,
       type,
       kind,
-      value: kind === 'semantic' ? `{color/primitive/${(index % 31) + 1}}` : primitiveValue,
+      value: kind === 'semantic' ? `{color/primitive/${(index % 32) + 1}}` : primitiveValue,
       description: `token ${index + 1} description`,
       cssVariable: `--ds-${name.replaceAll('/', '-')}`,
       resolvedValue: primitiveValue,
@@ -484,6 +673,7 @@ function makeTokens() {
 
 function collectionFor(token) {
   if (token.kind === 'semantic') return 'Semantic Color';
+  if (token.name.startsWith('motion/')) return 'Motion';
   if (token.name.startsWith('space/') || token.name.startsWith('size/')) return 'Spacing';
   if (token.name.startsWith('font/')) return 'Typography';
   if (token.name.startsWith('radius/')) return 'Radius';
@@ -491,7 +681,7 @@ function collectionFor(token) {
 }
 
 function scopesFor(token, collection) {
-  if (collection === 'Primitives') return [];
+  if (collection === 'Primitives' || collection === 'Motion') return [];
   if (collection === 'Radius') return ['CORNER_RADIUS'];
   if (collection === 'Spacing') {
     return token.name.startsWith('size/') ? ['WIDTH_HEIGHT'] : ['GAP'];
@@ -518,7 +708,11 @@ function makeTokenMap(tokens) {
       const collection = collectionFor(token);
       return {
         tokenName: token.name,
-        tokenType: token.type === 'color' ? 'COLOR' : token.type === 'fontFamily' ? 'STRING' : 'FLOAT',
+        tokenType: token.type === 'color'
+          ? 'COLOR'
+          : token.type === 'fontFamily' || token.type === 'cubicBezier'
+            ? 'STRING'
+            : 'FLOAT',
         collection,
         collectionId: collectionIds[collection],
         variableId: `variable:${index + 1}`,
@@ -566,7 +760,7 @@ function makeManifest() {
       ...prop,
       description: `${prop.name} property`,
     })),
-    tokens: fixtureComponentTokens[name],
+    tokens: [...fixtureComponentTokens[name], ...(fixtureTransitiveTokens[name] ?? [])],
     docsUrl: `/components/${slug}/`,
   }));
 }
@@ -651,8 +845,8 @@ async function createFixture() {
     const localVariableContract = name === 'ScrollArea'
       ? '--ds-scroll-area-edge-size: var(--ds-blur-subtle); height: var(--ds-scroll-area-edge-size); '
       : name === 'Switch'
-        ? '--ds-switch-track-width: var(--ds-size-control-11); '
-          + '--ds-switch-track-height: var(--ds-size-control-11); '
+        ? '--ds-switch-track-width: var(--ds-size-switch-small-width); '
+          + '--ds-switch-track-height: var(--ds-size-switch-small-width); '
           + 'width: var(--ds-switch-track-width); height: var(--ds-switch-track-height); '
         : '';
     await writeFile(
@@ -667,7 +861,7 @@ async function createFixture() {
   return root;
 }
 
-test('accepts a complete build, 113-token map, ten-component manifest, and Figma evidence', async (t) => {
+test('accepts a complete v0.3 build, 118-token map, fifteen-component manifest, and Figma evidence', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   assert.deepEqual(await verifyBuildArtifacts(root), []);
@@ -684,27 +878,35 @@ test('accepts equivalent Figma node URLs with additional query metadata', async 
   assert.deepEqual(await verifyFigmaEvidence(root), []);
 });
 
-test('reports every missing v0.2 static route', async (t) => {
+test('reports every missing v0.3 static route', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
-  const newRoutes = ['checkbox', 'radio-group', 'switch', 'textarea', 'select'];
-  await Promise.all(newRoutes.map((slug) => rm(
-    path.join(root, 'apps', 'docs', 'dist', 'components', slug, 'index.html'),
+  const newRoutes = [
+    'foundations/motion/index.html',
+    'components/index.html',
+    'components/text-button/index.html',
+    'components/icon-button/index.html',
+    'components/board-row/index.html',
+    'components/tab/index.html',
+    'components/bottom-sheet/index.html',
+  ];
+  await Promise.all(newRoutes.map((route) => rm(
+    path.join(root, 'apps', 'docs', 'dist', route),
   )));
   const violations = await verifyBuildArtifacts(root);
-  for (const slug of newRoutes) {
-    assert.ok(violations.includes(`Missing build artifact: components/${slug}/index.html`));
+  for (const route of newRoutes) {
+    assert.ok(violations.includes(`Missing build artifact: ${route}`));
   }
 });
 
-test('rejects an extra static HTML route beyond the exact 18-route contract', async (t) => {
+test('rejects an extra static HTML route beyond the exact 25-route contract', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const extra = path.join(root, 'apps', 'docs', 'dist', 'components', 'invented', 'index.html');
   await mkdir(path.dirname(extra), { recursive: true });
   await writeFile(extra, '<!doctype html><h1>invented</h1>');
   assert.ok((await verifyBuildArtifacts(root))
-    .includes('Static HTML routes must be exactly the 18 canonical routes'));
+    .includes('Static HTML routes must be exactly the 25 canonical routes'));
 });
 
 test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t) => {
@@ -716,11 +918,15 @@ test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t
   artifact.tokens[0].kind = 'other';
   artifact.tokens[1].cssVariable = '--wrong';
   delete artifact.tokens[2].resolvedValue;
+  artifact.tokens.find(({ name }) => name === 'motion/duration/fast').type = 'dimension';
+  artifact.tokens.find(({ name }) => name === 'motion/easing/standard').type = 'dimension';
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.some((value) => value.includes('exactly 113 tokens')));
-  assert.ok(violations.some((value) => value.includes('exactly 87 primitive tokens')));
-  assert.ok(violations.some((value) => value.includes('exactly 26 semantic tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 118 tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 91 primitive tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 27 semantic tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 2 duration tokens')));
+  assert.ok(violations.some((value) => value.includes('exactly 1 cubicBezier token')));
   assert.ok(violations.some((value) => value.includes('invalid kind')));
   assert.ok(violations.some((value) => value.includes('cssVariable mismatch')));
   assert.ok(violations.some((value) => value.includes('missing resolvedValue')));
@@ -742,7 +948,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   artifact.components[3].figmaUrl = artifact.components[2].figmaUrl;
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.some((value) => value.includes('exactly 10 components')));
+  assert.ok(violations.some((value) => value.includes('exactly 15 components')));
   assert.ok(violations.some((value) => value.includes('Component index 0 must be Icon')));
   assert.ok(violations.some((value) => value.includes('status must be preview')));
   assert.ok(violations.some((value) => value.includes('description must be non-empty')));
@@ -750,7 +956,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   assert.ok(violations.some((value) => value.includes('variants must be a string array')));
   assert.ok(violations.some((value) => value.includes('prop 0 required must be boolean')));
   assert.ok(violations.some((value) => value.includes('tokens must be a non-empty string array')));
-  assert.ok(violations.some((value) => value.includes('ten distinct Figma URLs')));
+  assert.ok(violations.some((value) => value.includes('fifteen distinct Figma URLs')));
 });
 
 test('rejects exact public component prop-contract drift', async (t) => {
@@ -776,6 +982,16 @@ test('rejects exact public component prop-contract drift', async (t) => {
     .find(({ name }) => name === 'resize').type = 'string';
   artifact.components.find(({ name }) => name === 'Select').props
     .find(({ name }) => name === '...selectProps').type = 'SelectHTMLAttributes<HTMLSelectElement>';
+  artifact.components.find(({ name }) => name === 'TextButton').props
+    .find(({ name }) => name === '...nativeProps').type = 'HTMLAttributes<HTMLElement>';
+  artifact.components.find(({ name }) => name === 'IconButton').props
+    .find(({ name }) => name === '...buttonProps').type = 'ButtonHTMLAttributes<HTMLButtonElement>';
+  artifact.components.find(({ name }) => name === 'BoardRow').props
+    .find(({ name }) => name === '...detailsProps').type = 'DetailsHTMLAttributes<HTMLDetailsElement>';
+  artifact.components.find(({ name }) => name === 'Tab').props
+    .find(({ name }) => name === 'items').type = 'TabItem[]';
+  artifact.components.find(({ name }) => name === 'BottomSheet').props
+    .find(({ name }) => name === 'initialFocusRef').type = 'RefObject<HTMLElement>';
   await writeFile(file, JSON.stringify(artifact));
 
   const violations = await verifyBuildArtifacts(root);
@@ -788,30 +1004,35 @@ test('rejects exact public component prop-contract drift', async (t) => {
   assert.ok(violations.includes('Switch prop contract mismatch'));
   assert.ok(violations.includes('Textarea prop contract mismatch'));
   assert.ok(violations.includes('Select prop contract mismatch'));
+  assert.ok(violations.includes('TextButton prop contract mismatch'));
+  assert.ok(violations.includes('IconButton prop contract mismatch'));
+  assert.ok(violations.includes('BoardRow prop contract mismatch'));
+  assert.ok(violations.includes('Tab prop contract mismatch'));
+  assert.ok(violations.includes('BottomSheet prop contract mismatch'));
 });
 
-test('rejects every missing v0.2 component manifest record', async (t) => {
+test('rejects every missing v0.3 component manifest record', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
   const artifact = JSON.parse(await readFile(file, 'utf8'));
-  const names = ['Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select'];
+  const names = ['TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet'];
   artifact.components = artifact.components.filter(({ name }) => !names.includes(name));
   await writeFile(file, JSON.stringify(artifact));
 
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.includes('components.json must contain exactly 10 components'));
+  assert.ok(violations.includes('components.json must contain exactly 15 components'));
   names.forEach((name, offset) => {
-    assert.ok(violations.includes(`Component index ${offset + 5} must be ${name}`));
+    assert.ok(violations.includes(`Component index ${offset + 10} must be ${name}`));
   });
 });
 
-test('rejects token-contract drift for every new form control', async (t) => {
+test('rejects token-contract drift for every v0.3 component', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
   const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
-  const names = ['Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select'];
+  const names = ['TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet'];
   const removed = Object.fromEntries(names.map((name) => {
     const component = manifest.components.find((entry) => entry.name === name);
     return [name, component.tokens.shift()];
@@ -867,21 +1088,29 @@ test('rejects incomplete token-map equality and WEB syntax', async (t) => {
   const tokenMap = JSON.parse(await readFile(file, 'utf8'));
   tokenMap.variables[0].webSyntax = 'var(--wrong)';
   delete tokenMap.variables[1].collectionId;
-  tokenMap.variables[2].scopes = ['ALL_SCOPES'];
-  tokenMap.variables.pop();
-  tokenMap.collections.find(({ name }) => name === 'Primitives').variableCount = 31;
+  const easing = tokenMap.variables.find(({ tokenName }) => tokenName === 'motion/easing/standard');
+  easing.scopes = ['ALL_SCOPES'];
+  easing.tokenType = 'FLOAT';
+  tokenMap.variables = tokenMap.variables.filter(({ tokenName }) => tokenName !== 'color/semantic/26');
+  tokenMap.collections.find(({ name }) => name === 'Primitives').variableCount = 32;
   tokenMap.collections.find(({ name }) => name === 'Spacing').variableCount = 25;
+  tokenMap.collections.find(({ name }) => name === 'Motion').variableCount = 2;
   tokenMap.styles.effect[0].description = 'drifted description';
   await writeFile(file, JSON.stringify(tokenMap));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('token-name mapping must equal tokens.json')));
-  assert.ok(violations.some((value) => value.includes('exactly 111 variables')));
-  assert.ok(violations.some((value) => value.includes('Primitives collection must contain exactly 32 variables')));
+  assert.ok(violations.some((value) => value.includes('exactly 116 variables')));
+  assert.ok(violations.some((value) => value.includes('exactly 27 Semantic Color variables')));
+  assert.ok(violations.some((value) => value.includes('exactly 59 COLOR variables')));
+  assert.ok(violations.some((value) => value.includes('Primitives collection must contain exactly 33 variables')));
   assert.ok(violations.some((value) => value.includes('Spacing collection must contain exactly 26 variables')));
-  assert.ok(violations.some((value) => value.includes('Primitives variableCount must be 32')));
+  assert.ok(violations.some((value) => value.includes('Motion collection must contain exactly 3 variables')));
+  assert.ok(violations.some((value) => value.includes('Primitives variableCount must be 33')));
+  assert.ok(violations.some((value) => value.includes('Motion variableCount must be 3')));
   assert.ok(violations.some((value) => value.includes('WEB syntax mismatch')));
   assert.ok(violations.some((value) => value.includes('variable fields mismatch')));
   assert.ok(violations.some((value) => value.includes('scopes mismatch')));
+  assert.ok(violations.some((value) => value.includes('motion/easing/standard tokenType mismatch')));
   assert.ok(violations.some((value) => value.includes('effect style description mismatch')));
 });
 
@@ -915,6 +1144,21 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   evidence.components.Select.variantCount = 7;
   evidence.components.Select.properties[1].name = 'Selection';
   evidence.components.Select.axes[1].values[1] = 'Focused';
+  evidence.components.TextButton.variantCount = 26;
+  evidence.components.TextButton.properties[0].type = 'BOOLEAN';
+  evidence.components.TextButton.axes[1].values[1] = 'Link';
+  evidence.components.IconButton.variantCount = 26;
+  evidence.components.IconButton.properties = [];
+  evidence.components.IconButton.axes[1].values.reverse();
+  evidence.components.BoardRow.variantCount = 3;
+  evidence.components.BoardRow.properties.pop();
+  evidence.components.BoardRow.axes[0].values.reverse();
+  evidence.components.Tab.variantCount = 11;
+  evidence.components.Tab.properties[0].name = 'First';
+  evidence.components.Tab.axes[1].values.reverse();
+  evidence.components.BottomSheet.variantCount = 3;
+  evidence.components.BottomSheet.properties.pop();
+  evidence.components.BottomSheet.axes[1].values.reverse();
   await writeFile(file, JSON.stringify(evidence));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('Icon componentCount must be 5')));
@@ -942,19 +1186,34 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   assert.ok(violations.some((value) => value.includes('Select variantCount must be 8')));
   assert.ok(violations.some((value) => value.includes('Select property definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('Select axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('TextButton variantCount must be 27')));
+  assert.ok(violations.some((value) => value.includes('TextButton property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('TextButton axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('IconButton variantCount must be 27')));
+  assert.ok(violations.some((value) => value.includes('IconButton property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('IconButton axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('BoardRow variantCount must be 4')));
+  assert.ok(violations.some((value) => value.includes('BoardRow property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('BoardRow axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Tab variantCount must be 12')));
+  assert.ok(violations.some((value) => value.includes('Tab property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Tab axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('BottomSheet variantCount must be 4')));
+  assert.ok(violations.some((value) => value.includes('BottomSheet property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('BottomSheet axis definitions mismatch')));
 });
 
-test('rejects every missing v0.2 Figma component and page record', async (t) => {
+test('rejects every missing v0.3 Figma component and page record', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'figma', 'verification.json');
   const evidence = JSON.parse(await readFile(file, 'utf8'));
   const records = [
-    ['Checkbox', '04.6 Checkbox'],
-    ['RadioGroup', '04.7 RadioGroup'],
-    ['Switch', '04.8 Switch'],
-    ['Textarea', '04.9 Textarea'],
-    ['Select', '04.10 Select'],
+    ['TextButton', '04.11 TextButton'],
+    ['IconButton', '04.12 IconButton'],
+    ['BoardRow', '04.13 BoardRow'],
+    ['Tab', '04.14 Tab'],
+    ['BottomSheet', '04.15 BottomSheet'],
   ];
   for (const [name, page] of records) {
     delete evidence.components[name];
@@ -976,18 +1235,18 @@ test('rejects exact Figma page, style, and component-set totals', async (t) => {
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'figma', 'verification.json');
   const evidence = JSON.parse(await readFile(file, 'utf8'));
-  evidence.pages = evidence.pages.filter((page) => page !== '04.10 Select');
+  evidence.pages = evidence.pages.filter((page) => page !== '04.15 BottomSheet');
   evidence.textStyleCount = 7;
   evidence.effectStyleCount = 1;
-  delete evidence.components.Select.componentSetUrl;
+  delete evidence.components.BottomSheet.componentSetUrl;
   await writeFile(file, JSON.stringify(evidence));
 
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.includes('Figma page list mismatch'));
   assert.ok(violations.includes('Figma textStyleCount must be 8'));
   assert.ok(violations.includes('Figma effectStyleCount must be 2'));
-  assert.ok(violations.includes('Figma evidence must expose exactly nine component sets'));
-  assert.ok(violations.includes('Select evidence fields mismatch'));
+  assert.ok(violations.includes('Figma evidence must expose exactly fourteen component sets'));
+  assert.ok(violations.includes('BottomSheet evidence fields mismatch'));
 });
 
 test('rejects approval, Code Connect, screenshot, hard-code, and URL mapping drift', async (t) => {
@@ -1104,8 +1363,8 @@ test('rejects cross-file and duplicate normalized Figma node targets', async (t)
 
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('same Figma file')));
-  assert.ok(violations.some((value) => value.includes('ten distinct manifest Figma node targets')));
-  assert.ok(violations.some((value) => value.includes('fifteen distinct Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('fifteen distinct manifest Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('twenty distinct Figma node targets')));
 });
 
 test('rejects duplicate token-map collection, variable, and style IDs', async (t) => {
@@ -1150,7 +1409,7 @@ test('rejects unexpected Figma component evidence keys', async (t) => {
   evidence.components.Tooltip = {};
   await writeFile(file, JSON.stringify(evidence));
   assert.ok((await verifyFigmaEvidence(root))
-    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select'));
+    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet'));
 });
 
 test('rejects non-strict or impossible ISO timestamps', async (t) => {
