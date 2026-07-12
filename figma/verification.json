@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T12:53:48+09:00",
+  "verifiedAt": "2026-07-12T13:18:50+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -30,6 +30,7 @@
     "04.9 Textarea",
     "04.10 Select",
     "04.11 TextButton",
+    "04.12 IconButton",
     "90 Native Differences",
     "99 Deprecated"
   ],
@@ -104,6 +105,7 @@
     "04.9 Textarea": "3254f47a9b5317cdbb34228a73bdf4c50005ffb92789034a905d6ca02c3a02cd",
     "04.10 Select": "e597e4ac9209c26e34c394df64757b60bb39c940fee8ed77f80a96fd22a6424f",
     "04.11 TextButton": "3e09fe0e6e2fdf0d70953dcce64780539390aa330a6f41589e11aa56e6e8619d",
+    "04.12 IconButton": "2f5c0a27aaa44a60be94f796467b35a57ea4040b397dfe0e3851e04e9fee9203",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -399,6 +401,24 @@
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
+    },
+    "IconButton": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134",
+      "variantCount": 27,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium", "Large"] },
+        { "name": "Variant", "values": ["Clear", "Fill", "Outline"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Icon",
+          "type": "INSTANCE_SWAP"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
     }
   },
   "foundations": {
@@ -423,6 +443,7 @@
     "04.9 Textarea": "158:2",
     "04.10 Select": "168:2",
     "04.11 TextButton": "182:2",
+    "04.12 IconButton": "189:17",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

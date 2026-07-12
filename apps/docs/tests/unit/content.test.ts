@@ -265,7 +265,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'IconButton',
       slug: 'icon-button',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134',
       variants: ['clear', 'fill', 'outline'],
       sizes: ['small', 'medium', 'large'],
       states: [

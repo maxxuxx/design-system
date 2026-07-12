@@ -3,7 +3,7 @@ name: IconButton
 slug: icon-button
 description: 접근 가능한 이름과 시스템 소유 아이콘으로 compact action을 일관되게 표현합니다.
 status: preview
-figmaUrl: ""
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134"
 frameworks:
   react: preview
   svelte: planned
@@ -144,7 +144,7 @@ export function SearchToolbar() {
 
 ## Figma
 
-IconButton Figma slice의 live readback 전까지 `figmaUrl`은 비워 둡니다. 예정된 component set은 `Size 3 × Variant 3 × State Default/Pressed/Disabled = 27` variants를 가지며, `Icon` INSTANCE_SWAP은 다섯 owned Icon component로 제한되고 기본값은 Close입니다. 구현 방향은 [TDS Mobile IconButton reference](https://tossmini-docs.toss.im/tds-mobile/components/icon-button/)와 함께 검토합니다.
+[IconButton component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134)은 `Size 3 × Variant 3 × State Default/Pressed/Disabled = 27` variants를 가집니다. `Icon` INSTANCE_SWAP의 기본값은 owned Close이고 preferred values는 Check, ChevronRight, Close, Info, Search 다섯 owned Icon component key로 제한됩니다. 프레임은 44/48/56px, icon은 20/24/24px이며 모든 상태 paint와 geometry가 token에 바인딩되어 있습니다. 구현 방향은 [TDS Mobile IconButton reference](https://tossmini-docs.toss.im/tds-mobile/components/icon-button/)와 함께 검토합니다.
 
 ## 지원 상태
 

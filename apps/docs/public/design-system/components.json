@@ -1129,7 +1129,7 @@
       "slug": "icon-button",
       "description": "접근 가능한 이름과 시스템 소유 아이콘으로 compact action을 일관되게 표현합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",
