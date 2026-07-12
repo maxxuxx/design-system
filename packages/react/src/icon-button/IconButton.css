@@ -101,11 +101,14 @@
 }
 
 @media (forced-colors: active) {
-  .ds-icon-button {
+  .ds-icon-button[data-variant] {
+    forced-color-adjust: none;
+  }
+
+  .ds-icon-button[data-variant='clear'] {
     color: ButtonText;
     background: ButtonFace;
-    border-color: ButtonText;
-    forced-color-adjust: none;
+    border-color: ButtonFace;
   }
 
   .ds-icon-button[data-variant='fill'] {
@@ -114,12 +117,54 @@
     border-color: Highlight;
   }
 
-  .ds-icon-button:focus-visible {
+  .ds-icon-button[data-variant='outline'] {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
+  }
+
+  .ds-icon-button[data-variant='clear']:not(:disabled):hover {
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  .ds-icon-button[data-variant='fill']:not(:disabled):hover {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: Highlight;
+  }
+
+  .ds-icon-button[data-variant='outline']:not(:disabled):hover {
+    color: HighlightText;
+    background: Highlight;
+    border-color: ButtonText;
+  }
+
+  .ds-icon-button[data-variant='clear']:not(:disabled):active {
+    color: ActiveText;
+    background: ButtonFace;
+    border-color: ActiveText;
+  }
+
+  .ds-icon-button[data-variant='fill']:not(:disabled):active {
+    color: HighlightText;
+    background: Highlight;
+    border-color: ActiveText;
+  }
+
+  .ds-icon-button[data-variant='outline']:not(:disabled):active {
+    color: ActiveText;
+    background: ButtonFace;
+    border-color: ButtonText;
+  }
+
+  .ds-icon-button[data-variant]:focus-visible {
     outline-color: Highlight;
     box-shadow: none;
   }
 
-  .ds-icon-button:disabled {
+  .ds-icon-button[data-variant]:disabled {
     color: GrayText;
     background: Canvas;
     border-color: GrayText;

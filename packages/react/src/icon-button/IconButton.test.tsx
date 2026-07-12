@@ -207,6 +207,22 @@ describe('IconButton', () => {
     expect(componentCss).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentCss).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
 
+    const forcedColorsStart = componentCss.indexOf(
+      '@media (forced-colors: active)',
+    );
+    for (const variant of variants) {
+      for (const state of ['', ':not(:disabled):hover', ':not(:disabled):active']) {
+        const selector =
+          `.ds-icon-button[data-variant='${variant}']${state}`;
+        expect(componentCss.lastIndexOf(selector)).toBeGreaterThan(
+          forcedColorsStart,
+        );
+      }
+    }
+    expect(
+      componentCss.lastIndexOf('.ds-icon-button[data-variant]:disabled'),
+    ).toBeGreaterThan(forcedColorsStart);
+
     const hoverSelector =
       ".ds-icon-button[data-variant='fill']:not(:disabled):hover";
     const activeSelector =

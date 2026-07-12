@@ -655,19 +655,149 @@ test('IconButton specimens remain responsive without page overflow', async ({ pa
   )).toBe(true);
 });
 
-test('IconButton exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+test('IconButton owns a complete forced-colors state palette and keyboard focus', async ({ page }, testInfo) => {
   test.skip(
     testInfo.project.name !== 'desktop-chromium',
     'Desktop owns forced-colors component focus.',
   );
 
-  await page.emulateMedia({ forcedColors: 'active' });
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
   await openHtmlRoute(page, {
     path: '/components/icon-button/',
     heading: 'IconButton',
   });
   const demo = page.locator('[data-component-demo="icon-button"]');
   const target = demo.locator('[data-icon-button-sample="interactive"]');
+  const variantControl = demo.getByLabel('변형');
+  const disabledControl = demo.getByLabel('disabled', { exact: true });
+  const system = await page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:absolute;left:-9999px;forced-color-adjust:none';
+    document.body.append(probe);
+    const colors: Record<string, string> = {};
+    for (const keyword of [
+      'ActiveText',
+      'ButtonFace',
+      'ButtonText',
+      'Canvas',
+      'GrayText',
+      'Highlight',
+      'HighlightText',
+    ]) {
+      probe.style.color = keyword;
+      colors[keyword] = getComputedStyle(probe).color;
+    }
+    probe.remove();
+    return colors;
+  });
+  const readPresentation = () => target.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      border: style.borderColor,
+      color: style.color,
+      forcedColorAdjust: style.forcedColorAdjust,
+    };
+  });
+  const disabledPresentation = {
+    background: system.Canvas,
+    border: system.GrayText,
+    color: system.GrayText,
+    forcedColorAdjust: 'none',
+  };
+  const expectedByVariant = {
+    clear: {
+      default: {
+        background: system.ButtonFace,
+        border: system.ButtonFace,
+        color: system.ButtonText,
+        forcedColorAdjust: 'none',
+      },
+      hover: {
+        background: system.Highlight,
+        border: system.Highlight,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+      pressed: {
+        background: system.ButtonFace,
+        border: system.ActiveText,
+        color: system.ActiveText,
+        forcedColorAdjust: 'none',
+      },
+    },
+    fill: {
+      default: {
+        background: system.Highlight,
+        border: system.Highlight,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+      hover: {
+        background: system.ButtonFace,
+        border: system.Highlight,
+        color: system.ButtonText,
+        forcedColorAdjust: 'none',
+      },
+      pressed: {
+        background: system.Highlight,
+        border: system.ActiveText,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+    },
+    outline: {
+      default: {
+        background: system.ButtonFace,
+        border: system.ButtonText,
+        color: system.ButtonText,
+        forcedColorAdjust: 'none',
+      },
+      hover: {
+        background: system.Highlight,
+        border: system.ButtonText,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+      pressed: {
+        background: system.ButtonFace,
+        border: system.ButtonText,
+        color: system.ActiveText,
+        forcedColorAdjust: 'none',
+      },
+    },
+  } as const;
+
+  for (const variant of ['clear', 'fill', 'outline'] as const) {
+    await variantControl.selectOption(variant);
+    await page.mouse.move(0, 0);
+    expect(await readPresentation()).toEqual(
+      expectedByVariant[variant].default,
+    );
+
+    await target.hover();
+    expect(await target.evaluate((element) => element.matches(':hover')))
+      .toBe(true);
+    expect(await readPresentation()).toEqual(
+      expectedByVariant[variant].hover,
+    );
+
+    const box = await target.boundingBox();
+    expect(box).not.toBeNull();
+    await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+    await page.mouse.down();
+    expect(await readPresentation()).toEqual(
+      expectedByVariant[variant].pressed,
+    );
+    await page.mouse.up();
+    await page.mouse.move(0, 0);
+
+    await disabledControl.check();
+    expect(await readPresentation()).toEqual(disabledPresentation);
+    await disabledControl.uncheck();
+  }
+
   await demo.getByLabel('disabled', { exact: true }).focus();
   await page.keyboard.press('Tab');
   await expectForcedColorFocus(target);

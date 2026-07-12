@@ -125,6 +125,13 @@ test('IconButton demo preserves owned naming, disabled, and native form behavior
   await expect(demo.getByText('활성화 횟수: 1')).toBeVisible();
   await expect(demo.getByText('폼 제출 횟수: 0')).toBeVisible();
 
+  await interactive.focus();
+  await page.keyboard.press('Enter');
+  await expect(demo.getByText('활성화 횟수: 2')).toBeVisible();
+  await page.keyboard.press('Space');
+  await expect(demo.getByText('활성화 횟수: 3')).toBeVisible();
+  await expect(demo.getByText('폼 제출 횟수: 0')).toBeVisible();
+
   await demo.getByLabel('아이콘').selectOption('close');
   await demo.getByLabel('크기').selectOption('large');
   await demo.getByLabel('변형').selectOption('outline');
