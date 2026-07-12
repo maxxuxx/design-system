@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T13:57:43+09:00",
+  "verifiedAt": "2026-07-12T14:19:53+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -33,6 +33,7 @@
     "04.12 IconButton",
     "04.13 BoardRow",
     "04.14 Tab",
+    "04.15 BottomSheet",
     "90 Native Differences",
     "99 Deprecated"
   ],
@@ -110,6 +111,7 @@
     "04.12 IconButton": "2f5c0a27aaa44a60be94f796467b35a57ea4040b397dfe0e3851e04e9fee9203",
     "04.13 BoardRow": "dc767d45ae6861b9a94ed53514979dadc761a46ddcf74f5dee5af2addd0d17d8",
     "04.14 Tab": "eafc4a14e547ff3fdc8d3c13d0f6d7451b64e298479ecb547e8fa73df89cf539",
+    "04.15 BottomSheet": "740a7f33c4d14b2f1a3915579b42396dfa0c74197fe8f846e66e5153786572d1",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -458,6 +460,22 @@
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
+    },
+    "BottomSheet": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66",
+      "variantCount": 4,
+      "axes": [
+        { "name": "Height", "values": ["Content", "Full"] },
+        { "name": "Footer", "values": ["Hidden", "Visible"] }
+      ],
+      "properties": [
+        { "name": "Title", "type": "TEXT" },
+        { "name": "Description", "type": "TEXT" },
+        { "name": "Show description", "type": "BOOLEAN" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
     }
   },
   "foundations": {
@@ -485,6 +503,7 @@
     "04.12 IconButton": "189:17",
     "04.13 BoardRow": "195:2",
     "04.14 Tab": "200:2",
+    "04.15 BottomSheet": "208:19",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

@@ -3,7 +3,7 @@ name: BottomSheet
 slug: bottom-sheet
 description: 모바일 선택과 확인 흐름을 native modal dialog, focus 관리, scroll lock으로 표준화합니다.
 status: preview
-figmaUrl: ""
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66"
 frameworks:
   react: preview
   svelte: planned
@@ -210,7 +210,7 @@ export function AddressSheet() {
 
 ## Figma
 
-BottomSheet Figma slice의 live readback 전까지 `figmaUrl`은 비워 둡니다. 예정 component set은 `Height Content/Full × Footer Hidden/Visible = 4` open-state variants이고 `Title`, `Description` TEXT와 `Show description` BOOLEAN property를 가집니다. closed state는 invisible variant가 아니라 behavior로 문서화합니다. 구현 방향은 [TDS Mobile BottomSheet reference](https://tossmini-docs.toss.im/tds-mobile/components/bottom-sheet/)와 함께 검토합니다.
+[BottomSheet component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66)은 `Height Content/Full × Footer Hidden/Visible = 4` open-state variants와 `Title`, `Description` TEXT, `Show description` BOOLEAN property를 제공합니다. 모든 variant가 owned Close instance를 사용하고 Footer Visible variant는 owned Large Fill Button instance를 재사용합니다. closed state는 invisible variant가 아니라 behavior로 문서화합니다. 구현 방향은 [TDS Mobile BottomSheet reference](https://tossmini-docs.toss.im/tds-mobile/components/bottom-sheet/)와 함께 검토합니다.
 
 ## 지원 상태
 

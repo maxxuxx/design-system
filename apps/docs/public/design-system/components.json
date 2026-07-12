@@ -1452,7 +1452,7 @@
       "slug": "bottom-sheet",
       "description": "모바일 선택과 확인 흐름을 native modal dialog, focus 관리, scroll lock으로 표준화합니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

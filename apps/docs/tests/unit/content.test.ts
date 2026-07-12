@@ -486,7 +486,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'BottomSheet',
       slug: 'bottom-sheet',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66',
       variants: ['content', 'full'],
       sizes: [],
       states: ['open', 'closing'],

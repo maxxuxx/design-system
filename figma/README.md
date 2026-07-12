@@ -13,7 +13,8 @@ the source-of-truth decisions. The current file has six token collections,
 documentation roots.
 Foundations visual approval was refreshed at `2026-07-12T12:53:48+09:00`, and
 Phase 3 component construction covers the five v0.1 families plus Checkbox,
-RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, and Tab.
+RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, and
+BottomSheet.
 
 ## Typography
 
@@ -62,10 +63,11 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 17. `04.12 IconButton`
 18. `04.13 BoardRow`
 19. `04.14 Tab`
-20. `90 Native Differences`
-21. `99 Deprecated`
+20. `04.15 BottomSheet`
+21. `90 Native Differences`
+22. `99 Deprecated`
 
-The current 21-page managed prefix is validated in this exact order. The original
+The current 22-page managed prefix is validated in this exact order. The original
 empty `Page 1` remains after this managed prefix and is not used by the library.
 
 ## Original Phase 2 Foundations catalog
@@ -314,6 +316,34 @@ top-level overlap.
   `1440 × 1148`; SHA-256
   `eafc4a14e547ff3fdc8d3c13d0f6d7451b64e298479ecb547e8fa73df89cf539`
 
+## TDS-inspired mobile core v0.3 BottomSheet validation
+
+- Component set: [BottomSheet](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66)
+- Variant count: 4 open-state specimens
+- Axes:
+  - `Height`: `Content`, `Full`
+  - `Footer`: `Hidden`, `Visible`
+- Component properties: `Title` and `Description` (`TEXT`), plus
+  `Show description` (`BOOLEAN`)
+- All four masters are `390 × 844px` mobile viewports with a semantic
+  `color/bg/scrim`; Content surfaces are `360px` or `448px` high and Full
+  surfaces preserve the token-guided `24px` top gap at `820px` high
+- Every surface is bottom aligned, uses `color/bg/surface`, token-bound
+  `radius/xl` top corners, and the `Shadow/2` Effect Style
+- Every variant owns one `Icon/Close` instance in a token-bound `44 × 44px`
+  target; Footer Visible variants own one Large Fill Button instance
+- Header, body scroll region, and optional footer remain separate layout
+  regions; no Full variant clips or extends beyond the viewport
+- `26` visible solid product paints are Variable-bound and unbound visible
+  product paints are `0`; typography, spacing, radius, target dimensions,
+  surface, scrim, and elevation bindings passed
+- Closed state is documented as lifecycle behavior rather than an invisible
+  variant. Mobile full-width and wider-screen `640px` maximum guidance are
+  recorded in the page documentation and React page
+- Full-page screenshot target: `04.15 BottomSheet` (`208:19`), rendered at
+  `1440 × 2148`; SHA-256
+  `740a7f33c4d14b2f1a3915579b42396dfa0c74197fe8f846e66e5153786572d1`
+
 ## Phase 3 TextField validation
 
 - Component set: [TextField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50)
@@ -493,12 +523,13 @@ top-level overlap.
   `1440 × 760`
 
 Status: Foundations, all five v0.1 slices, Checkbox, RadioGroup, Switch,
-Textarea, Select, TextButton, IconButton, BoardRow, and Tab are validated in Figma.
+Textarea, Select, TextButton, IconButton, BoardRow, Tab, and BottomSheet are
+validated in Figma.
 
 ## Phase 4 library verification
 
-- Current live readback: `2026-07-12T13:57:43+09:00`
-- Managed pages: all 21 current pages in the documented order
+- Current live readback: `2026-07-12T14:19:53+09:00`
+- Managed pages: all 22 current pages in the documented order
 - Current token readback: six collections, 116 Variables, eight Text Styles, and
   two Effect Styles
 - Token-map reconciliation: the regenerated live projection is byte-identical
@@ -522,13 +553,15 @@ Textarea, Select, TextButton, IconButton, BoardRow, and Tab are validated in Fig
   tokens during verification.
 - Accessibility: all reviewed text/background pairs meet WCAG AA, and every
   Button/TextButton/IconButton/TextField/ScrollArea/Checkbox/RadioGroup/
-  Switch/Textarea/Select/BoardRow/Tab control target is at least 44px with distinct focus,
-  pressed, error, disabled, or direction-availability presentation
+  Switch/Textarea/Select/BoardRow/Tab/BottomSheet control target is at least
+  44px with distinct focus, pressed, error, disabled, or
+  direction-availability presentation
 - Component parity: Icon `5`, Badge `16`, Button `27`, TextField `8`,
   ScrollArea `4`, Checkbox `18`, RadioGroup `18`, Switch `12`, Textarea `8`,
-  Select `8`, TextButton `27`, IconButton `27`, BoardRow `4`, and Tab `12`; all
-  properties, variants, semantic bindings, and React contracts passed
-- Variant-axis parity: the exact axis names and ordered values for all thirteen
+  Select `8`, TextButton `27`, IconButton `27`, BoardRow `4`, Tab `12`, and
+  BottomSheet `4`; all properties, variants, semantic bindings, and React
+  contracts passed
+- Variant-axis parity: the exact axis names and ordered values for all fourteen
   component sets are stored in [`verification.json`](./verification.json) and
   enforced by the artifact verifier
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
@@ -538,8 +571,8 @@ Textarea, Select, TextButton, IconButton, BoardRow, and Tab are validated in Fig
 - Empty-state documentation added and reviewed for `90 Native Differences` and
   `99 Deprecated`
 - Screenshots: every managed page was captured and reviewed for legibility,
-  clipping, overlap, stale copy, and visible component coverage; all 21 SHA-256
-  fingerprints are stored in verification evidence for all 21 managed pages
+  clipping, overlap, stale copy, and visible component coverage; all 22 SHA-256
+  fingerprints are stored in verification evidence for all 22 managed pages
 - Machine-readable evidence: [`verification.json`](./verification.json)
 
 Code Connect is explicitly `skipped-v0.1`.
