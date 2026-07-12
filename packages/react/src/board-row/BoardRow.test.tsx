@@ -1,6 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { createRef, useState } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 import { ICON_PATHS } from '../icon';
@@ -80,6 +82,43 @@ describe('BoardRow', () => {
     expect(details.open).toBe(false);
     await waitFor(() => expect(onOpenChange).toHaveBeenLastCalledWith(false));
     expect(onOpenChange).toHaveBeenCalledTimes(1);
+  });
+
+  it('reports close and reopen after hydrating a default-open disclosure', async () => {
+    const user = userEvent.setup();
+    const onOpenChange = vi.fn();
+    const element = (
+      <BoardRow
+        defaultOpen
+        onOpenChange={onOpenChange}
+        title="서버 주문 내역"
+      >
+        서버 주문 내용
+      </BoardRow>
+    );
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(element);
+    document.body.append(container);
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    const root = hydrateRoot(container, element);
+    await act(async () => Promise.resolve());
+
+    try {
+      const details = container.querySelector('details')!;
+      const summary = container.querySelector('summary')!;
+      expect(details.open).toBe(true);
+
+      await user.click(summary);
+      await waitFor(() => expect(details.open).toBe(false));
+      await user.click(summary);
+      await waitFor(() => expect(details.open).toBe(true));
+
+      expect(onOpenChange.mock.calls).toEqual([[false], [true]]);
+    } finally {
+      await act(async () => root.unmount());
+      container.remove();
+    }
   });
 
   it('leaves Enter and Space handling to the native summary element', async () => {

@@ -727,7 +727,7 @@ test('BoardRow keeps long copy and responsive specimens inside the page', async 
   )).toBe(true);
 });
 
-test('BoardRow exposes forced-colors focus and removes arrow motion when requested', async ({ page }, testInfo) => {
+test('BoardRow exposes a complete forced-colors interaction palette and removes arrow motion when requested', async ({ page }, testInfo) => {
   test.skip(
     testInfo.project.name !== 'desktop-chromium',
     'Desktop owns BoardRow platform state coverage.',
@@ -742,9 +742,48 @@ test('BoardRow exposes forced-colors focus and removes arrow motion when request
   const summary = demo.locator(
     '[data-board-row-sample="uncontrolled"] > summary',
   );
+  const system = await page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:absolute;left:-9999px;forced-color-adjust:none;color:HighlightText';
+    document.body.append(probe);
+    const highlightText = getComputedStyle(probe).color;
+    probe.remove();
+    return { highlightText };
+  });
+  const readForegrounds = () => summary.evaluate((element) => ({
+    arrow: getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-board-row__arrow')!,
+    ).color,
+    description: getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-board-row__description')!,
+    ).color,
+    prefix: getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-board-row__prefix')!,
+    ).color,
+    summary: getComputedStyle(element).color,
+  }));
   await tabTo(page, summary);
   await expectForcedColorFocus(summary);
-  await summary.click();
+  await summary.hover();
+  expect(await readForegrounds()).toEqual({
+    arrow: system.highlightText,
+    description: system.highlightText,
+    prefix: system.highlightText,
+    summary: system.highlightText,
+  });
+
+  const box = await summary.boundingBox();
+  expect(box).not.toBeNull();
+  await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+  await page.mouse.down();
+  expect(await readForegrounds()).toEqual({
+    arrow: system.highlightText,
+    description: system.highlightText,
+    prefix: system.highlightText,
+    summary: system.highlightText,
+  });
+  await page.mouse.up();
   const arrow = summary.locator('.ds-board-row__arrow');
   expect(await arrow.evaluate((element) =>
     getComputedStyle(element).transitionDuration)).toBe('0s');

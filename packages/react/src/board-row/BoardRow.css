@@ -138,6 +138,15 @@
     color: CanvasText;
   }
 
+  .ds-board-row__summary:hover .ds-board-row__prefix,
+  .ds-board-row__summary:hover .ds-board-row__description,
+  .ds-board-row__summary:hover .ds-board-row__arrow,
+  .ds-board-row__summary:active .ds-board-row__prefix,
+  .ds-board-row__summary:active .ds-board-row__description,
+  .ds-board-row__summary:active .ds-board-row__arrow {
+    color: HighlightText;
+  }
+
   .ds-board-row__content {
     border-color: ButtonText;
   }

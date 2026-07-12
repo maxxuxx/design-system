@@ -44,9 +44,8 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
     const controlledOpenRef = useRef(open);
     const previousControlledOpenRef = useRef(open);
     const initialOpenRef = useRef(open ?? defaultOpen);
-    const suppressedToggleRef = useRef<boolean | null>(
-      initialOpenRef.current ? true : null,
-    );
+    const suppressedToggleRef = useRef<boolean | null>(null);
+    const userTogglePendingRef = useRef(false);
     controlledOpenRef.current = open;
 
     const setDetailsRef = useCallback((node: HTMLDetailsElement | null) => {
@@ -75,9 +74,18 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
 
     function handleToggle(event: SyntheticEvent<HTMLDetailsElement>) {
       const nextOpen = event.currentTarget.open;
-      if (suppressedToggleRef.current === nextOpen) {
-        suppressedToggleRef.current = null;
+      const userInitiated = userTogglePendingRef.current;
+      userTogglePendingRef.current = false;
+
+      if (!userInitiated) {
+        if (suppressedToggleRef.current === nextOpen) {
+          suppressedToggleRef.current = null;
+        }
         return;
+      }
+
+      if (suppressedToggleRef.current !== null) {
+        suppressedToggleRef.current = null;
       }
 
       onOpenChange?.(nextOpen);
@@ -110,7 +118,12 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
         open={open ?? initialOpenRef.current}
         onToggle={handleToggle}
       >
-        <summary className="ds-board-row__summary">
+        <summary
+          className="ds-board-row__summary"
+          onClick={() => {
+            userTogglePendingRef.current = true;
+          }}
+        >
           {prefix !== undefined && prefix !== null ? (
             <span aria-hidden="true" className="ds-board-row__prefix">
               {prefix}
