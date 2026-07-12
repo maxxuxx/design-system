@@ -30,6 +30,7 @@ function metadata(name: ComponentMetadata['name'], figmaUrl = ''): ComponentMeta
     Switch: 'switch',
     Textarea: 'textarea',
     Select: 'select',
+    TextButton: 'text-button',
   } as const;
   return {
     name,
@@ -96,10 +97,10 @@ describe('component manifest', () => {
   });
 
   it('requires a Figma URL on every complete release entry', () => {
-    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select']
+    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton']
       .map((name) => document(name as ComponentMetadata['name']));
     expect(() => buildComponentManifest(documents, { requireFigma: true }))
-      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select');
+      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton');
   });
 
   it('renders stable two-space JSON with LF and a final newline', () => {

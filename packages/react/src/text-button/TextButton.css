@@ -1,0 +1,131 @@
+.ds-text-button {
+  display: inline-flex;
+  box-sizing: border-box;
+  min-block-size: var(--ds-size-control-small);
+  min-inline-size: var(--ds-size-control-small);
+  max-inline-size: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-4);
+  margin: var(--ds-space-0);
+  padding-block: var(--ds-space-0);
+  border: var(--ds-space-0) solid transparent;
+  border-radius: var(--ds-radius-sm);
+  font-family: var(--ds-font-family-sans);
+  font-weight: var(--ds-font-weight-semibold);
+  text-align: center;
+  text-decoration-line: none;
+  text-decoration-thickness: var(--ds-space-2);
+  text-underline-offset: var(--ds-space-4);
+  background: transparent;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition:
+    color var(--ds-motion-duration-fast) var(--ds-motion-easing-standard),
+    background-color var(--ds-motion-duration-fast)
+      var(--ds-motion-easing-standard),
+    text-decoration-color var(--ds-motion-duration-fast)
+      var(--ds-motion-easing-standard);
+}
+
+.ds-text-button[data-size='small'] {
+  padding-inline: var(--ds-space-8);
+  font-size: var(--ds-font-size-caption);
+  line-height: var(--ds-font-line-height-caption);
+}
+
+.ds-text-button[data-size='medium'] {
+  padding-inline: var(--ds-space-12);
+  font-size: var(--ds-font-size-body-sm);
+  line-height: var(--ds-font-line-height-body-sm);
+}
+
+.ds-text-button[data-size='large'] {
+  padding-inline: var(--ds-space-16);
+  font-size: var(--ds-font-size-body);
+  line-height: var(--ds-font-line-height-body);
+}
+
+.ds-text-button[data-variant='underline'] {
+  text-decoration-line: underline;
+}
+
+.ds-text-button[data-tone='primary'] {
+  color: var(--ds-color-action-primary);
+}
+
+.ds-text-button[data-tone='primary']:where(a:visited) {
+  color: var(--ds-color-action-on-weak);
+}
+
+.ds-text-button[data-tone='neutral'] {
+  color: var(--ds-color-text-primary);
+}
+
+.ds-text-button[data-tone='neutral']:where(a:visited) {
+  color: var(--ds-color-text-secondary);
+}
+
+.ds-text-button[data-tone='primary']:where(a, button:not(:disabled)):hover {
+  color: var(--ds-color-action-primary-hover);
+  background: var(--ds-color-action-weak);
+}
+
+.ds-text-button[data-tone='neutral']:where(a, button:not(:disabled)):hover {
+  color: var(--ds-color-text-primary);
+  background: var(--ds-color-bg-subtle);
+}
+
+.ds-text-button[data-tone='primary']:where(a, button:not(:disabled)):active {
+  color: var(--ds-color-action-primary-pressed);
+  background: var(--ds-color-action-weak-hover);
+}
+
+.ds-text-button[data-tone='neutral']:where(a, button:not(:disabled)):active {
+  color: var(--ds-color-text-secondary);
+  background: var(--ds-color-bg-subtle);
+}
+
+.ds-text-button:focus-visible {
+  outline: var(--ds-space-2) solid transparent;
+  outline-offset: var(--ds-space-2);
+  box-shadow: 0 0 0 var(--ds-space-4) var(--ds-color-focus-ring);
+}
+
+button.ds-text-button:disabled {
+  color: var(--ds-color-text-disabled);
+  background: transparent;
+  cursor: not-allowed;
+}
+
+.ds-text-button__label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+.ds-text-button__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.ds-text-button__icon .ds-icon {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-text-button {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .ds-text-button:focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+
+  button.ds-text-button:disabled {
+    color: GrayText;
+  }
+}

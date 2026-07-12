@@ -41,6 +41,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'Switch', href: '/components/switch/' },
       { label: 'Textarea', href: '/components/textarea/' },
       { label: 'Select', href: '/components/select/' },
+      { label: 'TextButton', href: '/components/text-button/' },
     ],
   },
 ];

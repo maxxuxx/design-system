@@ -80,6 +80,7 @@ describe('MDX collection coverage', () => {
       'content/components/switch.mdx',
       'content/components/textarea.mdx',
       'content/components/select.mdx',
+      'content/components/text-button.mdx',
     ]);
 
     for (const file of files) {
@@ -145,7 +146,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the ten component names and slugs in canonical order', () => {
+  it('locks the eleven component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -157,6 +158,7 @@ describe('component metadata contract', () => {
       'Switch',
       'Textarea',
       'Select',
+      'TextButton',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -169,6 +171,81 @@ describe('component metadata contract', () => {
       'switch',
       'textarea',
       'select',
+      'text-button',
+    ]);
+  });
+
+  it('locks the TextButton public metadata contract', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/text-button.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'TextButton',
+      slug: 'text-button',
+      figmaUrl: '',
+      variants: ['clear', 'underline', 'arrow'],
+      sizes: ['small', 'medium', 'large'],
+      states: [
+        'default',
+        'hover',
+        'pressed',
+        'focus-visible',
+        'visited',
+        'disabled',
+      ],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      { name: 'children', type: 'string', required: true, defaultValue: null },
+      { name: 'href', type: 'string', required: false, defaultValue: null },
+      { name: 'size', type: 'TextButtonSize', required: false, defaultValue: 'medium' },
+      { name: 'variant', type: 'TextButtonVariant', required: false, defaultValue: 'clear' },
+      { name: 'tone', type: 'TextButtonTone', required: false, defaultValue: 'primary' },
+      {
+        name: '...nativeProps',
+        type: "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/small',
+      'size/icon/small',
+      'space/0',
+      'space/2',
+      'space/4',
+      'space/8',
+      'space/12',
+      'space/16',
+      'radius/sm',
+      'font/family/sans',
+      'font/size/caption',
+      'font/size/body-sm',
+      'font/size/body',
+      'font/line-height/caption',
+      'font/line-height/body-sm',
+      'font/line-height/body',
+      'font/weight/semibold',
+      'motion/duration/fast',
+      'motion/easing/standard',
+      'color/bg/subtle',
+      'color/text/primary',
+      'color/text/secondary',
+      'color/text/disabled',
+      'color/action/primary',
+      'color/action/primary-hover',
+      'color/action/primary-pressed',
+      'color/action/weak',
+      'color/action/weak-hover',
+      'color/action/on-weak',
+      'color/focus/ring',
     ]);
   });
 

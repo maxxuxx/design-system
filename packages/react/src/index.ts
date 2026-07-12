@@ -8,3 +8,4 @@ export * from './radio-group';
 export * from './switch';
 export * from './textarea';
 export * from './select';
+export * from './text-button';

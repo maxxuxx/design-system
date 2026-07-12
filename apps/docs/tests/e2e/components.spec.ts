@@ -34,6 +34,59 @@ for (const route of COMPONENT_HTML_ROUTES) {
   });
 }
 
+test('TextButton renders its complete document template and demo without console errors', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text());
+  });
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  await page.waitForLoadState('networkidle');
+
+  const headings = await page.locator('main h2').allTextContents();
+  expect(headings.map((heading) => heading.trim())).toEqual(
+    REQUIRED_COMPONENT_HEADINGS,
+  );
+  await expect(
+    page.locator('[data-component-demo="text-button"]'),
+  ).toBeVisible();
+  await expect(page.getByText('preview', { exact: true }).first()).toBeVisible();
+  expect(errors, 'TextButton docs must not emit browser console errors').toEqual([]);
+});
+
+test('TextButton demo switches between native navigation and button semantics', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  const demo = page.locator('[data-component-demo="text-button"]');
+  const elementSelect = demo.getByLabel('요소');
+
+  const button = demo.getByRole('button', { name: '계속', exact: true });
+  await expect(button).toHaveAttribute('type', 'button');
+  await button.click();
+  await expect(demo.getByText('활성화 횟수: 1')).toBeVisible();
+
+  await elementSelect.selectOption('anchor');
+  const link = demo.getByRole('link', {
+    name: '상세 안내로 이동',
+    exact: true,
+  });
+  await expect(link).toHaveAttribute('href', '#text-button-demo-target');
+  await expect(link).not.toHaveAttribute('disabled');
+  await expect(demo.getByLabel('disabled', { exact: true })).toBeDisabled();
+  await link.click();
+  await expect(page).toHaveURL(/#text-button-demo-target$/);
+
+  await elementSelect.selectOption('button');
+  await demo.getByLabel('disabled', { exact: true }).check();
+  await expect(
+    demo.getByRole('button', { name: '계속', exact: true }),
+  ).toBeDisabled();
+});
+
 test('Checkbox visible label toggles its native input', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
   const checkbox = page.locator('[data-component-demo="checkbox"] .ds-checkbox').first();

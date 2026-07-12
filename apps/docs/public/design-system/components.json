@@ -1015,6 +1015,114 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/select/"
+    },
+    {
+      "name": "TextButton",
+      "slug": "text-button",
+      "description": "텍스트 위계와 native button 또는 anchor 의미로 가벼운 행동과 이동을 표현합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "clear",
+        "underline",
+        "arrow"
+      ],
+      "sizes": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible",
+        "visited",
+        "disabled"
+      ],
+      "accessibility": "native button과 anchor 의미, 44px minimum target, visible focus, persistent underline, button-only disabled, decorative owned arrow를 제공합니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "localizable visible accessible label입니다."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "문자열이면 native anchor, 없으면 native button을 렌더링합니다."
+        },
+        {
+          "name": "size",
+          "type": "TextButtonSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small caption, medium body-small, large body typography tier입니다."
+        },
+        {
+          "name": "variant",
+          "type": "TextButtonVariant",
+          "required": false,
+          "defaultValue": "clear",
+          "description": "clear, persistent underline, owned arrow 표현입니다."
+        },
+        {
+          "name": "tone",
+          "type": "TextButtonTone",
+          "required": false,
+          "defaultValue": "primary",
+          "description": "semantic primary 또는 neutral text tone입니다."
+        },
+        {
+          "name": "...nativeProps",
+          "type": "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "href 분기에 맞는 native anchor 또는 button props와 ref입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/icon/small",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "radius/sm",
+        "font/family/sans",
+        "font/size/caption",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/line-height/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "font/weight/semibold",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/text-button/"
     }
   ]
 }

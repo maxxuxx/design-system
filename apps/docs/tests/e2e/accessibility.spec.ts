@@ -38,6 +38,20 @@ test('Button demo is keyboard reachable with visible focus', async ({ page }) =>
   await tabTo(page, page.locator('[data-component-demo="button"] button').first());
 });
 
+test('TextButton route has zero axe violations and a keyboard-visible focus', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  await assertNoAxeViolations(page);
+  await tabTo(
+    page,
+    page.locator(
+      '[data-component-demo="text-button"] [data-text-button-sample="interactive"] .ds-text-button',
+    ),
+  );
+});
+
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());

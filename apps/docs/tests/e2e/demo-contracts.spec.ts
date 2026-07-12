@@ -452,6 +452,117 @@ test('Button exposes a forced-colors keyboard focus outline', async ({ page }, t
   await expectForcedColorFocus(button);
 });
 
+test('TextButton exposes all tiers, tones, variants, owned arrows, and 44px targets', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  const demo = page.locator('[data-component-demo="text-button"]');
+  const targets = demo.locator('.ds-text-button');
+
+  expect(await targets.count()).toBeGreaterThanOrEqual(9);
+  for (const target of await targets.all()) await expectMinimumTarget(target);
+  expect(
+    await targets.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-size')))],
+    ),
+  ).toEqual(expect.arrayContaining(['small', 'medium', 'large']));
+  expect(
+    await targets.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-tone')))],
+    ),
+  ).toEqual(expect.arrayContaining(['primary', 'neutral']));
+  expect(
+    await targets.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-variant')))],
+    ),
+  ).toEqual(expect.arrayContaining(['clear', 'underline', 'arrow']));
+
+  const arrowTargets = targets.filter({
+    has: page.locator('.ds-text-button__icon'),
+  });
+  expect(await arrowTargets.count()).toBeGreaterThan(0);
+  await expect(
+    arrowTargets.locator('.ds-text-button__icon .ds-icon').first(),
+  ).toHaveAttribute('aria-hidden', 'true');
+  await expect(
+    targets.filter({ hasNot: page.locator('.ds-text-button__icon') }),
+  ).not.toHaveCount(0);
+});
+
+test('TextButton keeps responsive specimens and long copy inside the page', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  const demo = page.locator('[data-component-demo="text-button"]');
+  const controls = demo.locator('.component-demo__controls > *');
+  const specimens = demo.locator('.text-button-demo__specimen');
+  const longLabel = demo.locator('[data-text-button-sample="long-label"]');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [firstControl, secondControl, firstSpecimen, secondSpecimen] =
+      await Promise.all([
+        controls.nth(0).boundingBox(),
+        controls.nth(1).boundingBox(),
+        specimens.nth(0).boundingBox(),
+        specimens.nth(1).boundingBox(),
+      ]);
+    expect(firstControl).not.toBeNull();
+    expect(secondControl).not.toBeNull();
+    expect(firstSpecimen).not.toBeNull();
+    expect(secondSpecimen).not.toBeNull();
+    expect(Math.abs(firstControl!.x - secondControl!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondControl!.y).toBeGreaterThan(firstControl!.y);
+    expect(Math.abs(firstSpecimen!.x - secondSpecimen!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondSpecimen!.y).toBeGreaterThan(firstSpecimen!.y);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const firstRowCount = await specimens.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5)
+        .length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  }
+
+  const longCopyFits = await longLabel.evaluate((element) => {
+    const owner = element.closest<HTMLElement>('.text-button-demo__specimen');
+    if (!owner) return false;
+    const copyRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return copyRect.left >= ownerRect.left - 0.5
+      && copyRect.right <= ownerRect.right + 0.5
+      && element.scrollWidth <= element.clientWidth + 0.5;
+  });
+  expect(longCopyFits).toBe(true);
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('TextButton exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns forced-colors component focus.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  const demo = page.locator('[data-component-demo="text-button"]');
+  const target = demo.locator(
+    '[data-text-button-sample="interactive"] .ds-text-button',
+  );
+  await demo.getByLabel('disabled', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(target);
+});
+
 test('TextField exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
 

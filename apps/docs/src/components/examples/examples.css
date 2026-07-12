@@ -154,6 +154,56 @@
   gap: var(--ds-space-16);
 }
 
+.component-demo__stage--text-button {
+  place-items: stretch;
+}
+
+.text-button-demo {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  gap: var(--ds-space-24);
+}
+
+.text-button-demo__interactive {
+  display: flex;
+  min-width: 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-space-12);
+  padding: var(--ds-space-16);
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
+}
+
+.text-button-demo__specimens {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--ds-space-12);
+}
+
+.text-button-demo__specimen {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-8);
+  padding: var(--ds-space-16);
+  text-align: center;
+  background: var(--ds-color-bg-subtle);
+  border-radius: var(--ds-radius-md);
+}
+
+.text-button-demo__specimen [data-text-button-sample='long-label'] {
+  width: 100%;
+}
+
+.text-button-demo__target {
+  scroll-margin-block: var(--ds-space-24);
+}
+
 .checkbox-demo {
   display: grid;
   width: 100%;
@@ -291,5 +341,9 @@
 
   .scroll-area-demo {
     width: 100%;
+  }
+
+  .text-button-demo__specimens {
+    grid-template-columns: 1fr;
   }
 }
