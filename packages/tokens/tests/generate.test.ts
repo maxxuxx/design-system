@@ -158,7 +158,7 @@ describe('token generation', () => {
       '  --ds-color-action-primary: var(--ds-color-blue-600);',
     );
     expect(css).toContain(
-      '  --ds-font-family-sans: "IBM Plex Sans KR", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;',
+      '  --ds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;',
     );
     expect(css.endsWith('\n')).toBe(true);
 
