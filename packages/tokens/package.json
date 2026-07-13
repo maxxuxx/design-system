@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
+    "./fonts.css": "./fonts.css",
     "./tokens.css": "./dist/tokens.css",
     "./tokens.json": "./dist/tokens.json"
   },
