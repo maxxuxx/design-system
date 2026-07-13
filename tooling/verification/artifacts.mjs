@@ -666,6 +666,45 @@ export async function verifyBuildArtifacts(root) {
   return violations.sort();
 }
 
+export async function verifyFontArtifacts(root) {
+  const cssPath = path.join(root, 'packages', 'tokens', 'fonts.css');
+  const css = await readFile(cssPath, 'utf8');
+  const urls = [...css.matchAll(/url\(["']?([^"')]+)["']?\)/g)]
+    .map((match) => match[1]);
+  const violations = [];
+
+  if (urls.length !== 92) {
+    violations.push('Pretendard fonts.css must reference exactly 92 subsets');
+  }
+  if (urls.some((url) => /^https?:\/\//.test(url))) {
+    violations.push('Pretendard fonts.css must not use external font URLs');
+  }
+  if (!css.includes('font-display: swap')) {
+    violations.push('Pretendard fonts.css must use font-display: swap');
+  }
+  for (const url of urls.filter((value) => !/^https?:\/\//.test(value))) {
+    try {
+      await access(path.resolve(path.dirname(cssPath), url));
+    } catch {
+      violations.push(`Missing Pretendard font asset: ${url}`);
+    }
+  }
+  try {
+    await access(path.join(
+      root,
+      'packages',
+      'tokens',
+      'fonts',
+      'pretendard',
+      'LICENSE.txt',
+    ));
+  } catch {
+    violations.push('Missing Pretendard SIL OFL license');
+  }
+
+  return violations.sort();
+}
+
 export async function verifyFigmaEvidence(root) {
   const tokensArtifact = await json(path.join(root, 'apps', 'docs', 'dist', 'design-system', 'tokens.json'));
   const tokenMap = await json(path.join(root, 'figma', 'token-map.json'));
@@ -829,6 +868,7 @@ async function main() {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
   const violations = [
     ...(await verifyBuildArtifacts(root)),
+    ...(await verifyFontArtifacts(root)),
     ...(await verifyFigmaEvidence(root)),
   ];
   if (violations.length) {
