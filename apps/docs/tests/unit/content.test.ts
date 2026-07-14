@@ -811,7 +811,7 @@ describe('component metadata contract', () => {
     ]);
   });
 
-  it('locks the Toast provider and queue metadata with its pending Figma URL', async () => {
+  it('locks the Toast provider, queue metadata, and live Figma URL', async () => {
     const source = await readFile(
       `${srcRoot}content/components/toast.mdx`,
       'utf8',
@@ -821,7 +821,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'Toast',
       slug: 'toast',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274',
       variants: [
         'neutral',
         'success',

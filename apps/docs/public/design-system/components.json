@@ -1969,7 +1969,7 @@
       "slug": "toast",
       "description": "짧은 비모달 피드백을 한 번에 하나씩 portal에 표시하고 FIFO queue로 순서를 보존하는 provider입니다.",
       "status": "preview",
-      "figmaUrl": "",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274",
       "frameworks": {
         "react": "preview",
         "svelte": "planned",

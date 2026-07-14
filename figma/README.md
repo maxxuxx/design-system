@@ -447,6 +447,33 @@ top-level overlap.
   `1440 × 742`; SHA-256
   `38f0975fdbe50d9bf1fd6982bd5d28933a79678d3c05263e31eaff0a6d57f0ff`
 
+## TDS-inspired mobile workflows v0.4 Toast validation
+
+- Component set: [Toast](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274)
+- Variant count: 6
+- Axes:
+  - `Tone`: `Neutral`, `Success`, `Danger`
+  - `Action`: `Hidden`, `Visible`
+- Component properties, in order: `Message` and `Action label` (`TEXT`),
+  `Show icon` (`BOOLEAN`), and `Icon` (`INSTANCE_SWAP`)
+- Every master is `320px` wide, uses a token-bound `48px` minimum height,
+  `space/8` and `space/12` spacing, `radius/md`, `Shadow/2`, and the
+  corresponding neutral, success, or danger status surface with on-status
+  foreground
+- All six variants own a `20 × 20px` `Icon/Info` instance linked to master
+  `30:16`; the swap property limits preferred values to the five owned Icon
+  masters. `Show icon` controls visibility without changing the variant axes
+- Action Visible variants retain the owned medium clear TextButton master
+  `182:73` as a `97 × 48px` action target. Action Hidden variants omit it from
+  layout while preserving the same message geometry
+- Message and action copy use the Pretendard-backed Body/Small Text Style.
+  The live file reports no missing fonts after the style application audit
+- Position, FIFO queue, duration, timer pause, and live-region behavior remain
+  documented React behavior rather than extra visual variants
+- Full-page screenshot target: `04.19 Toast` (`316:2`), rendered at
+  `1440 × 576`; SHA-256
+  `5018b9a4f38e76e31c4cda142f0263a5feaf9d18dabd6fa1bf848c971d206cc5`
+
 ## Phase 3 TextField validation
 
 - Component set: [TextField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50)
