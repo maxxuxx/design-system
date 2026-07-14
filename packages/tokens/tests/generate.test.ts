@@ -105,14 +105,14 @@ describe('token generation', () => {
       resolved.find((token) => token.name === 'color/action/primary'),
     ).toMatchObject({
       value: '{color/blue/600}',
-      cssVariable: '--ds-color-action-primary',
+      cssVariable: '--hds-color-action-primary',
       resolvedValue: '#245BE0',
     });
     expect(
       resolved.find((token) => token.name === 'color/icon/primary'),
     ).toMatchObject({
       value: '{color/neutral/900}',
-      cssVariable: '--ds-color-icon-primary',
+      cssVariable: '--hds-color-icon-primary',
       resolvedValue: '#171D24',
     });
 
@@ -139,10 +139,10 @@ describe('token generation', () => {
       type: 'dimension',
       kind: 'primitive',
       value: 8,
-      cssVariable: '--ds-blur-subtle',
+      cssVariable: '--hds-blur-subtle',
       resolvedValue: 8,
     });
-    expect(renderCss(first)).toContain('  --ds-blur-subtle: 8px;');
+    expect(renderCss(first)).toContain('  --hds-blur-subtle: 8px;');
     expect(second.map((token) => token.name)).toEqual(
       first.map((token) => token.name),
     );
@@ -164,13 +164,13 @@ describe('token generation', () => {
 
     expect(renderCss(second)).toBe(css);
     expect(renderJson(second)).toBe(json);
-    expect(css).toContain('  --ds-space-16: 16px;');
-    expect(css).toContain('  --ds-font-weight-semibold: 600;');
+    expect(css).toContain('  --hds-space-16: 16px;');
+    expect(css).toContain('  --hds-font-weight-semibold: 600;');
     expect(css).toContain(
-      '  --ds-color-action-primary: var(--ds-color-blue-600);',
+      '  --hds-color-action-primary: var(--hds-color-blue-600);',
     );
     expect(css).toContain(
-      '  --ds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;',
+      '  --hds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;',
     );
     expect(css.endsWith('\n')).toBe(true);
 
@@ -180,6 +180,10 @@ describe('token generation', () => {
     };
     expect(parsed.schemaVersion).toBe(1);
     expect(parsed.tokens).toHaveLength(118);
+    expect(parsed.tokens.every(({ cssVariable }) => (
+      typeof cssVariable === 'string' && cssVariable.startsWith('--hds-')
+    ))).toBe(true);
+    expect(json).not.toContain(['--', 'ds', '-'].join(''));
     expect(Object.keys(parsed.tokens[0] ?? {})).toEqual([
       'name',
       'type',
@@ -274,7 +278,7 @@ describe('token generation', () => {
 
       const source = await readFile(file, 'utf8');
       for (const match of source.matchAll(
-        /--ds-color-(?:neutral|blue|red|green)-/g,
+        /--hds-color-(?:neutral|blue|red|green)-/g,
       )) {
         const line = source.slice(0, match.index).split('\n').length;
         violations.push(

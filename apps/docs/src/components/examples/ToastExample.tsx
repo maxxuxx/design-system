@@ -5,7 +5,7 @@ import {
   ToastProvider,
   type ToastOptions,
   useToast,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const LONG_MESSAGE =
@@ -128,34 +128,34 @@ function ToastDemoControls() {
           <div className="toast-demo__specimens">
             <div
               aria-hidden="true"
-              className="ds-toast toast-demo__specimen"
+              className="hds-toast toast-demo__specimen"
               data-position="bottom"
               data-tone="neutral"
               data-toast-specimen="neutral"
             >
-              <span className="ds-toast__icon"><Icon name="info" size={20} /></span>
-              <span className="ds-toast__message">중립 · action hidden</span>
+              <span className="hds-toast__icon"><Icon name="info" size={20} /></span>
+              <span className="hds-toast__message">중립 · action hidden</span>
             </div>
             <div
               aria-hidden="true"
-              className="ds-toast toast-demo__specimen"
+              className="hds-toast toast-demo__specimen"
               data-position="bottom"
               data-tone="success"
               data-toast-specimen="success"
             >
-              <span className="ds-toast__icon"><Icon name="check" size={20} /></span>
-              <span className="ds-toast__message">성공 · action visible</span>
+              <span className="hds-toast__icon"><Icon name="check" size={20} /></span>
+              <span className="hds-toast__message">성공 · action visible</span>
               <span className="toast-demo__specimen-action">되돌리기</span>
             </div>
             <div
               aria-hidden="true"
-              className="ds-toast toast-demo__specimen"
+              className="hds-toast toast-demo__specimen"
               data-position="bottom"
               data-tone="danger"
               data-toast-specimen="danger"
             >
-              <span className="ds-toast__icon"><Icon name="info" size={20} /></span>
-              <span className="ds-toast__message">위험 · assertive alert</span>
+              <span className="hds-toast__icon"><Icon name="info" size={20} /></span>
+              <span className="hds-toast__message">위험 · assertive alert</span>
             </div>
           </div>
         </div>

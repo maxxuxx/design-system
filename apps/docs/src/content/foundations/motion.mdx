@@ -22,8 +22,8 @@ import MotionScale from '../../components/foundations/MotionScale.astro';
 
 ```css
 transition:
-  transform var(--ds-motion-duration-medium)
-  var(--ds-motion-easing-standard);
+  transform var(--hds-motion-duration-medium)
+  var(--hds-motion-easing-standard);
 ```
 
 ## 생성된 단계
@@ -50,5 +50,5 @@ transition:
 모달 backdrop에는 semantic token인 `color/bg/scrim`을 사용합니다. 이 토큰은 `rgba(15, 23, 42, 0.56)`으로 resolve되며, 제품 CSS에서 원시 `color/neutral/900-alpha-56` 값을 직접 참조하지 않습니다. scrim은 뒤 콘텐츠와 현재 modal surface를 구분하지만 focus 이동이나 닫기 동작을 대신하지 않습니다.
 
 ```css
-background: var(--ds-color-bg-scrim);
+background: var(--hds-color-bg-scrim);
 ```

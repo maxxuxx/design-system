@@ -1,18 +1,22 @@
 ---
-import '@maxxuxx/tokens/fonts.css';
-import '@maxxuxx/tokens/tokens.css';
-import '@maxxuxx/react/styles.css';
+import '@hds/tokens/fonts.css';
+import '@hds/tokens/tokens.css';
+import '@hds/react/styles.css';
 import '../styles/global.css';
+import { BRAND } from '../config/brand';
 
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = '사람과 AI가 함께 읽는 로컬 디자인 시스템 문서입니다.' } = Astro.props;
-const documentTitle = title === 'AI-Readable Design System v0.4'
-  ? title
-  : `${title} | AI-Readable Design System v0.4`;
+const { title, description = BRAND.description } = Astro.props;
+const homeTitle = `${BRAND.name} · ${BRAND.shortName} v${BRAND.version}`;
+const documentTitle = title === BRAND.name
+  ? homeTitle
+  : `${title} | ${BRAND.shortName} v${BRAND.version}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? BRAND.site);
+const openGraphImage = new URL('/brand/hds-og.png', Astro.site ?? BRAND.site);
 ---
 
 <!doctype html>
@@ -21,6 +25,21 @@ const documentTitle = title === 'AI-Readable Design System v0.4'
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={BRAND.name} />
+    <meta property="og:title" content={documentTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={openGraphImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={documentTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={openGraphImage} />
     <title>{documentTitle}</title>
   </head>
   <body>

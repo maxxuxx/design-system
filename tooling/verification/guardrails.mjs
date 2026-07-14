@@ -2,10 +2,22 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const allowedWorkspaces = new Set(['apps/docs', 'packages/tokens', 'packages/react']);
+const expectedVersion = '0.1.0';
+const allowedWorkspaces = new Map([
+  ['apps/docs', '@hds/docs'],
+  ['packages/tokens', '@hds/tokens'],
+  ['packages/react', '@hds/react'],
+]);
 const allowedWorkspaceDeclarations = new Set(['apps/*', 'packages/*']);
 const sourceExtensions = new Set(['.astro', '.css', '.mdx', '.ts', '.tsx']);
-const primitivePattern = /--ds-color-(?:neutral|blue|red|green)-/;
+const primitivePattern = /--hds-color-(?:neutral|blue|red|green)-/;
+const brandExtensions = new Set([
+  '.astro', '.css', '.js', '.json', '.md', '.mdx', '.mjs', '.svg', '.ts', '.tsx', '.yaml', '.yml',
+]);
+const retiredAutomaticIds = [
+  'checkbox', 'radio-group', 'scroll-area-viewport', 'search-field', 'select', 'switch', 'tab',
+  'text-field', 'textarea',
+];
 const componentSliceContract = [
   ['Icon', 'icon'],
   ['Badge', 'badge'],
@@ -122,7 +134,7 @@ export async function findWorkspaceViolations(root) {
       violations.push(`Unexpected workspace declaration: ${declaration}`);
     }
   }
-  for (const expected of allowedWorkspaces) {
+  for (const expected of allowedWorkspaces.keys()) {
     if (!candidates.includes(expected)) violations.push(`Missing workspace: ${expected}`);
   }
   for (const relative of candidates) {
@@ -131,12 +143,25 @@ export async function findWorkspaceViolations(root) {
     try {
       const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
       if (manifest.private !== true) violations.push(`Workspace must be private: ${relative}`);
+      const expectedName = allowedWorkspaces.get(relative);
+      if (expectedName && manifest.name !== expectedName) {
+        violations.push(`Workspace package name must be ${expectedName}: ${relative}`);
+      }
+      if (expectedName && manifest.version !== expectedVersion) {
+        violations.push(`Workspace version must be ${expectedVersion}: ${relative}`);
+      }
     } catch (error) {
       violations.push(`Unreadable workspace manifest: ${relative}: ${error.message}`);
     }
   }
   const rootManifest = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
   if (rootManifest.private !== true) violations.push('Root package must be private');
+  if (rootManifest.name !== '@hds/workspace') {
+    violations.push('Root package name must be @hds/workspace');
+  }
+  if (rootManifest.version !== expectedVersion) {
+    violations.push(`Root version must be ${expectedVersion}`);
+  }
   return violations.sort();
 }
 
@@ -149,6 +174,75 @@ async function walk(directory) {
     else files.push(full);
   }
   return files;
+}
+
+async function walkExisting(target) {
+  try {
+    const entries = await readdir(target, { withFileTypes: true });
+    const files = [];
+    for (const entry of entries) {
+      const full = path.join(target, entry.name);
+      if (entry.isDirectory()) files.push(...await walkExisting(full));
+      else files.push(full);
+    }
+    return files;
+  } catch (error) {
+    if (error.code === 'ENOENT' || error.code === 'ENOTDIR') return [];
+    throw error;
+  }
+}
+
+async function existingFile(target) {
+  try {
+    await readFile(target, 'utf8');
+    return [target];
+  } catch (error) {
+    if (error.code === 'ENOENT' || error.code === 'EISDIR') return [];
+    throw error;
+  }
+}
+
+export async function findBrandViolations(root) {
+  const files = [];
+  const directFiles = [
+    'README.md', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml',
+    'apps/docs/package.json', 'apps/docs/astro.config.mjs', 'packages/tokens/package.json',
+    'packages/react/package.json', 'docs/PROGRESS.md',
+  ];
+  for (const relative of directFiles) {
+    files.push(...await existingFile(path.join(root, relative)));
+  }
+  const directories = [
+    '.github', 'apps/docs/src', 'apps/docs/public', 'apps/docs/scripts', 'apps/docs/tests',
+    'packages/tokens/src', 'packages/tokens/dist', 'packages/tokens/scripts', 'packages/tokens/tests',
+    'packages/react/src', 'figma',
+  ];
+  for (const relative of directories) {
+    files.push(...await walkExisting(path.join(root, relative)));
+  }
+
+  const retiredBrand = ['AI', '-', 'Readable'].join('');
+  const retiredScope = ['@', 'maxxuxx'].join('');
+  const retiredVariable = ['--', 'ds', '-'].join('');
+  const retiredClass = ['.', 'ds', '-'].join('');
+  const automaticIdPattern = new RegExp(`\\bds-(?:${retiredAutomaticIds.join('|')})-`);
+  const violations = [];
+
+  for (const file of new Set(files)) {
+    if (!brandExtensions.has(path.extname(file)) && path.basename(file) !== 'pnpm-lock.yaml') continue;
+    const lines = (await readFile(file, 'utf8')).split(/\r?\n/);
+    lines.forEach((line, index) => {
+      const relative = path.relative(root, file).split(path.sep).join('/');
+      const location = `${relative}:${index + 1}`;
+      if (line.includes(retiredBrand)) violations.push(`${location}: retired brand ${retiredBrand}`);
+      if (line.includes(retiredScope)) violations.push(`${location}: retired package scope ${retiredScope}`);
+      if (line.includes(retiredVariable)) violations.push(`${location}: retired CSS variable prefix ${retiredVariable}`);
+      if (line.includes(retiredClass)) violations.push(`${location}: retired class prefix ${retiredClass}`);
+      if (automaticIdPattern.test(line)) violations.push(`${location}: retired automatic ID namespace`);
+    });
+  }
+
+  return violations.sort();
 }
 
 export async function findPrimitiveColorReferences(root) {
@@ -205,6 +299,7 @@ async function main() {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
   const violations = [
     ...(await findWorkspaceViolations(root)),
+    ...(await findBrandViolations(root)),
     ...(await findPrimitiveColorReferences(root)),
     ...(await findComponentSliceContractViolations(root)),
   ];
@@ -214,7 +309,7 @@ async function main() {
     return;
   }
   process.stdout.write(
-    'Guardrails passed: 3 private workspaces, 0 primitive color leaks, 40 Windows component-slice targets\n',
+    'Guardrails passed: HDS v0.1.0 brand, 3 private workspaces, 0 primitive color leaks, 40 Windows component-slice targets\n',
   );
 }
 

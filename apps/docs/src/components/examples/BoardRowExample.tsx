@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BoardRow } from '@maxxuxx/react';
+import { BoardRow } from '@hds/react';
 import './examples.css';
 
 const LONG_COPY = 'BoardRowLongUnbrokenCopyForResponsiveVerification'.repeat(6);

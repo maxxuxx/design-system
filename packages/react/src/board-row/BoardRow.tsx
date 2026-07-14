@@ -110,7 +110,7 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
       }
     }
 
-    const classes = ['ds-board-row', className].filter(Boolean).join(' ');
+    const classes = ['hds-board-row', className].filter(Boolean).join(' ');
 
     return (
       <details
@@ -123,7 +123,7 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
         style={getSafeLayoutStyle(style)}
       >
         <summary
-          className="ds-board-row__summary"
+          className="hds-board-row__summary"
           onClick={(event) => {
             const nativeEvent = event.nativeEvent;
             const sequence = userToggleSequenceRef.current + 1;
@@ -140,21 +140,21 @@ export const BoardRow = forwardRef<HTMLDetailsElement, BoardRowProps>(
           }}
         >
           {prefix !== undefined && prefix !== null ? (
-            <span aria-hidden="true" className="ds-board-row__prefix">
+            <span aria-hidden="true" className="hds-board-row__prefix">
               {prefix}
             </span>
           ) : null}
-          <span className="ds-board-row__copy">
-            <span className="ds-board-row__title">{title}</span>
+          <span className="hds-board-row__copy">
+            <span className="hds-board-row__title">{title}</span>
             {description !== undefined ? (
-              <span className="ds-board-row__description">{description}</span>
+              <span className="hds-board-row__description">{description}</span>
             ) : null}
           </span>
-          <span aria-hidden="true" className="ds-board-row__arrow">
+          <span aria-hidden="true" className="hds-board-row__arrow">
             <Icon name="chevron-right" size={20} />
           </span>
         </summary>
-        <div className="ds-board-row__content">{children}</div>
+        <div className="hds-board-row__content">{children}</div>
       </details>
     );
   },

@@ -116,9 +116,9 @@ test('Dialog keeps long copy internally scrollable and contained at 320px', asyn
   await page.getByLabel('긴 설명').check();
   await page.getByRole('button', { name: '확인 대화상자 열기' }).click();
   const dialog = page.getByRole('dialog', { name: '삭제할까요?' });
-  const surface = dialog.locator('.ds-dialog__surface');
-  const body = dialog.locator('.ds-dialog__body');
-  const actions = dialog.locator('.ds-dialog__actions');
+  const surface = dialog.locator('.hds-dialog__surface');
+  const body = dialog.locator('.hds-dialog__body');
+  const actions = dialog.locator('.hds-dialog__actions');
   const viewport = page.viewportSize()!;
   const surfaceBox = await surface.boundingBox();
 
@@ -140,15 +140,15 @@ test('Dialog keeps wrapped copy and actions visible at 200% text zoom in a 320px
   await openHtmlRoute(page, route);
   await page.addStyleTag({
     content: `
-      .ds-dialog {
+      .hds-dialog {
         font-size: 200% !important;
       }
 
-      .ds-dialog :is(
-        .ds-dialog__title,
-        .ds-dialog__description,
-        .ds-button,
-        .ds-text-button
+      .hds-dialog :is(
+        .hds-dialog__title,
+        .hds-dialog__description,
+        .hds-button,
+        .hds-text-button
       ) {
         font-size: inherit !important;
         line-height: 1.5 !important;
@@ -160,27 +160,27 @@ test('Dialog keeps wrapped copy and actions visible at 200% text zoom in a 320px
   const dialog = page.getByRole('dialog', { name: '삭제할까요?' });
   await expect(dialog).toBeVisible();
   await dialog.evaluate((element) => {
-    element.querySelector<HTMLElement>('.ds-dialog__title')!.textContent =
+    element.querySelector<HTMLElement>('.hds-dialog__title')!.textContent =
       '정말 이 항목과 연결된 모든 기록을 영구적으로 삭제할까요?';
-    element.querySelector<HTMLElement>('.ds-text-button__label')!.textContent =
+    element.querySelector<HTMLElement>('.hds-text-button__label')!.textContent =
       '변경 사항을 유지하고 이전 화면으로 돌아가기';
-    element.querySelector<HTMLElement>('.ds-button__label')!.textContent =
+    element.querySelector<HTMLElement>('.hds-button__label')!.textContent =
       '모든 변경 사항을 삭제하고 계속하기';
   });
 
   const metrics = await dialog.evaluate((element) => {
-    const surface = element.querySelector<HTMLElement>('.ds-dialog__surface')!;
-    const title = element.querySelector<HTMLElement>('.ds-dialog__title')!;
+    const surface = element.querySelector<HTMLElement>('.hds-dialog__surface')!;
+    const title = element.querySelector<HTMLElement>('.hds-dialog__title')!;
     const description = element.querySelector<HTMLElement>(
-      '.ds-dialog__description',
+      '.hds-dialog__description',
     )!;
-    const actions = element.querySelector<HTMLElement>('.ds-dialog__actions')!;
+    const actions = element.querySelector<HTMLElement>('.hds-dialog__actions')!;
     const buttons = Array.from(
       actions.querySelectorAll<HTMLElement>('button'),
     );
     const labels = buttons.map((button) =>
       button.querySelector<HTMLElement>(
-        '.ds-button__label, .ds-text-button__label',
+        '.hds-button__label, .hds-text-button__label',
       )!);
     const surfaceRect = surface.getBoundingClientRect();
     const actionsRect = actions.getBoundingClientRect();
@@ -262,7 +262,7 @@ test('Dialog is legible in forced colors, closes immediately for reduced motion,
 
   await page.getByRole('button', { name: '알림 열기' }).click();
   const alertDialog = page.getByRole('alertdialog', { name: '저장되었습니다.' });
-  const alertSurface = alertDialog.locator('.ds-dialog__surface');
+  const alertSurface = alertDialog.locator('.hds-dialog__surface');
   const alertAction = alertDialog.getByRole('button', { name: '확인' });
   await expect(alertDialog).toBeVisible();
   await page.keyboard.press('Tab');

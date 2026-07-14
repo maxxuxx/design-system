@@ -24,7 +24,7 @@ describe('ListRow', () => {
 
     const row = screen.getByTestId('static-row');
     expect(row).toBeInstanceOf(HTMLDivElement);
-    expect(row).toHaveClass('ds-list-row', 'consumer-row');
+    expect(row).toHaveClass('hds-list-row', 'consumer-row');
     expect(row).toHaveAttribute('id', 'delivery-row');
     expect(row).toHaveAttribute('aria-label', '배송지 정보');
     expect(row).not.toHaveAttribute('role');
@@ -53,7 +53,7 @@ describe('ListRow', () => {
     expect(button).toHaveAttribute('type', 'button');
     expect(button).toHaveAttribute('name', 'intent');
     expect(button).toHaveAttribute('value', 'payment');
-    expect(button).toHaveClass('ds-list-row', 'consumer-button');
+    expect(button).toHaveClass('hds-list-row', 'consumer-button');
     expect(ref.current).toBe(button);
 
     button.focus();
@@ -140,11 +140,11 @@ describe('ListRow', () => {
 
     const left = screen.getByTestId('left-art').parentElement;
     const right = screen.getByTestId('right-copy').parentElement;
-    const icon = container.querySelector('.ds-list-row__arrow .ds-icon');
+    const icon = container.querySelector('.hds-list-row__arrow .hds-icon');
     expect(left).toHaveAttribute('aria-hidden', 'true');
     expect(right).not.toHaveAttribute('aria-hidden');
     expect(screen.getByText('다음 날 도착')).toHaveClass(
-      'ds-list-row__description',
+      'hds-list-row__description',
     );
     expect(icon).toHaveAttribute('aria-hidden', 'true');
     expect(
@@ -152,7 +152,7 @@ describe('ListRow', () => {
         path.getAttribute('d'),
       ),
     ).toEqual(ICON_PATHS['chevron-right']);
-    expect(container.querySelector('.ds-list-row__arrow')).not.toHaveStyle(
+    expect(container.querySelector('.hds-list-row__arrow')).not.toHaveStyle(
       'transform: rotate(90deg)',
     );
   });
@@ -169,7 +169,7 @@ describe('ListRow', () => {
     const control = screen.getByRole('switch', { name: '배송 알림' });
     await user.click(control);
     expect(control).toBeChecked();
-    expect(control.closest('.ds-list-row__right')).not.toHaveAttribute(
+    expect(control.closest('.hds-list-row__right')).not.toHaveAttribute(
       'aria-hidden',
     );
   });
@@ -252,7 +252,7 @@ describe('ListRow', () => {
     } as unknown as StaticProps;
     const { container } = render(<ListRow {...runtimeProps} />);
 
-    const row = screen.getByText('안전한 행').closest('.ds-list-row')!;
+    const row = screen.getByText('안전한 행').closest('.hds-list-row')!;
     expect(row).toBeInstanceOf(HTMLDivElement);
     expect(row).toHaveAttribute('data-divider', 'indented');
     expect(row).toHaveAttribute('data-with-arrow', 'true');
@@ -280,7 +280,7 @@ describe('ListRow', () => {
 
     expect(reactStyles).toContain("@import './list-row/ListRow.css';");
     expect(componentCss).toMatch(
-      /\.ds-list-row\s*\{[^}]*min-block-size:\s*var\(--ds-size-control-large\);/s,
+      /\.hds-list-row\s*\{[^}]*min-block-size:\s*var\(--hds-size-control-large\);/s,
     );
     expect(componentCss).toContain('overflow-wrap: anywhere;');
     expect(componentCss).toContain("[data-divider='indented']");
@@ -288,13 +288,13 @@ describe('ListRow', () => {
     expect(componentCss).toContain('@media (forced-colors: active)');
     expect(componentCss).not.toContain('@keyframes');
     expect(componentCss).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
-    expect(componentCss).toContain('var(--ds-color-bg-surface)');
-    expect(componentCss).toContain('var(--ds-color-text-primary)');
-    expect(componentCss).toContain('var(--ds-color-action-weak)');
-    expect(componentCss).toContain('var(--ds-color-action-weak-hover)');
-    expect(componentCss).toContain('var(--ds-color-border-default)');
+    expect(componentCss).toContain('var(--hds-color-bg-surface)');
+    expect(componentCss).toContain('var(--hds-color-text-primary)');
+    expect(componentCss).toContain('var(--hds-color-action-weak)');
+    expect(componentCss).toContain('var(--hds-color-action-weak-hover)');
+    expect(componentCss).toContain('var(--hds-color-border-default)');
     expect(componentCss).toMatch(
-      /\.ds-list-row__left \.ds-icon,\s*\.ds-list-row__arrow \.ds-icon\s*\{[^}]*color:\s*inherit;/s,
+      /\.hds-list-row__left \.hds-icon,\s*\.hds-list-row__arrow \.hds-icon\s*\{[^}]*color:\s*inherit;/s,
     );
     expect(componentCss).not.toContain('forced-color-adjust: none');
     expect(componentSource).toContain(

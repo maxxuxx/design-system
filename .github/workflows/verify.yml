@@ -29,9 +29,9 @@ jobs:
         run: corepack pnpm install --frozen-lockfile
       - name: Install Chromium and Linux dependencies
         if: runner.os == 'Linux'
-        run: corepack pnpm --filter @maxxuxx/docs exec playwright install --with-deps chromium
+        run: corepack pnpm --filter @hds/docs exec playwright install --with-deps chromium
       - name: Install Chromium
         if: runner.os == 'Windows'
-        run: corepack pnpm --filter @maxxuxx/docs exec playwright install chromium
+        run: corepack pnpm --filter @hds/docs exec playwright install chromium
       - name: Verify
         run: corepack pnpm verify

@@ -126,8 +126,8 @@ native element가 제공하는 의미와 keyboard 동작을 ARIA로 재구현하
 ## React 예제
 
 ```tsx
-import { ListRow, Switch } from '@maxxuxx/react';
-import '@maxxuxx/react/styles.css';
+import { ListRow, Switch } from '@hds/react';
+import '@hds/react/styles.css';
 
 export function NotificationSetting() {
   return (
@@ -167,7 +167,7 @@ export function NotificationSetting() {
 
 ## Figma
 
-[live `ListRow` component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14)은 `Divider None/Indented × State Default/Pressed/Disabled = 6` variants와 `Title`, `Description`, `Right` TEXT, `Show left`, `Show description`, `Show right`, `Show arrow` BOOLEAN, `Left icon` INSTANCE_SWAP properties를 가집니다. Left icon은 owned `Icon/Info`를 기본으로 하고 다섯 owned Icon을 preferred swap으로 제한하며, 별도의 owned `Icon/ChevronRight`는 회전하지 않습니다. static·button·link는 같은 시각 geometry를 공유하는 구현 동작입니다. [TDS Mobile ListRow overview](https://tossmini-docs.toss.im/tds-mobile/components/ListRow/list-row-overview/)와 [components reference](https://tossmini-docs.toss.im/tds-mobile/components/ListRow/list-row-components/)를 참고하되 이 저장소는 native div·button·anchor overload와 strict nested-control 계약을 유지합니다.
+[live `ListRow` component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14)은 `Divider None/Indented × State Default/Pressed/Disabled = 6` variants와 `Title`, `Description`, `Right` TEXT, `Show left`, `Show description`, `Show right`, `Show arrow` BOOLEAN, `Left icon` INSTANCE_SWAP properties를 가집니다. Left icon은 owned `Icon/Info`를 기본으로 하고 다섯 owned Icon을 preferred swap으로 제한하며, 별도의 owned `Icon/ChevronRight`는 회전하지 않습니다. static·button·link는 같은 시각 geometry를 공유하는 구현 동작입니다. [TDS Mobile ListRow overview](https://tossmini-docs.toss.im/thds-mobile/components/ListRow/list-row-overview/)와 [components reference](https://tossmini-docs.toss.im/thds-mobile/components/ListRow/list-row-components/)를 참고하되 이 저장소는 native div·button·anchor overload와 strict nested-control 계약을 유지합니다.
 
 ## 지원 상태
 

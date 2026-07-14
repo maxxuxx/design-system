@@ -41,7 +41,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
       throw new Error('IconButton label must be a non-empty string.');
     }
 
-    const classes = ['ds-icon-button', className].filter(Boolean).join(' ');
+    const classes = ['hds-icon-button', className].filter(Boolean).join(' ');
 
     return (
       <button

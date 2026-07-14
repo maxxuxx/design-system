@@ -41,7 +41,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   ref,
 ) {
   const generatedId = useId();
-  const selectId = id ?? `ds-select-${generatedId}`;
+  const selectId = id ?? `hds-select-${generatedId}`;
   const hasDescription = typeof description === 'string' && description.trim().length > 0;
   const hasError = errorMessage !== undefined;
   const hasPlaceholder = placeholder !== undefined;
@@ -49,14 +49,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   const errorId = hasError ? `${selectId}-error` : undefined;
   const describedBy = mergeIds(descriptionId, errorId, ariaDescribedBy);
   const state = disabled ? 'disabled' : hasError ? 'error' : 'default';
-  const controlClasses = ['ds-select__control', className].filter(Boolean).join(' ');
+  const controlClasses = ['hds-select__control', className].filter(Boolean).join(' ');
 
   return (
-    <div className="ds-select" data-size={size} data-state={state}>
-      <label className="ds-select__label" htmlFor={selectId}>
+    <div className="hds-select" data-size={size} data-state={state}>
+      <label className="hds-select__label" htmlFor={selectId}>
         {label}
       </label>
-      <div className="ds-select__field" data-size={size} data-state={state}>
+      <div className="hds-select__field" data-size={size} data-state={state}>
         <select
           {...selectProps}
           ref={ref}
@@ -77,15 +77,15 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
           ) : null}
           {children}
         </select>
-        <Icon className="ds-select__icon" name="chevron-right" size={20} />
+        <Icon className="hds-select__icon" name="chevron-right" size={20} />
       </div>
       {hasDescription ? (
-        <p className="ds-select__description" id={descriptionId}>
+        <p className="hds-select__description" id={descriptionId}>
           {description}
         </p>
       ) : null}
       {hasError ? (
-        <p className="ds-select__error" id={errorId} role="alert">
+        <p className="hds-select__error" id={errorId} role="alert">
           {errorMessage}
         </p>
       ) : null}

@@ -18,12 +18,12 @@ describe('Checkbox', () => {
     const row = label.closest('label');
     const root = row?.parentElement;
 
-    expect(input.id).toMatch(/^ds-checkbox-/);
+    expect(input.id).toMatch(/^hds-checkbox-/);
     expect(row).toHaveAttribute('for', input.id);
     expect(input).toHaveAttribute('type', 'checkbox');
     expect(input).toHaveAttribute('data-size', 'medium');
     expect(input).toHaveAttribute('data-state', 'default');
-    expect(root).toHaveClass('ds-checkbox');
+    expect(root).toHaveClass('hds-checkbox');
     expect(root).toHaveAttribute('data-size', 'medium');
     expect(root).toHaveAttribute('data-state', 'default');
   });
@@ -120,7 +120,7 @@ describe('Checkbox', () => {
       />,
     );
     const input = screen.getByRole('checkbox', { name: '고정 선택' });
-    const root = input.closest('.ds-checkbox');
+    const root = input.closest('.hds-checkbox');
 
     expect(input).toBeDisabled();
     expect(input).toBeChecked();
@@ -151,7 +151,7 @@ describe('Checkbox', () => {
     const input = screen.getByRole<HTMLInputElement>('checkbox', { name: '마케팅 수신' });
 
     expect(input).toBeRequired();
-    expect(input).toHaveClass('ds-checkbox__input', 'consumer-checkbox');
+    expect(input).toHaveClass('hds-checkbox__input', 'consumer-checkbox');
     expect(input).toHaveAttribute('data-consumer', 'native');
     expect(ref.current).toBe(input);
     expect(new FormData(input.form!).get('marketing')).toBe('yes');
@@ -186,14 +186,14 @@ describe('Checkbox', () => {
     );
     const input = screen.getByRole('checkbox', { name: '문자 알림' });
     const row = input.closest('label');
-    const root = input.closest('.ds-checkbox');
+    const root = input.closest('.hds-checkbox');
 
-    expect(row).toHaveClass('ds-checkbox__row');
+    expect(row).toHaveClass('hds-checkbox__row');
     expect(row?.children[0]).toBe(input);
-    expect(row?.children[1]).toHaveClass('ds-checkbox__label');
+    expect(row?.children[1]).toHaveClass('hds-checkbox__label');
     expect(root?.children[0]).toBe(row);
-    expect(root?.children[1]).toHaveClass('ds-checkbox__description');
-    expect(root?.children[2]).toHaveClass('ds-checkbox__error');
+    expect(root?.children[1]).toHaveClass('hds-checkbox__description');
+    expect(root?.children[2]).toHaveClass('hds-checkbox__error');
   });
 
   it('exposes the exact public size union', () => {

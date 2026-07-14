@@ -17,7 +17,7 @@ for (const route of CANONICAL_HTML_ROUTES) {
 test('header and responsive navigation have logical visible keyboard focus', async ({ page }) => {
   await openHtmlRoute(page, CANONICAL_HTML_ROUTES[0]!);
   const skipLink = page.getByRole('link', { name: '본문으로 건너뛰기' });
-  const brand = page.getByRole('link', { name: 'AI-Readable DS' });
+  const brand = page.getByRole('link', { name: 'Haru Design System 홈' });
   await expectTabSequence(page, [skipLink, brand]);
 
   if (page.viewportSize()!.width < 960) {
@@ -47,7 +47,7 @@ test('TextButton route has zero axe violations and a keyboard-visible focus', as
   await tabTo(
     page,
     page.locator(
-      '[data-component-demo="text-button"] [data-text-button-sample="interactive"] .ds-text-button',
+      '[data-component-demo="text-button"] [data-text-button-sample="interactive"] .hds-text-button',
     ),
   );
 });
@@ -104,7 +104,7 @@ test('Dialog open variants have zero axe violations with owned initial focus', a
   const alertDialog = page.getByRole('alertdialog', { name: '저장되었습니다.' });
   const alertAction = alertDialog.getByRole('button', { name: '확인' });
   await expect(alertAction).toBeFocused();
-  await expect(alertDialog.locator('.ds-dialog__surface'))
+  await expect(alertDialog.locator('.hds-dialog__surface'))
     .toHaveCSS('opacity', '1');
   await assertNoAxeViolations(page);
   await alertDialog.getByRole('button', { name: '확인' }).click();
@@ -112,7 +112,7 @@ test('Dialog open variants have zero axe violations with owned initial focus', a
   await page.getByRole('button', { name: '확인 대화상자 열기' }).click();
   const confirmDialog = page.getByRole('dialog', { name: '삭제할까요?' });
   await expect(confirmDialog.getByRole('button', { name: '취소' })).toBeFocused();
-  await expect(confirmDialog.locator('.ds-dialog__surface'))
+  await expect(confirmDialog.locator('.hds-dialog__surface'))
     .toHaveCSS('opacity', '1');
   await assertNoAxeViolations(page);
   await confirmDialog.getByRole('button', { name: '취소' }).click();
@@ -185,12 +185,12 @@ test('BottomCTA Double actions follow secondary-primary keyboard order with zero
 
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
-  await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());
+  await tabTo(page, page.locator('[data-component-demo="text-field"] .hds-text-field__input').first());
 });
 
 test('Checkbox demo keeps native Space activation and visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
-  const input = page.locator('[data-component-demo="checkbox"] .ds-checkbox__input').first();
+  const input = page.locator('[data-component-demo="checkbox"] .hds-checkbox__input').first();
 
   await tabTo(page, input);
   await page.keyboard.press('Space');
@@ -199,7 +199,7 @@ test('Checkbox demo keeps native Space activation and visible focus', async ({ p
 
 test('RadioGroup demo keeps native arrow-key selection and visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
-  const group = page.locator('[data-component-demo="radio-group"] .ds-radio-group').first();
+  const group = page.locator('[data-component-demo="radio-group"] .hds-radio-group').first();
   const standard = group.getByRole('radio', { name: '일반 배송' });
   const express = group.getByRole('radio', { name: '빠른 배송' });
 
@@ -211,7 +211,7 @@ test('RadioGroup demo keeps native arrow-key selection and visible focus', async
 
 test('Switch demo keeps native Space activation and visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
-  const input = page.locator('[data-component-demo="switch"] .ds-switch__input').first();
+  const input = page.locator('[data-component-demo="switch"] .hds-switch__input').first();
 
   await tabTo(page, input);
   await page.keyboard.press('Space');
@@ -220,12 +220,12 @@ test('Switch demo keeps native Space activation and visible focus', async ({ pag
 
 test('Textarea demo is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
-  await tabTo(page, page.locator('[data-component-demo="textarea"] .ds-textarea__control').first());
+  await tabTo(page, page.locator('[data-component-demo="textarea"] .hds-textarea__control').first());
 });
 
 test('Select demo is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
-  const select = page.locator('[data-component-demo="select"] .ds-select__control').first();
+  const select = page.locator('[data-component-demo="select"] .hds-select__control').first();
 
   await tabTo(page, select);
 });

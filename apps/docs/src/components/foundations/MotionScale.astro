@@ -47,25 +47,25 @@ const scrim = tokenByName('color/bg/scrim');
   .motion-scale,
   .motion-card {
     display: grid;
-    gap: var(--ds-space-16);
+    gap: var(--hds-space-16);
   }
 
   .motion-card code,
   .motion-card p {
     margin: 0;
-    color: var(--ds-color-text-secondary);
+    color: var(--hds-color-text-secondary);
   }
 
   .motion-trigger {
     display: grid;
     min-height: 112px;
-    gap: var(--ds-space-12);
-    padding: var(--ds-space-16);
+    gap: var(--hds-space-12);
+    padding: var(--hds-space-16);
     cursor: pointer;
-    border: 1px solid var(--ds-color-border-default);
-    border-radius: var(--ds-radius-md);
-    background: var(--ds-color-bg-subtle);
-    color: var(--ds-color-text-primary);
+    border: 1px solid var(--hds-color-border-default);
+    border-radius: var(--hds-radius-md);
+    background: var(--hds-color-bg-subtle);
+    color: var(--hds-color-text-primary);
     text-align: left;
   }
 
@@ -74,17 +74,17 @@ const scrim = tokenByName('color/bg/scrim');
     width: min(100%, 240px);
     height: 24px;
     overflow: hidden;
-    border-radius: var(--ds-radius-full);
-    background: var(--ds-color-bg-surface);
+    border-radius: var(--hds-radius-full);
+    background: var(--hds-color-bg-surface);
   }
 
   .motion-dot {
     display: block;
     width: 24px;
     height: 24px;
-    border-radius: var(--ds-radius-full);
-    background: var(--ds-color-action-primary);
-    transition: transform var(--specimen-duration) var(--ds-motion-easing-standard);
+    border-radius: var(--hds-radius-full);
+    background: var(--hds-color-action-primary);
+    transition: transform var(--specimen-duration) var(--hds-motion-easing-standard);
   }
 
   .motion-trigger:hover .motion-dot,
@@ -98,9 +98,9 @@ const scrim = tokenByName('color/bg/scrim');
     min-height: 112px;
     place-items: center;
     overflow: hidden;
-    border-radius: var(--ds-radius-md);
-    background: var(--ds-color-bg-subtle);
-    color: var(--ds-color-text-secondary);
+    border-radius: var(--hds-radius-md);
+    background: var(--hds-color-bg-subtle);
+    color: var(--hds-color-text-secondary);
   }
 
   .scrim-layer {
@@ -108,15 +108,15 @@ const scrim = tokenByName('color/bg/scrim');
     inset: 0;
     display: grid;
     place-items: center;
-    background: var(--ds-color-bg-scrim);
+    background: var(--hds-color-bg-scrim);
   }
 
   .scrim-label {
-    padding: var(--ds-space-8) var(--ds-space-12);
-    border-radius: var(--ds-radius-full);
-    background: var(--ds-color-bg-surface);
-    color: var(--ds-color-text-primary);
-    font-weight: var(--ds-font-weight-semibold);
+    padding: var(--hds-space-8) var(--hds-space-12);
+    border-radius: var(--hds-radius-full);
+    background: var(--hds-color-bg-surface);
+    color: var(--hds-color-text-primary);
+    font-weight: var(--hds-font-weight-semibold);
   }
 
   @media (prefers-reduced-motion: reduce) {

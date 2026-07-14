@@ -1,19 +1,19 @@
 {
-  "name": "@maxxuxx/design-system-workspace",
+  "name": "@hds/workspace",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "packageManager": "pnpm@11.11.0",
   "engines": {
     "node": ">=24.0.0"
   },
   "scripts": {
-    "dev": "pnpm --filter @maxxuxx/docs dev",
-    "build": "pnpm --filter @maxxuxx/docs build",
+    "dev": "pnpm --filter @hds/docs dev",
+    "build": "pnpm --filter @hds/docs build",
     "check": "pnpm -r --if-present check",
     "test": "pnpm -r --if-present test",
-    "test:e2e": "pnpm --filter @maxxuxx/docs test:e2e",
+    "test:e2e": "pnpm --filter @hds/docs test:e2e",
     "test:guardrails": "node --test tooling/verification/guardrails.test.mjs tooling/verification/artifacts.test.mjs",
-    "generated:check": "pnpm --filter @maxxuxx/tokens generated:check && pnpm --filter @maxxuxx/docs manifest:check",
+    "generated:check": "pnpm --filter @hds/tokens generated:check && pnpm --filter @hds/docs manifest:check",
     "guardrails:check": "node tooling/verification/guardrails.mjs",
     "artifacts:check": "node tooling/verification/artifacts.mjs",
     "verify": "pnpm run check && pnpm run test && pnpm run test:guardrails && pnpm run generated:check && pnpm run guardrails:check && pnpm run build && pnpm run artifacts:check && pnpm run test:e2e"

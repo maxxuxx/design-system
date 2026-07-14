@@ -2151,7 +2151,7 @@
           "type": "boolean",
           "required": false,
           "defaultValue": "true",
-          "description": "system inset, --ds-safe-area-bottom override, space/16 중 최댓값을 하단 padding으로 사용합니다."
+          "description": "system inset, --hds-safe-area-bottom override, space/16 중 최댓값을 하단 padding으로 사용합니다."
         },
         {
           "name": "background",

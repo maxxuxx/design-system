@@ -33,8 +33,8 @@ test('fixed SearchField reserves its measured height and stays pinned in its con
   await openHtmlRoute(page, route);
   const viewport = page.locator('[data-search-field-fixed-viewport]');
   const scroller = page.locator('[data-search-field-fixed-scroll]');
-  const bar = viewport.locator('.ds-search-field__bar');
-  const spacer = viewport.locator('.ds-search-field__spacer');
+  const bar = viewport.locator('.hds-search-field__bar');
+  const spacer = viewport.locator('.hds-search-field__spacer');
   const [before, viewportBox] = await Promise.all([
     bar.boundingBox(),
     viewport.boundingBox(),
@@ -84,10 +84,10 @@ test('SearchField contains a long value at 320px and at 200% text zoom', async (
 
   await page.addStyleTag({
     content: `
-      [data-component-demo="search-field"] .ds-search-field {
+      [data-component-demo="search-field"] .hds-search-field {
         font-size: 200% !important;
       }
-      [data-component-demo="search-field"] .ds-search-field__input {
+      [data-component-demo="search-field"] .hds-search-field__input {
         font-size: inherit !important;
         line-height: 1.5 !important;
       }
@@ -95,9 +95,9 @@ test('SearchField contains a long value at 320px and at 200% text zoom', async (
   });
 
   const metrics = await input.evaluate((control) => {
-    const root = control.closest<HTMLElement>('.ds-search-field')!;
-    const field = control.closest<HTMLElement>('.ds-search-field__control')!;
-    const clear = field.querySelector<HTMLElement>('.ds-search-field__clear')!;
+    const root = control.closest<HTMLElement>('.hds-search-field')!;
+    const field = control.closest<HTMLElement>('.hds-search-field__control')!;
+    const clear = field.querySelector<HTMLElement>('.hds-search-field__clear')!;
     const fieldBox = field.getBoundingClientRect();
     const clearBox = clear.getBoundingClientRect();
     return {

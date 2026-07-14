@@ -372,7 +372,7 @@ describe('ToastProvider', () => {
     renderProvider();
     show({ duration: 0, icon: 'check', message: '완료', tone: 'success' });
 
-    const icon = screen.getByRole('status').querySelector('.ds-icon');
+    const icon = screen.getByRole('status').querySelector('.hds-icon');
     expect(icon).toHaveAttribute('aria-hidden', 'true');
     expect(
       Array.from(icon?.querySelectorAll('path') ?? [], (path) =>
@@ -533,14 +533,14 @@ describe('ToastProvider', () => {
   it('uses token-safe responsive, motion, and forced-color CSS contracts', () => {
     const css = readFileSync('src/toast/Toast.css', 'utf8');
 
-    expect(css).toContain('var(--ds-');
+    expect(css).toContain('var(--hds-');
     expect(css).toContain('max-inline-size');
     expect(css).toContain('overflow-wrap: anywhere');
     expect(css).toContain('env(safe-area-inset-bottom');
-    expect(css).toContain('.ds-toast__icon .ds-icon');
-    expect(css).toContain('.ds-toast__action.ds-text-button');
+    expect(css).toContain('.hds-toast__icon .hds-icon');
+    expect(css).toContain('.hds-toast__action.hds-text-button');
     expect(css).toContain(
-      ".ds-toast .ds-toast__action.ds-text-button[data-tone='neutral']",
+      ".hds-toast .hds-toast__action.hds-text-button[data-tone='neutral']",
     );
     expect(css).toContain('color: inherit');
     expect(css).toContain('@media (prefers-reduced-motion: reduce)');

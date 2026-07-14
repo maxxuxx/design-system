@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Icon, ListRow, Switch } from '@maxxuxx/react';
+import { Icon, ListRow, Switch } from '@hds/react';
 import './examples.css';
 
 const LONG_COPY = 'ListRowLongUnbrokenLocalizedCopyForResponsiveVerification'

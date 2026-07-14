@@ -35,7 +35,7 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
   ref,
 ) {
   const generatedId = useId();
-  const inputId = id ?? `ds-switch-${generatedId}`;
+  const inputId = id ?? `hds-switch-${generatedId}`;
   const hasDescription = typeof description === 'string'
     && description.trim().length > 0;
   const hasError = errorMessage !== undefined;
@@ -43,11 +43,11 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
   const errorId = hasError ? `${inputId}-error` : undefined;
   const describedBy = mergeIds(descriptionId, errorId, ariaDescribedBy);
   const state = disabled ? 'disabled' : hasError ? 'error' : 'default';
-  const inputClasses = ['ds-switch__input', className].filter(Boolean).join(' ');
+  const inputClasses = ['hds-switch__input', className].filter(Boolean).join(' ');
 
   return (
-    <div className="ds-switch" data-size={size} data-state={state}>
-      <label className="ds-switch__row" htmlFor={inputId}>
+    <div className="hds-switch" data-size={size} data-state={state}>
+      <label className="hds-switch__row" htmlFor={inputId}>
         <input
           {...inputProps}
           ref={ref}
@@ -62,15 +62,15 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(function Switch(
           role="switch"
           type="checkbox"
         />
-        <span className="ds-switch__label">{label}</span>
+        <span className="hds-switch__label">{label}</span>
       </label>
       {hasDescription ? (
-        <p className="ds-switch__description" id={descriptionId}>
+        <p className="hds-switch__description" id={descriptionId}>
           {description}
         </p>
       ) : null}
       {hasError ? (
-        <p className="ds-switch__error" id={errorId} role="alert">
+        <p className="hds-switch__error" id={errorId} role="alert">
           {errorMessage}
         </p>
       ) : null}

@@ -152,7 +152,7 @@ describe('Dialog', () => {
     const dialog = await getOpenConfirmDialog();
 
     expect(dialog).not.toHaveAttribute('aria-describedby');
-    expect(dialog.querySelector('.ds-dialog__description')).toBeNull();
+    expect(dialog.querySelector('.hds-dialog__description')).toBeNull();
   });
 
   it('reports exact owned alert, cancel, and confirm reasons without closing itself', async () => {
@@ -202,7 +202,7 @@ describe('Dialog', () => {
       />,
     );
     const dialog = await getOpenConfirmDialog();
-    const surface = dialog.querySelector('.ds-dialog__surface')!;
+    const surface = dialog.querySelector('.hds-dialog__surface')!;
     const cancel = new Event('cancel', { cancelable: true });
 
     dialog.dispatchEvent(cancel);
@@ -342,9 +342,9 @@ describe('Dialog', () => {
     const description = within(dialog).getByText(longCopy);
     const confirm = within(dialog).getByRole('button', { name: '삭제' });
 
-    expect(description.closest('.ds-dialog__body')).toBeInTheDocument();
-    expect(confirm.closest('.ds-dialog__actions')).toBeInTheDocument();
-    expect(confirm.closest('.ds-dialog__body')).toBeNull();
+    expect(description.closest('.hds-dialog__body')).toBeInTheDocument();
+    expect(confirm.closest('.hds-dialog__actions')).toBeInTheDocument();
+    expect(confirm.closest('.hds-dialog__body')).toBeNull();
   });
 
   it('is SSR-safe and hydrates without rendering a server portal', async () => {
@@ -407,9 +407,9 @@ describe('Dialog', () => {
       />,
     );
     const dialog = await getOpenConfirmDialog();
-    const surface = dialog.querySelector('.ds-dialog__surface');
+    const surface = dialog.querySelector('.hds-dialog__surface');
 
-    expect(surface).toHaveClass('ds-dialog__surface', 'consumer-dialog');
+    expect(surface).toHaveClass('hds-dialog__surface', 'consumer-dialog');
     expect(surface).toHaveAttribute('data-consumer', 'safe');
     expect(surface).toHaveStyle('margin-top: 1px');
     expect(surface).toHaveStyle('order: 2');
@@ -452,12 +452,12 @@ describe('Dialog', () => {
     const reactStyles = readFileSync('src/styles.css', 'utf8');
 
     expect(reactStyles).toContain("@import './dialog/Dialog.css';");
-    expect(componentCss).toContain('var(--ds-color-bg-scrim)');
-    expect(componentCss).toContain('var(--ds-color-bg-surface)');
-    expect(componentCss).toContain('var(--ds-color-text-primary)');
-    expect(componentCss).toContain('var(--ds-radius-xl)');
-    expect(componentCss).toContain('var(--ds-elevation-2)');
-    expect(componentCss).toContain('var(--ds-motion-duration-medium)');
+    expect(componentCss).toContain('var(--hds-color-bg-scrim)');
+    expect(componentCss).toContain('var(--hds-color-bg-surface)');
+    expect(componentCss).toContain('var(--hds-color-text-primary)');
+    expect(componentCss).toContain('var(--hds-radius-xl)');
+    expect(componentCss).toContain('var(--hds-elevation-2)');
+    expect(componentCss).toContain('var(--hds-motion-duration-medium)');
     expect(componentCss).toContain('overflow-y: auto');
     expect(componentCss).toContain('@media (forced-colors: active)');
     expect(componentCss).toContain('@media (prefers-reduced-motion: reduce)');

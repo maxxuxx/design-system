@@ -74,8 +74,8 @@ test('Button icon slots inherit the Button foreground color', async ({ page }) =
   await page.goto('/components/button/');
   const demo = page.locator('[data-component-demo="button"]');
   const button = demo.getByRole('button', { name: '주문 확인' });
-  const icon = button.locator('.ds-icon');
-  const label = button.locator('.ds-button__label');
+  const icon = button.locator('.hds-icon');
+  const label = button.locator('.hds-button__label');
   await expect(icon).toBeVisible();
 
   const labelColor = await label.evaluate((element) => getComputedStyle(element).color);
@@ -99,7 +99,7 @@ test('Button demo includes a full-width mobile sample', async ({ page }, testInf
   await expect(button).toHaveAttribute('data-width', 'full');
 
   const widths = await sample.evaluate((element) => {
-    const buttonElement = element.querySelector<HTMLButtonElement>('.ds-button')!;
+    const buttonElement = element.querySelector<HTMLButtonElement>('.hds-button')!;
     const sampleStyle = getComputedStyle(element);
     const sampleContentWidth = element.getBoundingClientRect().width
       - Number.parseFloat(sampleStyle.paddingLeft)
@@ -116,16 +116,16 @@ test('TextField demo shows full-width mobile states at both control heights', as
   const demo = page.locator('[data-component-demo="text-field"]');
   const stage = demo.locator('.component-demo__stage');
   const stack = stage.locator('.component-demo__stack');
-  const fields = stack.locator('.ds-text-field__input');
+  const fields = stack.locator('.hds-text-field__input');
   await expect(fields).toHaveCount(4);
   await expect(stack.getByText('기본 도움말')).toBeVisible();
   await expect(stack.getByText('필수 항목입니다.')).toBeVisible();
 
   const layout = await stage.evaluate((element) => {
     const stackElement = element.querySelector<HTMLElement>('.component-demo__stack')!;
-    const inputs = [...stackElement.querySelectorAll<HTMLInputElement>('.ds-text-field__input')];
+    const inputs = [...stackElement.querySelectorAll<HTMLInputElement>('.hds-text-field__input')];
     const feedback = [...stackElement.querySelectorAll<HTMLElement>(
-      '.ds-text-field__description, .ds-text-field__error',
+      '.hds-text-field__description, .hds-text-field__error',
     )];
     const stageStyle = getComputedStyle(element);
     const stageContentWidth = element.getBoundingClientRect().width
@@ -159,9 +159,9 @@ test('Checkbox label rows own 44px targets around 20px and 24px indicators', asy
   const demo = page.locator('[data-component-demo="checkbox"]');
   await expect(demo).toBeVisible();
 
-  const geometry = await demo.locator('.ds-checkbox').evaluateAll((roots) => roots.map((root) => {
-    const row = root.querySelector<HTMLElement>('.ds-checkbox__row')!;
-    const input = root.querySelector<HTMLInputElement>('.ds-checkbox__input')!;
+  const geometry = await demo.locator('.hds-checkbox').evaluateAll((roots) => roots.map((root) => {
+    const row = root.querySelector<HTMLElement>('.hds-checkbox__row')!;
+    const input = root.querySelector<HTMLInputElement>('.hds-checkbox__input')!;
     return {
       inputHeight: input.getBoundingClientRect().height,
       rowHeight: row.getBoundingClientRect().height,
@@ -178,11 +178,14 @@ test('Checkbox state cascade keeps checked Error styling while hovered', async (
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/components/checkbox/');
   const demo = page.locator('[data-component-demo="checkbox"]');
+  const island = demo.locator('xpath=ancestor::astro-island');
+  await expect(island).not.toHaveAttribute('ssr', '');
   await demo.getByLabel('값').selectOption('checked');
+  await expect(demo).toHaveAttribute('data-value', 'checked');
   await demo.getByLabel('error', { exact: true }).check();
 
-  const checkbox = demo.locator('.ds-checkbox').first();
-  const input = checkbox.locator('.ds-checkbox__input');
+  const checkbox = demo.locator('.hds-checkbox').first();
+  const input = checkbox.locator('.hds-checkbox__input');
   await expect(input).toBeChecked();
   await expect(checkbox).toHaveAttribute('data-state', 'error');
 
@@ -190,7 +193,7 @@ test('Checkbox state cascade keeps checked Error styling while hovered', async (
     const style = getComputedStyle(element);
     return { background: style.backgroundColor, border: style.borderColor };
   });
-  await checkbox.locator('.ds-checkbox__row').hover();
+  await checkbox.locator('.hds-checkbox__row').hover();
   const whileHovered = await input.evaluate((element) => {
     const style = getComputedStyle(element);
     return { background: style.backgroundColor, border: style.borderColor };
@@ -203,7 +206,10 @@ test('Checkbox state cascade uses system colors for Error and Disabled', async (
   await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
   await page.goto('/components/checkbox/');
   const demo = page.locator('[data-component-demo="checkbox"]');
+  const island = demo.locator('xpath=ancestor::astro-island');
+  await expect(island).not.toHaveAttribute('ssr', '');
   await demo.getByLabel('값').selectOption('checked');
+  await expect(demo).toHaveAttribute('data-value', 'checked');
   await demo.getByLabel('error', { exact: true }).check();
 
   const colors = await demo.evaluate((element) => {
@@ -215,10 +221,10 @@ test('Checkbox state cascade uses system colors for Error and Disabled', async (
     document.body.append(probe);
     const system = getComputedStyle(probe);
     const error = getComputedStyle(
-      element.querySelector<HTMLInputElement>('.ds-checkbox[data-state="error"] .ds-checkbox__input')!,
+      element.querySelector<HTMLInputElement>('.hds-checkbox[data-state="error"] .hds-checkbox__input')!,
     );
     const disabled = getComputedStyle(
-      element.querySelector<HTMLInputElement>('.ds-checkbox[data-state="disabled"] .ds-checkbox__input')!,
+      element.querySelector<HTMLInputElement>('.hds-checkbox[data-state="disabled"] .hds-checkbox__input')!,
     );
     const result = {
       disabled: {

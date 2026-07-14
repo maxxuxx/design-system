@@ -75,7 +75,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
     }
 
     const generatedId = useId();
-    const inputId = id ?? `ds-search-field-${generatedId}`;
+    const inputId = id ?? `hds-search-field-${generatedId}`;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const barRef = useRef<HTMLDivElement | null>(null);
     const [uncontrolledValue, setUncontrolledValue] = useState(
@@ -85,7 +85,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
     const isControlled = value !== undefined;
     const currentValue = isControlled ? value : uncontrolledValue;
     const showClear = currentValue.length > 0 && !disabled && !readOnly;
-    const rootClasses = ['ds-search-field', className]
+    const rootClasses = ['hds-search-field', className]
       .filter(Boolean)
       .join(' ');
 
@@ -160,26 +160,26 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
         {fixed && takeSpace ? (
           <div
             aria-hidden="true"
-            className="ds-search-field__spacer"
+            className="hds-search-field__spacer"
             style={spacerHeight === undefined
               ? undefined
               : { blockSize: `${spacerHeight}px` }}
           />
         ) : null}
-        <div className="ds-search-field__bar" ref={barRef}>
-          <div className="ds-search-field__control">
+        <div className="hds-search-field__bar" ref={barRef}>
+          <div className="hds-search-field__control">
             <Icon
-              className="ds-search-field__search-icon"
+              className="hds-search-field__search-icon"
               name="search"
               size={20}
             />
-            <label className="ds-search-field__label" htmlFor={inputId}>
+            <label className="hds-search-field__label" htmlFor={inputId}>
               {accessibleLabel}
             </label>
             <input
               {...inputProps}
               ref={setInputRef}
-              className="ds-search-field__input"
+              className="hds-search-field__input"
               dangerouslySetInnerHTML={undefined}
               disabled={disabled}
               id={inputId}
@@ -190,7 +190,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(
             />
             {showClear ? (
               <IconButton
-                className="ds-search-field__clear"
+                className="hds-search-field__clear"
                 label={accessibleClearLabel}
                 name="close"
                 onClick={handleClear}

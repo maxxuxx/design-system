@@ -3,7 +3,7 @@ import {
   BottomSheet,
   Button,
   type BottomSheetCloseReason,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const LONG_PARAGRAPHS = Array.from({ length: 48 }, (_, index) => (

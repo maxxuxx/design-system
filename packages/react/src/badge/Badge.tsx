@@ -15,7 +15,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
   { children, className, size = 'medium', tone = 'neutral', variant = 'soft', ...spanProps },
   ref,
 ) {
-  const classes = ['ds-badge', className].filter(Boolean).join(' ');
+  const classes = ['hds-badge', className].filter(Boolean).join(' ');
 
   return (
     <span
@@ -26,7 +26,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
       data-tone={tone}
       data-variant={variant}
     >
-      <span className="ds-badge__label">{children}</span>
+      <span className="hds-badge__label">{children}</span>
     </span>
   );
 });

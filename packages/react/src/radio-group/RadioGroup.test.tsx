@@ -37,7 +37,7 @@ describe('RadioGroup', () => {
     const radios = screen.getAllByRole('radio');
 
     expect(group).toBeInstanceOf(HTMLFieldSetElement);
-    expect(group.id).toMatch(/^ds-radio-group-/);
+    expect(group.id).toMatch(/^hds-radio-group-/);
     expect(group).toHaveAttribute('data-size', 'medium');
     expect(group).toHaveAttribute('data-state', 'default');
     expect(radios).toHaveLength(3);
@@ -219,7 +219,7 @@ describe('RadioGroup', () => {
     const group = screen.getByRole('group', { name: '배송' });
 
     expect(ref.current).toBe(group);
-    expect(group).toHaveClass('ds-radio-group', 'consumer-group');
+    expect(group).toHaveClass('hds-radio-group', 'consumer-group');
     expect(group).toHaveAttribute('data-consumer', 'native');
     expect(group).toHaveAttribute('form', 'checkout');
     expect(group).toHaveAttribute('data-size', 'small');
@@ -231,16 +231,16 @@ describe('RadioGroup', () => {
     const user = userEvent.setup();
     render(<RadioGroup legend="배송" name="delivery" options={options} />);
     const group = screen.getByRole('group', { name: '배송' });
-    const list = group.querySelector('.ds-radio-group__options');
+    const list = group.querySelector('.hds-radio-group__options');
     const row = screen.getByText('일반').closest('label');
     const input = screen.getByRole('radio', { name: '일반' });
 
     expect(list).toBeInTheDocument();
-    expect(row).toHaveClass('ds-radio-group__option');
+    expect(row).toHaveClass('hds-radio-group__option');
     expect(row?.children[0]).toBe(input);
-    expect(row?.children[1]).toHaveClass('ds-radio-group__option-copy');
+    expect(row?.children[1]).toHaveClass('hds-radio-group__option-copy');
     expect(within(row!).getByText('영업일 기준 3일 이내 배송'))
-      .toHaveClass('ds-radio-group__option-description');
+      .toHaveClass('hds-radio-group__option-description');
     await user.click(screen.getByText('일반'));
     expect(input).toBeChecked();
   });
@@ -261,18 +261,18 @@ describe('RadioGroup', () => {
     const componentCss = readFileSync('src/radio-group/RadioGroup.css', 'utf8');
 
     for (const selector of [
-      ':where(.ds-radio-group__option:hover) .ds-radio-group__input:where(:not(:disabled))',
-      ':where(.ds-radio-group__option:hover) .ds-radio-group__input:checked:where(:not(:disabled))',
-      '.ds-radio-group__input:where(:active:not(:disabled))',
-      '.ds-radio-group__input:checked:where(:active:not(:disabled))',
+      ':where(.hds-radio-group__option:hover) .hds-radio-group__input:where(:not(:disabled))',
+      ':where(.hds-radio-group__option:hover) .hds-radio-group__input:checked:where(:not(:disabled))',
+      '.hds-radio-group__input:where(:active:not(:disabled))',
+      '.hds-radio-group__input:checked:where(:active:not(:disabled))',
     ]) {
       expect(componentCss).toContain(selector);
     }
 
-    expect(componentCss.indexOf(".ds-radio-group__input[data-state='error']"))
-      .toBeGreaterThan(componentCss.indexOf(':where(.ds-radio-group__option:hover)'));
+    expect(componentCss.indexOf(".hds-radio-group__input[data-state='error']"))
+      .toBeGreaterThan(componentCss.indexOf(':where(.hds-radio-group__option:hover)'));
     expect(componentCss.indexOf('@media (forced-colors: active)'))
-      .toBeGreaterThan(componentCss.indexOf(':where(.ds-radio-group__option:hover)'));
+      .toBeGreaterThan(componentCss.indexOf(':where(.hds-radio-group__option:hover)'));
   });
 
   it('exposes the exact public unions and option contract', () => {

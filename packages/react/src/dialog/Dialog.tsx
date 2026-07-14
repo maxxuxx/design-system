@@ -79,13 +79,13 @@ function DialogFrame({
 }: DialogFrameProps) {
   const titleId = useId();
   const descriptionId = useId();
-  const classes = ['ds-dialog__surface', className].filter(Boolean).join(' ');
+  const classes = ['hds-dialog__surface', className].filter(Boolean).join(' ');
 
   return (
     <ModalDialog
       ariaDescribedBy={description === undefined ? undefined : descriptionId}
       ariaLabelledBy={titleId}
-      className="ds-dialog"
+      className="hds-dialog"
       dismissible={dismissible}
       fallbackFocusRef={fallbackFocusRef}
       initialFocusRef={fallbackFocusRef}
@@ -101,15 +101,15 @@ function DialogFrame({
         dangerouslySetInnerHTML={undefined}
         style={getSafeLayoutStyle(style)}
       >
-        <div className="ds-dialog__body">
-          <h2 className="ds-dialog__title" id={titleId}>{title}</h2>
+        <div className="hds-dialog__body">
+          <h2 className="hds-dialog__title" id={titleId}>{title}</h2>
           {description === undefined ? null : (
-            <p className="ds-dialog__description" id={descriptionId}>
+            <p className="hds-dialog__description" id={descriptionId}>
               {description}
             </p>
           )}
         </div>
-        <div className="ds-dialog__actions">{actions}</div>
+        <div className="hds-dialog__actions">{actions}</div>
       </div>
     </ModalDialog>
   );
@@ -128,7 +128,7 @@ export function AlertDialog({
       actions={(
         <Button
           ref={alertButtonRef}
-          className="ds-dialog__action ds-dialog__action--primary"
+          className="hds-dialog__action hds-dialog__action--primary"
           size="large"
           width="full"
           onClick={() => onOpenChange(false, 'alert-button')}
@@ -161,7 +161,7 @@ export function ConfirmDialog({
         <>
           <TextButton
             ref={cancelButtonRef}
-            className="ds-dialog__action ds-dialog__action--cancel"
+            className="hds-dialog__action hds-dialog__action--cancel"
             size="large"
             tone="neutral"
             onClick={() => onOpenChange(false, 'cancel-button')}
@@ -169,7 +169,7 @@ export function ConfirmDialog({
             {cancelLabel}
           </TextButton>
           <Button
-            className="ds-dialog__action ds-dialog__action--primary"
+            className="hds-dialog__action hds-dialog__action--primary"
             disabled={confirmDisabled}
             loading={confirmLoading}
             size="large"

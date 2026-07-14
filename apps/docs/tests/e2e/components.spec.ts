@@ -107,7 +107,7 @@ test('BottomCTA documents owned actions, fixed spacing, and BottomSheet boundari
   await expect(main).toContainText('secondary → primary');
   await expect(main).toContainText('fixed');
   await expect(main).toContainText('takeSpace');
-  await expect(main).toContainText('--ds-safe-area-bottom');
+  await expect(main).toContainText('--hds-safe-area-bottom');
   await expect(main).toContainText('background="none"');
   await expect(main).toContainText('BottomSheet');
 });
@@ -215,7 +215,7 @@ test('IconButton demo preserves owned naming, disabled, and native form behavior
   await demo.getByLabel('변형').selectOption('outline');
   await expect(interactive).toHaveAttribute('data-size', 'large');
   await expect(interactive).toHaveAttribute('data-variant', 'outline');
-  await expect(interactive.locator('.ds-icon')).toHaveAttribute('data-size', '24');
+  await expect(interactive.locator('.hds-icon')).toHaveAttribute('data-size', '24');
 
   await demo.getByLabel('disabled', { exact: true }).check();
   await expect(interactive).toBeDisabled();
@@ -369,18 +369,18 @@ test('BoardRow does not leak a canceled summary activation into controlled updat
 
 test('Checkbox visible label toggles its native input', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
-  const checkbox = page.locator('[data-component-demo="checkbox"] .ds-checkbox').first();
-  const input = checkbox.locator('.ds-checkbox__input');
+  const checkbox = page.locator('[data-component-demo="checkbox"] .hds-checkbox').first();
+  const input = checkbox.locator('.hds-checkbox__input');
 
   await expect(input).toHaveAttribute('type', 'checkbox');
   await expect(input).not.toBeChecked();
-  await checkbox.locator('.ds-checkbox__label').click();
+  await checkbox.locator('.hds-checkbox__label').click();
   await expect(input).toBeChecked();
 });
 
 test('RadioGroup label click updates its native same-name form value', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
-  const group = page.locator('[data-component-demo="radio-group"] .ds-radio-group').first();
+  const group = page.locator('[data-component-demo="radio-group"] .hds-radio-group').first();
   const express = group.getByRole('radio', { name: '빠른 배송' });
 
   await expect(group).toHaveAttribute('data-state', 'default');
@@ -393,9 +393,9 @@ test('RadioGroup label click updates its native same-name form value', async ({ 
 
 test('Switch visible label toggles its stable native switch and form value', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
-  const root = page.locator('[data-component-demo="switch"] .ds-switch').first();
+  const root = page.locator('[data-component-demo="switch"] .hds-switch').first();
   const input = root.getByRole('switch', { name: '자동 저장' });
-  const label = root.locator('.ds-switch__label');
+  const label = root.locator('.hds-switch__label');
 
   await expect(input).toHaveAttribute('type', 'checkbox');
   await expect(label).toHaveText('자동 저장');
@@ -408,7 +408,7 @@ test('Switch visible label toggles its stable native switch and form value', asy
 
 test('Textarea keeps native typing, rows, maxLength, and form value', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
-  const textarea = page.locator('[data-component-demo="textarea"] .ds-textarea__control').first();
+  const textarea = page.locator('[data-component-demo="textarea"] .hds-textarea__control').first();
 
   await expect(textarea).toHaveAttribute('rows', '4');
   await expect(textarea).toHaveAttribute('maxlength', '80');
@@ -420,7 +420,7 @@ test('Textarea keeps native typing, rows, maxLength, and form value', async ({ p
 
 test('Select keeps native single-value option selection and form value', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
-  const select = page.locator('[data-component-demo="select"] .ds-select__control').first();
+  const select = page.locator('[data-component-demo="select"] .hds-select__control').first();
 
   await expect(select).not.toHaveAttribute('multiple');
   await expect(select).not.toHaveAttribute('size');

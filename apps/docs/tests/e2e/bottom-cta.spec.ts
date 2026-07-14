@@ -17,15 +17,15 @@ const route = {
 test('BottomCTA derives Single and Double layouts with secondary-primary order', async ({ page }) => {
   await openHtmlRoute(page, route);
   const demo = page.locator('[data-component-demo="bottom-cta"]');
-  const single = demo.locator('[data-bottom-cta-sample="single"] .ds-bottom-cta');
-  const double = demo.locator('[data-bottom-cta-sample="double"] .ds-bottom-cta');
+  const single = demo.locator('[data-bottom-cta-sample="single"] .hds-bottom-cta');
+  const double = demo.locator('[data-bottom-cta-sample="double"] .hds-bottom-cta');
 
   await expect(single).toHaveAttribute('data-layout', 'single');
   await expect(single.getByRole('button')).toHaveCount(1);
   await expect(double).toHaveAttribute('data-layout', 'double');
   await expect(double.getByRole('button')).toHaveText(['취소', '확인']);
 
-  for (const button of await demo.locator('.ds-bottom-cta .ds-button').all()) {
+  for (const button of await demo.locator('.hds-bottom-cta .hds-button').all()) {
     await expect(button).toHaveAttribute('data-size', 'large');
     await expect(button).toHaveAttribute('data-width', 'full');
   }
@@ -44,9 +44,9 @@ test('fixed BottomCTA stays contained and its measured spacer matches the panel'
   await openHtmlRoute(page, route);
   const viewport = page.locator('[data-bottom-cta-fixed-viewport]');
   const scroller = page.locator('[data-bottom-cta-fixed-scroll]');
-  const root = viewport.locator('.ds-bottom-cta');
-  const panel = root.locator('.ds-bottom-cta__panel');
-  const spacer = root.locator('.ds-bottom-cta__spacer');
+  const root = viewport.locator('.hds-bottom-cta');
+  const panel = root.locator('.hds-bottom-cta__panel');
+  const spacer = root.locator('.hds-bottom-cta__spacer');
   const [before, viewportBox] = await Promise.all([
     panel.boundingBox(),
     viewport.boundingBox(),
@@ -88,7 +88,7 @@ test('fixed BottomCTA stays contained and its measured spacer matches the panel'
     );
     const lastItem = items.item(items.length - 1);
     const panelElement = element.querySelector<HTMLElement>(
-      '.ds-bottom-cta__panel',
+      '.hds-bottom-cta__panel',
     )!;
     return lastItem.getBoundingClientRect().bottom
       - panelElement.getBoundingClientRect().top;
@@ -100,18 +100,18 @@ test('fixed BottomCTA stays contained and its measured spacer matches the panel'
 test('BottomCTA honors the safe-area override and background-none surface', async ({ page }) => {
   await openHtmlRoute(page, route);
   const fixedRoot = page.locator(
-    '[data-bottom-cta-fixed-viewport] .ds-bottom-cta',
+    '[data-bottom-cta-fixed-viewport] .hds-bottom-cta',
   );
   await fixedRoot.evaluate((element: HTMLElement) => {
-    element.style.setProperty('--ds-safe-area-bottom', '40px');
+    element.style.setProperty('--hds-safe-area-bottom', '40px');
   });
   await expect(fixedRoot).toHaveAttribute('data-safe-area', 'true');
-  await expect.poll(() => fixedRoot.locator('.ds-bottom-cta__panel')
+  await expect.poll(() => fixedRoot.locator('.hds-bottom-cta__panel')
     .evaluate((element) => getComputedStyle(element).paddingBottom))
     .toBe('40px');
 
   const nonePanel = page.locator(
-    '[data-bottom-cta-sample="long-copy"] .ds-bottom-cta__panel',
+    '[data-bottom-cta-sample="long-copy"] .hds-bottom-cta__panel',
   );
   expect(await nonePanel.evaluate((element) =>
     getComputedStyle(element).backgroundColor)).toBe('rgba(0, 0, 0, 0)');
@@ -124,17 +124,17 @@ test('BottomCTA contains long labels at 320px and 200 percent text zoom', async 
   const buttons = specimen.getByRole('button');
 
   await page.addStyleTag({ content: `
-    [data-bottom-cta-sample="long-copy"] .ds-button {
+    [data-bottom-cta-sample="long-copy"] .hds-button {
       font-size: 200% !important;
       line-height: 1.5 !important;
     }
   ` });
 
   const containment = await specimen.evaluate((element) => {
-    const root = element.querySelector<HTMLElement>('.ds-bottom-cta')!;
+    const root = element.querySelector<HTMLElement>('.hds-bottom-cta')!;
     const rootBox = root.getBoundingClientRect();
     const elementBox = element.getBoundingClientRect();
-    const actionBoxes = [...element.querySelectorAll<HTMLElement>('.ds-button')]
+    const actionBoxes = [...element.querySelectorAll<HTMLElement>('.hds-button')]
       .map((button) => button.getBoundingClientRect());
     return {
       actionsContained: actionBoxes.every((box) =>
@@ -166,7 +166,7 @@ test('BottomCTA remains perceivable in forced colors and has zero axe violations
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, route);
   const button = page.locator(
-    '[data-bottom-cta-sample="double"] .ds-button',
+    '[data-bottom-cta-sample="double"] .hds-button',
   ).first();
   await button.focus();
   await expectVisibleFocus(button);

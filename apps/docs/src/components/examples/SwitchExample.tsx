@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Switch, type SwitchSize } from '@maxxuxx/react';
+import { Switch, type SwitchSize } from '@hds/react';
 
 import './examples.css';
 

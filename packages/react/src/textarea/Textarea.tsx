@@ -39,18 +39,18 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   ref,
 ) {
   const generatedId = useId();
-  const textareaId = id ?? `ds-textarea-${generatedId}`;
+  const textareaId = id ?? `hds-textarea-${generatedId}`;
   const hasDescription = typeof description === 'string' && description.trim().length > 0;
   const hasError = errorMessage !== undefined;
   const descriptionId = hasDescription ? `${textareaId}-description` : undefined;
   const errorId = hasError ? `${textareaId}-error` : undefined;
   const describedBy = mergeIds(descriptionId, errorId, ariaDescribedBy);
   const state = disabled ? 'disabled' : hasError ? 'error' : 'default';
-  const controlClasses = ['ds-textarea__control', className].filter(Boolean).join(' ');
+  const controlClasses = ['hds-textarea__control', className].filter(Boolean).join(' ');
 
   return (
-    <div className="ds-textarea" data-size={size} data-state={state}>
-      <label className="ds-textarea__label" htmlFor={textareaId}>
+    <div className="hds-textarea" data-size={size} data-state={state}>
+      <label className="hds-textarea__label" htmlFor={textareaId}>
         {label}
       </label>
       <textarea
@@ -68,12 +68,12 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         rows={rows}
       />
       {hasDescription ? (
-        <p className="ds-textarea__description" id={descriptionId}>
+        <p className="hds-textarea__description" id={descriptionId}>
           {description}
         </p>
       ) : null}
       {hasError ? (
-        <p className="ds-textarea__error" id={errorId} role="alert">
+        <p className="hds-textarea__error" id={errorId} role="alert">
           {errorMessage}
         </p>
       ) : null}

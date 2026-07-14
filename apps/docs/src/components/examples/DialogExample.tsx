@@ -6,7 +6,7 @@ import {
   ConfirmDialog,
   type ConfirmDialogCloseReason,
   TextButton,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const LONG_DESCRIPTION = Array.from(
@@ -94,16 +94,16 @@ export default function DialogExample() {
           <article className="dialog-demo__specimen">
             <span className="component-demo__label">Alert · 설명 표시</span>
             <div
-              className="ds-dialog__surface dialog-demo__surface"
+              className="hds-dialog__surface dialog-demo__surface"
               data-dialog-specimen="alert"
             >
-              <div className="ds-dialog__body">
-                <h3 className="ds-dialog__title">저장되었습니다.</h3>
-                <p className="ds-dialog__description">
+              <div className="hds-dialog__body">
+                <h3 className="hds-dialog__title">저장되었습니다.</h3>
+                <p className="hds-dialog__description">
                   변경 사항을 안전하게 저장했습니다.
                 </p>
               </div>
-              <div className="ds-dialog__actions">
+              <div className="hds-dialog__actions">
                 <Button size="large" width="full">확인</Button>
               </div>
             </div>
@@ -111,13 +111,13 @@ export default function DialogExample() {
           <article className="dialog-demo__specimen">
             <span className="component-demo__label">Confirm · 설명 숨김</span>
             <div
-              className="ds-dialog__surface dialog-demo__surface"
+              className="hds-dialog__surface dialog-demo__surface"
               data-dialog-specimen="confirm"
             >
-              <div className="ds-dialog__body">
-                <h3 className="ds-dialog__title">삭제할까요?</h3>
+              <div className="hds-dialog__body">
+                <h3 className="hds-dialog__title">삭제할까요?</h3>
               </div>
-              <div className="ds-dialog__actions">
+              <div className="hds-dialog__actions">
                 <TextButton size="large" tone="neutral">취소</TextButton>
                 <Button size="large" width="full">삭제</Button>
               </div>

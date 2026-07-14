@@ -15,13 +15,13 @@ describe('Switch', () => {
     const row = label.closest('label');
     const root = row?.parentElement;
 
-    expect(control.id).toMatch(/^ds-switch-/);
+    expect(control.id).toMatch(/^hds-switch-/);
     expect(control).toHaveAttribute('type', 'checkbox');
     expect(control).toHaveAttribute('role', 'switch');
     expect(control).toHaveAttribute('data-size', 'medium');
     expect(control).toHaveAttribute('data-state', 'default');
     expect(row).toHaveAttribute('for', control.id);
-    expect(root).toHaveClass('ds-switch');
+    expect(root).toHaveClass('hds-switch');
     expect(root).toHaveAttribute('data-size', 'medium');
     expect(root).toHaveAttribute('data-state', 'default');
   });
@@ -112,7 +112,7 @@ describe('Switch', () => {
       />,
     );
     const control = screen.getByRole('switch', { name: '고정 설정' });
-    const root = control.closest('.ds-switch');
+    const root = control.closest('.hds-switch');
 
     expect(control).toBeDisabled();
     expect(control).toBeChecked();
@@ -145,7 +145,7 @@ describe('Switch', () => {
     });
 
     expect(control).toBeRequired();
-    expect(control).toHaveClass('ds-switch__input', 'consumer-switch');
+    expect(control).toHaveClass('hds-switch__input', 'consumer-switch');
     expect(control).toHaveAttribute('data-consumer', 'native');
     expect(ref.current).toBe(control);
     expect(new FormData(control.form!).get('marketing')).toBe('enabled');
@@ -200,37 +200,37 @@ describe('Switch', () => {
     );
     const control = screen.getByRole('switch', { name: '절전 모드' });
     const row = control.closest('label');
-    const root = control.closest('.ds-switch');
+    const root = control.closest('.hds-switch');
 
-    expect(row).toHaveClass('ds-switch__row');
+    expect(row).toHaveClass('hds-switch__row');
     expect(row?.children[0]).toBe(control);
-    expect(row?.children[1]).toHaveClass('ds-switch__label');
+    expect(row?.children[1]).toHaveClass('hds-switch__label');
     expect(root?.children[0]).toBe(row);
-    expect(root?.children[1]).toHaveClass('ds-switch__description');
-    expect(root?.children[2]).toHaveClass('ds-switch__error');
+    expect(root?.children[1]).toHaveClass('hds-switch__description');
+    expect(root?.children[2]).toHaveClass('hds-switch__error');
   });
 
   it('keeps generic interaction selectors below error-state specificity', () => {
     const componentCss = readFileSync('src/switch/Switch.css', 'utf8');
 
     for (const selector of [
-      ":where(.ds-switch__row:hover) .ds-switch__input:where(:not(:disabled))",
-      ":where(.ds-switch__row:hover) .ds-switch__input:checked:where(:not(:disabled))",
-      ".ds-switch__input:where(:active:not(:disabled))",
-      ".ds-switch__input:checked:where(:active:not(:disabled))",
+      ":where(.hds-switch__row:hover) .hds-switch__input:where(:not(:disabled))",
+      ":where(.hds-switch__row:hover) .hds-switch__input:checked:where(:not(:disabled))",
+      ".hds-switch__input:where(:active:not(:disabled))",
+      ".hds-switch__input:checked:where(:active:not(:disabled))",
     ]) {
       expect(componentCss).toContain(selector);
     }
 
     expect(componentCss).toMatch(
-      /\.ds-switch__input:checked:where\(:not\(:disabled\)\)\s*\{[^}]*background:\s*var\(--ds-color-action-primary-hover\);[^}]*border-color:\s*var\(--ds-color-action-primary-hover\);/s,
+      /\.hds-switch__input:checked:where\(:not\(:disabled\)\)\s*\{[^}]*background:\s*var\(--hds-color-action-primary-hover\);[^}]*border-color:\s*var\(--hds-color-action-primary-hover\);/s,
     );
     expect(componentCss).toMatch(
-      /\.ds-switch__input:checked:where\(:active:not\(:disabled\)\)\s*\{[^}]*background:\s*var\(--ds-color-action-primary-pressed\);[^}]*border-color:\s*var\(--ds-color-action-primary-pressed\);/s,
+      /\.hds-switch__input:checked:where\(:active:not\(:disabled\)\)\s*\{[^}]*background:\s*var\(--hds-color-action-primary-pressed\);[^}]*border-color:\s*var\(--hds-color-action-primary-pressed\);/s,
     );
 
-    expect(componentCss.indexOf(".ds-switch[data-state='error']"))
-      .toBeGreaterThan(componentCss.indexOf(':where(.ds-switch__row:hover)'));
+    expect(componentCss.indexOf(".hds-switch[data-state='error']"))
+      .toBeGreaterThan(componentCss.indexOf(':where(.hds-switch__row:hover)'));
   });
 
   it('exposes the exact public contract', () => {

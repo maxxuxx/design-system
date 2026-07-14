@@ -5,7 +5,7 @@ import {
   type IconButtonSize,
   type IconButtonVariant,
   type IconName,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const SIZES: IconButtonSize[] = ['small', 'medium', 'large'];

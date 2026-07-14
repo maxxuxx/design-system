@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { TextField, type TextFieldSize } from '@maxxuxx/react';
+import { TextField, type TextFieldSize } from '@hds/react';
 import './examples.css';
 
 const SIZES: TextFieldSize[] = ['medium', 'large'];

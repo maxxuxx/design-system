@@ -16,7 +16,7 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
       ),
       kind: expect.stringMatching(/^(primitive|semantic)$/),
       description: expect.any(String),
-      cssVariable: expect.stringMatching(/^--ds-/),
+      cssVariable: expect.stringMatching(/^--hds-/),
     }));
     expect(['string', 'number']).toContain(typeof token.value);
     expect(['string', 'number']).toContain(typeof token.resolvedValue);

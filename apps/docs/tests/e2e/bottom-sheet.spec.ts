@@ -67,7 +67,7 @@ test('BottomSheet enters focus, traps native modal focus, locks scroll, and rest
 test('BottomSheet focus order includes a closed details summary but excludes its hidden controls', async ({ page }) => {
   await openHtmlRoute(page, route);
   const { dialog } = await openSheet(page);
-  await dialog.locator('.ds-bottom-sheet__surface').evaluate((surface) => {
+  await dialog.locator('.hds-bottom-sheet__surface').evaluate((surface) => {
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     const hiddenButton = document.createElement('button');
@@ -132,9 +132,9 @@ test('BottomSheet keeps long content internally scrollable with a visible footer
   await openHtmlRoute(page, route);
   await page.getByRole('checkbox', { name: '긴 본문', exact: true }).check();
   const { dialog } = await openSheet(page);
-  const surface = dialog.locator('.ds-bottom-sheet__surface');
-  const body = dialog.locator('.ds-bottom-sheet__body');
-  const footer = dialog.locator('.ds-bottom-sheet__footer');
+  const surface = dialog.locator('.hds-bottom-sheet__surface');
+  const body = dialog.locator('.hds-bottom-sheet__body');
+  const footer = dialog.locator('.hds-bottom-sheet__footer');
   const viewport = page.viewportSize()!;
   const surfaceBox = await surface.boundingBox();
 
@@ -155,7 +155,7 @@ test('BottomSheet uses immediate reduced motion and a legible forced-colors surf
   await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
   await openHtmlRoute(page, route);
   const { dialog } = await openSheet(page);
-  const surface = dialog.locator('.ds-bottom-sheet__surface');
+  const surface = dialog.locator('.hds-bottom-sheet__surface');
   const close = dialog.getByRole('button', { name: '바텀시트 닫기' });
 
   expect(await surface.evaluate((element) => {

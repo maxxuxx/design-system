@@ -4,7 +4,7 @@ import {
   type TabItem,
   type TabLayout,
   type TabSize,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const LONG_COPY = 'TabLongUnbrokenLocalizedCopyForResponsiveVerification'.repeat(6);

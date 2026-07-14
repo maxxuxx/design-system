@@ -56,8 +56,8 @@ describe('SearchField', () => {
       <SearchField clearLabel="검색어 지우기" label="  검색  " />,
     );
     const input = screen.getByRole('searchbox', { name: '검색' });
-    const label = container.querySelector('.ds-search-field__label');
-    const searchIcon = container.querySelector('.ds-search-field__search-icon');
+    const label = container.querySelector('.hds-search-field__label');
+    const searchIcon = container.querySelector('.hds-search-field__search-icon');
 
     expect(input).toHaveAttribute('type', 'search');
     expect(label).toHaveTextContent('검색');
@@ -254,7 +254,7 @@ describe('SearchField', () => {
     expect(input).toHaveAttribute('name', 'query');
     expect(input).toHaveAttribute('placeholder', '주문 번호');
     expect(input).toBeRequired();
-    expect(root).toHaveClass('ds-search-field', 'consumer-search-field');
+    expect(root).toHaveClass('hds-search-field', 'consumer-search-field');
     expect(root).toHaveStyle('margin-top: 8px');
     expect((root as HTMLElement).style.backgroundColor).toBe('');
     expect((root as HTMLElement).style.minHeight).toBe('');
@@ -266,8 +266,8 @@ describe('SearchField', () => {
       <SearchField clearLabel="검색어 지우기" fixed label="검색" />,
     );
     const root = container.firstElementChild;
-    const bar = container.querySelector<HTMLElement>('.ds-search-field__bar');
-    const spacer = container.querySelector<HTMLElement>('.ds-search-field__spacer');
+    const bar = container.querySelector<HTMLElement>('.hds-search-field__bar');
+    const spacer = container.querySelector<HTMLElement>('.hds-search-field__spacer');
     const observer = ResizeObserverDouble.instances[0];
 
     expect(root).toHaveAttribute('data-fixed', 'true');
@@ -300,7 +300,7 @@ describe('SearchField', () => {
       <SearchField clearLabel="검색어 지우기" fixed label="고정 검색" />,
     );
     const fallbackSpacer = fixed.container.querySelector<HTMLElement>(
-      '.ds-search-field__spacer',
+      '.hds-search-field__spacer',
     );
 
     expect(fallbackSpacer).not.toBeNull();
@@ -315,7 +315,7 @@ describe('SearchField', () => {
         takeSpace={false}
       />,
     );
-    expect(withoutSpace.container.querySelector('.ds-search-field__spacer')).toBeNull();
+    expect(withoutSpace.container.querySelector('.hds-search-field__spacer')).toBeNull();
   });
 
   it('suppresses the native WebKit cancel control and uses token-backed responsive styles', () => {
@@ -327,8 +327,8 @@ describe('SearchField', () => {
       /::-webkit-search-cancel-button[^}]*-webkit-appearance:\s*none/s,
     );
     expect(componentCss).toContain('min-inline-size: 0');
-    expect(componentCss).toContain('var(--ds-color-bg-surface)');
-    expect(componentCss).toContain('var(--ds-size-control-large)');
+    expect(componentCss).toContain('var(--hds-color-bg-surface)');
+    expect(componentCss).toContain('var(--hds-size-control-large)');
     expect(componentCss).toContain('@media (forced-colors: active)');
   });
 

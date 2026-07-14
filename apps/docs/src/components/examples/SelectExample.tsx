@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Select, type SelectSize } from '@maxxuxx/react';
+import { Select, type SelectSize } from '@hds/react';
 import './examples.css';
 
 const SIZES: SelectSize[] = ['medium', 'large'];

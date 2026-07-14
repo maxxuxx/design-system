@@ -1,33 +1,35 @@
-# Design System v0.1 Figma workspace
+# Haru Design System (HDS) v0.1.0 Figma workspace
 
 ## Target file
 
 - Location: Figma team Drafts
-- File: [Design System v0.1](https://www.figma.com/design/hNlju4j556mzi0G515UDwE)
+- File: [Haru Design System](https://www.figma.com/design/hNlju4j556mzi0G515UDwE)
 - Repository: [maxxuxx/design-system](https://github.com/maxxuxx/design-system) (`PUBLIC`)
 - Phase 0 approved: 2026-07-10
 
-This file is the approved target for the Figma implementation. Phase 0 resolved
-the source-of-truth decisions. The current file has six token collections,
-116 Variables, eight Text Styles, and two Effect Styles. Phase 2 created the ordered page structure and the first five
-documentation roots.
+This file is the approved HDS library target. Its file key and every managed
+Variable, Style, Component, and Component Set ID are preserved through the
+v0.1.0 rebrand. The current file has six token collections, 116 Variables,
+eight Text Styles, two Effect Styles, and 27 ordered pages.
 Foundations visual approval was refreshed at `2026-07-12T12:53:48+09:00`, and
-Phase 3 component construction covers the five v0.1 families plus Checkbox,
-RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, and
-BottomSheet. The v0.4 workflow slice now also includes Dialog, SearchField, and
-ListRow.
+The component library covers Icon, Badge, Button, TextField, ScrollArea,
+Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton,
+BoardRow, Tab, BottomSheet, Dialog, SearchField, ListRow, Toast, and BottomCTA.
 
 ## Typography
 
-The approved Figma font family is `IBM Plex Sans KR` with these exact styles:
+The approved Figma font family is `Pretendard` and the eight Text Styles use
+the matching regular, medium, semibold, and bold weights required by the token
+scale:
 
 - `Regular`
 - `Medium`
 - `SemiBold`
 - `Bold`
 
-The code token keeps the complete CSS fallback stack. Figma Text Styles use the
-installed `IBM Plex Sans KR` family.
+The code token keeps the complete Pretendard CSS fallback stack. Figma Text
+Styles use the installed Pretendard family while code serves Pretendard
+Variable subsets locally.
 
 ## Collections
 
@@ -68,11 +70,12 @@ scopes and WEB syntax, and the machine-readable readback is stored in
 21. `04.16 Dialog`
 22. `04.17 SearchField`
 23. `04.18 ListRow`
-24. `90 Native Differences`
-25. `99 Deprecated`
+24. `04.19 Toast`
+25. `04.20 BottomCTA`
+26. `90 Native Differences`
+27. `99 Deprecated`
 
-The current 25-page managed prefix is validated in this exact order. The original
-empty `Page 1` remains after this managed prefix and is not used by the library.
+The current 27-page library is validated in this exact order.
 
 ## Original Phase 2 Foundations catalog
 
@@ -99,7 +102,7 @@ The later `blur/subtle` Variable brings the live file to 105 Variables. Its
 value, binding, and visual behavior are documented on `04.5 ScrollArea` and in
 the final token readback.
 
-TDS-inspired mobile core v0.3 adds `color/neutral/900-alpha-56`,
+HDS mobile foundation work adds `color/neutral/900-alpha-56`,
 `color/bg/scrim`, `motion/duration/fast`, `motion/duration/medium`, and
 `motion/easing/standard`. The live file now has 116 Variables across six
 collections. The new Motion section in `03 Foundations` documents both
@@ -209,7 +212,7 @@ top-level overlap.
 - Full-page screenshot target: `04.3 Button` (`9:9`), rendered at
   `1440 × 1040`
 
-## TDS-inspired mobile core v0.3 TextButton validation
+## HDS component TextButton validation
 
 - Component set: [TextButton](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121)
 - Variant count: 27
@@ -239,7 +242,7 @@ top-level overlap.
 - Full-page screenshot target: `04.11 TextButton` (`182:2`), rendered at
   `1440 × 1124`
 
-## TDS-inspired mobile core v0.3 IconButton validation
+## HDS component IconButton validation
 
 - Component set: [IconButton](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134)
 - Variant count: 27
@@ -264,7 +267,7 @@ top-level overlap.
 - Full-page screenshot target: `04.12 IconButton` (`189:17`), rendered at
   `1440 × 1124`
 
-## TDS-inspired mobile core v0.3 BoardRow validation
+## HDS component BoardRow validation
 
 - Component set: [BoardRow](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38)
 - Variant count: 4
@@ -288,7 +291,7 @@ top-level overlap.
   `1440 × 720`; SHA-256
   `dc767d45ae6861b9a94ed53514979dadc761a46ddcf74f5dee5af2addd0d17d8`
 
-## TDS-inspired mobile core v0.3 Tab validation
+## HDS component Tab validation
 
 - Component set: [Tab](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59)
 - Variant count: 12
@@ -320,7 +323,7 @@ top-level overlap.
   `1440 × 1148`; SHA-256
   `eafc4a14e547ff3fdc8d3c13d0f6d7451b64e298479ecb547e8fa73df89cf539`
 
-## TDS-inspired mobile core v0.3 BottomSheet validation
+## HDS component BottomSheet validation
 
 - Component set: [BottomSheet](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66)
 - Variant count: 4 open-state specimens
@@ -348,7 +351,7 @@ top-level overlap.
   `1440 × 2148`; SHA-256
   `740a7f33c4d14b2f1a3915579b42396dfa0c74197fe8f846e66e5153786572d1`
 
-## TDS-inspired mobile workflows v0.4 Dialog validation
+## HDS component Dialog validation
 
 - Component set: [Dialog](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=219-48)
 - Variant count: 4
@@ -382,7 +385,7 @@ top-level overlap.
   `1440 × 2120`; SHA-256
   `c861063fbeb4ac51a97797eec1e1b9ca6905d81e24c2833e08fe9ce4fd5113eb`
 
-## TDS-inspired mobile workflows v0.4 SearchField validation
+## HDS component SearchField validation
 
 - Component set: [SearchField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19)
 - Variant count: 8
@@ -412,7 +415,7 @@ top-level overlap.
   `1440 × 436`; SHA-256
   `e53117e1bc17ffe727c87fd42b07e13c8681e10432d781946135cc5d87b553c2`
 
-## TDS-inspired mobile workflows v0.4 ListRow validation
+## HDS component ListRow validation
 
 - Component set: [ListRow](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14)
 - Variant count: 6
@@ -447,7 +450,7 @@ top-level overlap.
   `1440 × 742`; SHA-256
   `38f0975fdbe50d9bf1fd6982bd5d28933a79678d3c05263e31eaff0a6d57f0ff`
 
-## TDS-inspired mobile workflows v0.4 Toast validation
+## HDS component Toast validation
 
 - Component set: [Toast](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274)
 - Variant count: 6
@@ -474,7 +477,7 @@ top-level overlap.
   `1440 × 576`; SHA-256
   `5018b9a4f38e76e31c4cda142f0263a5feaf9d18dabd6fa1bf848c971d206cc5`
 
-## TDS-inspired mobile workflows v0.4 BottomCTA validation
+## HDS component BottomCTA validation
 
 - Component set: [BottomCTA](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=331-55)
 - Variant count: 4
@@ -722,7 +725,7 @@ SearchField, and ListRow are validated in Figma.
   variants, semantic bindings, and React contracts passed
 - Variant-axis parity: the exact axis names and ordered values for all seventeen
   component sets are stored in [`verification.json`](./verification.json).
-  Task 12 owns the aggregate verifier expansion to the final v0.4 totals
+  The aggregate verifier owns the final HDS v0.1.0 totals
 - Product-value audit: `0` visible hard-coded product paints. Inherited plugin
   keys on Instances and the intentionally invisible default fill on TextField
   component roots are excluded from owner/value counts.

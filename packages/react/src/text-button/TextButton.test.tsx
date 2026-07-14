@@ -53,7 +53,7 @@ describe('TextButton', () => {
     expect(link).toHaveAttribute('href', '/getting-started/');
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveAttribute('rel', 'noreferrer');
-    expect(link).toHaveClass('ds-text-button', 'consumer-link');
+    expect(link).toHaveClass('hds-text-button', 'consumer-link');
     expect(ref.current).toBe(link);
   });
 
@@ -79,7 +79,7 @@ describe('TextButton', () => {
     expect(button).toHaveAttribute('name', 'intent');
     expect(button).toHaveAttribute('type', 'submit');
     expect(button).toHaveAttribute('value', 'continue');
-    expect(button).toHaveClass('ds-text-button', 'consumer-button');
+    expect(button).toHaveClass('hds-text-button', 'consumer-button');
     expect(ref.current).toBe(button);
   });
 
@@ -185,10 +185,10 @@ describe('TextButton', () => {
       </div>,
     );
     const arrow = screen.getByRole('button', { name: '자세히 보기' });
-    const icon = arrow.querySelector('.ds-text-button__icon .ds-icon');
+    const icon = arrow.querySelector('.hds-text-button__icon .hds-icon');
 
     expect(screen.getAllByRole('button')).toHaveLength(3);
-    expect(container.querySelectorAll('.ds-text-button__icon')).toHaveLength(1);
+    expect(container.querySelectorAll('.hds-text-button__icon')).toHaveLength(1);
     expect(icon).toHaveAttribute('aria-hidden', 'true');
     expect(icon?.querySelectorAll('path')).toHaveLength(
       ICON_PATHS['chevron-right'].length,
@@ -222,36 +222,36 @@ describe('TextButton', () => {
 
     expect(reactStyles).toContain("@import './text-button/TextButton.css';");
     expect(componentCss).toContain(
-      'min-block-size: var(--ds-size-control-small);',
+      'min-block-size: var(--hds-size-control-small);',
     );
     expect(componentCss).toContain(
-      'min-inline-size: var(--ds-size-control-small);',
+      'min-inline-size: var(--hds-size-control-small);',
     );
     expect(componentCss).toMatch(
-      /\[data-size='small'\][^}]*font-size:\s*var\(--ds-font-size-caption\);/s,
+      /\[data-size='small'\][^}]*font-size:\s*var\(--hds-font-size-caption\);/s,
     );
     expect(componentCss).toMatch(
-      /\[data-size='medium'\][^}]*font-size:\s*var\(--ds-font-size-body-sm\);/s,
+      /\[data-size='medium'\][^}]*font-size:\s*var\(--hds-font-size-body-sm\);/s,
     );
     expect(componentCss).toMatch(
-      /\[data-size='large'\][^}]*font-size:\s*var\(--ds-font-size-body\);/s,
+      /\[data-size='large'\][^}]*font-size:\s*var\(--hds-font-size-body\);/s,
     );
     expect(componentCss).toMatch(
       /\[data-variant='underline'\][^}]*text-decoration-line:\s*underline;/s,
     );
     expect(componentCss).toContain('overflow-wrap: anywhere;');
-    expect(componentCss).toContain('var(--ds-motion-duration-fast)');
-    expect(componentCss).toContain('var(--ds-motion-easing-standard)');
+    expect(componentCss).toContain('var(--hds-motion-duration-fast)');
+    expect(componentCss).toContain('var(--hds-motion-easing-standard)');
     expect(componentCss).toContain('@media (forced-colors: active)');
     expect(componentCss).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentCss).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
 
     const visitedSelector =
-      ".ds-text-button[data-tone='primary']:where(a:visited)";
+      ".hds-text-button[data-tone='primary']:where(a:visited)";
     const hoverSelector =
-      ".ds-text-button[data-tone='primary']:where(a, button:not(:disabled)):hover";
+      ".hds-text-button[data-tone='primary']:where(a, button:not(:disabled)):hover";
     const activeSelector =
-      ".ds-text-button[data-tone='primary']:where(a, button:not(:disabled)):active";
+      ".hds-text-button[data-tone='primary']:where(a, button:not(:disabled)):active";
     expect(componentCss).toContain(visitedSelector);
     expect(componentCss.indexOf(visitedSelector)).toBeLessThan(
       componentCss.indexOf(hoverSelector),

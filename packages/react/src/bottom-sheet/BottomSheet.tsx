@@ -48,7 +48,7 @@ export function BottomSheet({
     <ModalDialog
       ariaDescribedBy={description === undefined ? undefined : descriptionId}
       ariaLabelledBy={titleId}
-      className="ds-bottom-sheet"
+      className="hds-bottom-sheet"
       dismissible={dismissible}
       fallbackFocusRef={closeButtonRef}
       initialFocusRef={initialFocusRef}
@@ -58,19 +58,19 @@ export function BottomSheet({
       portalContainer={portalContainer}
       role="dialog"
     >
-      <section className="ds-bottom-sheet__surface">
-        <header className="ds-bottom-sheet__header">
-          <div className="ds-bottom-sheet__heading-copy">
-            <h2 className="ds-bottom-sheet__title" id={titleId}>{title}</h2>
+      <section className="hds-bottom-sheet__surface">
+        <header className="hds-bottom-sheet__header">
+          <div className="hds-bottom-sheet__heading-copy">
+            <h2 className="hds-bottom-sheet__title" id={titleId}>{title}</h2>
             {description === undefined ? null : (
-              <p className="ds-bottom-sheet__description" id={descriptionId}>
+              <p className="hds-bottom-sheet__description" id={descriptionId}>
                 {description}
               </p>
             )}
           </div>
           <IconButton
             ref={closeButtonRef}
-            className="ds-bottom-sheet__close"
+            className="hds-bottom-sheet__close"
             label={closeLabel}
             name="close"
             size="small"
@@ -78,9 +78,9 @@ export function BottomSheet({
             onClick={() => onOpenChange(false, 'close-button')}
           />
         </header>
-        <div className="ds-bottom-sheet__body">{children}</div>
+        <div className="hds-bottom-sheet__body">{children}</div>
         {footer === undefined ? null : (
-          <footer className="ds-bottom-sheet__footer">{footer}</footer>
+          <footer className="hds-bottom-sheet__footer">{footer}</footer>
         )}
       </section>
     </ModalDialog>

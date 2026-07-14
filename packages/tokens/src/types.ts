@@ -16,6 +16,6 @@ export interface TokenDefinition {
 }
 
 export interface ResolvedToken extends TokenDefinition {
-  cssVariable: `--ds-${string}`;
+  cssVariable: `--hds-${string}`;
   resolvedValue: string | number;
 }

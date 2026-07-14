@@ -95,21 +95,21 @@ function ListRowContent({
   return (
     <>
       {left !== undefined && left !== null ? (
-        <span aria-hidden="true" className="ds-list-row__left">
+        <span aria-hidden="true" className="hds-list-row__left">
           {left}
         </span>
       ) : null}
-      <span className="ds-list-row__copy">
-        <span className="ds-list-row__title">{title}</span>
+      <span className="hds-list-row__copy">
+        <span className="hds-list-row__title">{title}</span>
         {description !== undefined ? (
-          <span className="ds-list-row__description">{description}</span>
+          <span className="hds-list-row__description">{description}</span>
         ) : null}
       </span>
       {right !== undefined && right !== null ? (
-        <span className="ds-list-row__right">{right}</span>
+        <span className="hds-list-row__right">{right}</span>
       ) : null}
       {withArrow ? (
-        <span aria-hidden="true" className="ds-list-row__arrow">
+        <span aria-hidden="true" className="hds-list-row__arrow">
           <Icon name="chevron-right" size={20} />
         </span>
       ) : null}
@@ -164,7 +164,7 @@ const ListRowImpl = forwardRef<
     }
   });
 
-  const classes = ['ds-list-row', className].filter(Boolean).join(' ');
+  const classes = ['hds-list-row', className].filter(Boolean).join(' ');
   const content = (
     <ListRowContent
       description={description}

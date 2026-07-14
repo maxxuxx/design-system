@@ -1,4 +1,4 @@
-import artifact from '@maxxuxx/tokens/tokens.json';
+import artifact from '@hds/tokens/tokens.json';
 
 export interface TokenRecord {
   name: string;
@@ -13,7 +13,7 @@ export interface TokenRecord {
   kind: 'primitive' | 'semantic';
   value: string | number;
   description: string;
-  cssVariable: `--ds-${string}`;
+  cssVariable: `--hds-${string}`;
   resolvedValue: string | number;
 }
 

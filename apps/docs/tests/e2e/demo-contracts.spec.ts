@@ -343,13 +343,13 @@ const formControlLayouts = [
   },
   {
     heading: 'Textarea',
-    itemSelector: '.textarea-demo > .ds-textarea',
+    itemSelector: '.textarea-demo > .hds-textarea',
     path: '/components/textarea/',
     slug: 'textarea',
   },
   {
     heading: 'Select',
-    itemSelector: '.select-demo > .ds-select',
+    itemSelector: '.select-demo > .hds-select',
     path: '/components/select/',
     slug: 'select',
   },
@@ -405,11 +405,11 @@ test('form-control copy wraps unbroken content without mobile page overflow', as
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns unbroken-copy overflow coverage.');
 
   const copySelectors = {
-    checkbox: '.ds-checkbox__label, .ds-checkbox__description, .ds-checkbox__error',
-    'radio-group': '.ds-radio-group__legend, .ds-radio-group__option-label, .ds-radio-group__option-description, .ds-radio-group__description, .ds-radio-group__error',
-    select: '.ds-select__label, .ds-select__description, .ds-select__error',
-    switch: '.ds-switch__label, .ds-switch__description, .ds-switch__error',
-    textarea: '.ds-textarea__label, .ds-textarea__description, .ds-textarea__error',
+    checkbox: '.hds-checkbox__label, .hds-checkbox__description, .hds-checkbox__error',
+    'radio-group': '.hds-radio-group__legend, .hds-radio-group__option-label, .hds-radio-group__option-description, .hds-radio-group__description, .hds-radio-group__error',
+    select: '.hds-select__label, .hds-select__description, .hds-select__error',
+    switch: '.hds-switch__label, .hds-switch__description, .hds-switch__error',
+    textarea: '.hds-textarea__label, .hds-textarea__description, .hds-textarea__error',
   } as const;
   const unbroken = 'VeryLongUnbrokenFormControlCopy'.repeat(40);
 
@@ -424,7 +424,7 @@ test('form-control copy wraps unbroken content without mobile page overflow', as
 
     const copyFits = await copy.evaluateAll((elements) => elements.every((element) => {
       const owner = element.closest(
-        '.ds-checkbox, .ds-radio-group, .ds-switch, .ds-textarea, .ds-select',
+        '.hds-checkbox, .hds-radio-group, .hds-switch, .hds-textarea, .hds-select',
       );
       if (!owner) return false;
       const copyRect = element.getBoundingClientRect();
@@ -446,12 +446,12 @@ test('form-control copy wraps unbroken content without mobile page overflow', as
 test('Icon demo switches its selected icon between labelled and decorative semantics', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/icon/', heading: 'Icon' });
   const demo = page.locator('[data-component-demo="icon"]');
-  const selectedIcon = demo.locator('.component-demo__stage > .ds-icon');
+  const selectedIcon = demo.locator('.component-demo__stage > .hds-icon');
   const toggle = demo.getByRole('checkbox', { name: '단독 아이콘 이름 제공' });
 
   await expect(selectedIcon).toHaveAttribute('role', 'img');
   await expect(selectedIcon).toHaveAttribute('aria-label', '선택한 search 아이콘');
-  await expect(demo.locator('.component-demo__grid .ds-icon[aria-hidden="true"]')).toHaveCount(5);
+  await expect(demo.locator('.component-demo__grid .hds-icon[aria-hidden="true"]')).toHaveCount(5);
   await expect(demo.locator('.component-demo__grid .component-demo__label')).toHaveText([
     'check', 'chevron-right', 'close', 'info', 'search',
   ]);
@@ -467,12 +467,12 @@ test('every rendered Button demo target is at least 44 by 44 pixels', async ({ p
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns minimum touch-target coverage.');
 
   await openHtmlRoute(page, { path: '/components/button/', heading: 'Button' });
-  const buttons = page.locator('[data-component-demo="button"] .ds-button');
+  const buttons = page.locator('[data-component-demo="button"] .hds-button');
   expect(await buttons.count()).toBeGreaterThan(0);
   const narrowButton = page.locator(
-    '[data-component-demo="button"] .ds-button[data-size="small"][data-width="hug"]',
+    '[data-component-demo="button"] .hds-button[data-size="small"][data-width="hug"]',
   ).first();
-  await narrowButton.locator('.ds-button__label').evaluate((element) => { element.textContent = 'i'; });
+  await narrowButton.locator('.hds-button__label').evaluate((element) => { element.textContent = 'i'; });
   await expectMinimumTarget(narrowButton);
   for (const button of await buttons.all()) await expectMinimumTarget(button);
 });
@@ -495,7 +495,7 @@ test('TextButton exposes all tiers, tones, variants, owned arrows, and 44px targ
     heading: 'TextButton',
   });
   const demo = page.locator('[data-component-demo="text-button"]');
-  const targets = demo.locator('.ds-text-button');
+  const targets = demo.locator('.hds-text-button');
 
   expect(await targets.count()).toBeGreaterThanOrEqual(9);
   for (const target of await targets.all()) await expectMinimumTarget(target);
@@ -516,14 +516,14 @@ test('TextButton exposes all tiers, tones, variants, owned arrows, and 44px targ
   ).toEqual(expect.arrayContaining(['clear', 'underline', 'arrow']));
 
   const arrowTargets = targets.filter({
-    has: page.locator('.ds-text-button__icon'),
+    has: page.locator('.hds-text-button__icon'),
   });
   expect(await arrowTargets.count()).toBeGreaterThan(0);
   await expect(
-    arrowTargets.locator('.ds-text-button__icon .ds-icon').first(),
+    arrowTargets.locator('.hds-text-button__icon .hds-icon').first(),
   ).toHaveAttribute('aria-hidden', 'true');
   await expect(
-    targets.filter({ hasNot: page.locator('.ds-text-button__icon') }),
+    targets.filter({ hasNot: page.locator('.hds-text-button__icon') }),
   ).not.toHaveCount(0);
 });
 
@@ -593,7 +593,7 @@ test('TextButton exposes a forced-colors keyboard focus outline', async ({ page 
   });
   const demo = page.locator('[data-component-demo="text-button"]');
   const target = demo.locator(
-    '[data-text-button-sample="interactive"] .ds-text-button',
+    '[data-text-button-sample="interactive"] .hds-text-button',
   );
   await demo.getByLabel('disabled', { exact: true }).focus();
   await page.keyboard.press('Tab');
@@ -634,7 +634,7 @@ test('IconButton exposes all icons, sizes, variants, and exact pointer boxes', a
 
   const geometry = await specimens.evaluateAll((elements) =>
     elements.map((element) => {
-      const icon = element.querySelector<SVGElement>('.ds-icon')!;
+      const icon = element.querySelector<SVGElement>('.hds-icon')!;
       const box = element.getBoundingClientRect();
       const iconBox = icon.getBoundingClientRect();
       return {
@@ -698,8 +698,8 @@ test('BoardRow owns native disclosure structure, arrow, pointer geometry, and no
     heading: 'BoardRow',
   });
   const demo = page.locator('[data-component-demo="board-row"]');
-  const rows = demo.locator('.ds-board-row');
-  const summaries = rows.locator(':scope > .ds-board-row__summary');
+  const rows = demo.locator('.hds-board-row');
+  const summaries = rows.locator(':scope > .hds-board-row__summary');
 
   expect(await rows.count()).toBeGreaterThanOrEqual(3);
   for (const summary of await summaries.all()) {
@@ -712,7 +712,7 @@ test('BoardRow owns native disclosure structure, arrow, pointer geometry, and no
     expect(summaryBox!.height).toBeGreaterThanOrEqual(56);
     expect(Math.abs(summaryBox!.width - rowInnerWidth)).toBeLessThanOrEqual(0.5);
   }
-  await expect(summaries.locator('.ds-board-row__arrow .ds-icon').first())
+  await expect(summaries.locator('.hds-board-row__arrow .hds-icon').first())
     .toHaveAttribute('aria-hidden', 'true');
   await expect(
     summaries.locator('a, button, input, select, textarea, [tabindex]'),
@@ -791,20 +791,20 @@ test('BoardRow exposes a complete forced-colors interaction palette and removes 
     return { canvasText, highlightText };
   });
   const openContent = demo.locator(
-    '[data-board-row-sample="long-copy"] > .ds-board-row__content',
+    '[data-board-row-sample="long-copy"] > .hds-board-row__content',
   );
   await expect(openContent).toBeVisible();
   expect(await openContent.evaluate((element) => getComputedStyle(element).color))
     .toBe(system.canvasText);
   const readForegrounds = () => summary.evaluate((element) => ({
     arrow: getComputedStyle(
-      element.querySelector<HTMLElement>('.ds-board-row__arrow')!,
+      element.querySelector<HTMLElement>('.hds-board-row__arrow')!,
     ).color,
     description: getComputedStyle(
-      element.querySelector<HTMLElement>('.ds-board-row__description')!,
+      element.querySelector<HTMLElement>('.hds-board-row__description')!,
     ).color,
     prefix: getComputedStyle(
-      element.querySelector<HTMLElement>('.ds-board-row__prefix')!,
+      element.querySelector<HTMLElement>('.hds-board-row__prefix')!,
     ).color,
     summary: getComputedStyle(element).color,
   }));
@@ -829,7 +829,7 @@ test('BoardRow exposes a complete forced-colors interaction palette and removes 
     summary: system.highlightText,
   });
   await page.mouse.up();
-  const arrow = summary.locator('.ds-board-row__arrow');
+  const arrow = summary.locator('.hds-board-row__arrow');
   expect(await arrow.evaluate((element) =>
     getComputedStyle(element).transitionDuration)).toBe('0s');
 });
@@ -935,7 +935,7 @@ test('Tab preserves its selected indicator and horizontal containment at 200% te
   });
   await page.addStyleTag({
     content: `
-      [data-component-demo="tab"] .ds-tab__button {
+      [data-component-demo="tab"] .hds-tab__button {
         font-size: 200% !important;
         line-height: 1.5 !important;
       }
@@ -948,10 +948,10 @@ test('Tab preserves its selected indicator and horizontal containment at 200% te
   const selected = longCopy.getByRole('tab', { selected: true });
   const metrics = await selected.evaluate((element) => {
     const tab = element.getBoundingClientRect();
-    const label = element.querySelector<HTMLElement>('.ds-tab__label')!
+    const label = element.querySelector<HTMLElement>('.hds-tab__label')!
       .getBoundingClientRect();
     const indicator = getComputedStyle(element, '::after');
-    const root = element.closest<HTMLElement>('.ds-tab')!;
+    const root = element.closest<HTMLElement>('.hds-tab')!;
     const list = element.closest<HTMLElement>('[role="tablist"]')!;
     return {
       componentContained: root.scrollWidth <= root.clientWidth + 0.5,
@@ -1223,7 +1223,7 @@ test('Checkbox exposes a forced-colors keyboard focus outline', async ({ page })
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
   const demo = page.locator('[data-component-demo="checkbox"]');
-  const input = demo.locator('.ds-checkbox__input').first();
+  const input = demo.locator('.hds-checkbox__input').first();
   await demo.getByLabel('error', { exact: true }).focus();
   await page.keyboard.press('Tab');
   await expectForcedColorFocus(input);
@@ -1261,10 +1261,10 @@ test('TextField error gains a distinct visible style from keyboard focus', async
 test('RadioGroup option rows keep 44px targets around 20px and 24px indicators', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
   const demo = page.locator('[data-component-demo="radio-group"]');
-  const geometry = await demo.locator('.ds-radio-group').evaluateAll((groups) =>
-    groups.flatMap((group) => [...group.querySelectorAll<HTMLElement>('.ds-radio-group__option')]
+  const geometry = await demo.locator('.hds-radio-group').evaluateAll((groups) =>
+    groups.flatMap((group) => [...group.querySelectorAll<HTMLElement>('.hds-radio-group__option')]
       .map((row) => {
-        const input = row.querySelector<HTMLInputElement>('.ds-radio-group__input')!;
+        const input = row.querySelector<HTMLInputElement>('.hds-radio-group__input')!;
         return {
           inputHeight: input.getBoundingClientRect().height,
           rowHeight: row.getBoundingClientRect().height,
@@ -1281,7 +1281,7 @@ test('RadioGroup exposes a forced-colors keyboard focus outline', async ({ page 
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
   const demo = page.locator('[data-component-demo="radio-group"]');
-  const firstRadio = demo.locator('.ds-radio-group__input').first();
+  const firstRadio = demo.locator('.hds-radio-group__input').first();
   await demo.getByLabel('error', { exact: true }).focus();
   await page.keyboard.press('Tab');
   await expectForcedColorFocus(firstRadio);
@@ -1290,9 +1290,9 @@ test('RadioGroup exposes a forced-colors keyboard focus outline', async ({ page 
 test('Switch rows keep 44px targets around token-sized tracks', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
   const demo = page.locator('[data-component-demo="switch"]');
-  const geometry = await demo.locator('.ds-switch').evaluateAll((roots) => roots.map((root) => {
-    const row = root.querySelector<HTMLElement>('.ds-switch__row')!;
-    const input = root.querySelector<HTMLInputElement>('.ds-switch__input')!;
+  const geometry = await demo.locator('.hds-switch').evaluateAll((roots) => roots.map((root) => {
+    const row = root.querySelector<HTMLElement>('.hds-switch__row')!;
+    const input = root.querySelector<HTMLInputElement>('.hds-switch__input')!;
     const rect = input.getBoundingClientRect();
     return { rowHeight: row.getBoundingClientRect().height, width: rect.width, height: rect.height };
   }));
@@ -1307,7 +1307,7 @@ test('Switch exposes a forced-colors keyboard focus outline', async ({ page }) =
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
   const demo = page.locator('[data-component-demo="switch"]');
-  const input = demo.locator('.ds-switch__input').first();
+  const input = demo.locator('.hds-switch__input').first();
   await demo.getByLabel('error', { exact: true }).focus();
   await page.keyboard.press('Tab');
   await expectForcedColorFocus(input);
@@ -1315,7 +1315,7 @@ test('Switch exposes a forced-colors keyboard focus outline', async ({ page }) =
 
 test('Textarea preserves size tiers, resize modes, and horizontal bounds', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
-  const controls = page.locator('[data-component-demo="textarea"] .ds-textarea__control');
+  const controls = page.locator('[data-component-demo="textarea"] .hds-textarea__control');
   await expect(controls).toHaveCount(4);
 
   const geometry = await controls.evaluateAll((elements) => elements.map((element) => {
@@ -1346,7 +1346,7 @@ test('Textarea exposes a forced-colors keyboard focus outline', async ({ page })
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
   const demo = page.locator('[data-component-demo="textarea"]');
-  const control = demo.locator('.ds-textarea__control').first();
+  const control = demo.locator('.hds-textarea__control').first();
   await demo.getByLabel('error', { exact: true }).focus();
   await page.keyboard.press('Tab');
   await expectForcedColorFocus(control);
@@ -1358,7 +1358,7 @@ test('Textarea error keeps a distinct visible keyboard-focus style', async ({ pa
   await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
   const demo = page.locator('[data-component-demo="textarea"]');
   await demo.getByLabel('error', { exact: true }).check();
-  const errorControl = demo.locator('.ds-textarea__control').first();
+  const errorControl = demo.locator('.hds-textarea__control').first();
   const signature = (element: Element) => {
     const style = getComputedStyle(element);
     return `${style.borderTopColor}|${style.boxShadow}|${style.outlineStyle}|${style.outlineWidth}`;
@@ -1373,12 +1373,12 @@ test('Textarea error keeps a distinct visible keyboard-focus style', async ({ pa
 test('Select preserves native size tiers, decorative icon, and horizontal bounds', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
   const demo = page.locator('[data-component-demo="select"]');
-  const controls = demo.locator('.ds-select__control');
+  const controls = demo.locator('.hds-select__control');
   await expect(controls).toHaveCount(4);
 
-  const geometry = await demo.locator('.ds-select').evaluateAll((roots) => roots.map((root) => {
-    const select = root.querySelector<HTMLSelectElement>('.ds-select__control')!;
-    const icon = root.querySelector<SVGElement>('.ds-select__icon')!;
+  const geometry = await demo.locator('.hds-select').evaluateAll((roots) => roots.map((root) => {
+    const select = root.querySelector<HTMLSelectElement>('.hds-select__control')!;
+    const icon = root.querySelector<SVGElement>('.hds-select__icon')!;
     const selectRect = select.getBoundingClientRect();
     const rootRect = root.getBoundingClientRect();
     return {
@@ -1404,7 +1404,7 @@ test('Select exposes a forced-colors keyboard focus outline', async ({ page }) =
   await page.emulateMedia({ forcedColors: 'active' });
   await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
   const demo = page.locator('[data-component-demo="select"]');
-  const control = demo.locator('.ds-select__control').first();
+  const control = demo.locator('.hds-select__control').first();
   await demo.getByLabel('error', { exact: true }).focus();
   await page.keyboard.press('Tab');
   await expectForcedColorFocus(control);
@@ -1416,7 +1416,7 @@ test('Select error keeps a distinct visible keyboard-focus style', async ({ page
   await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
   const demo = page.locator('[data-component-demo="select"]');
   await demo.getByLabel('error', { exact: true }).check();
-  const errorControl = demo.locator('.ds-select__control').first();
+  const errorControl = demo.locator('.hds-select__control').first();
   const signature = (element: Element) => {
     const style = getComputedStyle(element);
     return `${style.borderTopColor}|${style.boxShadow}|${style.outlineStyle}|${style.outlineWidth}`;
@@ -1432,7 +1432,7 @@ test('Badge constrains a long unbroken label without page overflow', async ({ pa
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns constrained-label coverage.');
 
   await openHtmlRoute(page, { path: '/components/badge/', heading: 'Badge' });
-  const badge = page.locator('[data-component-demo="badge"] > .component-demo__stage > .ds-badge');
+  const badge = page.locator('[data-component-demo="badge"] > .component-demo__stage > .hds-badge');
   await badge.evaluate((element) => {
     element.textContent = '처리상태정보가매우길어도레이아웃경계를벗어나지않습니다'.repeat(4);
   });
@@ -1496,15 +1496,15 @@ test('ListRow contains unbroken copy at 320px and 200 percent text zoom', async 
   );
   const baselineFontSizes = await longRow.evaluate((element) => ({
     description: Number.parseFloat(getComputedStyle(
-      element.querySelector<HTMLElement>('.ds-list-row__description')!,
+      element.querySelector<HTMLElement>('.hds-list-row__description')!,
     ).fontSize),
     title: Number.parseFloat(getComputedStyle(
-      element.querySelector<HTMLElement>('.ds-list-row__title')!,
+      element.querySelector<HTMLElement>('.hds-list-row__title')!,
     ).fontSize),
   }));
   await page.addStyleTag({ content: `
-    [data-list-row-sample="long-copy"] .ds-list-row__title,
-    [data-list-row-sample="long-copy"] .ds-list-row__description {
+    [data-list-row-sample="long-copy"] .hds-list-row__title,
+    [data-list-row-sample="long-copy"] .hds-list-row__description {
       font-size: 200% !important;
       line-height: normal !important;
     }
@@ -1519,10 +1519,10 @@ test('ListRow contains unbroken copy at 320px and 200 percent text zoom', async 
       pageFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
       rowFits: rowRect.left >= ownerRect.left - 0.5 && rowRect.right <= ownerRect.right + 0.5,
       descriptionFontSize: Number.parseFloat(getComputedStyle(
-        element.querySelector<HTMLElement>('.ds-list-row__description')!,
+        element.querySelector<HTMLElement>('.hds-list-row__description')!,
       ).fontSize),
       titleFontSize: Number.parseFloat(getComputedStyle(
-        element.querySelector<HTMLElement>('.ds-list-row__title')!,
+        element.querySelector<HTMLElement>('.hds-list-row__title')!,
       ).fontSize),
       wraps: element.getBoundingClientRect().height > 56,
     };
@@ -1556,7 +1556,7 @@ test('ListRow keeps forced-colors focus, divider, and trailing Switch ownership'
   const forcedPresentation = await staticRow.evaluate((element) => {
     const rowStyle = getComputedStyle(element);
     const dividerStyle = getComputedStyle(element, '::after');
-    const input = element.querySelector<HTMLInputElement>('.ds-switch__input')!;
+    const input = element.querySelector<HTMLInputElement>('.hds-switch__input')!;
     return {
       dividerColor: dividerStyle.borderBottomColor,
       dividerStyle: dividerStyle.borderBottomStyle,

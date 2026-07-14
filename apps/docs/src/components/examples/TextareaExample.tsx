@@ -3,7 +3,7 @@ import {
   Textarea,
   type TextareaResize,
   type TextareaSize,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const SIZES: TextareaSize[] = ['medium', 'large'];

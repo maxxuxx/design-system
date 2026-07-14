@@ -1,5 +1,6 @@
 ---
 import componentManifest from '../../../public/design-system/components.json';
+import { BRAND } from '../../config/brand';
 import DocsLayout from '../../layouts/DocsLayout.astro';
 
 const frameworkLabels = [
@@ -11,10 +12,10 @@ const frameworkLabels = [
 
 <DocsLayout
   title="Components"
-  description="AI-Readable Design System v0.4의 20개 컴포넌트 문서와 프레임워크 지원 상태를 한눈에 확인합니다."
+  description={`${BRAND.name}의 ${componentManifest.components.length}개 컴포넌트 문서와 프레임워크 지원 상태를 한눈에 확인합니다.`}
 >
   <header class="catalog-header">
-    <span class="eyebrow">v0.4 · 20 components</span>
+    <span class="eyebrow">{BRAND.shortName} v{BRAND.version} · {componentManifest.components.length} components</span>
     <h1>Components</h1>
     <p class="page-description">
       생성된 메타데이터와 같은 순서로 컴포넌트의 목적, preview 상태,

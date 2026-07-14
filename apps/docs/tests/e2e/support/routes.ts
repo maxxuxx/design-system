@@ -1,7 +1,8 @@
 import { expect, type APIRequestContext, type Page } from '@playwright/test';
+import brand from '../../../src/config/brand.json' with { type: 'json' };
 export interface HtmlRoute { path: string; heading: string }
 export const PLATFORM_HTML_ROUTES: readonly HtmlRoute[] = [
-  { path: '/', heading: '사람과 AI가 함께 읽는 디자인 시스템' }, { path: '/principles/', heading: '원칙' }, { path: '/getting-started/', heading: 'Getting Started' },
+  { path: '/', heading: brand.headline }, { path: '/principles/', heading: '원칙' }, { path: '/getting-started/', heading: 'Getting Started' },
   { path: '/foundations/colors/', heading: '색상' }, { path: '/foundations/typography/', heading: '타이포그래피' }, { path: '/foundations/spacing/', heading: '간격' },
   { path: '/foundations/radius/', heading: '모서리 반경' }, { path: '/foundations/elevation/', heading: '고도' },
   { path: '/foundations/motion/', heading: '모션' },

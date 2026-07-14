@@ -234,7 +234,7 @@ describe('Tab', () => {
     expect(firstPanels).toHaveLength(items.length);
     for (const [index, tab] of firstTabs.entries()) {
       const panel = firstPanels[index]!;
-      expect(tab.id).toMatch(/^ds-tab-/);
+      expect(tab.id).toMatch(/^hds-tab-/);
       expect(tab).toHaveAttribute('aria-controls', panel.id);
       expect(panel).toHaveAttribute('aria-labelledby', tab.id);
       expect(panel.hidden).toBe(index !== 0);
@@ -298,7 +298,7 @@ describe('Tab', () => {
     const root = screen.getByRole('tablist').parentElement;
 
     expect(ref.current).toBe(root);
-    expect(root).toHaveClass('ds-tab', 'consumer-tab');
+    expect(root).toHaveClass('hds-tab', 'consumer-tab');
     expect(root).toHaveAttribute('data-consumer', 'native');
     expect(root).toHaveAttribute('data-layout', 'scroll');
     expect(root).toHaveAttribute('data-size', 'small');
@@ -334,10 +334,10 @@ describe('Tab', () => {
       <Tab ariaLabel="레이아웃 탭" items={longItems} />,
     );
 
-    expect(screen.getByRole('tablist')).toHaveClass('ds-tab__list');
+    expect(screen.getByRole('tablist')).toHaveClass('hds-tab__list');
     expect(screen.getByRole('tablist').parentElement)
       .toHaveAttribute('data-layout', 'equal');
-    expect(screen.getByRole('tabpanel')).toHaveClass('ds-tab__panel');
+    expect(screen.getByRole('tabpanel')).toHaveClass('hds-tab__panel');
     expect(screen.getByRole('tabpanel')).toHaveTextContent(longCopy);
 
     rerender(<Tab ariaLabel="레이아웃 탭" items={longItems} layout="scroll" />);
@@ -348,12 +348,12 @@ describe('Tab', () => {
   it('uses token-backed 44px and 52px layouts with forced colors and reduced motion', () => {
     const componentCss = readFileSync('src/tab/Tab.css', 'utf8');
 
-    expect(componentCss).toContain('var(--ds-size-control-small)');
+    expect(componentCss).toContain('var(--hds-size-control-small)');
     expect(componentCss).toContain(
-      'calc(var(--ds-size-control-small) + var(--ds-space-8))',
+      'calc(var(--hds-size-control-small) + var(--hds-space-8))',
     );
-    expect(componentCss).toContain('var(--ds-motion-duration-fast)');
-    expect(componentCss).toContain('var(--ds-motion-easing-standard)');
+    expect(componentCss).toContain('var(--hds-motion-duration-fast)');
+    expect(componentCss).toContain('var(--hds-motion-easing-standard)');
     expect(componentCss).toContain('@media (forced-colors: active)');
     expect(componentCss).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentCss).toContain('overflow-wrap: anywhere');

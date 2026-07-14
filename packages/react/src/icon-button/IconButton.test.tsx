@@ -39,9 +39,9 @@ describe('IconButton', () => {
         <IconButton label={`${name} action`} name={name} />,
       );
       const button = screen.getByRole('button', { name: `${name} action` });
-      const icon = button.querySelector('.ds-icon');
+      const icon = button.querySelector('.hds-icon');
 
-      expect(container.querySelectorAll('.ds-icon')).toHaveLength(1);
+      expect(container.querySelectorAll('.hds-icon')).toHaveLength(1);
       expect(icon).toHaveAttribute('aria-hidden', 'true');
       expect(icon).not.toHaveAttribute('role');
       expect(
@@ -73,7 +73,7 @@ describe('IconButton', () => {
           />,
         );
         const button = screen.getByRole('button', { name: label });
-        const icon = button.querySelector('.ds-icon');
+        const icon = button.querySelector('.hds-icon');
 
         expect(button).toHaveAttribute('data-size', size);
         expect(button).toHaveAttribute('data-variant', variant);
@@ -115,7 +115,7 @@ describe('IconButton', () => {
     expect(button).toHaveAttribute('title', '검색 열기');
     expect(button).toHaveAttribute('type', 'submit');
     expect(button).toHaveAttribute('value', 'find');
-    expect(button).toHaveClass('ds-icon-button', 'consumer-icon-button');
+    expect(button).toHaveClass('hds-icon-button', 'consumer-icon-button');
     expect(button).toHaveStyle('margin-top: 1px');
     expect(button.style.backgroundColor).toBe('');
     expect(button.style.color).toBe('');
@@ -174,7 +174,7 @@ describe('IconButton', () => {
     expect(button).toHaveAttribute('aria-label', 'library label');
     expect(button).not.toHaveAttribute('name');
     expect(button).not.toHaveTextContent('caller child');
-    expect(button.querySelectorAll('.ds-icon')).toHaveLength(1);
+    expect(button.querySelectorAll('.hds-icon')).toHaveLength(1);
   });
 
   it('discards caller-owned markup at runtime', () => {
@@ -191,7 +191,7 @@ describe('IconButton', () => {
     }).not.toThrow();
     expect(screen.queryByTestId('injected')).not.toBeInTheDocument();
     expect(
-      screen.getByTestId('owned-markup').querySelectorAll('.ds-icon'),
+      screen.getByTestId('owned-markup').querySelectorAll('.hds-icon'),
     ).toHaveLength(1);
   });
 
@@ -204,19 +204,19 @@ describe('IconButton', () => {
 
     expect(reactStyles).toContain("@import './icon-button/IconButton.css';");
     expect(componentCss).toMatch(
-      /\[data-size='small'\][^}]*inline-size:\s*var\(--ds-size-control-small\);[^}]*block-size:\s*var\(--ds-size-control-small\);/s,
+      /\[data-size='small'\][^}]*inline-size:\s*var\(--hds-size-control-small\);[^}]*block-size:\s*var\(--hds-size-control-small\);/s,
     );
     expect(componentCss).toMatch(
-      /\[data-size='medium'\][^}]*inline-size:\s*var\(--ds-size-control-medium\);[^}]*block-size:\s*var\(--ds-size-control-medium\);/s,
+      /\[data-size='medium'\][^}]*inline-size:\s*var\(--hds-size-control-medium\);[^}]*block-size:\s*var\(--hds-size-control-medium\);/s,
     );
     expect(componentCss).toMatch(
-      /\[data-size='large'\][^}]*inline-size:\s*var\(--ds-size-control-large\);[^}]*block-size:\s*var\(--ds-size-control-large\);/s,
+      /\[data-size='large'\][^}]*inline-size:\s*var\(--hds-size-control-large\);[^}]*block-size:\s*var\(--hds-size-control-large\);/s,
     );
     expect(componentCss).toContain("[data-variant='clear']");
     expect(componentCss).toContain("[data-variant='fill']");
     expect(componentCss).toContain("[data-variant='outline']");
-    expect(componentCss).toContain('var(--ds-motion-duration-fast)');
-    expect(componentCss).toContain('var(--ds-motion-easing-standard)');
+    expect(componentCss).toContain('var(--hds-motion-duration-fast)');
+    expect(componentCss).toContain('var(--hds-motion-easing-standard)');
     expect(componentCss).toContain('@media (forced-colors: active)');
     expect(componentCss).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentCss).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);
@@ -227,21 +227,21 @@ describe('IconButton', () => {
     for (const variant of variants) {
       for (const state of ['', ':not(:disabled):hover', ':not(:disabled):active']) {
         const selector =
-          `.ds-icon-button[data-variant='${variant}']${state}`;
+          `.hds-icon-button[data-variant='${variant}']${state}`;
         expect(componentCss.lastIndexOf(selector)).toBeGreaterThan(
           forcedColorsStart,
         );
       }
     }
     expect(
-      componentCss.lastIndexOf('.ds-icon-button[data-variant]:disabled'),
+      componentCss.lastIndexOf('.hds-icon-button[data-variant]:disabled'),
     ).toBeGreaterThan(forcedColorsStart);
 
     const hoverSelector =
-      ".ds-icon-button[data-variant='fill']:not(:disabled):hover";
+      ".hds-icon-button[data-variant='fill']:not(:disabled):hover";
     const activeSelector =
-      ".ds-icon-button[data-variant='fill']:not(:disabled):active";
-    const disabledSelector = '.ds-icon-button:disabled';
+      ".hds-icon-button[data-variant='fill']:not(:disabled):active";
+    const disabledSelector = '.hds-icon-button:disabled';
     expect(componentCss.indexOf(hoverSelector)).toBeLessThan(
       componentCss.indexOf(activeSelector),
     );

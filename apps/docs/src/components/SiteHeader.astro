@@ -1,12 +1,15 @@
 ---
 import SideNavigation from './SideNavigation.astro';
+import { BRAND } from '../config/brand';
 
 interface Props { currentPath: string }
 const { currentPath } = Astro.props;
 ---
 
 <header class="site-header">
-  <a class="site-brand" href="/">AI-Readable DS</a>
+  <a class="site-brand" href="/" aria-label={`${BRAND.name} 홈`}>
+    <img src="/brand/hds-mark.svg" alt="" width="76" height="32" />
+  </a>
   <details class="mobile-navigation">
     <summary>메뉴</summary>
     <div class="mobile-navigation-panel">

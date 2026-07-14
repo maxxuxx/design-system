@@ -5,7 +5,7 @@ import {
   type ButtonSize,
   type ButtonVariant,
   type ButtonWidth,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const SIZES: ButtonSize[] = ['small', 'medium', 'large'];

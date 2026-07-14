@@ -131,8 +131,8 @@ neutral과 success는 `role="status"`, `aria-live="polite"`, `aria-atomic="true"
 ## React 예제
 
 ```tsx
-import { ToastProvider, useToast } from '@maxxuxx/react';
-import '@maxxuxx/react/styles.css';
+import { ToastProvider, useToast } from '@hds/react';
+import '@hds/react/styles.css';
 
 function SaveButton() {
   const toast = useToast();
@@ -184,7 +184,7 @@ export function App() {
 
 ## Figma
 
-[`04.19 Toast`](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=316-2) page의 [Toast component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274)은 `Tone Neutral/Success/Danger × Action Hidden/Visible = 6` variants를 제공합니다. Message와 Action label은 TEXT, Show icon은 BOOLEAN, Icon은 owned Icon master를 제한한 INSTANCE_SWAP property입니다. Position과 FIFO queue는 시각 variant가 아닌 code behavior입니다. [TDS Mobile Toast component](https://tossmini-docs.toss.im/tds-mobile/components/toast/)와 [use-toast reference](https://tossmini-docs.toss.im/tds-mobile/hooks/OverlayExtension/use-toast/)를 참고하되 이 저장소는 native-first non-modal portal과 deterministic queue를 유지합니다.
+[`04.19 Toast`](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=316-2) page의 [Toast component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274)은 `Tone Neutral/Success/Danger × Action Hidden/Visible = 6` variants를 제공합니다. Message와 Action label은 TEXT, Show icon은 BOOLEAN, Icon은 owned Icon master를 제한한 INSTANCE_SWAP property입니다. Position과 FIFO queue는 시각 variant가 아닌 code behavior입니다. [TDS Mobile Toast component](https://tossmini-docs.toss.im/thds-mobile/components/toast/)와 [use-toast reference](https://tossmini-docs.toss.im/thds-mobile/hooks/OverlayExtension/use-toast/)를 참고하되 이 저장소는 native-first non-modal portal과 deterministic queue를 유지합니다.
 
 ## 지원 상태
 

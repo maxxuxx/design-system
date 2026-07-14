@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SearchField } from '@maxxuxx/react';
+import { SearchField } from '@hds/react';
 import './examples.css';
 
 const FIXED_RESULTS = Array.from(

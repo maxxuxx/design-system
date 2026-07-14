@@ -89,7 +89,7 @@ export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(
     const panelRef = useRef<HTMLDivElement | null>(null);
     const [spacerHeight, setSpacerHeight] = useState<number>();
     const reservesSpace = fixed && takeSpace;
-    const classes = ['ds-bottom-cta', className].filter(Boolean).join(' ');
+    const classes = ['hds-bottom-cta', className].filter(Boolean).join(' ');
 
     useEffect(() => {
       const panel = panelRef.current;
@@ -126,14 +126,14 @@ export const BottomCTA = forwardRef<HTMLDivElement, BottomCTAProps>(
         {reservesSpace ? (
           <div
             aria-hidden="true"
-            className="ds-bottom-cta__spacer"
+            className="hds-bottom-cta__spacer"
             style={spacerHeight === undefined
               ? undefined
               : { blockSize: `${spacerHeight}px` }}
           />
         ) : null}
-        <div className="ds-bottom-cta__panel" ref={panelRef}>
-          <div className="ds-bottom-cta__actions">
+        <div className="hds-bottom-cta__panel" ref={panelRef}>
+          <div className="hds-bottom-cta__actions">
             {ownedSecondaryAction ? cloneOwnedAction(ownedSecondaryAction) : null}
             {cloneOwnedAction(ownedPrimaryAction)}
           </div>

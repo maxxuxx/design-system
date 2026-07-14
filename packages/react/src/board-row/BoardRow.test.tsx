@@ -19,11 +19,11 @@ describe('BoardRow', () => {
 
     const details = container.querySelector('details');
     const summary = screen.getByText('배송 정보').closest('summary');
-    const icon = summary?.querySelector('.ds-icon');
+    const icon = summary?.querySelector('.hds-icon');
 
-    expect(details).toHaveClass('ds-board-row');
+    expect(details).toHaveClass('hds-board-row');
     expect(details).not.toHaveAttribute('open');
-    expect(summary).toHaveClass('ds-board-row__summary');
+    expect(summary).toHaveClass('hds-board-row__summary');
     expect(summary).not.toHaveAttribute('role');
     expect(summary).not.toHaveAttribute('tabindex');
     expect(details).toContainElement(summary);
@@ -55,7 +55,7 @@ describe('BoardRow', () => {
 
     expect(details).toHaveAttribute('id', 'delivery-row');
     expect(details).toHaveAttribute('aria-label', '배송 상세');
-    expect(details).toHaveClass('ds-board-row', 'consumer-row');
+    expect(details).toHaveClass('hds-board-row', 'consumer-row');
     expect(details).toHaveStyle('margin-top: 1px');
     expect(details.style.backgroundColor).toBe('');
     expect(details.style.color).toBe('');
@@ -266,10 +266,10 @@ describe('BoardRow', () => {
     const description = screen.getByText('변경 사항을 확인하세요.');
     const content = screen.getByTestId('disclosure-content').parentElement;
 
-    expect(prefix).toHaveClass('ds-board-row__prefix');
+    expect(prefix).toHaveClass('hds-board-row__prefix');
     expect(prefix).toHaveAttribute('aria-hidden', 'true');
-    expect(description).toHaveClass('ds-board-row__description');
-    expect(content).toHaveClass('ds-board-row__content');
+    expect(description).toHaveClass('hds-board-row__description');
+    expect(content).toHaveClass('hds-board-row__content');
     expect(container.querySelector('summary a, summary button, summary input'))
       .not.toBeInTheDocument();
   });
@@ -304,11 +304,11 @@ describe('BoardRow', () => {
 
     expect(reactStyles).toContain("@import './board-row/BoardRow.css';");
     expect(componentCss).toMatch(
-      /\.ds-board-row__summary\s*\{[^}]*min-block-size:\s*var\(--ds-size-control-large\);/s,
+      /\.hds-board-row__summary\s*\{[^}]*min-block-size:\s*var\(--hds-size-control-large\);/s,
     );
-    expect(componentCss).toContain('.ds-board-row[open] .ds-board-row__arrow');
-    expect(componentCss).toContain('var(--ds-motion-duration-fast)');
-    expect(componentCss).toContain('var(--ds-motion-easing-standard)');
+    expect(componentCss).toContain('.hds-board-row[open] .hds-board-row__arrow');
+    expect(componentCss).toContain('var(--hds-motion-duration-fast)');
+    expect(componentCss).toContain('var(--hds-motion-easing-standard)');
     expect(componentCss).toContain('@media (forced-colors: active)');
     expect(componentCss).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentCss).not.toMatch(

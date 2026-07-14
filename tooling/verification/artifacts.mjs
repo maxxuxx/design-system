@@ -752,9 +752,9 @@ const componentPropContracts = {
   ],
 };
 const componentLocalCssVariables = {
-  ScrollArea: new Set(['--ds-scroll-area-edge-size']),
-  Switch: new Set(['--ds-switch-track-height', '--ds-switch-track-width']),
-  BottomCTA: new Set(['--ds-safe-area-bottom']),
+  ScrollArea: new Set(['--hds-scroll-area-edge-size']),
+  Switch: new Set(['--hds-switch-track-height', '--hds-switch-track-width']),
+  BottomCTA: new Set(['--hds-safe-area-bottom']),
 };
 const componentTransitiveTokens = {
   TextButton: new Set(['size/icon/small']),
@@ -1021,7 +1021,7 @@ function validateTokensArtifact(artifact) {
     if (!['string', 'number'].includes(typeof token?.resolvedValue)) {
       violations.push(`Token ${label} missing resolvedValue`);
     }
-    const expectedCss = nonEmpty(token?.name) ? `--ds-${token.name.replaceAll('/', '-')}` : '';
+    const expectedCss = nonEmpty(token?.name) ? `--hds-${token.name.replaceAll('/', '-')}` : '';
     if (token?.cssVariable !== expectedCss) violations.push(`Token ${label} cssVariable mismatch`);
     if (names.has(token?.name)) violations.push(`Duplicate token name: ${token.name}`);
     if (cssVariables.has(token?.cssVariable)) violations.push(`Duplicate cssVariable: ${token.cssVariable}`);
@@ -1139,7 +1139,7 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
     const executableCss = source.replace(/\/\*[\s\S]*?\*\//g, '');
     const allowedLocalVariables = componentLocalCssVariables[name] ?? new Set();
     const cssVariables = [...new Set(
-      [...executableCss.matchAll(/var\(\s*(--ds-[A-Za-z0-9_-]+)\b/g)]
+      [...executableCss.matchAll(/var\(\s*(--hds-[A-Za-z0-9_-]+)\b/g)]
         .map((match) => match[1])
         .filter((cssVariable) => !allowedLocalVariables.has(cssVariable)),
     )];

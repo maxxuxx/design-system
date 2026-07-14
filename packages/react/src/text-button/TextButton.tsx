@@ -49,9 +49,9 @@ function TextButtonContent({
 }): ReactElement {
   return (
     <>
-      <span className="ds-text-button__label">{children}</span>
+      <span className="hds-text-button__label">{children}</span>
       {variant === 'arrow' ? (
-        <span aria-hidden="true" className="ds-text-button__icon">
+        <span aria-hidden="true" className="hds-text-button__icon">
           <Icon name="chevron-right" size={16} />
         </span>
       ) : null}
@@ -73,7 +73,7 @@ const TextButtonImpl = forwardRef<
   },
   ref,
 ) {
-  const classes = ['ds-text-button', className].filter(Boolean).join(' ');
+  const classes = ['hds-text-button', className].filter(Boolean).join(' ');
   const content = (
     <TextButtonContent variant={variant}>{children}</TextButtonContent>
   );

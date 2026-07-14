@@ -1,7 +1,7 @@
 {
-  "name": "@maxxuxx/tokens",
+  "name": "@hds/tokens",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "exports": {
     "./fonts.css": "./fonts.css",

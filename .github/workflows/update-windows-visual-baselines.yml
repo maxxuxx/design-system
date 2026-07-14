@@ -1,0 +1,69 @@
+name: Update Windows visual baselines
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  baselines:
+    name: Generate reviewed baselines
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+      - name: Install Chromium
+        run: corepack pnpm --filter @hds/docs exec playwright install chromium
+      - name: Generate Windows component-slice baselines
+        run: >-
+          corepack pnpm --filter @hds/docs exec playwright test
+          tests/e2e/component-slices.visual.spec.ts
+          --project=mobile-chromium
+          --project=desktop-chromium
+          --update-snapshots
+      - name: Generate Windows full-page baselines
+        run: >-
+          corepack pnpm --filter @hds/docs exec playwright test
+          tests/e2e/visual.spec.ts
+          --update-snapshots
+      - name: Verify all forty baselines exist
+        shell: pwsh
+        run: |
+          $baselinePath = "apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec"
+          $count = (Get-ChildItem -Path $baselinePath -Filter "*.png" -File).Count
+          if ($count -ne 40) {
+            throw "Expected 40 Windows component-slice baselines, found $count."
+          }
+          Write-Output "Verified $count Windows component-slice baselines."
+      - name: Verify all fifteen full-page baselines exist
+        shell: pwsh
+        run: |
+          $baselinePath = "apps/docs/tests/e2e/__snapshots__/visual.spec"
+          $count = (Get-ChildItem -Path $baselinePath -Filter "*.png" -File).Count
+          if ($count -ne 15) {
+            throw "Expected 15 Windows full-page baselines, found $count."
+          }
+          Write-Output "Verified $count Windows full-page baselines."
+      - name: Upload component-slice baseline candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-component-slice-baselines
+          path: apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload full-page baseline candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-full-page-baselines
+          path: apps/docs/tests/e2e/__snapshots__/visual.spec
+          if-no-files-found: error
+          retention-days: 14

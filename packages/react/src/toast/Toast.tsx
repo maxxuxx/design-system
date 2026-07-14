@@ -205,12 +205,12 @@ function ToastViewport({
   };
 
   return (
-    <div className="ds-toast-layer" data-position={item.position}>
+    <div className="hds-toast-layer" data-position={item.position}>
       <div
         ref={rootRef}
         aria-atomic="true"
         aria-live={live}
-        className="ds-toast"
+        className="hds-toast"
         data-position={item.position}
         data-tone={item.tone}
         onBlurCapture={handleBlur}
@@ -220,14 +220,14 @@ function ToastViewport({
         role={role}
       >
         {item.icon === undefined ? null : (
-          <span aria-hidden="true" className="ds-toast__icon">
+          <span aria-hidden="true" className="hds-toast__icon">
             <Icon name={item.icon} size={20} />
           </span>
         )}
-        <span className="ds-toast__message">{item.message}</span>
+        <span className="hds-toast__message">{item.message}</span>
         {item.action === undefined ? null : (
           <TextButton
-            className="ds-toast__action"
+            className="hds-toast__action"
             onClick={handleAction}
             size="medium"
             tone="neutral"

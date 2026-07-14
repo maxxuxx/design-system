@@ -122,8 +122,8 @@ row와 summary는 container 너비를 사용하고 title, description, prefix, c
 
 ```tsx
 import { useState } from 'react';
-import { BoardRow } from '@maxxuxx/react';
-import '@maxxuxx/react/styles.css';
+import { BoardRow } from '@hds/react';
+import '@hds/react/styles.css';
 
 export function OrderDetails() {
   const [open, setOpen] = useState(false);
@@ -167,7 +167,7 @@ export function OrderDetails() {
 
 ## Figma
 
-Live [BoardRow component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38)은 `Value Closed/Open × State Default/Pressed = 4` variants와 `Title`, `Description`, `Prefix` TEXT, `Show description`, `Show prefix` BOOLEAN properties를 제공합니다. Open variant만 content region을 보이고 owned ChevronRight를 회전하며, summary는 token-bound 56px minimum과 content-driven height를 유지합니다. 구현 방향은 [TDS Mobile BoardRow reference](https://tossmini-docs.toss.im/tds-mobile/components/board-row/)와 함께 검토합니다.
+Live [BoardRow component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38)은 `Value Closed/Open × State Default/Pressed = 4` variants와 `Title`, `Description`, `Prefix` TEXT, `Show description`, `Show prefix` BOOLEAN properties를 제공합니다. Open variant만 content region을 보이고 owned ChevronRight를 회전하며, summary는 token-bound 56px minimum과 content-driven height를 유지합니다. 구현 방향은 [TDS Mobile BoardRow reference](https://tossmini-docs.toss.im/thds-mobile/components/board-row/)와 함께 검토합니다.
 
 ## 지원 상태
 

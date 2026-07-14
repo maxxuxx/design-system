@@ -37,7 +37,7 @@ props:
     type: boolean
     required: false
     defaultValue: "true"
-    description: system inset, --ds-safe-area-bottom override, space/16 중 최댓값을 하단 padding으로 사용합니다.
+    description: system inset, --hds-safe-area-bottom override, space/16 중 최댓값을 하단 padding으로 사용합니다.
   - name: background
     type: BottomCTABackground
     required: false
@@ -103,7 +103,7 @@ import BottomCTAExample from '../../components/examples/BottomCTAExample';
 
 ## 반응형 동작
 
-Double action은 같은 폭의 두 열이며 각각 `min-inline-size: 0`과 `overflow-wrap: anywhere`로 320px과 200% text zoom에서 재배치됩니다. horizontal safe area와 하단 `env(safe-area-inset-bottom)`, 상위 scope의 `--ds-safe-area-bottom`, `space/16` fallback을 함께 존중합니다.
+Double action은 같은 폭의 두 열이며 각각 `min-inline-size: 0`과 `overflow-wrap: anywhere`로 320px과 200% text zoom에서 재배치됩니다. horizontal safe area와 하단 `env(safe-area-inset-bottom)`, 상위 scope의 `--hds-safe-area-bottom`, `space/16` fallback을 함께 존중합니다.
 
 ## 접근성
 
@@ -112,8 +112,8 @@ outer div에 불필요한 landmark나 group role을 만들지 않습니다. Doub
 ## React 예제
 
 ```tsx
-import { BottomCTA, Button } from '@maxxuxx/react';
-import '@maxxuxx/react/styles.css';
+import { BottomCTA, Button } from '@hds/react';
+import '@hds/react/styles.css';
 
 export function CheckoutActions() {
   return (

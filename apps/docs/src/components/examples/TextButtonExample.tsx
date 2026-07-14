@@ -4,7 +4,7 @@ import {
   type TextButtonSize,
   type TextButtonTone,
   type TextButtonVariant,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 type NativeElement = 'button' | 'anchor';

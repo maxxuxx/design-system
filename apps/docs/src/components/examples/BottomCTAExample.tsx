@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BottomCTA, Button } from '@maxxuxx/react';
+import { BottomCTA, Button } from '@hds/react';
 import './examples.css';
 
 const LONG_PRIMARY = '결제를 완료하고 다음 단계로 계속 진행합니다';

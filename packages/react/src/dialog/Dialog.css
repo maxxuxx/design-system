@@ -1,152 +1,152 @@
-.ds-dialog {
+.hds-dialog {
   position: fixed;
-  inset: var(--ds-space-0);
+  inset: var(--hds-space-0);
   box-sizing: border-box;
   inline-size: 100%;
   max-inline-size: none;
   block-size: 100%;
   max-block-size: none;
-  margin: var(--ds-space-0);
-  padding: var(--ds-space-24);
+  margin: var(--hds-space-0);
+  padding: var(--hds-space-24);
   place-items: center;
-  color: var(--ds-color-text-primary);
-  font-family: var(--ds-font-family-sans);
+  color: var(--hds-color-text-primary);
+  font-family: var(--hds-font-family-sans);
   background: transparent;
-  border: var(--ds-space-0);
+  border: var(--hds-space-0);
   overflow: hidden;
 }
 
-.ds-dialog[open] {
+.hds-dialog[open] {
   display: grid;
 }
 
-.ds-dialog::backdrop {
-  background: var(--ds-color-bg-scrim);
-  transition: background-color var(--ds-motion-duration-medium)
-    var(--ds-motion-easing-standard);
+.hds-dialog::backdrop {
+  background: var(--hds-color-bg-scrim);
+  transition: background-color var(--hds-motion-duration-medium)
+    var(--hds-motion-easing-standard);
 }
 
-.ds-dialog__surface {
+.hds-dialog__surface {
   display: flex;
   box-sizing: border-box;
-  inline-size: min(100%, calc(var(--ds-space-64) * 6));
-  max-block-size: calc(100dvh - (var(--ds-space-24) * 2));
-  min-inline-size: var(--ds-space-0);
-  min-block-size: var(--ds-space-0);
+  inline-size: min(100%, calc(var(--hds-space-64) * 6));
+  max-block-size: calc(100dvh - (var(--hds-space-24) * 2));
+  min-inline-size: var(--hds-space-0);
+  min-block-size: var(--hds-space-0);
   flex-direction: column;
-  color: var(--ds-color-text-primary);
-  background: var(--ds-color-bg-surface);
-  border: var(--ds-space-2) solid var(--ds-color-border-default);
-  border-radius: var(--ds-radius-xl);
-  box-shadow: var(--ds-elevation-2);
+  color: var(--hds-color-text-primary);
+  background: var(--hds-color-bg-surface);
+  border: var(--hds-space-2) solid var(--hds-color-border-default);
+  border-radius: var(--hds-radius-xl);
+  box-shadow: var(--hds-elevation-2);
   opacity: 1;
   overflow: hidden;
   transform: scale(1);
   transition:
-    opacity var(--ds-motion-duration-medium) var(--ds-motion-easing-standard),
-    transform var(--ds-motion-duration-medium) var(--ds-motion-easing-standard);
+    opacity var(--hds-motion-duration-medium) var(--hds-motion-easing-standard),
+    transform var(--hds-motion-duration-medium) var(--hds-motion-easing-standard);
 }
 
-.ds-dialog[data-state='closing']::backdrop {
+.hds-dialog[data-state='closing']::backdrop {
   background: transparent;
 }
 
-.ds-dialog[data-state='closing'] .ds-dialog__surface {
+.hds-dialog[data-state='closing'] .hds-dialog__surface {
   opacity: 0;
   transform: scale(0.98);
 }
 
 @starting-style {
-  .ds-dialog[data-state='open']::backdrop {
+  .hds-dialog[data-state='open']::backdrop {
     background: transparent;
   }
 
-  .ds-dialog[data-state='open'] .ds-dialog__surface {
+  .hds-dialog[data-state='open'] .hds-dialog__surface {
     opacity: 0;
     transform: scale(0.98);
   }
 }
 
-.ds-dialog__body {
-  min-inline-size: var(--ds-space-0);
-  min-block-size: var(--ds-space-0);
-  padding: var(--ds-space-24) var(--ds-space-24) var(--ds-space-16);
+.hds-dialog__body {
+  min-inline-size: var(--hds-space-0);
+  min-block-size: var(--hds-space-0);
+  padding: var(--hds-space-24) var(--hds-space-24) var(--hds-space-16);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
-.ds-dialog__title,
-.ds-dialog__description {
-  min-inline-size: var(--ds-space-0);
-  margin: var(--ds-space-0);
+.hds-dialog__title,
+.hds-dialog__description {
+  min-inline-size: var(--hds-space-0);
+  margin: var(--hds-space-0);
   overflow-wrap: anywhere;
 }
 
-.ds-dialog__title {
-  font-size: var(--ds-font-size-title-sm);
-  font-weight: var(--ds-font-weight-semibold);
-  line-height: var(--ds-font-line-height-title-sm);
+.hds-dialog__title {
+  font-size: var(--hds-font-size-title-sm);
+  font-weight: var(--hds-font-weight-semibold);
+  line-height: var(--hds-font-line-height-title-sm);
 }
 
-.ds-dialog__description {
-  margin-block-start: var(--ds-space-8);
-  color: var(--ds-color-text-secondary);
-  font-size: var(--ds-font-size-body);
-  line-height: var(--ds-font-line-height-body);
+.hds-dialog__description {
+  margin-block-start: var(--hds-space-8);
+  color: var(--hds-color-text-secondary);
+  font-size: var(--hds-font-size-body);
+  line-height: var(--hds-font-line-height-body);
 }
 
-.ds-dialog__actions {
+.hds-dialog__actions {
   display: flex;
-  min-inline-size: var(--ds-space-0);
+  min-inline-size: var(--hds-space-0);
   flex: 0 0 auto;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--ds-space-8);
-  padding: var(--ds-space-8) var(--ds-space-24) var(--ds-space-24);
-  background: var(--ds-color-bg-surface);
+  gap: var(--hds-space-8);
+  padding: var(--hds-space-8) var(--hds-space-24) var(--hds-space-24);
+  background: var(--hds-color-bg-surface);
 }
 
-.ds-dialog__action {
-  min-inline-size: var(--ds-space-0);
+.hds-dialog__action {
+  min-inline-size: var(--hds-space-0);
 }
 
-.ds-dialog__action--cancel,
-.ds-dialog__action--primary {
-  flex: 1 1 var(--ds-space-0);
+.hds-dialog__action--cancel,
+.hds-dialog__action--primary {
+  flex: 1 1 var(--hds-space-0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ds-dialog::backdrop,
-  .ds-dialog__surface {
+  .hds-dialog::backdrop,
+  .hds-dialog__surface {
     transition: none;
   }
 
-  .ds-dialog[data-state='closing'] .ds-dialog__surface {
+  .hds-dialog[data-state='closing'] .hds-dialog__surface {
     transform: none;
   }
 }
 
 @media (forced-colors: active) {
-  .ds-dialog::backdrop {
+  .hds-dialog::backdrop {
     background: Canvas;
   }
 
-  .ds-dialog__surface {
+  .hds-dialog__surface {
     color: CanvasText;
     background: Canvas;
     border-color: ButtonText;
     box-shadow: none;
   }
 
-  .ds-dialog__description {
+  .hds-dialog__description {
     color: CanvasText;
   }
 
-  .ds-dialog__actions {
+  .hds-dialog__actions {
     background: Canvas;
   }
 
-  .ds-dialog__actions .ds-dialog__action {
+  .hds-dialog__actions .hds-dialog__action {
     color: ButtonText;
     background: ButtonFace;
     border-color: ButtonText;

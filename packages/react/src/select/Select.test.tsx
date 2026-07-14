@@ -21,9 +21,9 @@ describe('Select', () => {
     );
     const select = screen.getByRole('combobox', { name: '국가' });
     const label = screen.getByText('국가');
-    const root = select.closest('.ds-select');
+    const root = select.closest('.hds-select');
 
-    expect(select.id).toMatch(/^ds-select-/);
+    expect(select.id).toMatch(/^hds-select-/);
     expect(label).toHaveAttribute('for', select.id);
     expect(select).toHaveAttribute('data-size', 'medium');
     expect(select).toHaveAttribute('data-state', 'default');
@@ -200,7 +200,7 @@ describe('Select', () => {
       </Select>,
     );
     const select = screen.getByRole('combobox', { name: '고정 국가' });
-    const root = select.closest('.ds-select');
+    const root = select.closest('.hds-select');
 
     expect(select).toBeDisabled();
     expect(select).toHaveAttribute('data-state', 'disabled');
@@ -224,7 +224,7 @@ describe('Select', () => {
     );
     const select = screen.getByRole('combobox', { name: '거주 국가' });
 
-    expect(select).toHaveClass('ds-select__control', 'consumer-select');
+    expect(select).toHaveClass('hds-select__control', 'consumer-select');
     expect(select).toHaveAttribute('autocomplete', 'country');
     expect(select).toHaveAttribute('data-consumer', 'native');
     expect(ref.current).toBe(select);
@@ -240,10 +240,10 @@ describe('Select', () => {
     const wrapper = select.parentElement;
     const icon = wrapper?.querySelector('svg');
 
-    expect(wrapper).toHaveClass('ds-select__field');
+    expect(wrapper).toHaveClass('hds-select__field');
     expect(wrapper?.children[0]).toBe(select);
     expect(wrapper?.children[1]).toBe(icon);
-    expect(icon).toHaveClass('ds-select__icon');
+    expect(icon).toHaveClass('hds-select__icon');
     expect(icon).toHaveAttribute('aria-hidden', 'true');
     expect(icon).not.toHaveAttribute('aria-label');
     expect(icon).not.toHaveAttribute('role');

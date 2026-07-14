@@ -43,7 +43,7 @@ export function getExitDurationMs(dialog: HTMLDialogElement): number {
 
   const tokenValue = view
     ?.getComputedStyle(dialog)
-    .getPropertyValue('--ds-motion-duration-medium')
+    .getPropertyValue('--hds-motion-duration-medium')
     .trim();
   if (tokenValue?.endsWith('ms')) {
     const milliseconds = Number.parseFloat(tokenValue);

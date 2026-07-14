@@ -42,7 +42,7 @@ tokens:
 
 import ComponentPreview from '../../components/ComponentPreview.astro';
 import IconExample from '../../components/examples/IconExample';
-import { ICON_NAMES, Icon } from '@maxxuxx/react';
+import { ICON_NAMES, Icon } from '@hds/react';
 
 ## 예제
 
@@ -90,8 +90,8 @@ Without a non-empty `label`, Icon renders as decorative with `aria-hidden="true"
 ## React 예제
 
 ```tsx
-import { Icon } from '@maxxuxx/react';
-import '@maxxuxx/react/styles.css';
+import { Icon } from '@hds/react';
+import '@hds/react/styles.css';
 
 export function SearchLabel() {
   return <span><Icon name="search" size={20} /> Search</span>;

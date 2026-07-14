@@ -3,7 +3,7 @@ import {
   RadioGroup,
   type RadioGroupOption,
   type RadioGroupSize,
-} from '@maxxuxx/react';
+} from '@hds/react';
 
 import './examples.css';
 

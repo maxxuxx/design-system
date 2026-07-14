@@ -106,7 +106,7 @@ export const Tab = forwardRef<HTMLDivElement, TabProps>(function Tab(
   assertEnabledValue(items, defaultValue);
 
   const generatedId = useId();
-  const tabId = `ds-tab-${generatedId}`;
+  const tabId = `hds-tab-${generatedId}`;
   const firstEnabledValue = items.find((item) => !item.disabled)!.value;
   const [uncontrolledValue, setUncontrolledValue] = useState(
     () => defaultValue ?? firstEnabledValue,
@@ -116,7 +116,7 @@ export const Tab = forwardRef<HTMLDivElement, TabProps>(function Tab(
       ? firstEnabledValue
       : uncontrolledValue);
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const classes = ['ds-tab', className].filter(Boolean).join(' ');
+  const classes = ['hds-tab', className].filter(Boolean).join(' ');
 
   function selectItem(index: number): void {
     const item = items[index];
@@ -159,7 +159,7 @@ export const Tab = forwardRef<HTMLDivElement, TabProps>(function Tab(
       <div
         aria-label={ariaLabel}
         aria-orientation="horizontal"
-        className="ds-tab__list"
+        className="hds-tab__list"
         role="tablist"
       >
         {items.map((item, index) => {
@@ -175,7 +175,7 @@ export const Tab = forwardRef<HTMLDivElement, TabProps>(function Tab(
               }}
               aria-controls={itemPanelId}
               aria-selected={isSelected}
-              className="ds-tab__button"
+              className="hds-tab__button"
               data-state={item.disabled
                 ? 'disabled'
                 : isSelected ? 'selected' : 'default'}
@@ -188,20 +188,20 @@ export const Tab = forwardRef<HTMLDivElement, TabProps>(function Tab(
               onClick={() => selectItem(index)}
               onKeyDown={(event) => handleKeyDown(event, index)}
             >
-              <span className="ds-tab__label">{item.label}</span>
+              <span className="hds-tab__label">{item.label}</span>
             </button>
           );
         })}
       </div>
 
-      <div className="ds-tab__panels">
+      <div className="hds-tab__panels">
         {items.map((item) => {
           const isSelected = item.value === selectedValue;
           const itemIdentity = itemValueIdentity(item.value);
           return (
             <div
               aria-labelledby={`${tabId}-tab-${itemIdentity}`}
-              className="ds-tab__panel"
+              className="hds-tab__panel"
               hidden={!isSelected}
               id={`${tabId}-panel-${itemIdentity}`}
               key={item.value}

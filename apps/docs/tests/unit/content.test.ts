@@ -986,7 +986,7 @@ describe('component metadata contract', () => {
     ]);
     expect(matter(source).content).toContain('secondary → primary');
     expect(matter(source).content).toContain('ResizeObserver');
-    expect(matter(source).content).toContain('--ds-safe-area-bottom');
+    expect(matter(source).content).toContain('--hds-safe-area-bottom');
     expect(matter(source).content).toContain('BottomSheet');
   });
 
@@ -1413,7 +1413,7 @@ describe('component metadata contract', () => {
     if (!result.success) expect(result.error.issues[0]?.path).toEqual(['frameworks', 'react']);
   });
 
-  it('rejects stable component status because v0.1 is preview-only', () => {
+  it('rejects stable component status because HDS v0.1.0 is preview-only', () => {
     const value = validComponent();
     value.status = 'stable';
     const result = componentSchema.safeParse(value);

@@ -77,9 +77,12 @@ test('catalog and detail routes expose only their exact current sidebar entry', 
     .not.toHaveAttribute('aria-current', 'page');
 });
 
-test('homepage exposes the v0.4 preview and links to the catalog', async ({ page }) => {
-  await openHtmlRoute(page, { path: '/', heading: '사람과 AI가 함께 읽는 디자인 시스템' });
-  await expect(page.getByText('v0.4 · Local preview', { exact: true })).toBeVisible();
-  await expect(page).toHaveTitle('AI-Readable Design System v0.4');
+test('homepage exposes HDS v0.1.0 and links to the catalog', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/',
+    heading: 'Haru의 제품 경험을 일관되게 만드는 디자인 시스템',
+  });
+  await expect(page.getByText('HDS v0.1.0', { exact: true })).toBeVisible();
+  await expect(page).toHaveTitle('Haru Design System · HDS v0.1.0');
   await expect(page.getByRole('link', { name: /Components/ })).toHaveAttribute('href', '/components/');
 });

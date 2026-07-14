@@ -151,8 +151,8 @@ import {
   BottomSheet,
   Button,
   type BottomSheetCloseReason,
-} from '@maxxuxx/react';
-import '@maxxuxx/react/styles.css';
+} from '@hds/react';
+import '@hds/react/styles.css';
 
 export function AddressSheet() {
   const [open, setOpen] = useState(false);
@@ -210,7 +210,7 @@ export function AddressSheet() {
 
 ## Figma
 
-[BottomSheet component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66)은 `Height Content/Full × Footer Hidden/Visible = 4` open-state variants와 `Title`, `Description` TEXT, `Show description` BOOLEAN property를 제공합니다. 모든 variant가 owned Close instance를 사용하고 Footer Visible variant는 owned Large Fill Button instance를 재사용합니다. closed state는 invisible variant가 아니라 behavior로 문서화합니다. 구현 방향은 [TDS Mobile BottomSheet reference](https://tossmini-docs.toss.im/tds-mobile/components/bottom-sheet/)와 함께 검토합니다.
+[BottomSheet component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66)은 `Height Content/Full × Footer Hidden/Visible = 4` open-state variants와 `Title`, `Description` TEXT, `Show description` BOOLEAN property를 제공합니다. 모든 variant가 owned Close instance를 사용하고 Footer Visible variant는 owned Large Fill Button instance를 재사용합니다. closed state는 invisible variant가 아니라 behavior로 문서화합니다. 구현 방향은 [TDS Mobile BottomSheet reference](https://tossmini-docs.toss.im/thds-mobile/components/bottom-sheet/)와 함께 검토합니다.
 
 ## 지원 상태
 

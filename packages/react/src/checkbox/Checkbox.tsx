@@ -41,7 +41,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
 ) {
   const generatedId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const inputId = id ?? `ds-checkbox-${generatedId}`;
+  const inputId = id ?? `hds-checkbox-${generatedId}`;
   const hasDescription = typeof description === 'string'
     && description.trim().length > 0;
   const hasError = errorMessage !== undefined;
@@ -49,7 +49,7 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
   const errorId = hasError ? `${inputId}-error` : undefined;
   const describedBy = mergeIds(descriptionId, errorId, ariaDescribedBy);
   const state = disabled ? 'disabled' : hasError ? 'error' : 'default';
-  const inputClasses = ['ds-checkbox__input', className].filter(Boolean).join(' ');
+  const inputClasses = ['hds-checkbox__input', className].filter(Boolean).join(' ');
 
   useImperativeHandle(ref, () => inputRef.current as HTMLInputElement);
 
@@ -58,8 +58,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
   }, [indeterminate]);
 
   return (
-    <div className="ds-checkbox" data-size={size} data-state={state}>
-      <label className="ds-checkbox__row" htmlFor={inputId}>
+    <div className="hds-checkbox" data-size={size} data-state={state}>
+      <label className="hds-checkbox__row" htmlFor={inputId}>
         <input
           {...inputProps}
           ref={inputRef}
@@ -73,15 +73,15 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
           id={inputId}
           type="checkbox"
         />
-        <span className="ds-checkbox__label">{label}</span>
+        <span className="hds-checkbox__label">{label}</span>
       </label>
       {hasDescription ? (
-        <p className="ds-checkbox__description" id={descriptionId}>
+        <p className="hds-checkbox__description" id={descriptionId}>
           {description}
         </p>
       ) : null}
       {hasError ? (
-        <p className="ds-checkbox__error" id={errorId} role="alert">
+        <p className="hds-checkbox__error" id={errorId} role="alert">
           {errorMessage}
         </p>
       ) : null}

@@ -16,10 +16,10 @@ importers:
       '@astrojs/react':
         specifier: 6.0.1
         version: 6.0.1(@types/node@26.1.1)(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(esbuild@0.28.1)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(tsx@4.23.0)(yaml@2.9.0)
-      '@maxxuxx/react':
+      '@hds/react':
         specifier: workspace:*
         version: link:../../packages/react
-      '@maxxuxx/tokens':
+      '@hds/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
       astro:

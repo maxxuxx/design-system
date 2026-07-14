@@ -64,7 +64,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:2",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-0)"
+      "webSyntax": "var(--hds-color-neutral-0)"
     },
     {
       "tokenName": "color/neutral/50",
@@ -73,7 +73,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:3",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-50)"
+      "webSyntax": "var(--hds-color-neutral-50)"
     },
     {
       "tokenName": "color/neutral/100",
@@ -82,7 +82,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:4",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-100)"
+      "webSyntax": "var(--hds-color-neutral-100)"
     },
     {
       "tokenName": "color/neutral/200",
@@ -91,7 +91,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:5",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-200)"
+      "webSyntax": "var(--hds-color-neutral-200)"
     },
     {
       "tokenName": "color/neutral/300",
@@ -100,7 +100,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:6",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-300)"
+      "webSyntax": "var(--hds-color-neutral-300)"
     },
     {
       "tokenName": "color/neutral/400",
@@ -109,7 +109,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:7",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-400)"
+      "webSyntax": "var(--hds-color-neutral-400)"
     },
     {
       "tokenName": "color/neutral/500",
@@ -118,7 +118,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:8",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-500)"
+      "webSyntax": "var(--hds-color-neutral-500)"
     },
     {
       "tokenName": "color/neutral/600",
@@ -127,7 +127,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:9",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-600)"
+      "webSyntax": "var(--hds-color-neutral-600)"
     },
     {
       "tokenName": "color/neutral/700",
@@ -136,7 +136,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:10",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-700)"
+      "webSyntax": "var(--hds-color-neutral-700)"
     },
     {
       "tokenName": "color/neutral/800",
@@ -145,7 +145,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:11",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-800)"
+      "webSyntax": "var(--hds-color-neutral-800)"
     },
     {
       "tokenName": "color/neutral/900",
@@ -154,7 +154,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:12",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-900)"
+      "webSyntax": "var(--hds-color-neutral-900)"
     },
     {
       "tokenName": "color/neutral/900-alpha-56",
@@ -163,7 +163,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:177:3",
       "scopes": [],
-      "webSyntax": "var(--ds-color-neutral-900-alpha-56)"
+      "webSyntax": "var(--hds-color-neutral-900-alpha-56)"
     },
     {
       "tokenName": "color/blue/50",
@@ -172,7 +172,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:13",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-50)"
+      "webSyntax": "var(--hds-color-blue-50)"
     },
     {
       "tokenName": "color/blue/100",
@@ -181,7 +181,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:14",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-100)"
+      "webSyntax": "var(--hds-color-blue-100)"
     },
     {
       "tokenName": "color/blue/200",
@@ -190,7 +190,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:15",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-200)"
+      "webSyntax": "var(--hds-color-blue-200)"
     },
     {
       "tokenName": "color/blue/300",
@@ -199,7 +199,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:16",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-300)"
+      "webSyntax": "var(--hds-color-blue-300)"
     },
     {
       "tokenName": "color/blue/400",
@@ -208,7 +208,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:17",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-400)"
+      "webSyntax": "var(--hds-color-blue-400)"
     },
     {
       "tokenName": "color/blue/500",
@@ -217,7 +217,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:18",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-500)"
+      "webSyntax": "var(--hds-color-blue-500)"
     },
     {
       "tokenName": "color/blue/600",
@@ -226,7 +226,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:19",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-600)"
+      "webSyntax": "var(--hds-color-blue-600)"
     },
     {
       "tokenName": "color/blue/700",
@@ -235,7 +235,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:20",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-700)"
+      "webSyntax": "var(--hds-color-blue-700)"
     },
     {
       "tokenName": "color/blue/800",
@@ -244,7 +244,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:21",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-800)"
+      "webSyntax": "var(--hds-color-blue-800)"
     },
     {
       "tokenName": "color/blue/900",
@@ -253,7 +253,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:22",
       "scopes": [],
-      "webSyntax": "var(--ds-color-blue-900)"
+      "webSyntax": "var(--hds-color-blue-900)"
     },
     {
       "tokenName": "color/red/50",
@@ -262,7 +262,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:23",
       "scopes": [],
-      "webSyntax": "var(--ds-color-red-50)"
+      "webSyntax": "var(--hds-color-red-50)"
     },
     {
       "tokenName": "color/red/100",
@@ -271,7 +271,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:24",
       "scopes": [],
-      "webSyntax": "var(--ds-color-red-100)"
+      "webSyntax": "var(--hds-color-red-100)"
     },
     {
       "tokenName": "color/red/500",
@@ -280,7 +280,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:25",
       "scopes": [],
-      "webSyntax": "var(--ds-color-red-500)"
+      "webSyntax": "var(--hds-color-red-500)"
     },
     {
       "tokenName": "color/red/600",
@@ -289,7 +289,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:26",
       "scopes": [],
-      "webSyntax": "var(--ds-color-red-600)"
+      "webSyntax": "var(--hds-color-red-600)"
     },
     {
       "tokenName": "color/red/700",
@@ -298,7 +298,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:27",
       "scopes": [],
-      "webSyntax": "var(--ds-color-red-700)"
+      "webSyntax": "var(--hds-color-red-700)"
     },
     {
       "tokenName": "color/green/50",
@@ -307,7 +307,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:28",
       "scopes": [],
-      "webSyntax": "var(--ds-color-green-50)"
+      "webSyntax": "var(--hds-color-green-50)"
     },
     {
       "tokenName": "color/green/100",
@@ -316,7 +316,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:29",
       "scopes": [],
-      "webSyntax": "var(--ds-color-green-100)"
+      "webSyntax": "var(--hds-color-green-100)"
     },
     {
       "tokenName": "color/green/500",
@@ -325,7 +325,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:30",
       "scopes": [],
-      "webSyntax": "var(--ds-color-green-500)"
+      "webSyntax": "var(--hds-color-green-500)"
     },
     {
       "tokenName": "color/green/600",
@@ -334,7 +334,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:31",
       "scopes": [],
-      "webSyntax": "var(--ds-color-green-600)"
+      "webSyntax": "var(--hds-color-green-600)"
     },
     {
       "tokenName": "color/green/700",
@@ -343,7 +343,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:6:32",
       "scopes": [],
-      "webSyntax": "var(--ds-color-green-700)"
+      "webSyntax": "var(--hds-color-green-700)"
     },
     {
       "tokenName": "space/0",
@@ -354,7 +354,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-0)"
+      "webSyntax": "var(--hds-space-0)"
     },
     {
       "tokenName": "space/2",
@@ -365,7 +365,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-2)"
+      "webSyntax": "var(--hds-space-2)"
     },
     {
       "tokenName": "space/4",
@@ -376,7 +376,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-4)"
+      "webSyntax": "var(--hds-space-4)"
     },
     {
       "tokenName": "space/8",
@@ -387,7 +387,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-8)"
+      "webSyntax": "var(--hds-space-8)"
     },
     {
       "tokenName": "space/12",
@@ -398,7 +398,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-12)"
+      "webSyntax": "var(--hds-space-12)"
     },
     {
       "tokenName": "space/16",
@@ -409,7 +409,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-16)"
+      "webSyntax": "var(--hds-space-16)"
     },
     {
       "tokenName": "space/20",
@@ -420,7 +420,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-20)"
+      "webSyntax": "var(--hds-space-20)"
     },
     {
       "tokenName": "space/24",
@@ -431,7 +431,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-24)"
+      "webSyntax": "var(--hds-space-24)"
     },
     {
       "tokenName": "space/32",
@@ -442,7 +442,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-32)"
+      "webSyntax": "var(--hds-space-32)"
     },
     {
       "tokenName": "space/40",
@@ -453,7 +453,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-40)"
+      "webSyntax": "var(--hds-space-40)"
     },
     {
       "tokenName": "space/48",
@@ -464,7 +464,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-48)"
+      "webSyntax": "var(--hds-space-48)"
     },
     {
       "tokenName": "space/64",
@@ -475,7 +475,7 @@
       "scopes": [
         "GAP"
       ],
-      "webSyntax": "var(--ds-space-64)"
+      "webSyntax": "var(--hds-space-64)"
     },
     {
       "tokenName": "size/icon/small",
@@ -486,7 +486,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-icon-small)"
+      "webSyntax": "var(--hds-size-icon-small)"
     },
     {
       "tokenName": "size/icon/medium",
@@ -497,7 +497,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-icon-medium)"
+      "webSyntax": "var(--hds-size-icon-medium)"
     },
     {
       "tokenName": "size/icon/large",
@@ -508,7 +508,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-icon-large)"
+      "webSyntax": "var(--hds-size-icon-large)"
     },
     {
       "tokenName": "size/badge/small",
@@ -519,7 +519,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-badge-small)"
+      "webSyntax": "var(--hds-size-badge-small)"
     },
     {
       "tokenName": "size/badge/medium",
@@ -530,7 +530,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-badge-medium)"
+      "webSyntax": "var(--hds-size-badge-medium)"
     },
     {
       "tokenName": "size/control/small",
@@ -541,7 +541,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-control-small)"
+      "webSyntax": "var(--hds-size-control-small)"
     },
     {
       "tokenName": "size/control/medium",
@@ -552,7 +552,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-control-medium)"
+      "webSyntax": "var(--hds-size-control-medium)"
     },
     {
       "tokenName": "size/control/large",
@@ -563,7 +563,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-control-large)"
+      "webSyntax": "var(--hds-size-control-large)"
     },
     {
       "tokenName": "size/selection/small",
@@ -574,7 +574,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-selection-small)"
+      "webSyntax": "var(--hds-size-selection-small)"
     },
     {
       "tokenName": "size/selection/medium",
@@ -585,7 +585,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-selection-medium)"
+      "webSyntax": "var(--hds-size-selection-medium)"
     },
     {
       "tokenName": "size/switch/small-width",
@@ -596,7 +596,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-switch-small-width)"
+      "webSyntax": "var(--hds-size-switch-small-width)"
     },
     {
       "tokenName": "size/switch/small-height",
@@ -607,7 +607,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-switch-small-height)"
+      "webSyntax": "var(--hds-size-switch-small-height)"
     },
     {
       "tokenName": "size/switch/medium-width",
@@ -618,7 +618,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-switch-medium-width)"
+      "webSyntax": "var(--hds-size-switch-medium-width)"
     },
     {
       "tokenName": "size/switch/medium-height",
@@ -629,7 +629,7 @@
       "scopes": [
         "WIDTH_HEIGHT"
       ],
-      "webSyntax": "var(--ds-size-switch-medium-height)"
+      "webSyntax": "var(--hds-size-switch-medium-height)"
     },
     {
       "tokenName": "font/size/caption",
@@ -640,7 +640,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-caption)"
+      "webSyntax": "var(--hds-font-size-caption)"
     },
     {
       "tokenName": "font/size/body-sm",
@@ -651,7 +651,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-body-sm)"
+      "webSyntax": "var(--hds-font-size-body-sm)"
     },
     {
       "tokenName": "font/size/body",
@@ -662,7 +662,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-body)"
+      "webSyntax": "var(--hds-font-size-body)"
     },
     {
       "tokenName": "font/size/body-lg",
@@ -673,7 +673,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-body-lg)"
+      "webSyntax": "var(--hds-font-size-body-lg)"
     },
     {
       "tokenName": "font/size/title-sm",
@@ -684,7 +684,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-title-sm)"
+      "webSyntax": "var(--hds-font-size-title-sm)"
     },
     {
       "tokenName": "font/size/title",
@@ -695,7 +695,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-title)"
+      "webSyntax": "var(--hds-font-size-title)"
     },
     {
       "tokenName": "font/size/heading",
@@ -706,7 +706,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-heading)"
+      "webSyntax": "var(--hds-font-size-heading)"
     },
     {
       "tokenName": "font/size/display",
@@ -717,7 +717,7 @@
       "scopes": [
         "FONT_SIZE"
       ],
-      "webSyntax": "var(--ds-font-size-display)"
+      "webSyntax": "var(--hds-font-size-display)"
     },
     {
       "tokenName": "font/weight/regular",
@@ -728,7 +728,7 @@
       "scopes": [
         "FONT_WEIGHT"
       ],
-      "webSyntax": "var(--ds-font-weight-regular)"
+      "webSyntax": "var(--hds-font-weight-regular)"
     },
     {
       "tokenName": "font/weight/medium",
@@ -739,7 +739,7 @@
       "scopes": [
         "FONT_WEIGHT"
       ],
-      "webSyntax": "var(--ds-font-weight-medium)"
+      "webSyntax": "var(--hds-font-weight-medium)"
     },
     {
       "tokenName": "font/weight/semibold",
@@ -750,7 +750,7 @@
       "scopes": [
         "FONT_WEIGHT"
       ],
-      "webSyntax": "var(--ds-font-weight-semibold)"
+      "webSyntax": "var(--hds-font-weight-semibold)"
     },
     {
       "tokenName": "font/weight/bold",
@@ -761,7 +761,7 @@
       "scopes": [
         "FONT_WEIGHT"
       ],
-      "webSyntax": "var(--ds-font-weight-bold)"
+      "webSyntax": "var(--hds-font-weight-bold)"
     },
     {
       "tokenName": "font/line-height/caption",
@@ -772,7 +772,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-caption)"
+      "webSyntax": "var(--hds-font-line-height-caption)"
     },
     {
       "tokenName": "font/line-height/body-sm",
@@ -783,7 +783,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-body-sm)"
+      "webSyntax": "var(--hds-font-line-height-body-sm)"
     },
     {
       "tokenName": "font/line-height/body",
@@ -794,7 +794,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-body)"
+      "webSyntax": "var(--hds-font-line-height-body)"
     },
     {
       "tokenName": "font/line-height/body-lg",
@@ -805,7 +805,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-body-lg)"
+      "webSyntax": "var(--hds-font-line-height-body-lg)"
     },
     {
       "tokenName": "font/line-height/title-sm",
@@ -816,7 +816,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-title-sm)"
+      "webSyntax": "var(--hds-font-line-height-title-sm)"
     },
     {
       "tokenName": "font/line-height/title",
@@ -827,7 +827,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-title)"
+      "webSyntax": "var(--hds-font-line-height-title)"
     },
     {
       "tokenName": "font/line-height/heading",
@@ -838,7 +838,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-heading)"
+      "webSyntax": "var(--hds-font-line-height-heading)"
     },
     {
       "tokenName": "font/line-height/display",
@@ -849,7 +849,7 @@
       "scopes": [
         "LINE_HEIGHT"
       ],
-      "webSyntax": "var(--ds-font-line-height-display)"
+      "webSyntax": "var(--hds-font-line-height-display)"
     },
     {
       "tokenName": "font/family/sans",
@@ -860,7 +860,7 @@
       "scopes": [
         "FONT_FAMILY"
       ],
-      "webSyntax": "var(--ds-font-family-sans)"
+      "webSyntax": "var(--hds-font-family-sans)"
     },
     {
       "tokenName": "radius/none",
@@ -871,7 +871,7 @@
       "scopes": [
         "CORNER_RADIUS"
       ],
-      "webSyntax": "var(--ds-radius-none)"
+      "webSyntax": "var(--hds-radius-none)"
     },
     {
       "tokenName": "radius/sm",
@@ -882,7 +882,7 @@
       "scopes": [
         "CORNER_RADIUS"
       ],
-      "webSyntax": "var(--ds-radius-sm)"
+      "webSyntax": "var(--hds-radius-sm)"
     },
     {
       "tokenName": "radius/md",
@@ -893,7 +893,7 @@
       "scopes": [
         "CORNER_RADIUS"
       ],
-      "webSyntax": "var(--ds-radius-md)"
+      "webSyntax": "var(--hds-radius-md)"
     },
     {
       "tokenName": "radius/lg",
@@ -904,7 +904,7 @@
       "scopes": [
         "CORNER_RADIUS"
       ],
-      "webSyntax": "var(--ds-radius-lg)"
+      "webSyntax": "var(--hds-radius-lg)"
     },
     {
       "tokenName": "radius/xl",
@@ -915,7 +915,7 @@
       "scopes": [
         "CORNER_RADIUS"
       ],
-      "webSyntax": "var(--ds-radius-xl)"
+      "webSyntax": "var(--hds-radius-xl)"
     },
     {
       "tokenName": "radius/full",
@@ -926,7 +926,7 @@
       "scopes": [
         "CORNER_RADIUS"
       ],
-      "webSyntax": "var(--ds-radius-full)"
+      "webSyntax": "var(--hds-radius-full)"
     },
     {
       "tokenName": "blur/subtle",
@@ -935,7 +935,7 @@
       "collectionId": "VariableCollectionId:5:2",
       "variableId": "VariableID:110:2",
       "scopes": [],
-      "webSyntax": "var(--ds-blur-subtle)"
+      "webSyntax": "var(--hds-blur-subtle)"
     },
     {
       "tokenName": "motion/duration/fast",
@@ -944,7 +944,7 @@
       "collectionId": "VariableCollectionId:177:2",
       "variableId": "VariableID:177:4",
       "scopes": [],
-      "webSyntax": "var(--ds-motion-duration-fast)"
+      "webSyntax": "var(--hds-motion-duration-fast)"
     },
     {
       "tokenName": "motion/duration/medium",
@@ -953,7 +953,7 @@
       "collectionId": "VariableCollectionId:177:2",
       "variableId": "VariableID:177:5",
       "scopes": [],
-      "webSyntax": "var(--ds-motion-duration-medium)"
+      "webSyntax": "var(--hds-motion-duration-medium)"
     },
     {
       "tokenName": "motion/easing/standard",
@@ -962,7 +962,7 @@
       "collectionId": "VariableCollectionId:177:2",
       "variableId": "VariableID:177:6",
       "scopes": [],
-      "webSyntax": "var(--ds-motion-easing-standard)"
+      "webSyntax": "var(--hds-motion-easing-standard)"
     },
     {
       "tokenName": "color/bg/canvas",
@@ -974,7 +974,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-bg-canvas)"
+      "webSyntax": "var(--hds-color-bg-canvas)"
     },
     {
       "tokenName": "color/bg/surface",
@@ -986,7 +986,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-bg-surface)"
+      "webSyntax": "var(--hds-color-bg-surface)"
     },
     {
       "tokenName": "color/bg/subtle",
@@ -998,7 +998,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-bg-subtle)"
+      "webSyntax": "var(--hds-color-bg-subtle)"
     },
     {
       "tokenName": "color/text/primary",
@@ -1009,7 +1009,7 @@
       "scopes": [
         "TEXT_FILL"
       ],
-      "webSyntax": "var(--ds-color-text-primary)"
+      "webSyntax": "var(--hds-color-text-primary)"
     },
     {
       "tokenName": "color/text/secondary",
@@ -1020,7 +1020,7 @@
       "scopes": [
         "TEXT_FILL"
       ],
-      "webSyntax": "var(--ds-color-text-secondary)"
+      "webSyntax": "var(--hds-color-text-secondary)"
     },
     {
       "tokenName": "color/text/disabled",
@@ -1031,7 +1031,7 @@
       "scopes": [
         "TEXT_FILL"
       ],
-      "webSyntax": "var(--ds-color-text-disabled)"
+      "webSyntax": "var(--hds-color-text-disabled)"
     },
     {
       "tokenName": "color/text/inverse",
@@ -1042,7 +1042,7 @@
       "scopes": [
         "TEXT_FILL"
       ],
-      "webSyntax": "var(--ds-color-text-inverse)"
+      "webSyntax": "var(--hds-color-text-inverse)"
     },
     {
       "tokenName": "color/icon/primary",
@@ -1054,7 +1054,7 @@
         "SHAPE_FILL",
         "STROKE_COLOR"
       ],
-      "webSyntax": "var(--ds-color-icon-primary)"
+      "webSyntax": "var(--hds-color-icon-primary)"
     },
     {
       "tokenName": "color/border/default",
@@ -1065,7 +1065,7 @@
       "scopes": [
         "STROKE_COLOR"
       ],
-      "webSyntax": "var(--ds-color-border-default)"
+      "webSyntax": "var(--hds-color-border-default)"
     },
     {
       "tokenName": "color/border/strong",
@@ -1076,7 +1076,7 @@
       "scopes": [
         "STROKE_COLOR"
       ],
-      "webSyntax": "var(--ds-color-border-strong)"
+      "webSyntax": "var(--hds-color-border-strong)"
     },
     {
       "tokenName": "color/border/focus",
@@ -1087,7 +1087,7 @@
       "scopes": [
         "STROKE_COLOR"
       ],
-      "webSyntax": "var(--ds-color-border-focus)"
+      "webSyntax": "var(--hds-color-border-focus)"
     },
     {
       "tokenName": "color/action/primary",
@@ -1099,7 +1099,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-action-primary)"
+      "webSyntax": "var(--hds-color-action-primary)"
     },
     {
       "tokenName": "color/action/primary-hover",
@@ -1111,7 +1111,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-action-primary-hover)"
+      "webSyntax": "var(--hds-color-action-primary-hover)"
     },
     {
       "tokenName": "color/action/primary-pressed",
@@ -1123,7 +1123,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-action-primary-pressed)"
+      "webSyntax": "var(--hds-color-action-primary-pressed)"
     },
     {
       "tokenName": "color/action/on-primary",
@@ -1134,7 +1134,7 @@
       "scopes": [
         "TEXT_FILL"
       ],
-      "webSyntax": "var(--ds-color-action-on-primary)"
+      "webSyntax": "var(--hds-color-action-on-primary)"
     },
     {
       "tokenName": "color/action/weak",
@@ -1146,7 +1146,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-action-weak)"
+      "webSyntax": "var(--hds-color-action-weak)"
     },
     {
       "tokenName": "color/action/weak-hover",
@@ -1158,7 +1158,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-action-weak-hover)"
+      "webSyntax": "var(--hds-color-action-weak-hover)"
     },
     {
       "tokenName": "color/action/on-weak",
@@ -1169,7 +1169,7 @@
       "scopes": [
         "TEXT_FILL"
       ],
-      "webSyntax": "var(--ds-color-action-on-weak)"
+      "webSyntax": "var(--hds-color-action-on-weak)"
     },
     {
       "tokenName": "color/status/danger",
@@ -1181,7 +1181,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-status-danger)"
+      "webSyntax": "var(--hds-color-status-danger)"
     },
     {
       "tokenName": "color/status/danger-subtle",
@@ -1193,7 +1193,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-status-danger-subtle)"
+      "webSyntax": "var(--hds-color-status-danger-subtle)"
     },
     {
       "tokenName": "color/status/success",
@@ -1205,7 +1205,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-status-success)"
+      "webSyntax": "var(--hds-color-status-success)"
     },
     {
       "tokenName": "color/status/success-subtle",
@@ -1217,7 +1217,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-status-success-subtle)"
+      "webSyntax": "var(--hds-color-status-success-subtle)"
     },
     {
       "tokenName": "color/status/neutral",
@@ -1229,7 +1229,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-status-neutral)"
+      "webSyntax": "var(--hds-color-status-neutral)"
     },
     {
       "tokenName": "color/status/neutral-subtle",
@@ -1241,7 +1241,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-status-neutral-subtle)"
+      "webSyntax": "var(--hds-color-status-neutral-subtle)"
     },
     {
       "tokenName": "color/status/on-status",
@@ -1252,7 +1252,7 @@
       "scopes": [
         "TEXT_FILL"
       ],
-      "webSyntax": "var(--ds-color-status-on-status)"
+      "webSyntax": "var(--hds-color-status-on-status)"
     },
     {
       "tokenName": "color/focus/ring",
@@ -1263,7 +1263,7 @@
       "scopes": [
         "STROKE_COLOR"
       ],
-      "webSyntax": "var(--ds-color-focus-ring)"
+      "webSyntax": "var(--hds-color-focus-ring)"
     },
     {
       "tokenName": "color/bg/scrim",
@@ -1275,7 +1275,7 @@
         "FRAME_FILL",
         "SHAPE_FILL"
       ],
-      "webSyntax": "var(--ds-color-bg-scrim)"
+      "webSyntax": "var(--hds-color-bg-scrim)"
     }
   ],
   "styles": {
@@ -1319,14 +1319,14 @@
         "name": "Shadow/1",
         "description": "인접 surface를 미세하게 구분하는 낮은 elevation입니다.",
         "styleId": "S:52d62093669bbd5d8299e02d8f8d34108bc01fd7,",
-        "webSyntax": "var(--ds-elevation-1)"
+        "webSyntax": "var(--hds-elevation-1)"
       },
       {
         "tokenName": "elevation/2",
         "name": "Shadow/2",
         "description": "떠 있는 panel과 overlay를 구분하는 중간 elevation입니다.",
         "styleId": "S:8eda28f1b0b823f8d64aa24ff849aaea4f7d9fa1,",
-        "webSyntax": "var(--ds-elevation-2)"
+        "webSyntax": "var(--hds-elevation-2)"
       }
     ]
   }

@@ -1,164 +1,164 @@
-.ds-list-row {
+.hds-list-row {
   position: relative;
   display: flex;
   box-sizing: border-box;
-  min-block-size: var(--ds-size-control-large);
-  min-inline-size: var(--ds-space-0);
+  min-block-size: var(--hds-size-control-large);
+  min-inline-size: var(--hds-space-0);
   inline-size: 100%;
   max-inline-size: 100%;
   align-items: center;
-  gap: var(--ds-space-12);
-  margin: var(--ds-space-0);
-  padding-block: var(--ds-space-8);
-  padding-inline: var(--ds-space-16);
-  color: var(--ds-color-text-primary);
-  font-family: var(--ds-font-family-sans);
+  gap: var(--hds-space-12);
+  margin: var(--hds-space-0);
+  padding-block: var(--hds-space-8);
+  padding-inline: var(--hds-space-16);
+  color: var(--hds-color-text-primary);
+  font-family: var(--hds-font-family-sans);
   text-align: start;
   text-decoration-line: none;
-  background: var(--ds-color-bg-surface);
-  border: var(--ds-space-0) solid transparent;
-  border-radius: var(--ds-radius-none);
+  background: var(--hds-color-bg-surface);
+  border: var(--hds-space-0) solid transparent;
+  border-radius: var(--hds-radius-none);
   overflow-wrap: anywhere;
-  transition: background-color var(--ds-motion-duration-fast)
-    var(--ds-motion-easing-standard);
+  transition: background-color var(--hds-motion-duration-fast)
+    var(--hds-motion-easing-standard);
 }
 
-.ds-list-row:where(button) {
+.hds-list-row:where(button) {
   appearance: none;
 }
 
-.ds-list-row:where(a:visited) {
-  color: var(--ds-color-text-primary);
+.hds-list-row:where(a:visited) {
+  color: var(--hds-color-text-primary);
 }
 
-.ds-list-row:where(a, button:not(:disabled)) {
+.hds-list-row:where(a, button:not(:disabled)) {
   cursor: pointer;
 }
 
-.ds-list-row:where(a, button:not(:disabled)):hover {
-  background: var(--ds-color-action-weak);
+.hds-list-row:where(a, button:not(:disabled)):hover {
+  background: var(--hds-color-action-weak);
 }
 
-.ds-list-row:where(a, button:not(:disabled)):active {
-  background: var(--ds-color-action-weak-hover);
+.hds-list-row:where(a, button:not(:disabled)):active {
+  background: var(--hds-color-action-weak-hover);
 }
 
-.ds-list-row:focus-visible {
-  outline: var(--ds-space-2) solid transparent;
-  outline-offset: var(--ds-space-2);
-  box-shadow: 0 0 0 var(--ds-space-4) var(--ds-color-focus-ring);
+.hds-list-row:focus-visible {
+  outline: var(--hds-space-2) solid transparent;
+  outline-offset: var(--hds-space-2);
+  box-shadow: 0 0 0 var(--hds-space-4) var(--hds-color-focus-ring);
 }
 
-.ds-list-row:where(button:disabled) {
-  color: var(--ds-color-text-disabled);
+.hds-list-row:where(button:disabled) {
+  color: var(--hds-color-text-disabled);
   cursor: not-allowed;
 }
 
-.ds-list-row__left,
-.ds-list-row__right,
-.ds-list-row__arrow {
-  min-inline-size: var(--ds-space-0);
+.hds-list-row__left,
+.hds-list-row__right,
+.hds-list-row__arrow {
+  min-inline-size: var(--hds-space-0);
   flex: 0 1 auto;
 }
 
-.ds-list-row__left,
-.ds-list-row__arrow {
+.hds-list-row__left,
+.hds-list-row__arrow {
   display: inline-flex;
   align-items: center;
-  color: var(--ds-color-text-secondary);
+  color: var(--hds-color-text-secondary);
 }
 
-.ds-list-row__left .ds-icon,
-.ds-list-row__arrow .ds-icon {
+.hds-list-row__left .hds-icon,
+.hds-list-row__arrow .hds-icon {
   color: inherit;
 }
 
-.ds-list-row__right > .ds-icon {
+.hds-list-row__right > .hds-icon {
   color: inherit;
 }
 
-.ds-list-row__copy {
+.hds-list-row__copy {
   display: grid;
-  min-inline-size: var(--ds-space-0);
+  min-inline-size: var(--hds-space-0);
   flex: 1 1 auto;
-  gap: var(--ds-space-2);
+  gap: var(--hds-space-2);
 }
 
-.ds-list-row__title,
-.ds-list-row__description,
-.ds-list-row__left,
-.ds-list-row__right {
+.hds-list-row__title,
+.hds-list-row__description,
+.hds-list-row__left,
+.hds-list-row__right {
   overflow-wrap: anywhere;
 }
 
-.ds-list-row__title {
-  font-size: var(--ds-font-size-body);
-  font-weight: var(--ds-font-weight-medium);
-  line-height: var(--ds-font-line-height-body);
+.hds-list-row__title {
+  font-size: var(--hds-font-size-body);
+  font-weight: var(--hds-font-weight-medium);
+  line-height: var(--hds-font-line-height-body);
 }
 
-.ds-list-row__description,
-.ds-list-row__right {
-  color: var(--ds-color-text-secondary);
-  font-size: var(--ds-font-size-body-sm);
-  line-height: var(--ds-font-line-height-body-sm);
+.hds-list-row__description,
+.hds-list-row__right {
+  color: var(--hds-color-text-secondary);
+  font-size: var(--hds-font-size-body-sm);
+  line-height: var(--hds-font-line-height-body-sm);
 }
 
-.ds-list-row__arrow {
+.hds-list-row__arrow {
   flex: 0 0 auto;
 }
 
-.ds-list-row[data-divider='indented']::after {
+.hds-list-row[data-divider='indented']::after {
   position: absolute;
-  inset-block-end: var(--ds-space-0);
-  inset-inline-start: var(--ds-space-16);
-  inset-inline-end: var(--ds-space-0);
+  inset-block-end: var(--hds-space-0);
+  inset-inline-start: var(--hds-space-16);
+  inset-inline-end: var(--hds-space-0);
   content: '';
-  border-block-end: var(--ds-space-2) solid var(--ds-color-border-default);
+  border-block-end: var(--hds-space-2) solid var(--hds-color-border-default);
 }
 
-.ds-list-row:where(button:disabled) .ds-list-row__left,
-.ds-list-row:where(button:disabled) .ds-list-row__description,
-.ds-list-row:where(button:disabled) .ds-list-row__right,
-.ds-list-row:where(button:disabled) .ds-list-row__arrow {
+.hds-list-row:where(button:disabled) .hds-list-row__left,
+.hds-list-row:where(button:disabled) .hds-list-row__description,
+.hds-list-row:where(button:disabled) .hds-list-row__right,
+.hds-list-row:where(button:disabled) .hds-list-row__arrow {
   color: inherit;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ds-list-row {
+  .hds-list-row {
     transition: none;
   }
 }
 
 @media (forced-colors: active) {
-  .ds-list-row {
+  .hds-list-row {
     color: CanvasText;
     background: Canvas;
   }
 
-  .ds-list-row:where(a, button:not(:disabled)):hover,
-  .ds-list-row:where(a, button:not(:disabled)):active {
+  .hds-list-row:where(a, button:not(:disabled)):hover,
+  .hds-list-row:where(a, button:not(:disabled)):active {
     color: HighlightText;
     background: Highlight;
   }
 
-  .ds-list-row:focus-visible {
+  .hds-list-row:focus-visible {
     outline-color: Highlight;
     box-shadow: none;
   }
 
-  .ds-list-row:where(button:disabled) {
+  .hds-list-row:where(button:disabled) {
     color: GrayText;
   }
 
-  .ds-list-row__left,
-  .ds-list-row__description,
-  .ds-list-row__right,
-  .ds-list-row__arrow {
+  .hds-list-row__left,
+  .hds-list-row__description,
+  .hds-list-row__right,
+  .hds-list-row__arrow {
     color: currentColor;
   }
 
-  .ds-list-row[data-divider='indented']::after {
+  .hds-list-row[data-divider='indented']::after {
     border-color: ButtonText;
   }
 }

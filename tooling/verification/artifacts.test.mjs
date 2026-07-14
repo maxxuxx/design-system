@@ -857,7 +857,7 @@ function makeTokens() {
       kind,
       value: kind === 'semantic' ? `{color/primitive/${(index % 32) + 1}}` : primitiveValue,
       description: `token ${index + 1} description`,
-      cssVariable: `--ds-${name.replaceAll('/', '-')}`,
+      cssVariable: `--hds-${name.replaceAll('/', '-')}`,
       resolvedValue: primitiveValue,
     };
   });
@@ -1032,20 +1032,20 @@ async function createFixture() {
     const sourceDir = path.join(root, 'packages', 'react', 'src', slug);
     await mkdir(sourceDir, { recursive: true });
     const declarations = fixtureComponentTokens[name]
-      .map((tokenName, index) => `--fixture-${index}: var(--ds-${tokenName.replaceAll('/', '-')});`)
+      .map((tokenName, index) => `--fixture-${index}: var(--hds-${tokenName.replaceAll('/', '-')});`)
       .join(' ');
     const localVariableContract = name === 'ScrollArea'
-      ? '--ds-scroll-area-edge-size: var(--ds-blur-subtle); height: var(--ds-scroll-area-edge-size); '
+      ? '--hds-scroll-area-edge-size: var(--hds-blur-subtle); height: var(--hds-scroll-area-edge-size); '
       : name === 'Switch'
-        ? '--ds-switch-track-width: var(--ds-size-switch-small-width); '
-          + '--ds-switch-track-height: var(--ds-size-switch-small-width); '
-          + 'width: var(--ds-switch-track-width); height: var(--ds-switch-track-height); '
+        ? '--hds-switch-track-width: var(--hds-size-switch-small-width); '
+          + '--hds-switch-track-height: var(--hds-size-switch-small-width); '
+          + 'width: var(--hds-switch-track-width); height: var(--hds-switch-track-height); '
         : name === 'BottomCTA'
-          ? 'padding-bottom: var(--ds-safe-area-bottom, var(--ds-space-1)); '
+          ? 'padding-bottom: var(--hds-safe-area-bottom, var(--hds-space-1)); '
           : '';
     await writeFile(
       path.join(sourceDir, `${name}.css`),
-      `.fixture { ${localVariableContract}${declarations} } /* var(--ds-commented-out-token) */`,
+      `.fixture { ${localVariableContract}${declarations} } /* var(--hds-commented-out-token) */`,
     );
   }
   const figmaDir = path.join(root, 'figma');
@@ -1106,7 +1106,7 @@ test('rejects external, missing, and unlicensed Pretendard assets', async (t) =>
   assert.ok(violations.includes('Missing Pretendard SIL OFL license'));
 });
 
-test('accepts a complete v0.4 build, 118-token map, twenty-component manifest, and Figma evidence', async (t) => {
+test('accepts a complete HDS v0.1.0 build, 118-token map, twenty-component manifest, and Figma evidence', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   assert.deepEqual(await verifyBuildArtifacts(root), []);
@@ -1123,7 +1123,7 @@ test('accepts equivalent Figma node URLs with additional query metadata', async 
   assert.deepEqual(await verifyFigmaEvidence(root), []);
 });
 
-test('reports every missing v0.4 static route', async (t) => {
+test('reports every missing HDS v0.1.0 static route', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const newRoutes = [
@@ -1276,7 +1276,7 @@ test('rejects exact public component prop-contract drift', async (t) => {
   assert.ok(violations.includes('BottomCTA prop contract mismatch'));
 });
 
-test('rejects every missing v0.4 component manifest record', async (t) => {
+test('rejects every missing HDS v0.1.0 component manifest record', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
@@ -1292,7 +1292,7 @@ test('rejects every missing v0.4 component manifest record', async (t) => {
   });
 });
 
-test('rejects token-contract drift for every v0.4 component', async (t) => {
+test('rejects token-contract drift for every HDS v0.1.0 component', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
@@ -1318,9 +1318,9 @@ test('rejects unknown, omitted, invented, and duplicate component token declarat
   await writeFile(badgeCss, [
     await readFile(badgeCss, 'utf8'),
     '.drift {',
-    '  --missing: var(--ds-space-2);',
-    '  --ds-not-a-token: 1px;',
-    '  --unknown: var(--ds-not-a-token);',
+    '  --missing: var(--hds-space-2);',
+    '  --hds-not-a-token: 1px;',
+    '  --unknown: var(--hds-not-a-token);',
     '}',
   ].join('\n'));
 
@@ -1331,7 +1331,7 @@ test('rejects unknown, omitted, invented, and duplicate component token declarat
   await writeFile(manifestFile, JSON.stringify(manifest));
 
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.includes('Badge CSS references unknown token variable: --ds-not-a-token'));
+  assert.ok(violations.includes('Badge CSS references unknown token variable: --hds-not-a-token'));
   assert.ok(violations.includes('Badge manifest tokens omit CSS token: space/2'));
   assert.ok(violations.includes('Badge manifest tokens include unused CSS token: radius/1'));
   assert.ok(violations.includes('Badge manifest tokens include unknown token: invented/token'));
@@ -1498,7 +1498,7 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   assert.ok(violations.some((value) => value.includes('BottomCTA axis definitions mismatch')));
 });
 
-test('rejects every missing v0.4 Figma component and page record', async (t) => {
+test('rejects every missing HDS v0.1.0 Figma component and page record', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'figma', 'verification.json');
@@ -1772,4 +1772,27 @@ test('keeps permanent Linux and Windows verification CI', async () => {
   assert.match(workflow, /corepack pnpm install --frozen-lockfile/);
   assert.match(workflow, /playwright install(?: --with-deps)? chromium/);
   assert.match(workflow, /corepack pnpm verify/);
+});
+
+test('keeps a manual Windows workflow for reviewing all forty component-slice baselines', async () => {
+  const workflow = await readFile(
+    new URL('../../.github/workflows/update-windows-visual-baselines.yml', import.meta.url),
+    'utf8',
+  );
+  assert.match(workflow, /workflow_dispatch:/);
+  assert.match(workflow, /runs-on:\s*windows-latest/);
+  assert.match(workflow, /corepack pnpm install --frozen-lockfile/);
+  assert.match(workflow, /playwright install chromium/);
+  assert.match(workflow, /component-slices\.visual\.spec\.ts/);
+  assert.match(workflow, /--project=mobile-chromium/);
+  assert.match(workflow, /--project=desktop-chromium/);
+  assert.match(workflow, /--update-snapshots/);
+  assert.match(workflow, /tests\/e2e\/visual\.spec\.ts/);
+  assert.match(workflow, /windows-component-slice-baselines/);
+  assert.match(workflow, /component-slices\.visual\.spec/);
+  assert.match(workflow, /windows-full-page-baselines/);
+  assert.match(workflow, /Expected 15 Windows full-page baselines/);
+  assert.match(workflow, /Count/);
+  assert.match(workflow, /40/);
+  assert.match(workflow, /actions\/upload-artifact@v4/);
 });

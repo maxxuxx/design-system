@@ -78,7 +78,7 @@ describe('BottomCTA', () => {
     const root = container.firstElementChild;
     const button = screen.getByRole('button', { name: '계속' });
 
-    expect(root).toHaveClass('ds-bottom-cta');
+    expect(root).toHaveClass('hds-bottom-cta');
     expect(root).toHaveAttribute('data-layout', 'single');
     expect(root).toHaveAttribute('data-fixed', 'false');
     expect(root).toHaveAttribute('data-take-space', 'false');
@@ -101,7 +101,7 @@ describe('BottomCTA', () => {
     expect(buttons.map((button) => button.textContent)).toEqual(['취소', '확인']);
     expect(buttons[0]).toHaveAttribute('data-variant', 'weak');
     expect(buttons[1]).toHaveAttribute('data-variant', 'fill');
-    expect(buttons[0]?.closest('.ds-bottom-cta'))
+    expect(buttons[0]?.closest('.hds-bottom-cta'))
       .toHaveAttribute('data-layout', 'double');
 
     await user.tab();
@@ -200,7 +200,7 @@ describe('BottomCTA', () => {
     expect(ref.current).toBe(root);
     expect(root).toHaveAttribute('aria-label', '주요 행동');
     expect(root).toHaveAttribute('data-consumer', 'checkout');
-    expect(root).toHaveClass('ds-bottom-cta', 'consumer-cta');
+    expect(root).toHaveClass('hds-bottom-cta', 'consumer-cta');
     expect(root).toHaveStyle('margin-top: 8px');
     expect(root.style.backgroundColor).toBe('');
     expect(root.style.minHeight).toBe('');
@@ -216,8 +216,8 @@ describe('BottomCTA', () => {
       <BottomCTA fixed primaryAction={<Button>계속</Button>} />,
     );
     const root = container.firstElementChild;
-    const panel = container.querySelector<HTMLElement>('.ds-bottom-cta__panel');
-    const spacer = container.querySelector<HTMLElement>('.ds-bottom-cta__spacer');
+    const panel = container.querySelector<HTMLElement>('.hds-bottom-cta__panel');
+    const spacer = container.querySelector<HTMLElement>('.hds-bottom-cta__spacer');
     const observer = ResizeObserverDouble.instances[0];
 
     expect(root).toHaveAttribute('data-fixed', 'true');
@@ -265,7 +265,7 @@ describe('BottomCTA', () => {
       <BottomCTA fixed primaryAction={<Button>고정</Button>} />,
     );
     const fallbackSpacer = fixed.container.querySelector<HTMLElement>(
-      '.ds-bottom-cta__spacer',
+      '.hds-bottom-cta__spacer',
     );
     expect(fallbackSpacer).not.toBeNull();
     expect(fallbackSpacer?.style.blockSize).toBe('');
@@ -278,7 +278,7 @@ describe('BottomCTA', () => {
         takeSpace={false}
       />,
     );
-    expect(withoutSpace.container.querySelector('.ds-bottom-cta__spacer'))
+    expect(withoutSpace.container.querySelector('.hds-bottom-cta__spacer'))
       .toBeNull();
     expect(withoutSpace.container.firstElementChild)
       .toHaveAttribute('data-take-space', 'false');
@@ -305,8 +305,8 @@ describe('BottomCTA', () => {
     const reactStyles = readFileSync('src/styles.css', 'utf8');
 
     expect(reactStyles).toContain("@import './bottom-cta/BottomCTA.css';");
-    expect(css).toContain('env(safe-area-inset-bottom, var(--ds-space-0))');
-    expect(css).toContain('var(--ds-safe-area-bottom, var(--ds-space-0))');
+    expect(css).toContain('env(safe-area-inset-bottom, var(--hds-space-0))');
+    expect(css).toContain('var(--hds-safe-area-bottom, var(--hds-space-0))');
     expect(css).toContain('max(');
     expect(css).toContain("[data-background='none']");
     expect(css).toContain('overflow-wrap: anywhere');

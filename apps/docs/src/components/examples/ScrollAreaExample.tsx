@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ScrollArea } from '@maxxuxx/react';
+import { ScrollArea } from '@hds/react';
 import './examples.css';
 
 const ORDERS = [
@@ -34,11 +34,11 @@ export default function ScrollAreaExample() {
 
     const parts: Array<[Element | null, string]> = [
       [viewport, PART_TEST_IDS.viewport],
-      [viewport.querySelector('.ds-scroll-area__content'), PART_TEST_IDS.content],
-      [root.querySelector('.ds-scroll-area__edge--top'), PART_TEST_IDS.edgeUp],
-      [root.querySelector('.ds-scroll-area__edge--bottom'), PART_TEST_IDS.edgeDown],
-      [root.querySelector('.ds-scroll-area__button--up'), PART_TEST_IDS.buttonUp],
-      [root.querySelector('.ds-scroll-area__button--down'), PART_TEST_IDS.buttonDown],
+      [viewport.querySelector('.hds-scroll-area__content'), PART_TEST_IDS.content],
+      [root.querySelector('.hds-scroll-area__edge--top'), PART_TEST_IDS.edgeUp],
+      [root.querySelector('.hds-scroll-area__edge--bottom'), PART_TEST_IDS.edgeDown],
+      [root.querySelector('.hds-scroll-area__button--up'), PART_TEST_IDS.buttonUp],
+      [root.querySelector('.hds-scroll-area__button--down'), PART_TEST_IDS.buttonDown],
     ];
 
     for (const [element, testId] of parts) {

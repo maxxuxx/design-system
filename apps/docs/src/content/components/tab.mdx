@@ -123,8 +123,8 @@ root div 안에 이름이 있는 horizontal `tablist`, native button `tab`, 각 
 
 ```tsx
 import { useState } from 'react';
-import { Tab, type TabItem } from '@maxxuxx/react';
-import '@maxxuxx/react/styles.css';
+import { Tab, type TabItem } from '@hds/react';
+import '@hds/react/styles.css';
 
 const items = [
   { value: 'summary', label: '요약', content: <OrderSummary /> },
@@ -170,7 +170,7 @@ export function OrderTabs() {
 
 ## Figma
 
-Live [Tab component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59)은 `Size Small/Large × Layout Equal/Scroll × Selection First/Second/Third = 12` variants와 `First label`, `Second label`, `Third label` TEXT properties를 제공합니다. Equal은 세 항목을 균등 배치하고 Scroll은 320px viewport 안의 360px content와 token-bound edge affordance를 보여 줍니다. disabled와 긴 label overflow는 variant 축을 늘리지 않고 별도 문서 specimen으로 검증했습니다. 구현 방향은 [TDS Mobile Tab reference](https://tossmini-docs.toss.im/tds-mobile/components/tab/)와 함께 검토합니다.
+Live [Tab component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59)은 `Size Small/Large × Layout Equal/Scroll × Selection First/Second/Third = 12` variants와 `First label`, `Second label`, `Third label` TEXT properties를 제공합니다. Equal은 세 항목을 균등 배치하고 Scroll은 320px viewport 안의 360px content와 token-bound edge affordance를 보여 줍니다. disabled와 긴 label overflow는 variant 축을 늘리지 않고 별도 문서 specimen으로 검증했습니다. 구현 방향은 [TDS Mobile Tab reference](https://tossmini-docs.toss.im/thds-mobile/components/tab/)와 함께 검토합니다.
 
 ## 지원 상태
 

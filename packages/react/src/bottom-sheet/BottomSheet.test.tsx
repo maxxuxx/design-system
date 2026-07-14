@@ -269,7 +269,7 @@ describe('BottomSheet', () => {
       expect(dialog).toHaveAttribute('aria-describedby', description.id);
       expect(dialog).toHaveAttribute('data-state', 'open');
       expect(closeButton).toHaveAttribute('type', 'button');
-      expect(closeButton.querySelector('.ds-icon')).toHaveAttribute(
+      expect(closeButton.querySelector('.hds-icon')).toHaveAttribute(
         'aria-hidden',
         'true',
       );
@@ -339,7 +339,7 @@ describe('BottomSheet', () => {
     const onOpenChange = vi.fn();
     render(<BottomSheet {...defaultProps} onOpenChange={onOpenChange} />);
     const dialog = await getOpenDialog();
-    const surface = dialog.querySelector('.ds-bottom-sheet__surface')!;
+    const surface = dialog.querySelector('.hds-bottom-sheet__surface')!;
 
     fireEvent.pointerDown(dialog, { pointerId: 1 });
     fireEvent.pointerUp(surface, { pointerId: 1 });
@@ -575,10 +575,10 @@ describe('BottomSheet', () => {
     );
     const dialog = await getOpenDialog();
 
-    expect(within(dialog).getByText(longCopy).closest('.ds-bottom-sheet__body'))
+    expect(within(dialog).getByText(longCopy).closest('.hds-bottom-sheet__body'))
       .toBeInTheDocument();
     expect(within(dialog).getByRole('button', { name: '계속' })
-      .closest('.ds-bottom-sheet__footer')).toBeInTheDocument();
+      .closest('.hds-bottom-sheet__footer')).toBeInTheDocument();
   });
 
   it('publishes only the controlled modal API and exact close reasons', () => {
@@ -594,15 +594,15 @@ describe('BottomSheet', () => {
     const reactStyles = readFileSync('src/styles.css', 'utf8');
 
     expect(reactStyles).toContain("@import './bottom-sheet/BottomSheet.css';");
-    expect(componentCss).toContain('var(--ds-color-bg-scrim)');
-    expect(componentCss).toContain('var(--ds-motion-duration-medium)');
-    expect(componentCss).toContain('var(--ds-motion-easing-standard)');
-    expect(componentCss).toContain('var(--ds-radius-xl)');
-    expect(componentCss).toContain('var(--ds-elevation-2)');
+    expect(componentCss).toContain('var(--hds-color-bg-scrim)');
+    expect(componentCss).toContain('var(--hds-motion-duration-medium)');
+    expect(componentCss).toContain('var(--hds-motion-easing-standard)');
+    expect(componentCss).toContain('var(--hds-radius-xl)');
+    expect(componentCss).toContain('var(--hds-elevation-2)');
     expect(componentCss).toContain(
-      'calc(100dvh - var(--ds-space-24))',
+      'calc(100dvh - var(--hds-space-24))',
     );
-    expect(componentCss).toContain('calc(var(--ds-space-64) * 10)');
+    expect(componentCss).toContain('calc(var(--hds-space-64) * 10)');
     expect(componentCss).toContain('@media (forced-colors: active)');
     expect(componentCss).toContain('@media (prefers-reduced-motion: reduce)');
     expect(componentCss).not.toMatch(/#[\da-f]{3,8}\b|rgba?\(|hsla?\(/i);

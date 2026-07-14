@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Checkbox, type CheckboxSize } from '@maxxuxx/react';
+import { Checkbox, type CheckboxSize } from '@hds/react';
 
 import './examples.css';
 

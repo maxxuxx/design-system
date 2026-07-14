@@ -56,7 +56,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
     ref,
   ) {
     const generatedId = useId();
-    const groupId = id ?? `ds-radio-group-${generatedId}`;
+    const groupId = id ?? `hds-radio-group-${generatedId}`;
     const hasDescription = typeof description === 'string'
       && description.trim().length > 0;
     const hasError = errorMessage !== undefined;
@@ -64,7 +64,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
     const errorId = hasError ? `${groupId}-error` : undefined;
     const describedBy = mergeIds(descriptionId, errorId, ariaDescribedBy);
     const state = disabled ? 'disabled' : hasError ? 'error' : 'default';
-    const fieldsetClasses = ['ds-radio-group', className].filter(Boolean).join(' ');
+    const fieldsetClasses = ['hds-radio-group', className].filter(Boolean).join(' ');
     const firstEnabledOptionIndex = options.findIndex((option) => !option.disabled);
 
     return (
@@ -80,13 +80,13 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
         disabled={disabled}
         id={groupId}
       >
-        <legend className="ds-radio-group__legend">{legend}</legend>
+        <legend className="hds-radio-group__legend">{legend}</legend>
         {hasDescription ? (
-          <p className="ds-radio-group__description" id={descriptionId}>
+          <p className="hds-radio-group__description" id={descriptionId}>
             {description}
           </p>
         ) : null}
-        <div className="ds-radio-group__options">
+        <div className="hds-radio-group__options">
           {options.map((option, index) => {
             const optionId = `${groupId}-option-${index}`;
             const optionLabelId = `${optionId}-label`;
@@ -108,7 +108,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
 
             return (
               <label
-                className="ds-radio-group__option"
+                className="hds-radio-group__option"
                 data-disabled={disabled || option.disabled ? 'true' : undefined}
                 htmlFor={optionId}
                 key={option.value}
@@ -119,7 +119,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                   aria-errormessage={hasError ? errorId : ariaErrorMessage}
                   aria-invalid={hasError ? true : ariaInvalid}
                   aria-labelledby={optionLabelId}
-                  className="ds-radio-group__input"
+                  className="hds-radio-group__input"
                   data-size={size}
                   data-state={optionState}
                   disabled={option.disabled}
@@ -130,13 +130,13 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
                   type="radio"
                   value={option.value}
                 />
-                <span className="ds-radio-group__option-copy">
-                  <span className="ds-radio-group__option-label" id={optionLabelId}>
+                <span className="hds-radio-group__option-copy">
+                  <span className="hds-radio-group__option-label" id={optionLabelId}>
                     {option.label}
                   </span>
                   {hasOptionDescription ? (
                     <span
-                      className="ds-radio-group__option-description"
+                      className="hds-radio-group__option-description"
                       id={optionDescriptionId}
                     >
                       {option.description}
@@ -148,7 +148,7 @@ export const RadioGroup = forwardRef<HTMLFieldSetElement, RadioGroupProps>(
           })}
         </div>
         {hasError ? (
-          <p className="ds-radio-group__error" id={errorId} role="alert">
+          <p className="hds-radio-group__error" id={errorId} role="alert">
             {errorMessage}
           </p>
         ) : null}

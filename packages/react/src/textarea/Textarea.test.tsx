@@ -16,9 +16,9 @@ describe('Textarea', () => {
     render(<Textarea label="요청사항" />);
     const textarea = screen.getByRole('textbox', { name: '요청사항' });
     const label = screen.getByText('요청사항');
-    const root = textarea.closest('.ds-textarea');
+    const root = textarea.closest('.hds-textarea');
 
-    expect(textarea.id).toMatch(/^ds-textarea-/);
+    expect(textarea.id).toMatch(/^hds-textarea-/);
     expect(label).toHaveAttribute('for', textarea.id);
     expect(textarea).toHaveAttribute('rows', '4');
     expect(textarea).toHaveAttribute('data-size', 'medium');
@@ -171,7 +171,7 @@ describe('Textarea', () => {
       />,
     );
     const textarea = screen.getByRole('textbox', { name: '고정 메모' });
-    const root = textarea.closest('.ds-textarea');
+    const root = textarea.closest('.hds-textarea');
 
     expect(textarea).toBeDisabled();
     expect(textarea).toHaveAttribute('data-state', 'disabled');
@@ -194,7 +194,7 @@ describe('Textarea', () => {
     );
     const textarea = screen.getByRole('textbox', { name: '상세 주소' });
 
-    expect(textarea).toHaveClass('ds-textarea__control', 'consumer-textarea');
+    expect(textarea).toHaveClass('hds-textarea__control', 'consumer-textarea');
     expect(textarea).toHaveAttribute('autocomplete', 'street-address');
     expect(textarea).toHaveAttribute('data-consumer', 'native');
     expect(textarea).toHaveAttribute('spellcheck', 'false');

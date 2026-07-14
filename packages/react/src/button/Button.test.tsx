@@ -76,7 +76,7 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: '대기' })).toHaveAttribute('aria-busy', 'false');
     const loading = screen.getByRole('button', { name: '결제하기' });
     expect(loading).toHaveAttribute('aria-busy', 'true');
-    expect(loading.querySelector('.ds-button__spinner')).toHaveAttribute('aria-hidden', 'true');
+    expect(loading.querySelector('.hds-button__spinner')).toHaveAttribute('aria-hidden', 'true');
   });
 
   it('renders every size, variant, and width data contract', () => {
@@ -153,7 +153,7 @@ describe('Button', () => {
     );
     const button = screen.getByTestId('button');
 
-    expect(button).toHaveClass('ds-button', 'consumer-button');
+    expect(button).toHaveClass('hds-button', 'consumer-button');
     expect(button).toHaveAttribute('type', 'submit');
     expect(ref.current).toBe(button);
   });
