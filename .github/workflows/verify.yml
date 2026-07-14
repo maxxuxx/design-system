@@ -4,14 +4,12 @@ on:
   push:
     branches: [main]
   pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   verify:
-    if: github.event_name != 'workflow_dispatch'
     name: Verify (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -37,47 +35,3 @@ jobs:
         run: corepack pnpm --filter @hds/docs exec playwright install chromium
       - name: Verify
         run: corepack pnpm verify
-
-  baselines:
-    if: github.event_name == 'workflow_dispatch'
-    name: Generate Windows visual baselines
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-      - name: Install dependencies
-        run: corepack pnpm install --frozen-lockfile
-      - name: Install Chromium
-        run: corepack pnpm --filter @hds/docs exec playwright install chromium
-      - name: Generate Windows component-slice baselines
-        run: >-
-          corepack pnpm --filter @hds/docs exec playwright test
-          tests/e2e/component-slices.visual.spec.ts
-          --project=mobile-chromium
-          --project=desktop-chromium
-          --update-snapshots
-      - name: Generate Windows full-page baselines
-        run: >-
-          corepack pnpm --filter @hds/docs exec playwright test
-          tests/e2e/visual.spec.ts
-          --update-snapshots
-      - name: Upload component-slice baseline candidate
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-component-slice-baselines
-          path: apps/docs/tests/e2e/__snapshots__/component-slices.visual.spec
-          if-no-files-found: error
-          retention-days: 14
-      - name: Upload full-page baseline candidate
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-full-page-baselines
-          path: apps/docs/tests/e2e/__snapshots__/visual.spec
-          if-no-files-found: error
-          retention-days: 14

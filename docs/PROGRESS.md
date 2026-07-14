@@ -60,7 +60,10 @@ HDS 전환 후 macOS 전체 검증 결과는 다음과 같습니다.
 - Static docs: 30 pages
 - Browser: 586 passed, 197 platform/viewport-owned skips
 
-Windows Chromium baseline 수치는 workflow artifact 검토와 PR CI가 끝난 뒤 추가합니다.
+Windows Chromium baseline workflow [run 29319319388](https://github.com/maxxuxx/design-system/actions/runs/29319319388)에서 다음 기준 이미지를 생성하고 대표 화면을 검토했습니다.
+
+- Component slice: 40개(20 components × mobile/desktop)
+- Full page: 15개(5 routes × mobile/tablet/desktop)
 
 ## 릴리스 체크리스트
 
@@ -71,7 +74,8 @@ Windows Chromium baseline 수치는 workflow artifact 검토와 PR CI가 끝난 
 - [x] Figma 페이지 문구·118개 token mapping live 동기화와 readback
 - [x] macOS `pnpm verify` 통과
 - [ ] Figma 파일 제목을 `Haru Design System`으로 변경
-- [ ] Windows Chromium 누락 baseline 30개 생성·검토 및 총 40개 재비교
+- [x] Windows Chromium 누락 baseline 30개 생성·검토
+- [ ] Windows Chromium component slice 40개와 full-page 15개 PR 재비교
 - [ ] Linux·Windows CI와 Vercel Preview 통과
 - [ ] Vercel 프로젝트명을 `haru-design-system`으로 변경
 - [ ] `main` 병합 후 Production과 `hds.haru-dev.com` 최종 점검
