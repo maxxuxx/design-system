@@ -25,6 +25,11 @@ const componentSlicesSource = `const slices = [
   { name: 'BoardRow', slug: 'board-row' },
   { name: 'Tab', slug: 'tab' },
   { name: 'BottomSheet', slug: 'bottom-sheet' },
+  { name: 'Dialog', slug: 'dialog' },
+  { name: 'SearchField', slug: 'search-field' },
+  { name: 'ListRow', slug: 'list-row' },
+  { name: 'Toast', slug: 'toast' },
+  { name: 'BottomCTA', slug: 'bottom-cta' },
 ] as const;
 `;
 
@@ -101,7 +106,7 @@ test('finds primitive colors in product code but ignores foundation visualizers'
   assert.match(violations[0], /button\.css/);
 });
 
-test('accepts the exact fifteen component slices and thirty Windows targets', async (t) => {
+test('accepts the exact twenty component slices and forty Windows targets', async (t) => {
   const root = await fixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const directory = path.join(root, 'apps', 'docs', 'tests', 'e2e');
@@ -119,18 +124,18 @@ test('rejects missing, extra, or reordered component-slice targets', async (t) =
   await mkdir(directory, { recursive: true });
 
   await writeFile(target, componentSlicesSource.replace(
-    "  { name: 'BottomSheet', slug: 'bottom-sheet' },\n",
+    "  { name: 'BottomCTA', slug: 'bottom-cta' },\n",
     '',
   ));
   assert.deepEqual(await findComponentSliceContractViolations(root), [
-    'Component slice list must contain exactly 15 ordered components and 30 Windows mobile/desktop targets',
+    'Component slice list must contain exactly 20 ordered components and 40 Windows mobile/desktop targets',
   ]);
 
   await writeFile(target, componentSlicesSource.replace(
-    "  { name: 'Tab', slug: 'tab' },\n  { name: 'BottomSheet', slug: 'bottom-sheet' },",
-    "  { name: 'BottomSheet', slug: 'bottom-sheet' },\n  { name: 'Tab', slug: 'tab' },",
+    "  { name: 'Toast', slug: 'toast' },\n  { name: 'BottomCTA', slug: 'bottom-cta' },",
+    "  { name: 'BottomCTA', slug: 'bottom-cta' },\n  { name: 'Toast', slug: 'toast' },",
   ));
   assert.deepEqual(await findComponentSliceContractViolations(root), [
-    'Component slice list must contain exactly 15 ordered components and 30 Windows mobile/desktop targets',
+    'Component slice list must contain exactly 20 ordered components and 40 Windows mobile/desktop targets',
   ]);
 });

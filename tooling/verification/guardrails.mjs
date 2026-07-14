@@ -22,6 +22,11 @@ const componentSliceContract = [
   ['BoardRow', 'board-row'],
   ['Tab', 'tab'],
   ['BottomSheet', 'bottom-sheet'],
+  ['Dialog', 'dialog'],
+  ['SearchField', 'search-field'],
+  ['ListRow', 'list-row'],
+  ['Toast', 'toast'],
+  ['BottomCTA', 'bottom-cta'],
 ];
 
 function workspaceDeclarations(source) {
@@ -190,7 +195,7 @@ export async function findComponentSliceContractViolations(root) {
   )].map((match) => [match[1], match[2]]);
   if (JSON.stringify(entries) !== JSON.stringify(componentSliceContract)) {
     return [
-      'Component slice list must contain exactly 15 ordered components and 30 Windows mobile/desktop targets',
+      'Component slice list must contain exactly 20 ordered components and 40 Windows mobile/desktop targets',
     ];
   }
   return [];
@@ -209,7 +214,7 @@ async function main() {
     return;
   }
   process.stdout.write(
-    'Guardrails passed: 3 private workspaces, 0 primitive color leaks, 30 Windows component-slice targets\n',
+    'Guardrails passed: 3 private workspaces, 0 primitive color leaks, 40 Windows component-slice targets\n',
   );
 }
 

@@ -23,7 +23,7 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
   }
 });
 
-test('components.json exposes all fifteen release-ready component contracts', async ({ request }) => {
+test('components.json exposes all twenty release-ready component contracts', async ({ request }) => {
   const response = await request.get('/design-system/components.json');
   expect(response.status()).toBe(200);
   const artifact = await response.json();
@@ -45,6 +45,11 @@ test('components.json exposes all fifteen release-ready component contracts', as
       'BoardRow',
       'Tab',
       'BottomSheet',
+      'Dialog',
+      'SearchField',
+      'ListRow',
+      'Toast',
+      'BottomCTA',
     ]);
   expect(artifact.components.map(({ docsUrl }: { docsUrl: string }) => docsUrl)).toEqual([
     '/components/icon/',
@@ -62,6 +67,11 @@ test('components.json exposes all fifteen release-ready component contracts', as
     '/components/board-row/',
     '/components/tab/',
     '/components/bottom-sheet/',
+    '/components/dialog/',
+    '/components/search-field/',
+    '/components/list-row/',
+    '/components/toast/',
+    '/components/bottom-cta/',
   ]);
   const scrollArea = artifact.components.find(({ name }: { name: string }) => name === 'ScrollArea');
   expect(scrollArea.variants).toEqual([]);

@@ -2,7 +2,6 @@
   box-sizing: border-box;
   inline-size: 100%;
   min-inline-size: 0;
-  color: var(--ds-color-text-primary);
   font-family: var(--ds-font-family-sans);
 }
 

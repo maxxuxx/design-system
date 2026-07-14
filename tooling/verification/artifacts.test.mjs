@@ -23,6 +23,9 @@ const routes = [
   'components/select/index.html', 'components/text-button/index.html',
   'components/icon-button/index.html', 'components/board-row/index.html',
   'components/tab/index.html', 'components/bottom-sheet/index.html',
+  'components/dialog/index.html', 'components/search-field/index.html',
+  'components/list-row/index.html', 'components/toast/index.html',
+  'components/bottom-cta/index.html',
 ];
 
 const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius', 'Motion'];
@@ -33,7 +36,8 @@ const pageNames = [
   '04.4 TextField', '04.5 ScrollArea', '04.6 Checkbox', '04.7 RadioGroup',
   '04.8 Switch', '04.9 Textarea', '04.10 Select',
   '04.11 TextButton', '04.12 IconButton', '04.13 BoardRow', '04.14 Tab',
-  '04.15 BottomSheet',
+  '04.15 BottomSheet', '04.16 Dialog', '04.17 SearchField', '04.18 ListRow',
+  '04.19 Toast', '04.20 BottomCTA',
   '90 Native Differences', '99 Deprecated',
 ];
 
@@ -176,6 +180,50 @@ const componentSpecs = [
       { name: 'Footer', values: ['Hidden', 'Visible'] },
     ],
     variants: ['content', 'full'], sizes: [], states: ['open', 'closing'],
+  },
+  {
+    name: 'Dialog', slug: 'dialog', variantCount: 4,
+    axes: [
+      { name: 'Type', values: ['Alert', 'Confirm'] },
+      { name: 'Description', values: ['Hidden', 'Visible'] },
+    ],
+    variants: ['alert', 'confirm'], sizes: [],
+    states: ['open', 'closing', 'disabled', 'loading'],
+  },
+  {
+    name: 'SearchField', slug: 'search-field', variantCount: 8,
+    axes: [
+      { name: 'Value', values: ['Empty', 'Filled'] },
+      { name: 'State', values: ['Default', 'Focus', 'Disabled', 'ReadOnly'] },
+    ],
+    variants: ['empty', 'filled'], sizes: [],
+    states: ['default', 'focus', 'disabled', 'readonly'],
+  },
+  {
+    name: 'ListRow', slug: 'list-row', variantCount: 6,
+    axes: [
+      { name: 'Divider', values: ['None', 'Indented'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    variants: ['none', 'indented'], sizes: [], states: ['default', 'pressed', 'disabled'],
+  },
+  {
+    name: 'Toast', slug: 'toast', variantCount: 6,
+    axes: [
+      { name: 'Tone', values: ['Neutral', 'Success', 'Danger'] },
+      { name: 'Action', values: ['Hidden', 'Visible'] },
+    ],
+    variants: ['neutral', 'success', 'danger', 'action-hidden', 'action-visible'], sizes: [],
+    states: ['visible', 'queued', 'paused', 'persistent'],
+  },
+  {
+    name: 'BottomCTA', slug: 'bottom-cta', variantCount: 4,
+    axes: [
+      { name: 'Layout', values: ['Single', 'Double'] },
+      { name: 'Background', values: ['Default', 'None'] },
+    ],
+    variants: ['single', 'double', 'background-default', 'background-none'], sizes: [],
+    states: ['static', 'fixed', 'take-space'],
   },
 ];
 
@@ -417,6 +465,104 @@ const manifestProps = {
       defaultValue: 'owned close button',
     },
   ],
+  Dialog: [
+    { name: 'open', type: 'boolean', required: true, defaultValue: null },
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'alertLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'cancelLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'confirmLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'confirmDisabled', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'confirmLoading', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    {
+      name: 'onOpenChange',
+      type: '((open: boolean, reason: AlertDialogCloseReason) => void) | ((open: boolean, reason: ConfirmDialogCloseReason) => void)',
+      required: true,
+      defaultValue: null,
+    },
+    {
+      name: '...rootProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  SearchField: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'clearLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: null },
+    { name: 'onValueChange', type: '(value: string) => void', required: false, defaultValue: null },
+    { name: 'onClear', type: '() => void', required: false, defaultValue: null },
+    { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'children' | 'defaultValue' | 'onChange' | 'size' | 'type' | 'value'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  ListRow: [
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'left', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'right', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'divider', type: "'none' | 'indented'", required: false, defaultValue: 'none' },
+    { name: 'withArrow', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'href', type: 'string', required: false, defaultValue: null },
+    { name: 'onClick', type: 'MouseEventHandler<HTMLButtonElement>', required: false, defaultValue: null },
+    {
+      name: '...nativeProps',
+      type: 'ListRowStaticProps | ListRowButtonProps | ListRowAnchorProps',
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Toast: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    { name: 'message', type: 'string', required: true, defaultValue: null },
+    { name: 'tone', type: 'ToastTone', required: false, defaultValue: 'neutral' },
+    { name: 'icon', type: 'IconName', required: false, defaultValue: null },
+    {
+      name: 'duration',
+      type: 'number',
+      required: false,
+      defaultValue: '3000 or 5000 with action',
+    },
+    { name: 'position', type: 'ToastPosition', required: false, defaultValue: 'bottom' },
+    { name: 'action', type: 'ToastAction', required: false, defaultValue: null },
+    { name: 'show', type: '(options: ToastOptions) => string', required: true, defaultValue: null },
+    { name: 'dismiss', type: '(id: string) => void', required: true, defaultValue: null },
+    { name: 'clear', type: '() => void', required: true, defaultValue: null },
+  ],
+  BottomCTA: [
+    { name: 'primaryAction', type: 'BottomCTAAction', required: true, defaultValue: null },
+    { name: 'secondaryAction', type: 'BottomCTAAction', required: false, defaultValue: null },
+    { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+    { name: 'hasSafeAreaPadding', type: 'boolean', required: false, defaultValue: 'true' },
+    { name: 'background', type: 'BottomCTABackground', required: false, defaultValue: 'default' },
+    {
+      name: '...divProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
 };
 
 const properties = {
@@ -486,6 +632,38 @@ const properties = {
     { name: 'Description', type: 'TEXT' },
     { name: 'Show description', type: 'BOOLEAN' },
   ],
+  Dialog: [
+    { name: 'Title', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Alert label', type: 'TEXT' },
+    { name: 'Cancel label', type: 'TEXT' },
+    { name: 'Confirm label', type: 'TEXT' },
+    { name: 'Show description', type: 'BOOLEAN' },
+  ],
+  SearchField: [
+    { name: 'Placeholder', type: 'TEXT' },
+    { name: 'Value', type: 'TEXT' },
+  ],
+  ListRow: [
+    { name: 'Title', type: 'TEXT' },
+    { name: 'Description', type: 'TEXT' },
+    { name: 'Right', type: 'TEXT' },
+    { name: 'Show left', type: 'BOOLEAN' },
+    { name: 'Show description', type: 'BOOLEAN' },
+    { name: 'Show right', type: 'BOOLEAN' },
+    { name: 'Show arrow', type: 'BOOLEAN' },
+    { name: 'Left icon', type: 'INSTANCE_SWAP' },
+  ],
+  Toast: [
+    { name: 'Message', type: 'TEXT' },
+    { name: 'Action label', type: 'TEXT' },
+    { name: 'Show icon', type: 'BOOLEAN' },
+    { name: 'Icon', type: 'INSTANCE_SWAP' },
+  ],
+  BottomCTA: [
+    { name: 'Primary label', type: 'TEXT' },
+    { name: 'Secondary label', type: 'TEXT' },
+  ],
 };
 
 const componentNodeIds = {
@@ -504,6 +682,11 @@ const componentNodeIds = {
   BoardRow: '197-38',
   Tab: '202-59',
   BottomSheet: '209-66',
+  Dialog: '219-48',
+  SearchField: '238-19',
+  ListRow: '253-14',
+  Toast: '319-274',
+  BottomCTA: '331-55',
 };
 
 const iconNodeIds = ['30-4', '30-7', '30-11', '30-16', '30-20'];
@@ -524,12 +707,20 @@ const fixtureComponentTokens = {
   BoardRow: ['size/control/large', 'color/semantic/11'],
   Tab: ['size/control/small', 'color/semantic/12'],
   BottomSheet: ['motion/duration/fast', 'motion/easing/standard', 'color/semantic/13'],
+  Dialog: ['space/2', 'color/semantic/14'],
+  SearchField: ['size/control/medium', 'color/semantic/15'],
+  ListRow: ['size/control/large', 'color/semantic/16'],
+  Toast: ['size/control/medium', 'motion/duration/fast', 'color/semantic/17'],
+  BottomCTA: ['size/control/large', 'space/1', 'space/4', 'color/semantic/18'],
 };
 const fixtureTransitiveTokens = {
   TextButton: ['size/icon/small'],
   IconButton: ['size/icon/medium', 'size/icon/large'],
   BoardRow: ['size/icon/medium'],
   BottomSheet: ['size/control/small', 'size/icon/medium'],
+  Dialog: ['size/control/small', 'size/control/large', 'size/icon/medium'],
+  ListRow: ['size/icon/medium'],
+  Toast: ['size/icon/medium'],
 };
 const sizeTokenNames = [
   'size/icon/small', 'size/icon/medium', 'size/icon/large',
@@ -849,7 +1040,9 @@ async function createFixture() {
         ? '--ds-switch-track-width: var(--ds-size-switch-small-width); '
           + '--ds-switch-track-height: var(--ds-size-switch-small-width); '
           + 'width: var(--ds-switch-track-width); height: var(--ds-switch-track-height); '
-        : '';
+        : name === 'BottomCTA'
+          ? 'padding-bottom: var(--ds-safe-area-bottom, var(--ds-space-1)); '
+          : '';
     await writeFile(
       path.join(sourceDir, `${name}.css`),
       `.fixture { ${localVariableContract}${declarations} } /* var(--ds-commented-out-token) */`,
@@ -913,7 +1106,7 @@ test('rejects external, missing, and unlicensed Pretendard assets', async (t) =>
   assert.ok(violations.includes('Missing Pretendard SIL OFL license'));
 });
 
-test('accepts a complete v0.3 build, 118-token map, fifteen-component manifest, and Figma evidence', async (t) => {
+test('accepts a complete v0.4 build, 118-token map, twenty-component manifest, and Figma evidence', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   assert.deepEqual(await verifyBuildArtifacts(root), []);
@@ -930,7 +1123,7 @@ test('accepts equivalent Figma node URLs with additional query metadata', async 
   assert.deepEqual(await verifyFigmaEvidence(root), []);
 });
 
-test('reports every missing v0.3 static route', async (t) => {
+test('reports every missing v0.4 static route', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const newRoutes = [
@@ -941,6 +1134,11 @@ test('reports every missing v0.3 static route', async (t) => {
     'components/board-row/index.html',
     'components/tab/index.html',
     'components/bottom-sheet/index.html',
+    'components/dialog/index.html',
+    'components/search-field/index.html',
+    'components/list-row/index.html',
+    'components/toast/index.html',
+    'components/bottom-cta/index.html',
   ];
   await Promise.all(newRoutes.map((route) => rm(
     path.join(root, 'apps', 'docs', 'dist', route),
@@ -951,14 +1149,14 @@ test('reports every missing v0.3 static route', async (t) => {
   }
 });
 
-test('rejects an extra static HTML route beyond the exact 25-route contract', async (t) => {
+test('rejects an extra static HTML route beyond the exact 30-route contract', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const extra = path.join(root, 'apps', 'docs', 'dist', 'components', 'invented', 'index.html');
   await mkdir(path.dirname(extra), { recursive: true });
   await writeFile(extra, '<!doctype html><h1>invented</h1>');
   assert.ok((await verifyBuildArtifacts(root))
-    .includes('Static HTML routes must be exactly the 25 canonical routes'));
+    .includes('Static HTML routes must be exactly the 30 canonical routes'));
 });
 
 test('rejects token count, kind, cssVariable, and resolvedValue drift', async (t) => {
@@ -1000,7 +1198,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   artifact.components[3].figmaUrl = artifact.components[2].figmaUrl;
   await writeFile(file, JSON.stringify(artifact));
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.some((value) => value.includes('exactly 15 components')));
+  assert.ok(violations.some((value) => value.includes('exactly 20 components')));
   assert.ok(violations.some((value) => value.includes('Component index 0 must be Icon')));
   assert.ok(violations.some((value) => value.includes('status must be preview')));
   assert.ok(violations.some((value) => value.includes('description must be non-empty')));
@@ -1008,7 +1206,7 @@ test('rejects component order, status, full-field, prop, and distinct-URL drift'
   assert.ok(violations.some((value) => value.includes('variants must be a string array')));
   assert.ok(violations.some((value) => value.includes('prop 0 required must be boolean')));
   assert.ok(violations.some((value) => value.includes('tokens must be a non-empty string array')));
-  assert.ok(violations.some((value) => value.includes('fifteen distinct Figma URLs')));
+  assert.ok(violations.some((value) => value.includes('twenty distinct Figma URLs')));
 });
 
 test('rejects exact public component prop-contract drift', async (t) => {
@@ -1044,6 +1242,16 @@ test('rejects exact public component prop-contract drift', async (t) => {
     .find(({ name }) => name === 'items').type = 'TabItem[]';
   artifact.components.find(({ name }) => name === 'BottomSheet').props
     .find(({ name }) => name === 'initialFocusRef').type = 'RefObject<HTMLElement>';
+  artifact.components.find(({ name }) => name === 'Dialog').props
+    .find(({ name }) => name === 'onOpenChange').type = '(open: boolean) => void';
+  artifact.components.find(({ name }) => name === 'SearchField').props
+    .find(({ name }) => name === '...inputProps').type = 'InputHTMLAttributes<HTMLInputElement>';
+  artifact.components.find(({ name }) => name === 'ListRow').props
+    .find(({ name }) => name === '...nativeProps').type = 'HTMLAttributes<HTMLElement>';
+  artifact.components.find(({ name }) => name === 'Toast').props
+    .find(({ name }) => name === 'duration').defaultValue = '3000';
+  artifact.components.find(({ name }) => name === 'BottomCTA').props
+    .find(({ name }) => name === 'primaryAction').type = 'ReactElement';
   await writeFile(file, JSON.stringify(artifact));
 
   const violations = await verifyBuildArtifacts(root);
@@ -1061,30 +1269,35 @@ test('rejects exact public component prop-contract drift', async (t) => {
   assert.ok(violations.includes('BoardRow prop contract mismatch'));
   assert.ok(violations.includes('Tab prop contract mismatch'));
   assert.ok(violations.includes('BottomSheet prop contract mismatch'));
+  assert.ok(violations.includes('Dialog prop contract mismatch'));
+  assert.ok(violations.includes('SearchField prop contract mismatch'));
+  assert.ok(violations.includes('ListRow prop contract mismatch'));
+  assert.ok(violations.includes('Toast prop contract mismatch'));
+  assert.ok(violations.includes('BottomCTA prop contract mismatch'));
 });
 
-test('rejects every missing v0.3 component manifest record', async (t) => {
+test('rejects every missing v0.4 component manifest record', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
   const artifact = JSON.parse(await readFile(file, 'utf8'));
-  const names = ['TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet'];
+  const names = ['Dialog', 'SearchField', 'ListRow', 'Toast', 'BottomCTA'];
   artifact.components = artifact.components.filter(({ name }) => !names.includes(name));
   await writeFile(file, JSON.stringify(artifact));
 
   const violations = await verifyBuildArtifacts(root);
-  assert.ok(violations.includes('components.json must contain exactly 15 components'));
+  assert.ok(violations.includes('components.json must contain exactly 20 components'));
   names.forEach((name, offset) => {
-    assert.ok(violations.includes(`Component index ${offset + 10} must be ${name}`));
+    assert.ok(violations.includes(`Component index ${offset + 15} must be ${name}`));
   });
 });
 
-test('rejects token-contract drift for every v0.3 component', async (t) => {
+test('rejects token-contract drift for every v0.4 component', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const manifestFile = path.join(root, 'apps', 'docs', 'dist', 'design-system', 'components.json');
   const manifest = JSON.parse(await readFile(manifestFile, 'utf8'));
-  const names = ['TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet'];
+  const names = ['Dialog', 'SearchField', 'ListRow', 'Toast', 'BottomCTA'];
   const removed = Object.fromEntries(names.map((name) => {
     const component = manifest.components.find((entry) => entry.name === name);
     return [name, component.tokens.shift()];
@@ -1211,6 +1424,21 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   evidence.components.BottomSheet.variantCount = 3;
   evidence.components.BottomSheet.properties.pop();
   evidence.components.BottomSheet.axes[1].values.reverse();
+  evidence.components.Dialog.variantCount = 3;
+  evidence.components.Dialog.properties.pop();
+  evidence.components.Dialog.axes[0].values.reverse();
+  evidence.components.SearchField.variantCount = 7;
+  evidence.components.SearchField.properties.pop();
+  evidence.components.SearchField.axes[1].values.reverse();
+  evidence.components.ListRow.variantCount = 5;
+  evidence.components.ListRow.properties.pop();
+  evidence.components.ListRow.axes[0].values.reverse();
+  evidence.components.Toast.variantCount = 5;
+  evidence.components.Toast.properties.pop();
+  evidence.components.Toast.axes[0].values.reverse();
+  evidence.components.BottomCTA.variantCount = 3;
+  evidence.components.BottomCTA.properties.pop();
+  evidence.components.BottomCTA.axes[1].values.reverse();
   await writeFile(file, JSON.stringify(evidence));
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('Icon componentCount must be 5')));
@@ -1253,9 +1481,24 @@ test('rejects exact Figma counts, Icon URLs, and property definitions', async (t
   assert.ok(violations.some((value) => value.includes('BottomSheet variantCount must be 4')));
   assert.ok(violations.some((value) => value.includes('BottomSheet property definitions mismatch')));
   assert.ok(violations.some((value) => value.includes('BottomSheet axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Dialog variantCount must be 4')));
+  assert.ok(violations.some((value) => value.includes('Dialog property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Dialog axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('SearchField variantCount must be 8')));
+  assert.ok(violations.some((value) => value.includes('SearchField property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('SearchField axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('ListRow variantCount must be 6')));
+  assert.ok(violations.some((value) => value.includes('ListRow property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('ListRow axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Toast variantCount must be 6')));
+  assert.ok(violations.some((value) => value.includes('Toast property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('Toast axis definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('BottomCTA variantCount must be 4')));
+  assert.ok(violations.some((value) => value.includes('BottomCTA property definitions mismatch')));
+  assert.ok(violations.some((value) => value.includes('BottomCTA axis definitions mismatch')));
 });
 
-test('rejects every missing v0.3 Figma component and page record', async (t) => {
+test('rejects every missing v0.4 Figma component and page record', async (t) => {
   const root = await createFixture();
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'figma', 'verification.json');
@@ -1266,6 +1509,11 @@ test('rejects every missing v0.3 Figma component and page record', async (t) => 
     ['BoardRow', '04.13 BoardRow'],
     ['Tab', '04.14 Tab'],
     ['BottomSheet', '04.15 BottomSheet'],
+    ['Dialog', '04.16 Dialog'],
+    ['SearchField', '04.17 SearchField'],
+    ['ListRow', '04.18 ListRow'],
+    ['Toast', '04.19 Toast'],
+    ['BottomCTA', '04.20 BottomCTA'],
   ];
   for (const [name, page] of records) {
     delete evidence.components[name];
@@ -1287,18 +1535,18 @@ test('rejects exact Figma page, style, and component-set totals', async (t) => {
   t.after(() => rm(root, { recursive: true, force: true }));
   const file = path.join(root, 'figma', 'verification.json');
   const evidence = JSON.parse(await readFile(file, 'utf8'));
-  evidence.pages = evidence.pages.filter((page) => page !== '04.15 BottomSheet');
+  evidence.pages = evidence.pages.filter((page) => page !== '04.20 BottomCTA');
   evidence.textStyleCount = 7;
   evidence.effectStyleCount = 1;
-  delete evidence.components.BottomSheet.componentSetUrl;
+  delete evidence.components.BottomCTA.componentSetUrl;
   await writeFile(file, JSON.stringify(evidence));
 
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.includes('Figma page list mismatch'));
   assert.ok(violations.includes('Figma textStyleCount must be 8'));
   assert.ok(violations.includes('Figma effectStyleCount must be 2'));
-  assert.ok(violations.includes('Figma evidence must expose exactly fourteen component sets'));
-  assert.ok(violations.includes('BottomSheet evidence fields mismatch'));
+  assert.ok(violations.includes('Figma evidence must expose exactly nineteen component sets'));
+  assert.ok(violations.includes('BottomCTA evidence fields mismatch'));
 });
 
 test('rejects approval, Code Connect, screenshot, hard-code, and URL mapping drift', async (t) => {
@@ -1415,8 +1663,8 @@ test('rejects cross-file and duplicate normalized Figma node targets', async (t)
 
   const violations = await verifyFigmaEvidence(root);
   assert.ok(violations.some((value) => value.includes('same Figma file')));
-  assert.ok(violations.some((value) => value.includes('fifteen distinct manifest Figma node targets')));
-  assert.ok(violations.some((value) => value.includes('twenty distinct Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('twenty distinct manifest Figma node targets')));
+  assert.ok(violations.some((value) => value.includes('twenty-five distinct Figma node targets')));
 });
 
 test('rejects duplicate token-map collection, variable, and style IDs', async (t) => {
@@ -1461,7 +1709,7 @@ test('rejects unexpected Figma component evidence keys', async (t) => {
   evidence.components.Tooltip = {};
   await writeFile(file, JSON.stringify(evidence));
   assert.ok((await verifyFigmaEvidence(root))
-    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet'));
+    .includes('Figma component keys must be exactly Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, SearchField, ListRow, Toast, BottomCTA'));
 });
 
 test('rejects non-strict or impossible ISO timestamps', async (t) => {

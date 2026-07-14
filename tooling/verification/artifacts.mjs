@@ -29,6 +29,11 @@ const routes = [
   'components/board-row/index.html',
   'components/tab/index.html',
   'components/bottom-sheet/index.html',
+  'components/dialog/index.html',
+  'components/search-field/index.html',
+  'components/list-row/index.html',
+  'components/toast/index.html',
+  'components/bottom-cta/index.html',
   'design-system/tokens.json',
   'design-system/components.json',
 ];
@@ -68,7 +73,8 @@ const pageNames = [
   '04.4 TextField', '04.5 ScrollArea', '04.6 Checkbox', '04.7 RadioGroup',
   '04.8 Switch', '04.9 Textarea', '04.10 Select',
   '04.11 TextButton', '04.12 IconButton', '04.13 BoardRow', '04.14 Tab',
-  '04.15 BottomSheet',
+  '04.15 BottomSheet', '04.16 Dialog', '04.17 SearchField', '04.18 ListRow',
+  '04.19 Toast', '04.20 BottomCTA',
   '90 Native Differences', '99 Deprecated',
 ];
 const componentSpecs = [
@@ -315,6 +321,98 @@ const componentSpecs = [
     sizes: [],
     states: ['open', 'closing'],
   },
+  {
+    name: 'Dialog',
+    slug: 'dialog',
+    variantCount: 4,
+    axes: [
+      { name: 'Type', values: ['Alert', 'Confirm'] },
+      { name: 'Description', values: ['Hidden', 'Visible'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Alert label', type: 'TEXT' },
+      { name: 'Cancel label', type: 'TEXT' },
+      { name: 'Confirm label', type: 'TEXT' },
+      { name: 'Show description', type: 'BOOLEAN' },
+    ],
+    variants: ['alert', 'confirm'],
+    sizes: [],
+    states: ['open', 'closing', 'disabled', 'loading'],
+  },
+  {
+    name: 'SearchField',
+    slug: 'search-field',
+    variantCount: 8,
+    axes: [
+      { name: 'Value', values: ['Empty', 'Filled'] },
+      { name: 'State', values: ['Default', 'Focus', 'Disabled', 'ReadOnly'] },
+    ],
+    properties: [
+      { name: 'Placeholder', type: 'TEXT' },
+      { name: 'Value', type: 'TEXT' },
+    ],
+    variants: ['empty', 'filled'],
+    sizes: [],
+    states: ['default', 'focus', 'disabled', 'readonly'],
+  },
+  {
+    name: 'ListRow',
+    slug: 'list-row',
+    variantCount: 6,
+    axes: [
+      { name: 'Divider', values: ['None', 'Indented'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Right', type: 'TEXT' },
+      { name: 'Show left', type: 'BOOLEAN' },
+      { name: 'Show description', type: 'BOOLEAN' },
+      { name: 'Show right', type: 'BOOLEAN' },
+      { name: 'Show arrow', type: 'BOOLEAN' },
+      { name: 'Left icon', type: 'INSTANCE_SWAP' },
+    ],
+    variants: ['none', 'indented'],
+    sizes: [],
+    states: ['default', 'pressed', 'disabled'],
+  },
+  {
+    name: 'Toast',
+    slug: 'toast',
+    variantCount: 6,
+    axes: [
+      { name: 'Tone', values: ['Neutral', 'Success', 'Danger'] },
+      { name: 'Action', values: ['Hidden', 'Visible'] },
+    ],
+    properties: [
+      { name: 'Message', type: 'TEXT' },
+      { name: 'Action label', type: 'TEXT' },
+      { name: 'Show icon', type: 'BOOLEAN' },
+      { name: 'Icon', type: 'INSTANCE_SWAP' },
+    ],
+    variants: ['neutral', 'success', 'danger', 'action-hidden', 'action-visible'],
+    sizes: [],
+    states: ['visible', 'queued', 'paused', 'persistent'],
+  },
+  {
+    name: 'BottomCTA',
+    slug: 'bottom-cta',
+    variantCount: 4,
+    axes: [
+      { name: 'Layout', values: ['Single', 'Double'] },
+      { name: 'Background', values: ['Default', 'None'] },
+    ],
+    properties: [
+      { name: 'Primary label', type: 'TEXT' },
+      { name: 'Secondary label', type: 'TEXT' },
+    ],
+    variants: ['single', 'double', 'background-default', 'background-none'],
+    sizes: [],
+    states: ['static', 'fixed', 'take-space'],
+  },
 ];
 const componentPropContracts = {
   Icon: [
@@ -554,10 +652,109 @@ const componentPropContracts = {
       defaultValue: 'owned close button',
     },
   ],
+  Dialog: [
+    { name: 'open', type: 'boolean', required: true, defaultValue: null },
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'alertLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'cancelLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'confirmLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'confirmDisabled', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'confirmLoading', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    {
+      name: 'onOpenChange',
+      type: '((open: boolean, reason: AlertDialogCloseReason) => void) | ((open: boolean, reason: ConfirmDialogCloseReason) => void)',
+      required: true,
+      defaultValue: null,
+    },
+    {
+      name: '...rootProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  SearchField: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'clearLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: null },
+    { name: 'onValueChange', type: '(value: string) => void', required: false, defaultValue: null },
+    { name: 'onClear', type: '() => void', required: false, defaultValue: null },
+    { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'children' | 'defaultValue' | 'onChange' | 'size' | 'type' | 'value'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  ListRow: [
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'left', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'right', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'divider', type: "'none' | 'indented'", required: false, defaultValue: 'none' },
+    { name: 'withArrow', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'href', type: 'string', required: false, defaultValue: null },
+    { name: 'onClick', type: 'MouseEventHandler<HTMLButtonElement>', required: false, defaultValue: null },
+    {
+      name: '...nativeProps',
+      type: 'ListRowStaticProps | ListRowButtonProps | ListRowAnchorProps',
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Toast: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    { name: 'message', type: 'string', required: true, defaultValue: null },
+    { name: 'tone', type: 'ToastTone', required: false, defaultValue: 'neutral' },
+    { name: 'icon', type: 'IconName', required: false, defaultValue: null },
+    {
+      name: 'duration',
+      type: 'number',
+      required: false,
+      defaultValue: '3000 or 5000 with action',
+    },
+    { name: 'position', type: 'ToastPosition', required: false, defaultValue: 'bottom' },
+    { name: 'action', type: 'ToastAction', required: false, defaultValue: null },
+    { name: 'show', type: '(options: ToastOptions) => string', required: true, defaultValue: null },
+    { name: 'dismiss', type: '(id: string) => void', required: true, defaultValue: null },
+    { name: 'clear', type: '() => void', required: true, defaultValue: null },
+  ],
+  BottomCTA: [
+    { name: 'primaryAction', type: 'BottomCTAAction', required: true, defaultValue: null },
+    { name: 'secondaryAction', type: 'BottomCTAAction', required: false, defaultValue: null },
+    { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+    { name: 'hasSafeAreaPadding', type: 'boolean', required: false, defaultValue: 'true' },
+    { name: 'background', type: 'BottomCTABackground', required: false, defaultValue: 'default' },
+    {
+      name: '...divProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
 };
 const componentLocalCssVariables = {
   ScrollArea: new Set(['--ds-scroll-area-edge-size']),
   Switch: new Set(['--ds-switch-track-height', '--ds-switch-track-width']),
+  BottomCTA: new Set(['--ds-safe-area-bottom']),
 };
 const componentTransitiveTokens = {
   TextButton: new Set(['size/icon/small']),
@@ -579,6 +776,45 @@ const componentTransitiveTokens = {
     'motion/duration/fast',
     'size/control/small',
     'size/icon/medium',
+  ]),
+  Dialog: new Set([
+    'size/control/small',
+    'size/control/large',
+    'size/icon/medium',
+    'space/4',
+    'space/12',
+    'radius/sm',
+    'radius/md',
+    'radius/full',
+    'font/size/body-lg',
+    'font/line-height/body-lg',
+    'motion/duration/fast',
+    'color/bg/subtle',
+    'color/text/disabled',
+    'color/action/primary',
+    'color/action/primary-hover',
+    'color/action/primary-pressed',
+    'color/action/on-primary',
+    'color/focus/ring',
+  ]),
+  ListRow: new Set(['size/icon/medium']),
+  Toast: new Set(['size/icon/medium', 'color/focus/ring']),
+  BottomCTA: new Set([
+    'space/4',
+    'radius/md',
+    'font/size/body-lg',
+    'font/weight/semibold',
+    'font/line-height/body-lg',
+    'color/action/primary',
+    'color/action/primary-hover',
+    'color/action/primary-pressed',
+    'color/action/on-primary',
+    'color/action/weak',
+    'color/action/weak-hover',
+    'color/action/on-weak',
+    'color/border/default',
+    'color/border/strong',
+    'color/focus/ring',
   ]),
 };
 const iconNames = ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search'];
@@ -813,7 +1049,7 @@ function validateComponentsArtifact(artifact) {
     violations.push('components.json must contain components');
     return violations;
   }
-  if (artifact.components.length !== 15) violations.push('components.json must contain exactly 15 components');
+  if (artifact.components.length !== 20) violations.push('components.json must contain exactly 20 components');
   const figmaUrls = [];
   componentSpecs.forEach(({ name, slug, variants, sizes, states }, index) => {
     const component = artifact.components[index];
@@ -878,8 +1114,8 @@ function validateComponentsArtifact(artifact) {
       }
     }
   });
-  if (figmaUrls.length !== 15 || new Set(figmaUrls).size !== 15) {
-    violations.push('components.json must contain fifteen distinct Figma URLs');
+  if (figmaUrls.length !== 20 || new Set(figmaUrls).size !== 20) {
+    violations.push('components.json must contain twenty distinct Figma URLs');
   }
   return violations;
 }
@@ -901,16 +1137,11 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
     }
 
     const executableCss = source.replace(/\/\*[\s\S]*?\*\//g, '');
-    const declaredVariables = new Set(
-      [...executableCss.matchAll(/(--[A-Za-z0-9_-]+)\s*:/g)].map((match) => match[1]),
-    );
     const allowedLocalVariables = componentLocalCssVariables[name] ?? new Set();
     const cssVariables = [...new Set(
       [...executableCss.matchAll(/var\(\s*(--ds-[A-Za-z0-9_-]+)\b/g)]
         .map((match) => match[1])
-        .filter((cssVariable) => !(
-          declaredVariables.has(cssVariable) && allowedLocalVariables.has(cssVariable)
-        )),
+        .filter((cssVariable) => !allowedLocalVariables.has(cssVariable)),
     )];
     const usedTokenNames = new Set();
     for (const cssVariable of cssVariables) {
@@ -1093,7 +1324,7 @@ export async function verifyBuildArtifacts(root) {
   try {
     const actualHtmlRoutes = await collectHtmlRoutes(dist);
     if (JSON.stringify(actualHtmlRoutes) !== JSON.stringify([...htmlRoutes].sort())) {
-      violations.push('Static HTML routes must be exactly the 25 canonical routes');
+      violations.push('Static HTML routes must be exactly the 30 canonical routes');
     }
   } catch {
     violations.push('Static HTML route set is unreadable');
@@ -1236,7 +1467,7 @@ export async function verifyFigmaEvidence(root) {
   const componentSetCount = Object.entries(evidence.components ?? {})
     .filter(([name, component]) => name !== 'Icon' && nonEmpty(component?.componentSetUrl))
     .length;
-  if (componentSetCount !== 14) violations.push('Figma evidence must expose exactly fourteen component sets');
+  if (componentSetCount !== 19) violations.push('Figma evidence must expose exactly nineteen component sets');
 
   const manifestTargets = [];
   for (const spec of componentSpecs) {
@@ -1298,16 +1529,16 @@ export async function verifyFigmaEvidence(root) {
     }
   }
 
-  if (manifestTargets.length !== 15 || new Set(manifestTargets).size !== 15) {
-    violations.push('Figma evidence must expose fifteen distinct manifest Figma node targets');
+  if (manifestTargets.length !== 20 || new Set(manifestTargets).size !== 20) {
+    violations.push('Figma evidence must expose twenty distinct manifest Figma node targets');
   }
   const ownedIconTargets = evidence.components?.Icon?.componentUrls
     ?.map(({ url }) => figmaNodeTarget(url)) ?? [];
   const allEvidenceTargets = [...manifestTargets, ...ownedIconTargets];
-  if (allEvidenceTargets.length !== 20
+  if (allEvidenceTargets.length !== 25
     || allEvidenceTargets.some((value) => !value)
-    || new Set(allEvidenceTargets).size !== 20) {
-    violations.push('Figma evidence must expose twenty distinct Figma node targets');
+    || new Set(allEvidenceTargets).size !== 25) {
+    violations.push('Figma evidence must expose twenty-five distinct Figma node targets');
   }
   return violations.sort();
 }
