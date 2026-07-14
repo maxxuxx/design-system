@@ -1,0 +1,158 @@
+---
+name: Switch
+slug: switch
+description: 변경 즉시 적용되는 binary setting을 native checkbox와 switch role로 제공합니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [off, on]
+sizes: [small, medium]
+states: [default, error, disabled]
+accessibility: stable visible label, 44px pointer target, native Space·checked·form semantics와 ordered description/error relationships를 제공합니다.
+props:
+  - name: label
+    type: string
+    required: true
+    defaultValue: null
+    description: on/off에서 변하지 않는 visible label입니다.
+  - name: description
+    type: string
+    required: false
+    defaultValue: null
+    description: 설정 효과를 설명하는 도움말입니다.
+  - name: errorMessage
+    type: string
+    required: false
+    defaultValue: null
+    description: aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다.
+  - name: size
+    type: SwitchSize
+    required: false
+    defaultValue: medium
+    description: small 36×20px 또는 medium 44×24px track을 선택합니다.
+  - name: ...inputProps
+    type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'role' | 'size' | 'type'>"
+    required: false
+    defaultValue: null
+    description: owned role, size, checkbox type을 제외한 native input props입니다.
+tokens:
+  - size/control/small
+  - size/switch/small-width
+  - size/switch/small-height
+  - size/switch/medium-width
+  - size/switch/medium-height
+  - space/2
+  - space/4
+  - space/8
+  - radius/full
+  - elevation/1
+  - font/family/sans
+  - font/size/caption
+  - font/size/body-sm
+  - font/size/body
+  - font/line-height/caption
+  - font/line-height/body-sm
+  - font/line-height/body
+  - color/bg/surface
+  - color/bg/subtle
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/border/default
+  - color/border/focus
+  - color/action/primary
+  - color/action/primary-hover
+  - color/action/primary-pressed
+  - color/action/on-primary
+  - color/status/danger
+  - color/status/on-status
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import SwitchExample from '../../components/examples/SwitchExample';
+
+## 예제
+
+<ComponentPreview title="Switch 상태" description="on/off, size, disabled, error controls와 정적 상태를 비교합니다.">
+  <SwitchExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+자동 저장, 알림, 표시 옵션처럼 바꾸는 즉시 적용되는 binary setting에 사용합니다. 현재 on/off 상태와 결과가 바로 이해되어야 합니다.
+
+## 사용하지 말아야 할 때
+
+약관 동의, 여러 항목 선택, form 제출 전까지 확정되지 않는 값에는 Checkbox를 사용합니다. 여러 값 중 하나를 고를 때는 RadioGroup, 실행 동작에는 Button을 사용합니다.
+
+## 구조
+
+root 안의 label row가 native `input[type="checkbox"][role="switch"]` track/thumb와 stable visible label을 감쌉니다. optional description과 optional error는 row 뒤에 옵니다.
+
+## 크기와 변형
+
+`small` track은 36×20px, `medium`은 44×24px이며 기본값은 `medium`입니다. label row는 두 크기 모두 최소 44px입니다. value axis는 `off`, `on`입니다.
+
+## 상태와 동작
+
+상태 우선순위는 `Disabled > Error > Focus > Default`이며 checked value와 독립적입니다. `:checked`가 track color와 thumb 위치를 결정합니다. transition은 짧게 적용되지만 reduced-motion에서는 제거됩니다.
+
+## 반응형 동작
+
+root는 내용 너비를 사용하면서 available width를 넘지 않습니다. 긴 label과 feedback은 줄바꿈되고, 모바일에서도 같은 native input과 44px label row를 유지합니다.
+
+## 접근성
+
+visible label은 input과 직접 연결되고 on/off에서 바뀌지 않습니다. `role="switch"`, native Space activation, checked state, required/disabled, form value를 보존합니다. description과 error, caller IDs는 중복 없이 순서대로 결합됩니다.
+
+## React 예제
+
+```tsx
+import { Switch } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function AutosaveSetting() {
+  return (
+    <Switch
+      description="변경 사항을 자동으로 저장합니다."
+      label="자동 저장"
+      name="autosave"
+      value="enabled"
+    />
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `label` | `string` | required | stable visible label |
+| `description` | `string` | 없음 | helper text |
+| `errorMessage` | `string` | 없음 | error ARIA와 alert text |
+| `size` | `'small' \| 'medium'` | `'medium'` | 36×20px / 44×24px track; row는 최소 44px |
+| native input props | <code>Omit&lt;InputHTMLAttributes&lt;HTMLInputElement&gt;, 'role' \| 'size' \| 'type'&gt;</code> | 없음 | controlled/uncontrolled/form behavior |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/small`, `size/switch/*`
+- `space/2`, `space/4`, `space/8`, `radius/full`, `elevation/1`
+- `font/*`, `color/bg/*`, `color/text/*`, `color/border/*`, `color/action/*`, `color/status/*`, `color/focus/ring`
+
+## Figma
+
+[Switch component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122)은 `Size 2 × Value 2 × State 3 = 12` variants와 `Label`, `Description`, `Error` TEXT properties를 제공합니다. track 크기와 44px target row, zero padding, full radius, semantic state colors, thumb elevation이 모두 library token에 연결되어 있습니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

@@ -2,7 +2,14 @@ import artifact from '@maxxuxx/tokens/tokens.json';
 
 export interface TokenRecord {
   name: string;
-  type: 'color' | 'dimension' | 'fontFamily' | 'fontWeight' | 'shadow';
+  type:
+    | 'color'
+    | 'dimension'
+    | 'fontFamily'
+    | 'fontWeight'
+    | 'shadow'
+    | 'duration'
+    | 'cubicBezier';
   kind: 'primitive' | 'semantic';
   value: string | number;
   description: string;

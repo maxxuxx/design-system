@@ -1,0 +1,193 @@
+---
+name: Toast
+slug: toast
+description: 짧은 비모달 피드백을 한 번에 하나씩 portal에 표시하고 FIFO queue로 순서를 보존하는 provider입니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [neutral, success, danger, action-hidden, action-visible]
+sizes: []
+states: [visible, queued, paused, persistent]
+accessibility: neutral·success는 polite atomic status, danger는 assertive atomic alert이며 focus·scroll·inert 상태를 변경하지 않습니다.
+props:
+  - name: children
+    type: ReactNode
+    required: true
+    defaultValue: null
+    description: Toast context를 사용하는 application subtree입니다.
+  - name: portalContainer
+    type: HTMLElement | null
+    required: false
+    defaultValue: document.body after hydration
+    description: SSR-safe portal 목적지이며 변경되어도 진행 중 timer를 재시작하지 않습니다.
+  - name: message
+    type: string
+    required: true
+    defaultValue: null
+    description: trim 후 비어 있지 않아야 하는 localizable visible copy입니다.
+  - name: tone
+    type: ToastTone
+    required: false
+    defaultValue: neutral
+    description: neutral, success, danger live-region tone을 정합니다.
+  - name: icon
+    type: IconName
+    required: false
+    defaultValue: null
+    description: accessible name에서 제외되는 owned decorative Icon입니다.
+  - name: duration
+    type: number
+    required: false
+    defaultValue: 3000 or 5000 with action
+    description: finite non-negative milliseconds이며 0은 persistent입니다.
+  - name: position
+    type: ToastPosition
+    required: false
+    defaultValue: bottom
+    description: top 또는 bottom safe-area 위치이며 top Toast에는 action을 허용하지 않습니다.
+  - name: action
+    type: ToastAction
+    required: false
+    defaultValue: null
+    description: bottom에서만 허용되는 non-empty label과 callable onPress입니다.
+  - name: show
+    type: "(options: ToastOptions) => string"
+    required: true
+    defaultValue: null
+    description: 검증된 Toast를 FIFO queue에 추가하고 stable monotonic ID를 반환합니다.
+  - name: dismiss
+    type: "(id: string) => void"
+    required: true
+    defaultValue: null
+    description: visible 또는 queued ID를 action 호출 없이 제거합니다.
+  - name: clear
+    type: "() => void"
+    required: true
+    defaultValue: null
+    description: visible과 queued Toast를 모두 action 호출 없이 제거합니다.
+tokens:
+  - size/control/medium
+  - size/icon/medium
+  - space/0
+  - space/2
+  - space/8
+  - space/12
+  - space/16
+  - space/64
+  - radius/md
+  - font/family/sans
+  - font/size/body-sm
+  - font/line-height/body-sm
+  - elevation/2
+  - motion/duration/fast
+  - motion/easing/standard
+  - color/status/neutral
+  - color/status/success
+  - color/status/danger
+  - color/status/on-status
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import ToastExample from '../../components/examples/ToastExample';
+
+## 예제
+
+<ComponentPreview title="Toast queue와 live feedback" description="neutral·success·danger, FIFO 순서, bottom action, top message, pointer pause와 persistent in-flow specimen을 확인하세요.">
+  <ToastExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+저장 완료, 복사 성공, 재시도 가능한 일시 오류처럼 현재 작업을 가리지 않는 짧은 피드백에 사용합니다. 후속 행동이 필수인 복구 흐름이라면 `duration=0`으로 유지하고 같은 행동을 본문에도 제공합니다.
+
+## 사용하지 말아야 할 때
+
+사용자의 결정을 막고 확인해야 하는 내용에는 Dialog를 사용합니다. Toast는 non-modal이므로 focus 이동·trap, document inert, scroll lock, Escape 닫기, swipe dismissal을 제공하지 않습니다. Lottie, 임의 addon node와 modal action도 범위 밖입니다.
+
+## 구조
+
+`ToastProvider`는 application subtree와 SSR-safe portal을 소유하고 `useToast`는 stable `show`, `dismiss`, `clear` API를 제공합니다. provider state는 한 `visible` item과 FIFO `queue`로 나뉘며 queued timer는 시작되지 않습니다. visible Toast는 선택적인 owned decorative Icon, message, bottom 전용 native TextButton action으로 구성됩니다.
+
+## 크기와 변형
+
+공개 size prop은 없습니다. surface는 content-driven width와 viewport-safe `max-inline-size`를 사용하고 action은 최소 44×44 CSS pixel입니다. tone은 `neutral | success | danger`, action은 hidden 또는 visible이며 position과 queue 상태는 시각 variant가 아닌 동작 계약입니다.
+
+## 상태와 동작
+
+`show`는 options를 정규화·검증한 뒤 stable monotonic ID를 만들고 한 번에 하나만 표시합니다. 기본 duration은 action이 없으면 3000ms, 있으면 5000ms이며 `duration=0`은 persistent입니다. `dismiss`는 visible과 queued ID 모두에 작동하고 `clear`는 action을 호출하지 않습니다. action `onPress`는 먼저 실행되고 `finally`에서 현재 Toast를 제거해 다음 item으로 진행합니다.
+
+## 반응형 동작
+
+top과 bottom layer는 각 safe area를 존중하고 inline padding으로 320px에서도 viewport를 넘지 않습니다. message와 action label은 `overflow-wrap: anywhere`로 줄바꿈되며 portal container가 다른 `ownerDocument`로 이동해도 남은 timer 시간은 초기화되지 않습니다.
+
+## 접근성
+
+neutral과 success는 `role="status"`, `aria-live="polite"`, `aria-atomic="true"`를 사용합니다. danger는 `role="alert"`와 assertive atomic live region을 사용합니다. owned Icon은 decorative이고 top Toast에는 type과 runtime 모두 action을 허용하지 않습니다. timer는 pointer hover, Toast 내부 focus, owner document hidden 이유를 각각 추적하고 모든 pause 이유가 사라질 때만 남은 시간으로 재개합니다. reduced motion에서는 transform과 transition을 제거하고 forced colors에서는 system color와 border를 사용합니다.
+
+## React 예제
+
+```tsx
+import { ToastProvider, useToast } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+function SaveButton() {
+  const toast = useToast();
+  return (
+    <button
+      type="button"
+      onClick={() => toast.show({
+        action: { label: '되돌리기', onPress: undoSave },
+        icon: 'check',
+        message: '저장했습니다.',
+        tone: 'success',
+      })}
+    >
+      저장
+    </button>
+  );
+}
+
+export function App() {
+  return <ToastProvider><SaveButton /></ToastProvider>;
+}
+```
+
+## API
+
+<div className="api-table">
+
+| API | Type | Default | 설명 |
+|---|---|---|---|
+| `ToastProvider.children` | `ReactNode` | required | context subtree |
+| `ToastProvider.portalContainer` | `HTMLElement \| null` | `document.body` after hydration | SSR-safe non-modal portal target |
+| `show` | `(options: ToastOptions) => string` | required | 검증 후 ID 반환과 FIFO enqueue |
+| `message` | `string` | required | trim 후 non-empty visible copy |
+| `tone` | `'neutral' \| 'success' \| 'danger'` | `'neutral'` | live role과 semantic color |
+| `icon` | `IconName` | - | owned decorative Icon |
+| `duration` | `number` | `3000`, action은 `5000` | finite non-negative ms; `0`은 persistent |
+| `position` | `'top' \| 'bottom'` | `'bottom'` | top은 action 금지 |
+| `action` | `{ label: string; onPress: () => void }` | - | bottom 전용 native TextButton action |
+| `dismiss` | `(id: string) => void` | required | visible 또는 queued item 제거 |
+| `clear` | `() => void` | required | 전체 queue 제거 |
+
+</div>
+
+## 사용 토큰
+
+- geometry: `size/control/medium`, `size/icon/medium`, `space/0`, `space/2`, `space/8`, `space/12`, `space/16`, `space/64`, `radius/md`
+- type와 depth: `font/family/sans`, `font/size/body-sm`, `font/line-height/body-sm`, `elevation/2`
+- motion과 color: `motion/duration/fast`, `motion/easing/standard`, `color/status/neutral`, `color/status/success`, `color/status/danger`, `color/status/on-status`, `color/focus/ring`
+
+## Figma
+
+[`04.19 Toast`](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=316-2) page의 [Toast component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274)은 `Tone Neutral/Success/Danger × Action Hidden/Visible = 6` variants를 제공합니다. Message와 Action label은 TEXT, Show icon은 BOOLEAN, Icon은 owned Icon master를 제한한 INSTANCE_SWAP property입니다. Position과 FIFO queue는 시각 variant가 아닌 code behavior입니다. [TDS Mobile Toast component](https://tossmini-docs.toss.im/tds-mobile/components/toast/)와 [use-toast reference](https://tossmini-docs.toss.im/tds-mobile/hooks/OverlayExtension/use-toast/)를 참고하되 이 저장소는 native-first non-modal portal과 deterministic queue를 유지합니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

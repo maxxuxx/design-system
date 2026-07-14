@@ -60,6 +60,8 @@ function renderCssValue(token: ResolvedToken): string {
     case 'color':
     case 'fontFamily':
     case 'shadow':
+    case 'duration':
+    case 'cubicBezier':
       return String(token.value);
   }
 }

@@ -25,6 +25,21 @@ function metadata(name: ComponentMetadata['name'], figmaUrl = ''): ComponentMeta
     Button: 'button',
     TextField: 'text-field',
     ScrollArea: 'scroll-area',
+    Checkbox: 'checkbox',
+    RadioGroup: 'radio-group',
+    Switch: 'switch',
+    Textarea: 'textarea',
+    Select: 'select',
+    TextButton: 'text-button',
+    IconButton: 'icon-button',
+    BoardRow: 'board-row',
+    Tab: 'tab',
+    BottomSheet: 'bottom-sheet',
+    Dialog: 'dialog',
+    SearchField: 'search-field',
+    ListRow: 'list-row',
+    Toast: 'toast',
+    BottomCTA: 'bottom-cta',
   } as const;
   return {
     name,
@@ -56,8 +71,23 @@ describe('component manifest', () => {
     expect(buildComponentManifest([])).toEqual({ schemaVersion: 1, components: [] });
   });
 
-  it('sorts all five entries in canonical order regardless of file order', () => {
+  it('sorts all twenty entries in canonical order regardless of file order', () => {
     const manifest = buildComponentManifest([
+      document('BottomCTA'),
+      document('Toast'),
+      document('ListRow'),
+      document('SearchField'),
+      document('Dialog'),
+      document('BottomSheet'),
+      document('Tab'),
+      document('BoardRow'),
+      document('IconButton'),
+      document('TextButton'),
+      document('Select'),
+      document('Textarea'),
+      document('Switch'),
+      document('RadioGroup'),
+      document('Checkbox'),
       document('ScrollArea'),
       document('TextField'),
       document('Button'),
@@ -65,26 +95,41 @@ describe('component manifest', () => {
       document('Icon'),
     ]);
     expect(manifest.components.map(({ name }) => name))
-      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']);
+      .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet', 'Dialog', 'SearchField', 'ListRow', 'Toast', 'BottomCTA']);
     expect(manifest.components.map(({ docsUrl }) => docsUrl)).toEqual([
       '/components/icon/',
       '/components/badge/',
       '/components/button/',
       '/components/text-field/',
       '/components/scroll-area/',
+      '/components/checkbox/',
+      '/components/radio-group/',
+      '/components/switch/',
+      '/components/textarea/',
+      '/components/select/',
+      '/components/text-button/',
+      '/components/icon-button/',
+      '/components/board-row/',
+      '/components/tab/',
+      '/components/bottom-sheet/',
+      '/components/dialog/',
+      '/components/search-field/',
+      '/components/list-row/',
+      '/components/toast/',
+      '/components/bottom-cta/',
     ]);
   });
 
   it('requires all entries before the release check can pass', () => {
     expect(() => buildComponentManifest([document('Icon')], { requireFigma: true }))
-      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea');
+      .toThrow('Release manifest is missing components: Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, SearchField, ListRow, Toast, BottomCTA');
   });
 
   it('requires a Figma URL on every complete release entry', () => {
-    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']
+    const documents = ['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea', 'Checkbox', 'RadioGroup', 'Switch', 'Textarea', 'Select', 'TextButton', 'IconButton', 'BoardRow', 'Tab', 'BottomSheet', 'Dialog', 'SearchField', 'ListRow', 'Toast', 'BottomCTA']
       .map((name) => document(name as ComponentMetadata['name']));
     expect(() => buildComponentManifest(documents, { requireFigma: true }))
-      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea');
+      .toThrow('Figma URLs are required for release: Icon, Badge, Button, TextField, ScrollArea, Checkbox, RadioGroup, Switch, Textarea, Select, TextButton, IconButton, BoardRow, Tab, BottomSheet, Dialog, SearchField, ListRow, Toast, BottomCTA');
   });
 
   it('renders stable two-space JSON with LF and a final newline', () => {

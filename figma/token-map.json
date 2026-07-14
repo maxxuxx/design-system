@@ -8,7 +8,7 @@
         "id": "5:0",
         "name": "Default"
       },
-      "variableCount": 32
+      "variableCount": 33
     },
     {
       "name": "Semantic Color",
@@ -17,7 +17,7 @@
         "id": "5:1",
         "name": "Default"
       },
-      "variableCount": 26
+      "variableCount": 27
     },
     {
       "name": "Spacing",
@@ -26,7 +26,7 @@
         "id": "5:2",
         "name": "Default"
       },
-      "variableCount": 20
+      "variableCount": 26
     },
     {
       "name": "Typography",
@@ -45,6 +45,15 @@
         "name": "Default"
       },
       "variableCount": 6
+    },
+    {
+      "name": "Motion",
+      "id": "VariableCollectionId:177:2",
+      "mode": {
+        "id": "177:0",
+        "name": "Default"
+      },
+      "variableCount": 3
     }
   ],
   "variables": [
@@ -146,6 +155,15 @@
       "variableId": "VariableID:6:12",
       "scopes": [],
       "webSyntax": "var(--ds-color-neutral-900)"
+    },
+    {
+      "tokenName": "color/neutral/900-alpha-56",
+      "tokenType": "COLOR",
+      "collection": "Primitives",
+      "collectionId": "VariableCollectionId:5:2",
+      "variableId": "VariableID:177:3",
+      "scopes": [],
+      "webSyntax": "var(--ds-color-neutral-900-alpha-56)"
     },
     {
       "tokenName": "color/blue/50",
@@ -548,6 +566,72 @@
       "webSyntax": "var(--ds-size-control-large)"
     },
     {
+      "tokenName": "size/selection/small",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:2",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-selection-small)"
+    },
+    {
+      "tokenName": "size/selection/medium",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:3",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-selection-medium)"
+    },
+    {
+      "tokenName": "size/switch/small-width",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:4",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-small-width)"
+    },
+    {
+      "tokenName": "size/switch/small-height",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:5",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-small-height)"
+    },
+    {
+      "tokenName": "size/switch/medium-width",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:6",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-medium-width)"
+    },
+    {
+      "tokenName": "size/switch/medium-height",
+      "tokenType": "FLOAT",
+      "collection": "Spacing",
+      "collectionId": "VariableCollectionId:5:4",
+      "variableId": "VariableID:137:7",
+      "scopes": [
+        "WIDTH_HEIGHT"
+      ],
+      "webSyntax": "var(--ds-size-switch-medium-height)"
+    },
+    {
       "tokenName": "font/size/caption",
       "tokenType": "FLOAT",
       "collection": "Typography",
@@ -854,6 +938,33 @@
       "webSyntax": "var(--ds-blur-subtle)"
     },
     {
+      "tokenName": "motion/duration/fast",
+      "tokenType": "FLOAT",
+      "collection": "Motion",
+      "collectionId": "VariableCollectionId:177:2",
+      "variableId": "VariableID:177:4",
+      "scopes": [],
+      "webSyntax": "var(--ds-motion-duration-fast)"
+    },
+    {
+      "tokenName": "motion/duration/medium",
+      "tokenType": "FLOAT",
+      "collection": "Motion",
+      "collectionId": "VariableCollectionId:177:2",
+      "variableId": "VariableID:177:5",
+      "scopes": [],
+      "webSyntax": "var(--ds-motion-duration-medium)"
+    },
+    {
+      "tokenName": "motion/easing/standard",
+      "tokenType": "STRING",
+      "collection": "Motion",
+      "collectionId": "VariableCollectionId:177:2",
+      "variableId": "VariableID:177:6",
+      "scopes": [],
+      "webSyntax": "var(--ds-motion-easing-standard)"
+    },
+    {
       "tokenName": "color/bg/canvas",
       "tokenType": "COLOR",
       "collection": "Semantic Color",
@@ -1153,6 +1264,18 @@
         "STROKE_COLOR"
       ],
       "webSyntax": "var(--ds-color-focus-ring)"
+    },
+    {
+      "tokenName": "color/bg/scrim",
+      "tokenType": "COLOR",
+      "collection": "Semantic Color",
+      "collectionId": "VariableCollectionId:5:3",
+      "variableId": "VariableID:177:7",
+      "scopes": [
+        "FRAME_FILL",
+        "SHAPE_FILL"
+      ],
+      "webSyntax": "var(--ds-color-bg-scrim)"
     }
   ],
   "styles": {

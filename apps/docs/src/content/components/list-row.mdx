@@ -1,0 +1,176 @@
+---
+name: ListRow
+slug: list-row
+description: 정보, 전체 행 동작, 화면 이동을 static div와 native button·anchor로 구분하는 flat row입니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [none, indented]
+sizes: []
+states: [default, pressed, disabled]
+accessibility: native div·button·anchor 의미, presentational left, exposed right, decorative arrow, action branch의 nested-control 금지를 보존합니다.
+props:
+  - name: title
+    type: string
+    required: true
+    defaultValue: null
+    description: 행의 주 정보이자 localizable visible copy입니다.
+  - name: description
+    type: string
+    required: false
+    defaultValue: null
+    description: title 아래에 표시하는 선택 설명입니다.
+  - name: left
+    type: ReactNode
+    required: false
+    defaultValue: null
+    description: assistive technology에서 숨기는 presentational leading content입니다.
+  - name: right
+    type: ReactNode
+    required: false
+    defaultValue: null
+    description: 의미를 노출하는 trailing content이며 interactive child는 static branch에만 허용됩니다.
+  - name: divider
+    type: "'none' | 'indented'"
+    required: false
+    defaultValue: none
+    description: 행 아래에 inset divider를 표시할지 정합니다.
+  - name: withArrow
+    type: boolean
+    required: false
+    defaultValue: "false"
+    description: 회전하지 않는 owned decorative ChevronRight를 표시합니다.
+  - name: href
+    type: string
+    required: false
+    defaultValue: null
+    description: string이면 native anchor branch를 선택하며 fake disabled로 바뀌지 않습니다.
+  - name: onClick
+    type: MouseEventHandler<HTMLButtonElement>
+    required: false
+    defaultValue: null
+    description: href가 없고 function이면 native button branch를 선택합니다.
+  - name: ...nativeProps
+    type: ListRowStaticProps | ListRowButtonProps | ListRowAnchorProps
+    required: false
+    defaultValue: null
+    description: 선택된 native root의 data·aria·form·navigation props와 정확한 forwarded ref를 보존하며 style은 safe layout 값만 적용합니다.
+tokens:
+  - size/control/large
+  - size/icon/medium
+  - space/0
+  - space/2
+  - space/4
+  - space/8
+  - space/12
+  - space/16
+  - radius/none
+  - font/family/sans
+  - font/size/body-sm
+  - font/size/body
+  - font/weight/medium
+  - font/line-height/body-sm
+  - font/line-height/body
+  - motion/duration/fast
+  - motion/easing/standard
+  - color/bg/surface
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/border/default
+  - color/action/weak
+  - color/action/weak-hover
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import ListRowExample from '../../components/examples/ListRowExample';
+
+## 예제
+
+<ComponentPreview title="ListRow static·button·link branch" description="trailing Switch를 가진 static row, native button·anchor, divider·arrow·disabled·long-copy 상태를 비교하세요.">
+  <ListRowExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+설정, 주문, 배송처럼 한 줄의 정보가 자체로 완결되거나 전체 행이 한 번의 동작 또는 화면 이동을 나타낼 때 사용합니다. 의미 있는 trailing control이 따로 필요하면 static branch의 `right`에 Switch 같은 control을 놓습니다.
+
+## 사용하지 말아야 할 때
+
+현재 문맥 안에서 상세 내용을 펼치는 disclosure에는 `BoardRow`를 사용합니다. whole-row button이나 link 안에 Button, anchor, input, select, textarea, summary 또는 positive tabindex descendant를 중첩하지 않습니다. asset loader, shine·blink, 임의 padding matrix는 ListRow의 책임이 아닙니다.
+
+## 구조
+
+root는 props에 따라 `div`, `button`, `a` 중 하나입니다. 내부에는 선택적인 presentational left, title과 description copy, 의미가 유지되는 right, 선택적인 owned decorative ChevronRight가 있습니다. left는 `aria-hidden="true"`, right는 노출 상태를 유지합니다.
+
+## 크기와 변형
+
+공개 size prop 없이 최소 56px 높이와 full-width flat geometry를 사용합니다. divider는 `none` 또는 `indented`, arrow는 별도 boolean입니다. Figma 계약은 `Divider None/Indented × State Default/Pressed/Disabled = 6` variants이며 native root 종류는 같은 시각 geometry를 공유합니다.
+
+## 상태와 동작
+
+runtime dispatch는 string `href`를 먼저 검사해 native anchor를 만들고, 그다음 function `onClick`으로 native button을 만들며, 둘 다 없으면 static div로 돌아갑니다. button의 기본 `type`은 `button`이고 native Enter·Space·form·disabled 동작을 유지합니다. anchor에는 실제 `href`가 남고 fake disabled 상태를 제공하지 않습니다. 개발과 테스트에서는 whole-row action root를 DOM에 렌더한 뒤 nested interactive descendant를 검증합니다.
+
+## 반응형 동작
+
+모든 region은 `min-inline-size: 0`과 `overflow-wrap: anywhere`를 사용합니다. 긴 localized copy와 공백 없는 문자열은 320px viewport와 200% text zoom에서도 page overflow 없이 content-driven height로 줄바꿈됩니다.
+
+## 접근성
+
+native element가 제공하는 의미와 keyboard 동작을 ARIA로 재구현하지 않습니다. left와 ChevronRight는 accessible name에서 제외되고 title, description, right는 노출됩니다. interactive right child는 static branch에만 허용됩니다. focus ring과 indented divider는 forced colors에서도 system color로 남으며 static trailing Switch의 자체 system-color 처리를 방해하지 않습니다.
+
+## React 예제
+
+```tsx
+import { ListRow, Switch } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function NotificationSetting() {
+  return (
+    <ListRow
+      description="주문 상태가 바뀌면 알려드려요."
+      divider="indented"
+      right={<Switch label="주문 알림" />}
+      title="알림 설정"
+    />
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `title` | `string` | required | localizable visible primary copy |
+| `description` | `string` | - | title 아래 선택 설명 |
+| `left` | `ReactNode` | - | `aria-hidden` presentational leading content |
+| `right` | `ReactNode` | - | exposed trailing content; interactive child는 static에서만 허용 |
+| `divider` | `'none' \| 'indented'` | `'none'` | inset divider |
+| `withArrow` | `boolean` | `false` | owned decorative ChevronRight |
+| `href` | `string` | - | native anchor branch; disabled prop 없음 |
+| `onClick` | <code>MouseEventHandler&lt;HTMLButtonElement&gt;</code> | - | native button branch; 기본 `type="button"` |
+| native props | `div \| button \| anchor` branch props | - | root별 native props와 정확한 ref; safe layout style만 보존 |
+
+</div>
+
+## 사용 토큰
+
+- geometry: `size/control/large`, `size/icon/medium`, `space/0`, `space/2`, `space/4`, `space/8`, `space/12`, `space/16`, `radius/none`
+- type와 motion: `font/family/sans`, `font/size/body-sm`, `font/size/body`, `font/weight/medium`, `font/line-height/body-sm`, `font/line-height/body`, `motion/duration/fast`, `motion/easing/standard`
+- color: `color/bg/surface`, `color/text/primary`, `color/text/secondary`, `color/text/disabled`, `color/border/default`, `color/action/weak`, `color/action/weak-hover`, `color/focus/ring`
+
+## Figma
+
+[live `ListRow` component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14)은 `Divider None/Indented × State Default/Pressed/Disabled = 6` variants와 `Title`, `Description`, `Right` TEXT, `Show left`, `Show description`, `Show right`, `Show arrow` BOOLEAN, `Left icon` INSTANCE_SWAP properties를 가집니다. Left icon은 owned `Icon/Info`를 기본으로 하고 다섯 owned Icon을 preferred swap으로 제한하며, 별도의 owned `Icon/ChevronRight`는 회전하지 않습니다. static·button·link는 같은 시각 geometry를 공유하는 구현 동작입니다. [TDS Mobile ListRow overview](https://tossmini-docs.toss.im/tds-mobile/components/ListRow/list-row-overview/)와 [components reference](https://tossmini-docs.toss.im/tds-mobile/components/ListRow/list-row-components/)를 참고하되 이 저장소는 native div·button·anchor overload와 strict nested-control 계약을 유지합니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

@@ -1,0 +1,165 @@
+---
+name: TextButton
+slug: text-button
+description: 텍스트 위계와 native button 또는 anchor 의미로 가벼운 행동과 이동을 표현합니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [clear, underline, arrow]
+sizes: [small, medium, large]
+states: [default, hover, pressed, focus-visible, visited, disabled]
+accessibility: native button과 anchor 의미, 44px minimum target, visible focus, persistent underline, button-only disabled, decorative owned arrow를 제공합니다.
+props:
+  - name: children
+    type: string
+    required: true
+    defaultValue: null
+    description: localizable visible accessible label입니다.
+  - name: href
+    type: string
+    required: false
+    defaultValue: null
+    description: 문자열이면 native anchor, 없으면 native button을 렌더링합니다.
+  - name: size
+    type: TextButtonSize
+    required: false
+    defaultValue: medium
+    description: small caption, medium body-small, large body typography tier입니다.
+  - name: variant
+    type: TextButtonVariant
+    required: false
+    defaultValue: clear
+    description: clear, persistent underline, owned arrow 표현입니다.
+  - name: tone
+    type: TextButtonTone
+    required: false
+    defaultValue: primary
+    description: semantic primary 또는 neutral text tone입니다.
+  - name: ...nativeProps
+    type: "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>"
+    required: false
+    defaultValue: null
+    description: href 분기의 native events·form·data·aria props와 ref입니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다.
+tokens:
+  - size/control/small
+  - size/icon/small
+  - space/0
+  - space/2
+  - space/4
+  - space/8
+  - space/12
+  - space/16
+  - radius/sm
+  - font/family/sans
+  - font/size/caption
+  - font/size/body-sm
+  - font/size/body
+  - font/line-height/caption
+  - font/line-height/body-sm
+  - font/line-height/body
+  - font/weight/semibold
+  - motion/duration/fast
+  - motion/easing/standard
+  - color/bg/subtle
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/action/primary
+  - color/action/primary-hover
+  - color/action/primary-pressed
+  - color/action/weak
+  - color/action/weak-hover
+  - color/action/on-weak
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import TextButtonExample from '../../components/examples/TextButtonExample';
+
+## 예제
+
+<ComponentPreview title="TextButton native 분기와 상태" description="요소, 크기, 변형, 톤, button disabled를 바꾸고 전체 specimen을 비교하세요.">
+  <TextButtonExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+화면 안의 가벼운 보조 행동, 낮은 위계의 command, 문맥을 유지하는 상세 이동에 사용합니다. 이동은 `href`를 제공해 anchor로, 현재 화면의 동작은 button으로 표현합니다.
+
+## 사용하지 말아야 할 때
+
+폼 제출이나 결제처럼 강한 시각 위계가 필요한 주 행동에는 Button을 사용합니다. icon만으로 충분한 compact action에는 IconButton을 사용하고, `href` 없이 페이지 이동을 흉내 내지 않습니다.
+
+## 구조
+
+root native `button` 또는 `a` 안에 string label이 있습니다. `arrow`만 library가 소유하는 decorative `Icon/ChevronRight`를 trailing 위치에 추가하며 임의 icon slot은 받지 않습니다.
+
+## 크기와 변형
+
+`small`, `medium`, `large`는 각각 caption, body-small, body typography를 사용하면서 모두 44px minimum target을 지킵니다. `clear`는 persistent decoration이 없고, `underline`은 hover 전에도 밑줄이 보이며, `arrow`는 owned chevron으로 이동 방향을 보조합니다.
+
+## 상태와 동작
+
+기본값은 `size="medium"`, `variant="clear"`, `tone="primary"`입니다. primary와 neutral tone은 semantic action/text token만 사용합니다. hover, pressed, focus-visible, visited anchor는 구분되며 native `disabled`는 button 분기에만 존재합니다. anchor에 fake disabled state를 만들지 않습니다.
+
+## 반응형 동작
+
+TextButton은 320px content에서도 label을 줄바꿈하고 container 경계를 넘지 않습니다. 같은 API가 mobile, tablet, desktop에 적용되며 caller class로 주변 layout을 확장할 수 있습니다. Inline `style`은 외부 배치용 margin, order, self alignment, grid placement만 보존하고 component-owned 색상, 배경, target 크기, flex sizing은 무시합니다.
+
+## 접근성
+
+button은 Enter와 Space activation 및 form semantics를, anchor는 navigation과 visited semantics를 브라우저에 맡깁니다. 모든 크기는 44px minimum pointer target과 normal/forced-colors focus indicator를 유지합니다. arrow icon은 `aria-hidden="true"`이고 accessible name은 localizable string label만 사용합니다.
+
+## React 예제
+
+```tsx
+import { TextButton } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function HelpActions() {
+  return (
+    <nav aria-label="도움말">
+      <TextButton href="/refunds" variant="underline">
+        환불 정책
+      </TextButton>
+      <TextButton type="button" variant="arrow">
+        다음 단계
+      </TextButton>
+    </nav>
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `children` | `string` | required | localizable visible accessible label |
+| `href` | `string` | 없음 | 제공하면 native anchor, 없으면 native button |
+| `size` | `'small' \| 'medium' \| 'large'` | `'medium'` | caption/body-small/body tier, 모두 44px minimum target |
+| `variant` | `'clear' \| 'underline' \| 'arrow'` | `'clear'` | persistent decoration 또는 owned ChevronRight |
+| `tone` | `'primary' \| 'neutral'` | `'primary'` | semantic action/text color hierarchy |
+| native props | <code>AnchorHTMLAttributes&lt;HTMLAnchorElement&gt; \| ButtonHTMLAttributes&lt;HTMLButtonElement&gt;</code> | 분기별 기본값 | events·form·data·aria props와 분기별 ref; `style`은 외부 배치 whitelist만 보존, owned geometry/state와 dangerous HTML은 무시 |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/small`, `size/icon/small`, `space/0`, `space/2`, `space/4`, `space/8`, `space/12`, `space/16`, `radius/sm`
+- `font/family/sans`, caption/body-small/body size와 line-height, `font/weight/semibold`
+- `motion/duration/fast`, `motion/easing/standard`, `color/action/*`, `color/text/*`, `color/bg/subtle`, `color/focus/ring`
+
+## Figma
+
+[TextButton component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121)은 `Size 3 × Variant 3 × State Default/Pressed/Disabled = 27` variants와 `Label` TEXT property를 가집니다. Arrow variant는 owned `Icon/ChevronRight` instance를 사용하고 visited anchor는 browser content state라 variant axis에서 제외합니다. Underline은 TEXT property의 variant 간 style 동기화를 피하기 위해 token-bound structural underline layer로 표현합니다. 구현 방향은 [TDS Mobile TextButton reference](https://tossmini-docs.toss.im/tds-mobile/components/text-button/)와 함께 검토합니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

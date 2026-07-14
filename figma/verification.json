@@ -1,14 +1,15 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-11T23:28:37+09:00",
+  "verifiedAt": "2026-07-14T15:00:12+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
     "Semantic Color",
     "Spacing",
     "Typography",
-    "Radius"
+    "Radius",
+    "Motion"
   ],
   "textStyleCount": 8,
   "effectStyleCount": 2,
@@ -23,10 +24,25 @@
     "04.3 Button",
     "04.4 TextField",
     "04.5 ScrollArea",
+    "04.6 Checkbox",
+    "04.7 RadioGroup",
+    "04.8 Switch",
+    "04.9 Textarea",
+    "04.10 Select",
+    "04.11 TextButton",
+    "04.12 IconButton",
+    "04.13 BoardRow",
+    "04.14 Tab",
+    "04.15 BottomSheet",
+    "04.16 Dialog",
+    "04.17 SearchField",
+    "04.18 ListRow",
+    "04.19 Toast",
+    "04.20 BottomCTA",
     "90 Native Differences",
     "99 Deprecated"
   ],
-  "tokenValuesSha256": "52c1bbc62267e017de3dff501cc89580d5eaaf4dce10f692851c7d9ec0b944d3",
+  "tokenValuesSha256": "40b2ff9c96c11d969cee7b9da7af3e1e9de28c5f86f4a983a823cd6dbbb0289a",
   "effectValuesSha256": "e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8",
   "effectReadback": [
     {
@@ -81,16 +97,31 @@
     }
   ],
   "pageScreenshotSha256": {
-    "00 Cover": "c77e8b4b72feed70637ebccd24bac7443b83e6b30672faf7cd2d98f6a9361a13",
+    "00 Cover": "4602fa11f94696ed924d4078514d236bb05e7ef74de1c528a179419d8a29e76e",
     "01 Principles": "4002e3e8df110e06171a6b69a24e9b9dfb208eec633f2947e1470b185daa3625",
     "02 Getting Started": "2f4295f5dbe155b152639eaa149162d52b82fbf2fc7e0cbcd670b34ee0836071",
-    "03 Foundations": "2b485fb08296d97003856a116cba19958e4edaaa0922dca25fbf36ab5f9729d3",
+    "03 Foundations": "c3f132507d8a8ef4bd6e9690d099419ae849f047788f09311b860768c3cc6ebd",
     "04 Components": "748cc65b960ebc1a4bc87694a215dc173ec59d8cfa588048cf44922f03d9434c",
     "04.1 Icon": "ef4c59b98e2884752a85a7529dd4fda0bbd2d57c6b5b97abc31aae179a9ae09d",
-    "04.2 Badge": "273987be72319f7b9e48726632074c8475b58749227b155555fe27477506bd0f",
-    "04.3 Button": "ae5b3d09b20f974fc5ea439e4e4da8c1ca6d3f4168fcd291ed7cd3788a73e2a8",
-    "04.4 TextField": "ac62db900a8c7560d993392d0173874a1db8c6da75fabc8fee489d75a8274117",
-    "04.5 ScrollArea": "a46826086c4267d6de0f613e462997b7d8a471960e8db6b0e137c40eb865ec77",
+    "04.2 Badge": "183ebf9fdf84d6667526328f88b209d9ecdeeb3db5100d559e745d2fdf79b2ba",
+    "04.3 Button": "8ff05ea41d421d9276c7cb00848ad20d1e68b7b45e68e06ce14deb4a6e651df2",
+    "04.4 TextField": "7e768e590af79626dc178136537f4c9ab2da4323e278de7b102fb3cea31e84d3",
+    "04.5 ScrollArea": "04be530d2b892a693d73cca90745f01ec0b9089c4f86e698ef4c29c094a6ad64",
+    "04.6 Checkbox": "72185543d79c8ab482e5b975d261cc47783c573f45175bf6d74f0ab8acb93b38",
+    "04.7 RadioGroup": "a0bc1871d5a0f54b41d60adc7f60649f865536065baa26b50fb2551b9ea6d7df",
+    "04.8 Switch": "88e54ade7faafefda00a8378214e7a9d2b8e52ef86ec76982984f0bb0f97b6d5",
+    "04.9 Textarea": "3254f47a9b5317cdbb34228a73bdf4c50005ffb92789034a905d6ca02c3a02cd",
+    "04.10 Select": "e597e4ac9209c26e34c394df64757b60bb39c940fee8ed77f80a96fd22a6424f",
+    "04.11 TextButton": "3e09fe0e6e2fdf0d70953dcce64780539390aa330a6f41589e11aa56e6e8619d",
+    "04.12 IconButton": "2f5c0a27aaa44a60be94f796467b35a57ea4040b397dfe0e3851e04e9fee9203",
+    "04.13 BoardRow": "dc767d45ae6861b9a94ed53514979dadc761a46ddcf74f5dee5af2addd0d17d8",
+    "04.14 Tab": "eafc4a14e547ff3fdc8d3c13d0f6d7451b64e298479ecb547e8fa73df89cf539",
+    "04.15 BottomSheet": "740a7f33c4d14b2f1a3915579b42396dfa0c74197fe8f846e66e5153786572d1",
+    "04.16 Dialog": "c861063fbeb4ac51a97797eec1e1b9ca6905d81e24c2833e08fe9ce4fd5113eb",
+    "04.17 SearchField": "e53117e1bc17ffe727c87fd42b07e13c8681e10432d781946135cc5d87b553c2",
+    "04.18 ListRow": "38f0975fdbe50d9bf1fd6982bd5d28933a79678d3c05263e31eaff0a6d57f0ff",
+    "04.19 Toast": "5018b9a4f38e76e31c4cda142f0263a5feaf9d18dabd6fa1bf848c971d206cc5",
+    "04.20 BottomCTA": "e0daa225ea23a82abf38a92735e92fd8b1818125cf4e64dc4e62eda2ba59addb",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -128,6 +159,11 @@
     "Badge": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=47-2",
       "variantCount": 16,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Variant", "values": ["Soft", "Solid"] },
+        { "name": "Tone", "values": ["Neutral", "Primary", "Success", "Danger"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -141,6 +177,11 @@
     "Button": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=65-56",
       "variantCount": 27,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium", "Large"] },
+        { "name": "Variant", "values": ["Fill", "Weak", "Outline"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -174,6 +215,10 @@
     "TextField": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50",
       "variantCount": 8,
+      "axes": [
+        { "name": "Size", "values": ["Medium", "Large"] },
+        { "name": "State", "values": ["Default", "Focus", "Error", "Disabled"] }
+      ],
       "properties": [
         {
           "name": "Label",
@@ -199,7 +244,332 @@
     "ScrollArea": {
       "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=115-6",
       "variantCount": 4,
+      "axes": [
+        { "name": "State", "values": ["No overflow", "Start", "Middle", "End"] }
+      ],
       "properties": [],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Checkbox": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=139-176",
+      "variantCount": 18,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Value", "values": ["Unchecked", "Checked", "Indeterminate"] },
+        { "name": "State", "values": ["Default", "Error", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        },
+        {
+          "name": "Description",
+          "type": "TEXT"
+        },
+        {
+          "name": "Error",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "RadioGroup": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=147-272",
+      "variantCount": 18,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Selection", "values": ["None", "First", "Second"] },
+        { "name": "State", "values": ["Default", "Error", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Legend",
+          "type": "TEXT"
+        },
+        {
+          "name": "Option 1",
+          "type": "TEXT"
+        },
+        {
+          "name": "Option 2",
+          "type": "TEXT"
+        },
+        {
+          "name": "Option 3",
+          "type": "TEXT"
+        },
+        {
+          "name": "Description",
+          "type": "TEXT"
+        },
+        {
+          "name": "Error",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Switch": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122",
+      "variantCount": 12,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium"] },
+        { "name": "Value", "values": ["Off", "On"] },
+        { "name": "State", "values": ["Default", "Error", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        },
+        {
+          "name": "Description",
+          "type": "TEXT"
+        },
+        {
+          "name": "Error",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Textarea": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=158-56",
+      "variantCount": 8,
+      "axes": [
+        { "name": "Size", "values": ["Medium", "Large"] },
+        { "name": "State", "values": ["Default", "Focus", "Error", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        },
+        {
+          "name": "Value",
+          "type": "TEXT"
+        },
+        {
+          "name": "Description",
+          "type": "TEXT"
+        },
+        {
+          "name": "Error",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Select": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72",
+      "variantCount": 8,
+      "axes": [
+        { "name": "Size", "values": ["Medium", "Large"] },
+        { "name": "State", "values": ["Default", "Focus", "Error", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        },
+        {
+          "name": "Value",
+          "type": "TEXT"
+        },
+        {
+          "name": "Description",
+          "type": "TEXT"
+        },
+        {
+          "name": "Error",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "TextButton": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121",
+      "variantCount": 27,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium", "Large"] },
+        { "name": "Variant", "values": ["Clear", "Underline", "Arrow"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Label",
+          "type": "TEXT"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "IconButton": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134",
+      "variantCount": 27,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Medium", "Large"] },
+        { "name": "Variant", "values": ["Clear", "Fill", "Outline"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
+      "properties": [
+        {
+          "name": "Icon",
+          "type": "INSTANCE_SWAP"
+        }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "BoardRow": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38",
+      "variantCount": 4,
+      "axes": [
+        { "name": "Value", "values": ["Closed", "Open"] },
+        { "name": "State", "values": ["Default", "Pressed"] }
+      ],
+      "properties": [
+        { "name": "Title", "type": "TEXT" },
+        { "name": "Description", "type": "TEXT" },
+        { "name": "Prefix", "type": "TEXT" },
+        { "name": "Show description", "type": "BOOLEAN" },
+        { "name": "Show prefix", "type": "BOOLEAN" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Tab": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59",
+      "variantCount": 12,
+      "axes": [
+        { "name": "Size", "values": ["Small", "Large"] },
+        { "name": "Layout", "values": ["Equal", "Scroll"] },
+        { "name": "Selection", "values": ["First", "Second", "Third"] }
+      ],
+      "properties": [
+        { "name": "First label", "type": "TEXT" },
+        { "name": "Second label", "type": "TEXT" },
+        { "name": "Third label", "type": "TEXT" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "BottomSheet": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66",
+      "variantCount": 4,
+      "axes": [
+        { "name": "Height", "values": ["Content", "Full"] },
+        { "name": "Footer", "values": ["Hidden", "Visible"] }
+      ],
+      "properties": [
+        { "name": "Title", "type": "TEXT" },
+        { "name": "Description", "type": "TEXT" },
+        { "name": "Show description", "type": "BOOLEAN" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Dialog": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=219-48",
+      "variantCount": 4,
+      "axes": [
+        { "name": "Type", "values": ["Alert", "Confirm"] },
+        { "name": "Description", "values": ["Hidden", "Visible"] }
+      ],
+      "properties": [
+        { "name": "Title", "type": "TEXT" },
+        { "name": "Description", "type": "TEXT" },
+        { "name": "Alert label", "type": "TEXT" },
+        { "name": "Cancel label", "type": "TEXT" },
+        { "name": "Confirm label", "type": "TEXT" },
+        { "name": "Show description", "type": "BOOLEAN" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "SearchField": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19",
+      "variantCount": 8,
+      "axes": [
+        { "name": "Value", "values": ["Empty", "Filled"] },
+        { "name": "State", "values": ["Default", "Focus", "Disabled", "ReadOnly"] }
+      ],
+      "properties": [
+        { "name": "Placeholder", "type": "TEXT" },
+        { "name": "Value", "type": "TEXT" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "ListRow": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14",
+      "variantCount": 6,
+      "axes": [
+        { "name": "Divider", "values": ["None", "Indented"] },
+        { "name": "State", "values": ["Default", "Pressed", "Disabled"] }
+      ],
+      "properties": [
+        { "name": "Title", "type": "TEXT" },
+        { "name": "Description", "type": "TEXT" },
+        { "name": "Right", "type": "TEXT" },
+        { "name": "Show left", "type": "BOOLEAN" },
+        { "name": "Show description", "type": "BOOLEAN" },
+        { "name": "Show right", "type": "BOOLEAN" },
+        { "name": "Show arrow", "type": "BOOLEAN" },
+        { "name": "Left icon", "type": "INSTANCE_SWAP" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "Toast": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274",
+      "variantCount": 6,
+      "axes": [
+        { "name": "Tone", "values": ["Neutral", "Success", "Danger"] },
+        { "name": "Action", "values": ["Hidden", "Visible"] }
+      ],
+      "properties": [
+        { "name": "Message", "type": "TEXT" },
+        { "name": "Action label", "type": "TEXT" },
+        { "name": "Show icon", "type": "BOOLEAN" },
+        { "name": "Icon", "type": "INSTANCE_SWAP" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
+    },
+    "BottomCTA": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=331-55",
+      "variantCount": 4,
+      "axes": [
+        { "name": "Layout", "values": ["Single", "Double"] },
+        { "name": "Background", "values": ["Default", "None"] }
+      ],
+      "properties": [
+        { "name": "Primary label", "type": "TEXT" },
+        { "name": "Secondary label", "type": "TEXT" }
+      ],
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
@@ -207,7 +577,7 @@
   },
   "foundations": {
     "approved": true,
-    "approvedAt": "2026-07-10T23:08:13+09:00",
+    "approvedAt": "2026-07-12T12:53:48+09:00",
     "tokenParity": true
   },
   "pageScreenshotNodeIds": {
@@ -221,6 +591,21 @@
     "04.3 Button": "9:9",
     "04.4 TextField": "9:10",
     "04.5 ScrollArea": "111:2",
+    "04.6 Checkbox": "138:2",
+    "04.7 RadioGroup": "147:2",
+    "04.8 Switch": "151:2",
+    "04.9 Textarea": "158:2",
+    "04.10 Select": "168:2",
+    "04.11 TextButton": "182:2",
+    "04.12 IconButton": "189:17",
+    "04.13 BoardRow": "195:2",
+    "04.14 Tab": "200:2",
+    "04.15 BottomSheet": "208:19",
+    "04.16 Dialog": "213:2",
+    "04.17 SearchField": "230:29",
+    "04.18 ListRow": "248:6",
+    "04.19 Toast": "316:2",
+    "04.20 BottomCTA": "329:2",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

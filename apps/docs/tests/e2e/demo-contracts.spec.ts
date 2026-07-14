@@ -1,5 +1,5 @@
 import { expect, test, type Locator } from '@playwright/test';
-import { expectVisibleFocus } from './support/accessibility';
+import { expectVisibleFocus, tabTo } from './support/accessibility';
 import { openHtmlRoute } from './support/routes';
 
 async function expectMinimumTarget(locator: Locator, minimum = 44): Promise<void> {
@@ -50,6 +50,43 @@ function resolvedBlurPixels(value: string): number | null {
 }
 
 type ScrollAreaState = 'no-overflow' | 'start' | 'middle' | 'end';
+
+test('Toast demo controls and action expose 44px native targets', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns Toast target coverage.');
+  await openHtmlRoute(page, { path: '/components/toast/', heading: 'Toast' });
+  const demo = page.locator('[data-component-demo="toast"]');
+  const controls = demo.locator('[data-toast-trigger]');
+  await expect(controls).toHaveCount(8);
+  for (const control of await controls.all()) await expectMinimumTarget(control);
+
+  await demo.getByRole('button', { name: '실행 취소 알림' }).click();
+  await expectMinimumTarget(page.getByRole('button', { name: '되돌리기' }));
+});
+
+test('Toast in-flow specimens stay contained at 320px', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns Toast containment coverage.');
+  await page.setViewportSize({ width: 320, height: 720 });
+  await openHtmlRoute(page, { path: '/components/toast/', heading: 'Toast' });
+  const specimens = page.locator('[data-toast-specimen]');
+  await expect(specimens).toHaveCount(3);
+  const contained = await specimens.evaluateAll((elements) =>
+    elements.every((element) => {
+      const box = element.getBoundingClientRect();
+      return box.left >= 0 && box.right <= document.documentElement.clientWidth;
+    }),
+  );
+  expect(contained).toBe(true);
+});
+
+test('BottomCTA actions expose 44px targets in secondary-primary order', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns BottomCTA target coverage.');
+  await openHtmlRoute(page, { path: '/components/bottom-cta/', heading: 'BottomCTA' });
+  const double = page.locator('[data-bottom-cta-sample="double"]');
+  const actions = double.getByRole('button');
+
+  await expect(actions).toHaveText(['취소', '확인']);
+  for (const action of await actions.all()) await expectMinimumTarget(action);
+});
 
 async function expectScrollAreaState(
   root: Locator,
@@ -285,6 +322,127 @@ test('mobile demos use one-column controls and item stacks without shrinking the
   expect(itemDirection).toBe('column');
 });
 
+const formControlLayouts = [
+  {
+    heading: 'Checkbox',
+    itemSelector: '.checkbox-demo__specimen',
+    path: '/components/checkbox/',
+    slug: 'checkbox',
+  },
+  {
+    heading: 'RadioGroup',
+    itemSelector: '.radio-group-demo__specimen',
+    path: '/components/radio-group/',
+    slug: 'radio-group',
+  },
+  {
+    heading: 'Switch',
+    itemSelector: '.switch-demo__specimen',
+    path: '/components/switch/',
+    slug: 'switch',
+  },
+  {
+    heading: 'Textarea',
+    itemSelector: '.textarea-demo > .ds-textarea',
+    path: '/components/textarea/',
+    slug: 'textarea',
+  },
+  {
+    heading: 'Select',
+    itemSelector: '.select-demo > .ds-select',
+    path: '/components/select/',
+    slug: 'select',
+  },
+] as const;
+
+for (const layout of formControlLayouts) {
+  test(`${layout.heading} mobile demo keeps controls and specimens in one column`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns form-control column coverage.');
+
+    await openHtmlRoute(page, { path: layout.path, heading: layout.heading });
+    const demo = page.locator(`[data-component-demo="${layout.slug}"]`);
+    const controls = demo.locator('.component-demo__controls > *');
+    const items = demo.locator(layout.itemSelector);
+    expect(await controls.count()).toBeGreaterThanOrEqual(2);
+    expect(await items.count()).toBeGreaterThanOrEqual(2);
+
+    const [firstControl, secondControl, firstItem, secondItem] = await Promise.all([
+      controls.nth(0).boundingBox(),
+      controls.nth(1).boundingBox(),
+      items.nth(0).boundingBox(),
+      items.nth(1).boundingBox(),
+    ]);
+    expect(firstControl).not.toBeNull();
+    expect(secondControl).not.toBeNull();
+    expect(firstItem).not.toBeNull();
+    expect(secondItem).not.toBeNull();
+    expect(Math.abs(firstControl!.x - secondControl!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondControl!.y).toBeGreaterThan(firstControl!.y);
+    expect(Math.abs(firstItem!.x - secondItem!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondItem!.y).toBeGreaterThan(firstItem!.y);
+    expect(await page.evaluate(() =>
+      document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  });
+}
+
+for (const layout of formControlLayouts.slice(0, 3)) {
+  test(`${layout.heading} desktop specimens use multiple columns`, async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns multi-column specimen coverage.');
+
+    await openHtmlRoute(page, { path: layout.path, heading: layout.heading });
+    const items = page.locator(`[data-component-demo="${layout.slug}"] ${layout.itemSelector}`);
+    expect(await items.count()).toBeGreaterThanOrEqual(2);
+    const firstRowCount = await items.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5).length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  });
+}
+
+test('form-control copy wraps unbroken content without mobile page overflow', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns unbroken-copy overflow coverage.');
+
+  const copySelectors = {
+    checkbox: '.ds-checkbox__label, .ds-checkbox__description, .ds-checkbox__error',
+    'radio-group': '.ds-radio-group__legend, .ds-radio-group__option-label, .ds-radio-group__option-description, .ds-radio-group__description, .ds-radio-group__error',
+    select: '.ds-select__label, .ds-select__description, .ds-select__error',
+    switch: '.ds-switch__label, .ds-switch__description, .ds-switch__error',
+    textarea: '.ds-textarea__label, .ds-textarea__description, .ds-textarea__error',
+  } as const;
+  const unbroken = 'VeryLongUnbrokenFormControlCopy'.repeat(40);
+
+  for (const layout of formControlLayouts) {
+    await openHtmlRoute(page, { path: layout.path, heading: layout.heading });
+    const copy = page.locator(`[data-component-demo="${layout.slug}"]`)
+      .locator(copySelectors[layout.slug]);
+    expect(await copy.count()).toBeGreaterThan(0);
+    await copy.evaluateAll((elements, value) => {
+      elements.forEach((element) => { element.textContent = value; });
+    }, unbroken);
+
+    const copyFits = await copy.evaluateAll((elements) => elements.every((element) => {
+      const owner = element.closest(
+        '.ds-checkbox, .ds-radio-group, .ds-switch, .ds-textarea, .ds-select',
+      );
+      if (!owner) return false;
+      const copyRect = element.getBoundingClientRect();
+      const ownerRect = owner.getBoundingClientRect();
+      return copyRect.left >= ownerRect.left - 0.5
+        && copyRect.right <= ownerRect.right + 0.5
+        && element.scrollWidth <= element.clientWidth + 0.5;
+    }));
+
+    const result = await page.evaluate(() => ({
+      clientWidth: document.documentElement.clientWidth,
+      scrollWidth: document.documentElement.scrollWidth,
+    }));
+    expect(copyFits, `${layout.heading} copy must wrap inside its component`).toBe(true);
+    expect(result.scrollWidth, `${layout.heading} must not overflow`).toBeLessThanOrEqual(result.clientWidth);
+  }
+});
+
 test('Icon demo switches its selected icon between labelled and decorative semantics', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/icon/', heading: 'Icon' });
   const demo = page.locator('[data-component-demo="icon"]');
@@ -331,6 +489,724 @@ test('Button exposes a forced-colors keyboard focus outline', async ({ page }, t
   await expectForcedColorFocus(button);
 });
 
+test('TextButton exposes all tiers, tones, variants, owned arrows, and 44px targets', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  const demo = page.locator('[data-component-demo="text-button"]');
+  const targets = demo.locator('.ds-text-button');
+
+  expect(await targets.count()).toBeGreaterThanOrEqual(9);
+  for (const target of await targets.all()) await expectMinimumTarget(target);
+  expect(
+    await targets.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-size')))],
+    ),
+  ).toEqual(expect.arrayContaining(['small', 'medium', 'large']));
+  expect(
+    await targets.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-tone')))],
+    ),
+  ).toEqual(expect.arrayContaining(['primary', 'neutral']));
+  expect(
+    await targets.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-variant')))],
+    ),
+  ).toEqual(expect.arrayContaining(['clear', 'underline', 'arrow']));
+
+  const arrowTargets = targets.filter({
+    has: page.locator('.ds-text-button__icon'),
+  });
+  expect(await arrowTargets.count()).toBeGreaterThan(0);
+  await expect(
+    arrowTargets.locator('.ds-text-button__icon .ds-icon').first(),
+  ).toHaveAttribute('aria-hidden', 'true');
+  await expect(
+    targets.filter({ hasNot: page.locator('.ds-text-button__icon') }),
+  ).not.toHaveCount(0);
+});
+
+test('TextButton keeps responsive specimens and long copy inside the page', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  const demo = page.locator('[data-component-demo="text-button"]');
+  const controls = demo.locator('.component-demo__controls > *');
+  const specimens = demo.locator('.text-button-demo__specimen');
+  const longLabel = demo.locator('[data-text-button-sample="long-label"]');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [firstControl, secondControl, firstSpecimen, secondSpecimen] =
+      await Promise.all([
+        controls.nth(0).boundingBox(),
+        controls.nth(1).boundingBox(),
+        specimens.nth(0).boundingBox(),
+        specimens.nth(1).boundingBox(),
+      ]);
+    expect(firstControl).not.toBeNull();
+    expect(secondControl).not.toBeNull();
+    expect(firstSpecimen).not.toBeNull();
+    expect(secondSpecimen).not.toBeNull();
+    expect(Math.abs(firstControl!.x - secondControl!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondControl!.y).toBeGreaterThan(firstControl!.y);
+    expect(Math.abs(firstSpecimen!.x - secondSpecimen!.x)).toBeLessThanOrEqual(0.5);
+    expect(secondSpecimen!.y).toBeGreaterThan(firstSpecimen!.y);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const firstRowCount = await specimens.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5)
+        .length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  }
+
+  const longCopyFits = await longLabel.evaluate((element) => {
+    const owner = element.closest<HTMLElement>('.text-button-demo__specimen');
+    if (!owner) return false;
+    const copyRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return copyRect.left >= ownerRect.left - 0.5
+      && copyRect.right <= ownerRect.right + 0.5
+      && element.scrollWidth <= element.clientWidth + 0.5;
+  });
+  expect(longCopyFits).toBe(true);
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('TextButton exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns forced-colors component focus.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, {
+    path: '/components/text-button/',
+    heading: 'TextButton',
+  });
+  const demo = page.locator('[data-component-demo="text-button"]');
+  const target = demo.locator(
+    '[data-text-button-sample="interactive"] .ds-text-button',
+  );
+  await demo.getByLabel('disabled', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(target);
+});
+
+test('IconButton exposes all icons, sizes, variants, and exact pointer boxes', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  const demo = page.locator('[data-component-demo="icon-button"]');
+  const specimens = demo.locator('[data-icon-button-specimen]');
+
+  expect(await specimens.count()).toBeGreaterThanOrEqual(15);
+  expect(
+    await specimens.evaluateAll((elements) =>
+      [...new Set(elements.map((element) =>
+        element.getAttribute('data-icon-button-name')))],
+    ),
+  ).toEqual(expect.arrayContaining([
+    'check',
+    'chevron-right',
+    'close',
+    'info',
+    'search',
+  ]));
+  expect(
+    await specimens.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-size')))],
+    ),
+  ).toEqual(expect.arrayContaining(['small', 'medium', 'large']));
+  expect(
+    await specimens.evaluateAll((elements) =>
+      [...new Set(elements.map((element) => element.getAttribute('data-variant')))],
+    ),
+  ).toEqual(expect.arrayContaining(['clear', 'fill', 'outline']));
+
+  const geometry = await specimens.evaluateAll((elements) =>
+    elements.map((element) => {
+      const icon = element.querySelector<SVGElement>('.ds-icon')!;
+      const box = element.getBoundingClientRect();
+      const iconBox = icon.getBoundingClientRect();
+      return {
+        box: `${box.width}x${box.height}`,
+        icon: `${iconBox.width}x${iconBox.height}`,
+        size: element.getAttribute('data-size'),
+      };
+    }),
+  );
+  expect(
+    [...new Set(geometry.map(({ box }) => box))].sort(),
+  ).toEqual(['44x44', '48x48', '56x56']);
+  expect(
+    geometry.filter(({ size }) => size === 'small').every(({ icon }) =>
+      icon === '20x20'),
+  ).toBe(true);
+  expect(
+    geometry.filter(({ size }) => size !== 'small').every(({ icon }) =>
+      icon === '24x24'),
+  ).toBe(true);
+  for (const target of await specimens.all()) await expectMinimumTarget(target);
+});
+
+test('IconButton specimens remain responsive without page overflow', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  const demo = page.locator('[data-component-demo="icon-button"]');
+  const specimens = demo.locator('.icon-button-demo__specimen');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [first, second] = await Promise.all([
+      specimens.nth(0).boundingBox(),
+      specimens.nth(1).boundingBox(),
+    ]);
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(Math.abs(first!.x - second!.x)).toBeLessThanOrEqual(0.5);
+    expect(second!.y).toBeGreaterThan(first!.y);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const firstRowCount = await specimens.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5)
+        .length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  }
+
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('BoardRow owns native disclosure structure, arrow, pointer geometry, and noninteractive summaries', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const rows = demo.locator('.ds-board-row');
+  const summaries = rows.locator(':scope > .ds-board-row__summary');
+
+  expect(await rows.count()).toBeGreaterThanOrEqual(3);
+  for (const summary of await summaries.all()) {
+    const summaryBox = await summary.boundingBox();
+    const row = summary.locator('..');
+    const rowBox = await row.boundingBox();
+    const rowInnerWidth = await row.evaluate((element) => element.clientWidth);
+    expect(summaryBox).not.toBeNull();
+    expect(rowBox).not.toBeNull();
+    expect(summaryBox!.height).toBeGreaterThanOrEqual(56);
+    expect(Math.abs(summaryBox!.width - rowInnerWidth)).toBeLessThanOrEqual(0.5);
+  }
+  await expect(summaries.locator('.ds-board-row__arrow .ds-icon').first())
+    .toHaveAttribute('aria-hidden', 'true');
+  await expect(
+    summaries.locator('a, button, input, select, textarea, [tabindex]'),
+  ).toHaveCount(0);
+});
+
+test('BoardRow keeps long copy and responsive specimens inside the page', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const specimens = demo.locator('.board-row-demo__specimen');
+  const longRow = demo.locator('[data-board-row-sample="long-copy"]');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [first, second] = await Promise.all([
+      specimens.nth(0).boundingBox(),
+      specimens.nth(1).boundingBox(),
+    ]);
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(Math.abs(first!.x - second!.x)).toBeLessThanOrEqual(0.5);
+    expect(second!.y).toBeGreaterThan(first!.y);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    const firstRowCount = await specimens.evaluateAll((elements) => {
+      const firstTop = elements[0]?.getBoundingClientRect().top;
+      return elements.filter((element) =>
+        Math.abs(element.getBoundingClientRect().top - (firstTop ?? 0)) <= 0.5)
+        .length;
+    });
+    expect(firstRowCount).toBeGreaterThan(1);
+  }
+
+  const longCopyFits = await longRow.evaluate((element) => {
+    const owner = element.closest<HTMLElement>('.board-row-demo__specimen');
+    if (!owner) return false;
+    const rowRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return rowRect.left >= ownerRect.left - 0.5
+      && rowRect.right <= ownerRect.right + 0.5
+      && element.scrollWidth <= element.clientWidth + 0.5;
+  });
+  expect(longCopyFits).toBe(true);
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('BoardRow exposes a complete forced-colors interaction palette and removes arrow motion when requested', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns BoardRow platform state coverage.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await openHtmlRoute(page, {
+    path: '/components/board-row/',
+    heading: 'BoardRow',
+  });
+  const demo = page.locator('[data-component-demo="board-row"]');
+  const summary = demo.locator(
+    '[data-board-row-sample="uncontrolled"] > summary',
+  );
+  const system = await page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:absolute;left:-9999px;forced-color-adjust:none;color:HighlightText';
+    document.body.append(probe);
+    const highlightText = getComputedStyle(probe).color;
+    probe.style.color = 'CanvasText';
+    const canvasText = getComputedStyle(probe).color;
+    probe.remove();
+    return { canvasText, highlightText };
+  });
+  const openContent = demo.locator(
+    '[data-board-row-sample="long-copy"] > .ds-board-row__content',
+  );
+  await expect(openContent).toBeVisible();
+  expect(await openContent.evaluate((element) => getComputedStyle(element).color))
+    .toBe(system.canvasText);
+  const readForegrounds = () => summary.evaluate((element) => ({
+    arrow: getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-board-row__arrow')!,
+    ).color,
+    description: getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-board-row__description')!,
+    ).color,
+    prefix: getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-board-row__prefix')!,
+    ).color,
+    summary: getComputedStyle(element).color,
+  }));
+  await tabTo(page, summary);
+  await expectForcedColorFocus(summary);
+  await summary.hover();
+  expect(await readForegrounds()).toEqual({
+    arrow: system.highlightText,
+    description: system.highlightText,
+    prefix: system.highlightText,
+    summary: system.highlightText,
+  });
+
+  const box = await summary.boundingBox();
+  expect(box).not.toBeNull();
+  await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+  await page.mouse.down();
+  expect(await readForegrounds()).toEqual({
+    arrow: system.highlightText,
+    description: system.highlightText,
+    prefix: system.highlightText,
+    summary: system.highlightText,
+  });
+  await page.mouse.up();
+  const arrow = summary.locator('.ds-board-row__arrow');
+  expect(await arrow.evaluate((element) =>
+    getComputedStyle(element).transitionDuration)).toBe('0s');
+});
+
+test('Tab owns exact size, equal-width, scroll-overflow, and panel relationships', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  const demo = page.locator('[data-component-demo="tab"]');
+  const interactive = demo.locator('[data-tab-sample="interactive"]');
+  const scroll = demo.locator('[data-tab-sample="scroll"]');
+  const interactiveButtons = interactive.getByRole('tab');
+  const scrollButtons = scroll.getByRole('tab');
+
+  await demo.getByLabel('레이아웃').selectOption('scroll');
+  expect(await interactiveButtons.count()).toBe(4);
+  for (const button of await interactiveButtons.all()) {
+    const box = await button.boundingBox();
+    expect(box).not.toBeNull();
+    expect(Math.abs(box!.height - 52)).toBeLessThanOrEqual(0.5);
+  }
+  expect(await scrollButtons.count()).toBe(6);
+  for (const button of await scrollButtons.all()) {
+    const box = await button.boundingBox();
+    expect(box).not.toBeNull();
+    expect(Math.abs(box!.height - 44)).toBeLessThanOrEqual(0.5);
+  }
+
+  if (testInfo.project.name === 'desktop-chromium') {
+    await demo.getByLabel('레이아웃').selectOption('equal');
+    const widths = await interactiveButtons.evaluateAll((elements) =>
+      elements.map((element) => element.getBoundingClientRect().width));
+    expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(0.5);
+  }
+
+  const relationships = await interactive.evaluate((root) => {
+    const tabs = [...root.querySelectorAll<HTMLElement>('[role="tab"]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+    return {
+      valid: tabs.every((tab, index) => {
+        const panel = panels[index];
+        return panel !== undefined
+          && tab.getAttribute('aria-controls') === panel.id
+          && panel.getAttribute('aria-labelledby') === tab.id;
+      }),
+      visiblePanels: panels.filter((panel) => !panel.hidden).length,
+    };
+  });
+  expect(relationships).toEqual({ valid: true, visiblePanels: 1 });
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const nativeOverflow = await scroll.getByRole('tablist').evaluate((list) => ({
+      clientWidth: list.clientWidth,
+      overflowX: getComputedStyle(list).overflowX,
+      scrollWidth: list.scrollWidth,
+    }));
+    expect(nativeOverflow.scrollWidth).toBeGreaterThan(nativeOverflow.clientWidth);
+    expect(nativeOverflow.overflowX).toBe('auto');
+  }
+
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('Tab contains long copy and stacks its specimens on mobile', async ({ page }, testInfo) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  const demo = page.locator('[data-component-demo="tab"]');
+  const specimens = demo.locator('.tab-demo__specimen');
+  const longCopy = demo.locator('[data-tab-sample="long-copy"]');
+
+  if (testInfo.project.name === 'mobile-chromium') {
+    const [first, second] = await Promise.all([
+      specimens.nth(0).boundingBox(),
+      specimens.nth(1).boundingBox(),
+    ]);
+    expect(first).not.toBeNull();
+    expect(second).not.toBeNull();
+    expect(Math.abs(first!.x - second!.x)).toBeLessThanOrEqual(0.5);
+    expect(second!.y).toBeGreaterThan(first!.y);
+  }
+
+  const fitsOwner = await longCopy.evaluate((element) => {
+    const owner = element.closest<HTMLElement>('.tab-demo__specimen');
+    if (!owner) return false;
+    const elementRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return elementRect.left >= ownerRect.left - 0.5
+      && elementRect.right <= ownerRect.right + 0.5
+      && element.scrollWidth <= element.clientWidth + 0.5;
+  });
+  expect(fitsOwner).toBe(true);
+});
+
+test('Tab preserves its selected indicator and horizontal containment at 200% text zoom', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  await page.addStyleTag({
+    content: `
+      [data-component-demo="tab"] .ds-tab__button {
+        font-size: 200% !important;
+        line-height: 1.5 !important;
+      }
+    `,
+  });
+
+  const longCopy = page.locator(
+    '[data-component-demo="tab"] [data-tab-sample="long-copy"]',
+  );
+  const selected = longCopy.getByRole('tab', { selected: true });
+  const metrics = await selected.evaluate((element) => {
+    const tab = element.getBoundingClientRect();
+    const label = element.querySelector<HTMLElement>('.ds-tab__label')!
+      .getBoundingClientRect();
+    const indicator = getComputedStyle(element, '::after');
+    const root = element.closest<HTMLElement>('.ds-tab')!;
+    const list = element.closest<HTMLElement>('[role="tablist"]')!;
+    return {
+      componentContained: root.scrollWidth <= root.clientWidth + 0.5,
+      indicatorBackground: indicator.backgroundColor,
+      indicatorHeight: Number.parseFloat(indicator.height),
+      labelContained:
+        label.left >= tab.left - 0.5
+        && label.right <= tab.right + 0.5
+        && label.top >= tab.top - 0.5
+        && label.bottom <= tab.bottom + 0.5,
+      listContained: list.scrollWidth <= list.clientWidth + 0.5,
+    };
+  });
+
+  expect(metrics).toEqual({
+    componentContained: true,
+    indicatorBackground: expect.not.stringMatching(
+      /^(?:transparent|rgba\([^)]*,\s*0\))$/,
+    ),
+    indicatorHeight: 2,
+    labelContained: true,
+    listContained: true,
+  });
+  expect(await page.evaluate(() =>
+    document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+  )).toBe(true);
+});
+
+test('Tab preserves forced-colors selection and removes motion when requested', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns Tab platform state coverage.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await openHtmlRoute(page, {
+    path: '/components/tab/',
+    heading: 'Tab',
+  });
+  const system = await page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:absolute;left:-9999px;forced-color-adjust:none';
+    document.body.append(probe);
+    const colors: Record<string, string> = {};
+    for (const keyword of [
+      'Canvas',
+      'CanvasText',
+      'Highlight',
+      'HighlightText',
+    ]) {
+      probe.style.color = keyword;
+      colors[keyword] = getComputedStyle(probe).color;
+    }
+    probe.remove();
+    return colors;
+  });
+  const selected = page.locator(
+    '[data-component-demo="tab"] [data-tab-sample="interactive"] [role="tab"][aria-selected="true"]',
+  );
+  await tabTo(page, selected);
+  await expectForcedColorFocus(selected);
+  const presentation = await selected.evaluate((element) => {
+    const style = getComputedStyle(element);
+    const indicator = getComputedStyle(element, '::after');
+    return {
+      background: style.backgroundColor,
+      color: style.color,
+      indicatorBackground: indicator.backgroundColor,
+      indicatorHeight: Number.parseFloat(indicator.height),
+      outlineColor: style.outlineColor,
+      transitionDuration: style.transitionDuration,
+    };
+  });
+  expect(presentation.background).not.toMatch(/^(?:transparent|rgba\([^)]*,\s*0\))$/);
+  expect(presentation.color).not.toBe(presentation.background);
+  expect(presentation.indicatorBackground).not.toMatch(/^(?:transparent|rgba\([^)]*,\s*0\))$/);
+  expect(presentation.indicatorHeight).toBeGreaterThanOrEqual(2);
+  expect(presentation.outlineColor).toBe(system.HighlightText);
+  expect(contrastRatio(presentation.outlineColor, presentation.background))
+    .toBeGreaterThanOrEqual(3);
+  expect(presentation.transitionDuration).toBe('0s');
+
+  const unselected = page.locator(
+    '[data-component-demo="tab"] [data-tab-sample="interactive"] [role="tab"][aria-selected="false"]:not(:disabled)',
+  ).first();
+  await unselected.evaluate((element) => element.focus());
+  await expect(unselected).toBeFocused();
+  expect(await unselected.evaluate((element) => element.matches(':focus-visible')))
+    .toBe(true);
+  const unselectedFocus = await unselected.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      outlineColor: style.outlineColor,
+    };
+  });
+  expect(unselectedFocus).toEqual({
+    background: system.Canvas,
+    outlineColor: system.CanvasText,
+  });
+  expect(contrastRatio(
+    unselectedFocus.outlineColor,
+    unselectedFocus.background,
+  )).toBeGreaterThanOrEqual(3);
+});
+
+test('IconButton owns a complete forced-colors state palette and keyboard focus', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns forced-colors component focus.',
+  );
+
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await openHtmlRoute(page, {
+    path: '/components/icon-button/',
+    heading: 'IconButton',
+  });
+  const demo = page.locator('[data-component-demo="icon-button"]');
+  const target = demo.locator('[data-icon-button-sample="interactive"]');
+  const variantControl = demo.getByLabel('변형');
+  const disabledControl = demo.getByLabel('disabled', { exact: true });
+  const system = await page.evaluate(() => {
+    const probe = document.createElement('div');
+    probe.style.cssText =
+      'position:absolute;left:-9999px;forced-color-adjust:none';
+    document.body.append(probe);
+    const colors: Record<string, string> = {};
+    for (const keyword of [
+      'ActiveText',
+      'ButtonFace',
+      'ButtonText',
+      'Canvas',
+      'GrayText',
+      'Highlight',
+      'HighlightText',
+    ]) {
+      probe.style.color = keyword;
+      colors[keyword] = getComputedStyle(probe).color;
+    }
+    probe.remove();
+    return colors;
+  });
+  const readPresentation = () => target.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      border: style.borderColor,
+      color: style.color,
+      forcedColorAdjust: style.forcedColorAdjust,
+    };
+  });
+  const disabledPresentation = {
+    background: system.Canvas,
+    border: system.GrayText,
+    color: system.GrayText,
+    forcedColorAdjust: 'none',
+  };
+  const expectedByVariant = {
+    clear: {
+      default: {
+        background: system.ButtonFace,
+        border: system.ButtonFace,
+        color: system.ButtonText,
+        forcedColorAdjust: 'none',
+      },
+      hover: {
+        background: system.Highlight,
+        border: system.Highlight,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+      pressed: {
+        background: system.ButtonFace,
+        border: system.ActiveText,
+        color: system.ActiveText,
+        forcedColorAdjust: 'none',
+      },
+    },
+    fill: {
+      default: {
+        background: system.Highlight,
+        border: system.Highlight,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+      hover: {
+        background: system.ButtonFace,
+        border: system.Highlight,
+        color: system.ButtonText,
+        forcedColorAdjust: 'none',
+      },
+      pressed: {
+        background: system.Highlight,
+        border: system.ActiveText,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+    },
+    outline: {
+      default: {
+        background: system.ButtonFace,
+        border: system.ButtonText,
+        color: system.ButtonText,
+        forcedColorAdjust: 'none',
+      },
+      hover: {
+        background: system.Highlight,
+        border: system.ButtonText,
+        color: system.HighlightText,
+        forcedColorAdjust: 'none',
+      },
+      pressed: {
+        background: system.ButtonFace,
+        border: system.ButtonText,
+        color: system.ActiveText,
+        forcedColorAdjust: 'none',
+      },
+    },
+  } as const;
+
+  for (const variant of ['clear', 'fill', 'outline'] as const) {
+    await variantControl.selectOption(variant);
+    await page.mouse.move(0, 0);
+    expect(await readPresentation()).toEqual(
+      expectedByVariant[variant].default,
+    );
+
+    await target.hover();
+    expect(await target.evaluate((element) => element.matches(':hover')))
+      .toBe(true);
+    expect(await readPresentation()).toEqual(
+      expectedByVariant[variant].hover,
+    );
+
+    const box = await target.boundingBox();
+    expect(box).not.toBeNull();
+    await page.mouse.move(box!.x + box!.width / 2, box!.y + box!.height / 2);
+    await page.mouse.down();
+    expect(await readPresentation()).toEqual(
+      expectedByVariant[variant].pressed,
+    );
+    await page.mouse.up();
+    await page.mouse.move(0, 0);
+
+    await disabledControl.check();
+    expect(await readPresentation()).toEqual(disabledPresentation);
+    await disabledControl.uncheck();
+  }
+
+  await demo.getByLabel('disabled', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(target);
+});
+
 test('TextField exposes a forced-colors keyboard focus outline', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns forced-colors component focus.');
 
@@ -338,6 +1214,16 @@ test('TextField exposes a forced-colors keyboard focus outline', async ({ page }
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   const demo = page.locator('[data-component-demo="text-field"]');
   const input = demo.getByLabel('이름');
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(input);
+});
+
+test('Checkbox exposes a forced-colors keyboard focus outline', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/checkbox/', heading: 'Checkbox' });
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  const input = demo.locator('.ds-checkbox__input').first();
   await demo.getByLabel('error', { exact: true }).focus();
   await page.keyboard.press('Tab');
   await expectForcedColorFocus(input);
@@ -372,6 +1258,176 @@ test('TextField error gains a distinct visible style from keyboard focus', async
   expect(await errorInput.evaluate(styles)).not.toBe(before);
 });
 
+test('RadioGroup option rows keep 44px targets around 20px and 24px indicators', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
+  const demo = page.locator('[data-component-demo="radio-group"]');
+  const geometry = await demo.locator('.ds-radio-group').evaluateAll((groups) =>
+    groups.flatMap((group) => [...group.querySelectorAll<HTMLElement>('.ds-radio-group__option')]
+      .map((row) => {
+        const input = row.querySelector<HTMLInputElement>('.ds-radio-group__input')!;
+        return {
+          inputHeight: input.getBoundingClientRect().height,
+          rowHeight: row.getBoundingClientRect().height,
+        };
+      })));
+
+  expect(geometry.length).toBeGreaterThanOrEqual(12);
+  expect(geometry.every(({ rowHeight }) => rowHeight >= 44)).toBe(true);
+  expect([...new Set(geometry.map(({ inputHeight }) => inputHeight))]
+    .sort((left, right) => left - right)).toEqual([20, 24]);
+});
+
+test('RadioGroup exposes a forced-colors keyboard focus outline', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/radio-group/', heading: 'RadioGroup' });
+  const demo = page.locator('[data-component-demo="radio-group"]');
+  const firstRadio = demo.locator('.ds-radio-group__input').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(firstRadio);
+});
+
+test('Switch rows keep 44px targets around token-sized tracks', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
+  const demo = page.locator('[data-component-demo="switch"]');
+  const geometry = await demo.locator('.ds-switch').evaluateAll((roots) => roots.map((root) => {
+    const row = root.querySelector<HTMLElement>('.ds-switch__row')!;
+    const input = root.querySelector<HTMLInputElement>('.ds-switch__input')!;
+    const rect = input.getBoundingClientRect();
+    return { rowHeight: row.getBoundingClientRect().height, width: rect.width, height: rect.height };
+  }));
+
+  expect(geometry.length).toBeGreaterThanOrEqual(5);
+  expect(geometry.every(({ rowHeight }) => rowHeight >= 44)).toBe(true);
+  expect([...new Set(geometry.map(({ width, height }) => `${width}x${height}`))].sort())
+    .toEqual(['36x20', '44x24']);
+});
+
+test('Switch exposes a forced-colors keyboard focus outline', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/switch/', heading: 'Switch' });
+  const demo = page.locator('[data-component-demo="switch"]');
+  const input = demo.locator('.ds-switch__input').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(input);
+});
+
+test('Textarea preserves size tiers, resize modes, and horizontal bounds', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  const controls = page.locator('[data-component-demo="textarea"] .ds-textarea__control');
+  await expect(controls).toHaveCount(4);
+
+  const geometry = await controls.evaluateAll((elements) => elements.map((element) => {
+    const control = element as HTMLTextAreaElement;
+    const style = getComputedStyle(control);
+    const rect = control.getBoundingClientRect();
+    const parentRect = control.parentElement!.getBoundingClientRect();
+    return {
+      dataResize: control.dataset.resize,
+      dataSize: control.dataset.size,
+      maxInlineSize: style.maxInlineSize,
+      minHeight: Number.parseFloat(style.minHeight),
+      resize: style.resize,
+      withinParent: rect.left >= parentRect.left - 0.5 && rect.right <= parentRect.right + 0.5,
+    };
+  }));
+
+  expect([...new Set(geometry.map(({ minHeight }) => minHeight))]
+    .sort((left, right) => left - right)).toEqual([48, 56]);
+  expect(new Set(geometry.map(({ dataSize }) => dataSize))).toEqual(new Set(['medium', 'large']));
+  expect(new Set(geometry.map(({ dataResize }) => dataResize))).toEqual(new Set(['vertical', 'none']));
+  expect(new Set(geometry.map(({ resize }) => resize))).toEqual(new Set(['vertical', 'none']));
+  expect(geometry.every(({ maxInlineSize, withinParent }) => maxInlineSize === '100%' && withinParent)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test('Textarea exposes a forced-colors keyboard focus outline', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  const demo = page.locator('[data-component-demo="textarea"]');
+  const control = demo.locator('.ds-textarea__control').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(control);
+});
+
+test('Textarea error keeps a distinct visible keyboard-focus style', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns keyboard focus-style coverage.');
+
+  await openHtmlRoute(page, { path: '/components/textarea/', heading: 'Textarea' });
+  const demo = page.locator('[data-component-demo="textarea"]');
+  await demo.getByLabel('error', { exact: true }).check();
+  const errorControl = demo.locator('.ds-textarea__control').first();
+  const signature = (element: Element) => {
+    const style = getComputedStyle(element);
+    return `${style.borderTopColor}|${style.boxShadow}|${style.outlineStyle}|${style.outlineWidth}`;
+  };
+  const before = await errorControl.evaluate(signature);
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectVisibleFocus(errorControl);
+  expect(await errorControl.evaluate(signature)).not.toBe(before);
+});
+
+test('Select preserves native size tiers, decorative icon, and horizontal bounds', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const demo = page.locator('[data-component-demo="select"]');
+  const controls = demo.locator('.ds-select__control');
+  await expect(controls).toHaveCount(4);
+
+  const geometry = await demo.locator('.ds-select').evaluateAll((roots) => roots.map((root) => {
+    const select = root.querySelector<HTMLSelectElement>('.ds-select__control')!;
+    const icon = root.querySelector<SVGElement>('.ds-select__icon')!;
+    const selectRect = select.getBoundingClientRect();
+    const rootRect = root.getBoundingClientRect();
+    return {
+      height: selectRect.height,
+      iconAriaHidden: icon.getAttribute('aria-hidden'),
+      iconPointerEvents: getComputedStyle(icon).pointerEvents,
+      multiple: select.multiple,
+      sizeAttribute: select.getAttribute('size'),
+      withinRoot: selectRect.left >= rootRect.left - 0.5 && selectRect.right <= rootRect.right + 0.5,
+    };
+  }));
+
+  expect([...new Set(geometry.map(({ height }) => height))]
+    .sort((left, right) => left - right)).toEqual([48, 56]);
+  expect(geometry.every(({ iconAriaHidden }) => iconAriaHidden === 'true')).toBe(true);
+  expect(geometry.every(({ iconPointerEvents }) => iconPointerEvents === 'none')).toBe(true);
+  expect(geometry.every(({ multiple, sizeAttribute }) => !multiple && sizeAttribute === null)).toBe(true);
+  expect(geometry.every(({ withinRoot }) => withinRoot)).toBe(true);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+});
+
+test('Select exposes a forced-colors keyboard focus outline', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const demo = page.locator('[data-component-demo="select"]');
+  const control = demo.locator('.ds-select__control').first();
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectForcedColorFocus(control);
+});
+
+test('Select error keeps a distinct visible keyboard-focus style', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'desktop-chromium', 'Desktop owns keyboard focus-style coverage.');
+
+  await openHtmlRoute(page, { path: '/components/select/', heading: 'Select' });
+  const demo = page.locator('[data-component-demo="select"]');
+  await demo.getByLabel('error', { exact: true }).check();
+  const errorControl = demo.locator('.ds-select__control').first();
+  const signature = (element: Element) => {
+    const style = getComputedStyle(element);
+    return `${style.borderTopColor}|${style.boxShadow}|${style.outlineStyle}|${style.outlineWidth}`;
+  };
+  const before = await errorControl.evaluate(signature);
+  await demo.getByLabel('error', { exact: true }).focus();
+  await page.keyboard.press('Tab');
+  await expectVisibleFocus(errorControl);
+  expect(await errorControl.evaluate(signature)).not.toBe(before);
+});
+
 test('Badge constrains a long unbroken label without page overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns constrained-label coverage.');
 
@@ -393,4 +1449,126 @@ test('Badge constrains a long unbroken label without page overflow', async ({ pa
   expect(result.badgeFits).toBe(true);
   expect(result.overflowX).not.toBe('visible');
   expect(result.pageFits).toBe(true);
+});
+
+test('ListRow renders static, native button, and real anchor branches without nested action controls', async ({ page }) => {
+  await openHtmlRoute(page, { path: '/components/list-row/', heading: 'ListRow' });
+  const demo = page.locator('[data-component-demo="list-row"]');
+  const staticRow = demo.locator('[data-list-row-sample="static"]');
+  const buttonRow = demo.locator('[data-list-row-sample="button"]');
+  const linkRow = demo.locator('[data-list-row-sample="link"]');
+  const disabledRow = demo.locator('[data-list-row-sample="disabled"]');
+
+  await expect(staticRow).toHaveJSProperty('tagName', 'DIV');
+  await expect(staticRow.getByRole('switch', { name: '배송 알림' })).toBeVisible();
+  await expect(buttonRow).toHaveJSProperty('tagName', 'BUTTON');
+  await expect(buttonRow).toHaveAttribute('type', 'button');
+  await expect(linkRow).toHaveJSProperty('tagName', 'A');
+  await expect(linkRow).toHaveAttribute('href', '#list-row-demo-target');
+  await expect(linkRow).not.toHaveAttribute('disabled');
+  await expect(linkRow).not.toHaveAttribute('aria-disabled');
+  await expect(disabledRow).toBeDisabled();
+
+  const nestedActions = await demo.locator(
+    '[data-list-row-sample="button"], [data-list-row-sample="link"]',
+  ).evaluateAll((roots) => roots.map((root) =>
+    root.querySelectorAll(
+      'a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"]):not([tabindex="0"])',
+    ).length));
+  expect(nestedActions).toEqual([0, 0]);
+
+  await buttonRow.click();
+  await buttonRow.focus();
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Space');
+  await expect(demo.getByText(/버튼 활성화 3회/)).toBeVisible();
+});
+
+test('ListRow contains unbroken copy at 320px and 200 percent text zoom', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'mobile-chromium',
+    'Mobile owns ListRow narrow reflow coverage.',
+  );
+  await page.setViewportSize({ width: 320, height: 844 });
+  await openHtmlRoute(page, { path: '/components/list-row/', heading: 'ListRow' });
+  const longRow = page.locator(
+    '[data-component-demo="list-row"] [data-list-row-sample="long-copy"]',
+  );
+  const baselineFontSizes = await longRow.evaluate((element) => ({
+    description: Number.parseFloat(getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-list-row__description')!,
+    ).fontSize),
+    title: Number.parseFloat(getComputedStyle(
+      element.querySelector<HTMLElement>('.ds-list-row__title')!,
+    ).fontSize),
+  }));
+  await page.addStyleTag({ content: `
+    [data-list-row-sample="long-copy"] .ds-list-row__title,
+    [data-list-row-sample="long-copy"] .ds-list-row__description {
+      font-size: 200% !important;
+      line-height: normal !important;
+    }
+  ` });
+
+  const containment = await longRow.evaluate((element) => {
+    const owner = element.parentElement!;
+    const rowRect = element.getBoundingClientRect();
+    const ownerRect = owner.getBoundingClientRect();
+    return {
+      ownerFits: ownerRect.left >= 0 && ownerRect.right <= document.documentElement.clientWidth,
+      pageFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      rowFits: rowRect.left >= ownerRect.left - 0.5 && rowRect.right <= ownerRect.right + 0.5,
+      descriptionFontSize: Number.parseFloat(getComputedStyle(
+        element.querySelector<HTMLElement>('.ds-list-row__description')!,
+      ).fontSize),
+      titleFontSize: Number.parseFloat(getComputedStyle(
+        element.querySelector<HTMLElement>('.ds-list-row__title')!,
+      ).fontSize),
+      wraps: element.getBoundingClientRect().height > 56,
+    };
+  });
+  expect(containment.ownerFits).toBe(true);
+  expect(containment.pageFits).toBe(true);
+  expect(containment.rowFits).toBe(true);
+  expect(containment.wraps).toBe(true);
+  expect(containment.titleFontSize).toBeGreaterThanOrEqual(
+    baselineFontSizes.title * 2,
+  );
+  expect(containment.descriptionFontSize).toBeGreaterThanOrEqual(
+    baselineFontSizes.description * 2,
+  );
+});
+
+test('ListRow keeps forced-colors focus, divider, and trailing Switch ownership', async ({ page }, testInfo) => {
+  test.skip(
+    testInfo.project.name !== 'desktop-chromium',
+    'Desktop owns ListRow forced-colors coverage.',
+  );
+  await page.emulateMedia({ forcedColors: 'active' });
+  await openHtmlRoute(page, { path: '/components/list-row/', heading: 'ListRow' });
+  const demo = page.locator('[data-component-demo="list-row"]');
+  const staticRow = demo.locator('[data-list-row-sample="static"]');
+  const buttonRow = demo.locator('[data-list-row-sample="button"]');
+  const staticSwitch = staticRow.getByRole('switch', { name: '배송 알림' });
+
+  await buttonRow.focus();
+  await expectForcedColorFocus(buttonRow);
+  const forcedPresentation = await staticRow.evaluate((element) => {
+    const rowStyle = getComputedStyle(element);
+    const dividerStyle = getComputedStyle(element, '::after');
+    const input = element.querySelector<HTMLInputElement>('.ds-switch__input')!;
+    return {
+      dividerColor: dividerStyle.borderBottomColor,
+      dividerStyle: dividerStyle.borderBottomStyle,
+      dividerWidth: Number.parseFloat(dividerStyle.borderBottomWidth),
+      rowForcedColorAdjust: rowStyle.forcedColorAdjust,
+      switchForcedColorAdjust: getComputedStyle(input).forcedColorAdjust,
+    };
+  });
+  expect(forcedPresentation.dividerStyle).toBe('solid');
+  expect(forcedPresentation.dividerWidth).toBeGreaterThanOrEqual(2);
+  expect(forcedPresentation.dividerColor).not.toBe('transparent');
+  expect(forcedPresentation.rowForcedColorAdjust).not.toBe('none');
+  expect(forcedPresentation.switchForcedColorAdjust).toBe('none');
+  await expect(staticSwitch).toBeVisible();
 });

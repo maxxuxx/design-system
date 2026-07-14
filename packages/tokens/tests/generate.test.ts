@@ -98,7 +98,6 @@ describe('token generation', () => {
     const definitions = await loadDefinitions();
     const resolved = resolveTokens(definitions);
 
-    expect(resolved).toHaveLength(107);
     expect(resolved.map((token) => token.name)).toEqual(
       definitions.map((token) => token.name),
     );
@@ -116,6 +115,19 @@ describe('token generation', () => {
       cssVariable: '--ds-color-icon-primary',
       resolvedValue: '#171D24',
     });
+
+    const resolveToken = (name: string): string | number | undefined =>
+      resolved.find((token) => token.name === name)?.resolvedValue;
+
+    expect(resolveToken('motion/duration/fast')).toBe('120ms');
+    expect(resolveToken('motion/duration/medium')).toBe('200ms');
+    expect(resolveToken('motion/easing/standard')).toBe(
+      'cubic-bezier(0.2, 0, 0, 1)',
+    );
+    expect(resolveToken('color/bg/scrim')).toBe(
+      'rgba(15, 23, 42, 0.56)',
+    );
+    expect(resolved).toHaveLength(118);
   });
 
   it('emits the subtle blur primitive in deterministic source order', async () => {
@@ -158,7 +170,7 @@ describe('token generation', () => {
       '  --ds-color-action-primary: var(--ds-color-blue-600);',
     );
     expect(css).toContain(
-      '  --ds-font-family-sans: "IBM Plex Sans KR", "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;',
+      '  --ds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;',
     );
     expect(css.endsWith('\n')).toBe(true);
 
@@ -167,7 +179,7 @@ describe('token generation', () => {
       tokens: Array<Record<string, unknown>>;
     };
     expect(parsed.schemaVersion).toBe(1);
-    expect(parsed.tokens).toHaveLength(107);
+    expect(parsed.tokens).toHaveLength(118);
     expect(Object.keys(parsed.tokens[0] ?? {})).toEqual([
       'name',
       'type',
@@ -178,6 +190,26 @@ describe('token generation', () => {
       'resolvedValue',
     ]);
     expect(json.endsWith('\n')).toBe(true);
+  });
+
+  it('generates the six form-control size tokens', async () => {
+    const artifact = JSON.parse(await readFile(distJsonUrl, 'utf8')) as {
+      tokens: Array<{ name: string; resolvedValue: unknown }>;
+    };
+
+    expect(artifact.tokens).toHaveLength(118);
+    expect(
+      Object.fromEntries(
+        artifact.tokens.map((token) => [token.name, token.resolvedValue]),
+      ),
+    ).toMatchObject({
+      'size/selection/small': 20,
+      'size/selection/medium': 24,
+      'size/switch/small-width': 36,
+      'size/switch/small-height': 20,
+      'size/switch/medium-width': 44,
+      'size/switch/medium-height': 24,
+    });
   });
 
   it('maps control boundaries and the focus ring to the approved aliases', async () => {

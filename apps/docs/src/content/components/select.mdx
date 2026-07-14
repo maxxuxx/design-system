@@ -1,0 +1,170 @@
+---
+name: Select
+slug: select
+description: 닫힌 목록에서 한 값을 고르는 native single-select와 OS popup 동작을 제공합니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: []
+sizes: [medium, large]
+states: [default, focus, error, disabled]
+accessibility: visible label, native combobox keyboard·validation·form semantics, stable feedback IDs와 decorative chevron을 제공합니다.
+props:
+  - name: children
+    type: ReactNode
+    required: true
+    defaultValue: null
+    description: native option 또는 optgroup content입니다.
+  - name: label
+    type: string
+    required: true
+    defaultValue: null
+    description: select와 연결되는 visible label입니다.
+  - name: description
+    type: string
+    required: false
+    defaultValue: null
+    description: 선택 기준을 설명하는 도움말입니다.
+  - name: errorMessage
+    type: string
+    required: false
+    defaultValue: null
+    description: aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다.
+  - name: placeholder
+    type: string
+    required: false
+    defaultValue: null
+    description: value가 비어 있고 disabled인 첫 option을 선택적으로 추가합니다.
+  - name: size
+    type: SelectSize
+    required: false
+    defaultValue: medium
+    description: medium 48px 또는 large 56px closed-field tier를 선택합니다.
+  - name: ...selectProps
+    type: "Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'multiple' | 'size'>"
+    required: false
+    defaultValue: null
+    description: single-select가 소유하는 children, multiple, native size를 제외한 native props입니다.
+tokens:
+  - size/control/medium
+  - size/control/large
+  - size/icon/medium
+  - space/2
+  - space/4
+  - space/8
+  - space/16
+  - space/20
+  - radius/md
+  - font/family/sans
+  - font/size/body-sm
+  - font/size/body
+  - font/size/caption
+  - font/line-height/body-sm
+  - font/line-height/body
+  - font/line-height/caption
+  - font/weight/semibold
+  - color/bg/surface
+  - color/bg/subtle
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/border/default
+  - color/border/focus
+  - color/icon/primary
+  - color/status/danger
+  - color/status/danger-subtle
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import SelectExample from '../../components/examples/SelectExample';
+
+## 예제
+
+<ComponentPreview title="Select 상태" description="option 선택, size, disabled, required, description, error와 native form 값을 확인합니다.">
+  <SelectExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+긴 닫힌 목록에서 한 값을 선택하되 모든 옵션을 항상 펼쳐 놓을 필요가 없을 때 사용합니다. 운영체제와 브라우저가 제공하는 popup, keyboard, autofill, validation이 적합한 경우에 우선합니다.
+
+## 사용하지 말아야 할 때
+
+서로 바로 비교해야 하는 짧은 목록에는 RadioGroup을 사용합니다. 검색, async loading, virtualization, custom popup positioning, freeform value에는 추후 별도 Combobox가 필요합니다.
+
+## 구조
+
+root 안에 visible label, relative field wrapper, native select, pointer-inert decorative ChevronRight, optional description, optional alert error가 배치됩니다. icon은 closed field의 방향만 표시합니다.
+
+## 크기와 변형
+
+`medium` closed field는 48px, `large`는 56px입니다. 시각 variant는 없고 option/optgroup content는 native children입니다. placeholder는 비어 있고 disabled인 첫 option으로만 추가됩니다.
+
+## 상태와 동작
+
+상태 우선순위는 `Disabled > Error > Focus > Default`입니다. single-select 계약이므로 `multiple`과 native listbox `size`는 노출하지 않습니다. controlled/uncontrolled value, onChange, required, form value, OS popup은 브라우저가 소유합니다.
+
+## 반응형 동작
+
+closed field는 available width를 채우고 `max-inline-size: 100%`를 유지합니다. popup의 폭·위치·스크롤과 모바일 picker UI는 브라우저 및 운영체제가 결정하며 별도 반응형 popup을 만들지 않습니다.
+
+## 접근성
+
+visible label은 native select와 직접 연결됩니다. description, error, caller IDs는 중복 없이 순서대로 결합됩니다. placeholder option은 disabled이고, chevron은 `aria-hidden`이며 pointer event를 받지 않습니다.
+
+## React 예제
+
+```tsx
+import { Select } from '@maxxuxx/react';
+import '@maxxuxx/react/styles.css';
+
+export function CountrySelect() {
+  return (
+    <Select defaultValue="" label="국가" name="country" placeholder="선택하세요" required>
+      <optgroup label="아시아">
+        <option value="kr">대한민국</option>
+        <option value="jp">일본</option>
+      </optgroup>
+      <optgroup label="유럽">
+        <option value="de">독일</option>
+      </optgroup>
+    </Select>
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `children` | `ReactNode` | required | native option/optgroup content |
+| `label` | `string` | required | visible associated label |
+| `description` | `string` | 없음 | helper text |
+| `errorMessage` | `string` | 없음 | error ARIA와 alert text |
+| `placeholder` | `string` | 없음 | disabled empty-value first option |
+| `size` | `'medium' \| 'large'` | `'medium'` | 48/56px closed-field tier |
+| native select props | <code>Omit&lt;SelectHTMLAttributes&lt;HTMLSelectElement&gt;, 'children' \| 'multiple' \| 'size'&gt;</code> | 없음 | controlled/uncontrolled, onChange, required, name, form behavior |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/medium`, `size/control/large`, `size/icon/medium`, `radius/md`
+- `space/2`, `space/4`, `space/8`, `space/16`, `space/20`
+- `font/*`, `color/bg/*`, `color/text/*`, `color/border/*`, `color/icon/primary`, `color/status/danger*`, `color/focus/ring`
+
+## Figma
+
+[Select component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72)은 closed field의 `Size 2 × State 4 = 8` variants와 `Label`, `Value`, `Description`, `Error` TEXT properties를 제공합니다. owned `Icon/ChevronRight` instance와 48/56px 높이, padding, radius, semantic state colors, typography가 library asset에 연결되며 OS popup menu는 재현하지 않습니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

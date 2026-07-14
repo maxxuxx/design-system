@@ -4,6 +4,8 @@ import {
   type InputHTMLAttributes,
 } from 'react';
 
+import { mergeIds } from '../field/ids';
+
 export type TextFieldSize = 'medium' | 'large';
 export type TextFieldType =
   | 'text'
@@ -41,13 +43,6 @@ function normalizeType(type: unknown): TextFieldType {
   return TEXT_FIELD_TYPES.includes(type as TextFieldType)
     ? (type as TextFieldType)
     : 'text';
-}
-
-function mergeIds(...values: Array<string | undefined>): string | undefined {
-  const ids = values
-    .flatMap((value) => value?.split(/\s+/) ?? [])
-    .filter((value, index, all) => value.length > 0 && all.indexOf(value) === index);
-  return ids.length > 0 ? ids.join(' ') : undefined;
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(

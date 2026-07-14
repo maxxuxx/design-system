@@ -1,0 +1,86 @@
+.ds-bottom-cta {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--ds-font-family-sans);
+}
+
+.ds-bottom-cta__panel {
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding-block-start: var(--ds-space-16);
+  padding-block-end: var(--ds-space-16);
+  padding-inline:
+    max(var(--ds-space-16), env(safe-area-inset-left, var(--ds-space-0)))
+    max(var(--ds-space-16), env(safe-area-inset-right, var(--ds-space-0)));
+  background: var(--ds-color-bg-surface);
+}
+
+.ds-bottom-cta[data-safe-area='true'] .ds-bottom-cta__panel {
+  padding-block-end: max(
+    var(--ds-space-16),
+    env(safe-area-inset-bottom, var(--ds-space-0)),
+    var(--ds-safe-area-bottom, var(--ds-space-0))
+  );
+}
+
+.ds-bottom-cta[data-background='none'] .ds-bottom-cta__panel {
+  background: transparent;
+}
+
+.ds-bottom-cta[data-fixed='true'] .ds-bottom-cta__panel {
+  position: fixed;
+  z-index: 10;
+  inset-block-end: 0;
+  inset-inline: 0;
+  pointer-events: none;
+}
+
+.ds-bottom-cta__spacer {
+  block-size: calc(
+    var(--ds-size-control-large)
+    + var(--ds-space-16)
+    + max(
+      var(--ds-space-16),
+      env(safe-area-inset-bottom, var(--ds-space-0)),
+      var(--ds-safe-area-bottom, var(--ds-space-0))
+    )
+  );
+}
+
+.ds-bottom-cta__actions {
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr);
+  inline-size: 100%;
+  min-inline-size: 0;
+  gap: var(--ds-space-12);
+  pointer-events: auto;
+}
+
+.ds-bottom-cta[data-layout='double'] .ds-bottom-cta__actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ds-bottom-cta .ds-button,
+.ds-bottom-cta .ds-button__content,
+.ds-bottom-cta .ds-button__label {
+  min-inline-size: 0;
+}
+
+.ds-bottom-cta .ds-button__label {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+@media (forced-colors: active) {
+  .ds-bottom-cta__panel {
+    background: Canvas;
+    border-block-start: 1px solid ButtonText;
+  }
+
+  .ds-bottom-cta[data-background='none'] .ds-bottom-cta__panel {
+    background: transparent;
+    border-block-start-color: transparent;
+  }
+}

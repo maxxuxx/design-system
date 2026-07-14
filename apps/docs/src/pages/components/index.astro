@@ -1,0 +1,53 @@
+---
+import componentManifest from '../../../public/design-system/components.json';
+import DocsLayout from '../../layouts/DocsLayout.astro';
+
+const frameworkLabels = [
+  ['react', 'React'],
+  ['svelte', 'Svelte'],
+  ['reactNative', 'React Native'],
+] as const;
+---
+
+<DocsLayout
+  title="Components"
+  description="AI-Readable Design System v0.4의 20개 컴포넌트 문서와 프레임워크 지원 상태를 한눈에 확인합니다."
+>
+  <header class="catalog-header">
+    <span class="eyebrow">v0.4 · 20 components</span>
+    <h1>Components</h1>
+    <p class="page-description">
+      생성된 메타데이터와 같은 순서로 컴포넌트의 목적, preview 상태,
+      프레임워크 지원 범위를 확인하고 상세 문서로 이동할 수 있습니다.
+    </p>
+  </header>
+
+  <ul class="component-catalog" aria-label="컴포넌트 목록">
+    {componentManifest.components.map((component) => (
+      <li>
+        <article class="component-catalog-card">
+          <div class="component-catalog-card__heading">
+            <h2>{component.name}</h2>
+            <span class="status-chip">{component.status}</span>
+          </div>
+          <p>{component.description}</p>
+          <ul
+            class="framework-support"
+            aria-label={`${component.name} 프레임워크 지원`}
+          >
+            {frameworkLabels.map(([key, label]) => (
+              <li>{`${label} ${component.frameworks[key]}`}</li>
+            ))}
+          </ul>
+          <a
+            class="component-catalog-card__link"
+            href={component.docsUrl}
+            aria-label={`${component.name} 문서 보기`}
+          >
+            문서 보기
+          </a>
+        </article>
+      </li>
+    ))}
+  </ul>
+</DocsLayout>
