@@ -671,6 +671,94 @@
   overflow-wrap: anywhere;
 }
 
+.component-demo__stage--bottom-cta {
+  place-items: stretch;
+}
+
+.bottom-cta-demo {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  gap: var(--ds-space-16);
+}
+
+.bottom-cta-demo__status {
+  min-inline-size: var(--ds-space-0);
+  margin: var(--ds-space-0);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-size-caption);
+  line-height: var(--ds-font-line-height-caption);
+  overflow-wrap: anywhere;
+}
+
+.bottom-cta-demo__specimen {
+  display: grid;
+  min-inline-size: var(--ds-space-0);
+  gap: var(--ds-space-8);
+  overflow: hidden;
+  background: var(--ds-color-bg-subtle);
+  border: var(--ds-space-2) solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-md);
+}
+
+.bottom-cta-demo__specimen > .component-demo__label {
+  padding-block-start: var(--ds-space-12);
+  padding-inline: var(--ds-space-16);
+}
+
+.bottom-cta-demo__specimen--long {
+  inline-size: min(100%, 320px);
+}
+
+.bottom-cta-demo__fixed-viewport {
+  position: relative;
+  min-inline-size: var(--ds-space-0);
+  block-size: 320px;
+  overflow: hidden;
+  background: var(--ds-color-bg-surface);
+  border: var(--ds-space-2) solid var(--ds-color-border-default);
+  border-radius: var(--ds-radius-lg);
+  transform: translateZ(0);
+}
+
+.bottom-cta-demo__fixed-scroll {
+  box-sizing: border-box;
+  block-size: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.bottom-cta-demo__fixed-scroll:focus-visible {
+  outline: var(--ds-space-2) solid var(--ds-color-border-focus);
+  outline-offset: calc(var(--ds-space-2) * -1);
+}
+
+.bottom-cta-demo__fixed-item {
+  padding: var(--ds-space-16);
+  color: var(--ds-color-text-primary);
+  border-block-end: 1px solid var(--ds-color-border-default);
+}
+
+.bottom-cta-demo__fixed-clearance {
+  block-size: calc(
+    var(--ds-size-control-large)
+    + var(--ds-space-16)
+    + var(--ds-space-16)
+    + var(--ds-space-4)
+  );
+}
+
+.bottom-cta-demo__fixed-viewport
+  .ds-bottom-cta.bottom-cta-demo__fixed-cta[data-fixed='true']
+  .ds-bottom-cta__panel {
+  position: absolute;
+}
+
+.bottom-cta-demo__fixed-cta {
+  position: absolute;
+  inset-block-end: var(--ds-space-0);
+  inset-inline: var(--ds-space-0);
+}
+
 @media (forced-colors: active) {
   .component-demo__control select:focus-visible,
   .component-demo__control input[type='text']:focus-visible,
@@ -731,5 +819,9 @@
 
   .toast-demo__specimens {
     grid-template-columns: 1fr;
+  }
+
+  .bottom-cta-demo__specimen--long {
+    inline-size: 100%;
   }
 }

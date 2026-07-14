@@ -166,6 +166,23 @@ test('ListRow action branches are keyboard reachable and the static trailing Swi
   await assertNoAxeViolations(page);
 });
 
+test('BottomCTA Double actions follow secondary-primary keyboard order with zero axe violations', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/bottom-cta/',
+    heading: 'BottomCTA',
+  });
+  const double = page.locator('[data-bottom-cta-sample="double"]');
+  const secondary = double.getByRole('button', { name: '취소' });
+  const primary = double.getByRole('button', { name: '확인' });
+
+  await tabTo(page, secondary);
+  await expectVisibleFocus(secondary);
+  await page.keyboard.press('Tab');
+  await expect(primary).toBeFocused();
+  await expectVisibleFocus(primary);
+  await assertNoAxeViolations(page);
+});
+
 test('TextField demo input is keyboard reachable with visible focus', async ({ page }) => {
   await openHtmlRoute(page, { path: '/components/text-field/', heading: 'TextField' });
   await tabTo(page, page.locator('[data-component-demo="text-field"] .ds-text-field__input').first());

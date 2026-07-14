@@ -89,6 +89,7 @@ describe('MDX collection coverage', () => {
       'content/components/search-field.mdx',
       'content/components/list-row.mdx',
       'content/components/toast.mdx',
+      'content/components/bottom-cta.mdx',
     ]);
 
     for (const file of files) {
@@ -154,7 +155,7 @@ describe('MDX collection coverage', () => {
 });
 
 describe('component metadata contract', () => {
-  it('locks the nineteen component names and slugs in canonical order', () => {
+  it('locks the twenty component names and slugs in canonical order', () => {
     expect(COMPONENT_NAMES).toEqual([
       'Icon',
       'Badge',
@@ -175,6 +176,7 @@ describe('component metadata contract', () => {
       'SearchField',
       'ListRow',
       'Toast',
+      'BottomCTA',
     ]);
     expect(COMPONENT_SLUGS).toEqual([
       'icon',
@@ -196,6 +198,7 @@ describe('component metadata contract', () => {
       'search-field',
       'list-row',
       'toast',
+      'bottom-cta',
     ]);
   });
 
@@ -902,6 +905,89 @@ describe('component metadata contract', () => {
     expect(matter(source).content).toContain('FIFO');
     expect(matter(source).content).toContain('duration=0');
     expect(matter(source).content).toContain('top Toast');
+  });
+
+  it('locks the BottomCTA owned-action and fixed-layout metadata with its pending Figma URL', async () => {
+    const source = await readFile(
+      `${srcRoot}content/components/bottom-cta.mdx`,
+      'utf8',
+    );
+    const data = componentSchema.parse(matter(source).data);
+
+    expect(data).toMatchObject({
+      name: 'BottomCTA',
+      slug: 'bottom-cta',
+      figmaUrl: '',
+      variants: ['single', 'double', 'background-default', 'background-none'],
+      sizes: [],
+      states: ['static', 'fixed', 'take-space'],
+    });
+    expect(data.props.map(({ name, type, required, defaultValue }) => ({
+      name,
+      type,
+      required,
+      defaultValue,
+    }))).toEqual([
+      {
+        name: 'primaryAction',
+        type: 'BottomCTAAction',
+        required: true,
+        defaultValue: null,
+      },
+      {
+        name: 'secondaryAction',
+        type: 'BottomCTAAction',
+        required: false,
+        defaultValue: null,
+      },
+      { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+      { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+      {
+        name: 'hasSafeAreaPadding',
+        type: 'boolean',
+        required: false,
+        defaultValue: 'true',
+      },
+      {
+        name: 'background',
+        type: 'BottomCTABackground',
+        required: false,
+        defaultValue: 'default',
+      },
+      {
+        name: '...divProps',
+        type: "Omit<HTMLAttributes<HTMLDivElement>, 'children'>",
+        required: false,
+        defaultValue: null,
+      },
+    ]);
+    expect(data.tokens).toEqual([
+      'size/control/large',
+      'space/0',
+      'space/4',
+      'space/12',
+      'space/16',
+      'radius/md',
+      'font/family/sans',
+      'font/size/body-lg',
+      'font/weight/semibold',
+      'font/line-height/body-lg',
+      'color/bg/surface',
+      'color/action/primary',
+      'color/action/primary-hover',
+      'color/action/primary-pressed',
+      'color/action/on-primary',
+      'color/action/weak',
+      'color/action/weak-hover',
+      'color/action/on-weak',
+      'color/border/default',
+      'color/border/strong',
+      'color/focus/ring',
+    ]);
+    expect(matter(source).content).toContain('secondary → primary');
+    expect(matter(source).content).toContain('ResizeObserver');
+    expect(matter(source).content).toContain('--ds-safe-area-bottom');
+    expect(matter(source).content).toContain('BottomSheet');
   });
 
   it('locks the Select public metadata contract', async () => {

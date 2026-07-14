@@ -51,6 +51,7 @@ export const NAVIGATION: NavigationSection[] = [
       { label: 'SearchField', href: '/components/search-field/' },
       { label: 'ListRow', href: '/components/list-row/' },
       { label: 'Toast', href: '/components/toast/' },
+      { label: 'BottomCTA', href: '/components/bottom-cta/' },
     ],
   },
 ];

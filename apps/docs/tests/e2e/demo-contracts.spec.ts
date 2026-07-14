@@ -78,6 +78,16 @@ test('Toast in-flow specimens stay contained at 320px', async ({ page }, testInf
   expect(contained).toBe(true);
 });
 
+test('BottomCTA actions expose 44px targets in secondary-primary order', async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== 'mobile-chromium', 'Mobile owns BottomCTA target coverage.');
+  await openHtmlRoute(page, { path: '/components/bottom-cta/', heading: 'BottomCTA' });
+  const double = page.locator('[data-bottom-cta-sample="double"]');
+  const actions = double.getByRole('button');
+
+  await expect(actions).toHaveText(['취소', '확인']);
+  for (const action of await actions.all()) await expectMinimumTarget(action);
+});
+
 async function expectScrollAreaState(
   root: Locator,
   viewport: Locator,

@@ -95,6 +95,23 @@ test('Toast documents its provider, FIFO, pause, and non-modal boundaries', asyn
   await expect(main).toContainText('non-modal');
 });
 
+test('BottomCTA documents owned actions, fixed spacing, and BottomSheet boundaries', async ({ page }) => {
+  await openHtmlRoute(page, {
+    path: '/components/bottom-cta/',
+    heading: 'BottomCTA',
+  });
+
+  const main = page.locator('main');
+  await expect(main).toContainText('Single');
+  await expect(main).toContainText('Double');
+  await expect(main).toContainText('secondary → primary');
+  await expect(main).toContainText('fixed');
+  await expect(main).toContainText('takeSpace');
+  await expect(main).toContainText('--ds-safe-area-bottom');
+  await expect(main).toContainText('background="none"');
+  await expect(main).toContainText('BottomSheet');
+});
+
 test('TextButton renders its complete document template and demo without console errors', async ({ page }) => {
   const errors: string[] = [];
   page.on('console', (message) => {

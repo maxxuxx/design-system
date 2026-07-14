@@ -2092,6 +2092,106 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/toast/"
+    },
+    {
+      "name": "BottomCTA",
+      "slug": "bottom-cta",
+      "description": "화면 하단의 한두 개 핵심 행동을 owned Button으로 구성하고 fixed·safe-area·공간 보존을 일관되게 처리합니다.",
+      "status": "preview",
+      "figmaUrl": "",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "single",
+        "double",
+        "background-default",
+        "background-none"
+      ],
+      "sizes": [],
+      "states": [
+        "static",
+        "fixed",
+        "take-space"
+      ],
+      "accessibility": "secondary 다음 primary의 DOM·tab 순서를 유지하고 owned native Button의 이름, 상태, form 동작과 focus 표현을 보존합니다.",
+      "props": [
+        {
+          "name": "primaryAction",
+          "type": "BottomCTAAction",
+          "required": true,
+          "defaultValue": null,
+          "description": "정확한 owned Button element이며 large·full geometry로 렌더링되는 주 행동입니다."
+        },
+        {
+          "name": "secondaryAction",
+          "type": "BottomCTAAction",
+          "required": false,
+          "defaultValue": null,
+          "description": "있으면 Double layout을 만들고 primary보다 먼저 DOM과 tab 순서에 배치되는 보조 행동입니다."
+        },
+        {
+          "name": "fixed",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "portal 없이 현재 DOM 위치에서 viewport 하단에 panel을 고정합니다."
+        },
+        {
+          "name": "takeSpace",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "fixed일 때 ResizeObserver로 측정한 높이만큼 spacer를 두어 콘텐츠 가림을 방지합니다."
+        },
+        {
+          "name": "hasSafeAreaPadding",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "system inset, --ds-safe-area-bottom override, space/16 중 최댓값을 하단 padding으로 사용합니다."
+        },
+        {
+          "name": "background",
+          "type": "BottomCTABackground",
+          "required": false,
+          "defaultValue": "default",
+          "description": "default surface 또는 persistent surface를 제거한 none을 선택합니다."
+        },
+        {
+          "name": "...divProps",
+          "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "data·aria·event와 forwarded ref를 보존하며 style은 safe layout 값만 적용합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/large",
+        "space/0",
+        "space/4",
+        "space/12",
+        "space/16",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-lg",
+        "font/weight/semibold",
+        "font/line-height/body-lg",
+        "color/bg/surface",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/border/default",
+        "color/border/strong",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/bottom-cta/"
     }
   ]
 }

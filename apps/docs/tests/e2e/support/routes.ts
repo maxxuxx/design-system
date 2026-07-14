@@ -25,6 +25,7 @@ export const COMPONENT_HTML_ROUTES: readonly (HtmlRoute & { slug: string })[] = 
   { path: '/components/search-field/', heading: 'SearchField', slug: 'search-field' },
   { path: '/components/list-row/', heading: 'ListRow', slug: 'list-row' },
   { path: '/components/toast/', heading: 'Toast', slug: 'toast' },
+  { path: '/components/bottom-cta/', heading: 'BottomCTA', slug: 'bottom-cta' },
 ];
 export const CANONICAL_HTML_ROUTES = [
   ...PLATFORM_HTML_ROUTES,
