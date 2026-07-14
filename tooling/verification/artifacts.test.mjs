@@ -7,6 +7,7 @@ import test from 'node:test';
 import {
   verifyBuildArtifacts,
   verifyFigmaEvidence,
+  verifyFontArtifacts,
 } from './artifacts.mjs';
 
 const routes = [
@@ -860,6 +861,57 @@ async function createFixture() {
   await writeFile(path.join(figmaDir, 'verification.json'), JSON.stringify(makeVerification(tokens)));
   return root;
 }
+
+async function createFontFixture() {
+  const root = await mkdtemp(path.join(tmpdir(), 'ds-fonts-'));
+  const tokensRoot = path.join(root, 'packages', 'tokens');
+  const fontsRoot = path.join(tokensRoot, 'fonts', 'pretendard');
+  const woff2Root = path.join(fontsRoot, 'woff2');
+  await mkdir(woff2Root, { recursive: true });
+  const faces = Array.from({ length: 92 }, (_, index) => [
+    '@font-face {',
+    "  font-family: 'Pretendard Variable';",
+    '  font-display: swap;',
+    '  font-weight: 45 920;',
+    `  src: url(./fonts/pretendard/woff2/PretendardVariable.subset.${index}.woff2) format('woff2-variations');`,
+    `  unicode-range: U+${index.toString(16)};`,
+    '}',
+  ].join('\n'));
+  await writeFile(path.join(tokensRoot, 'fonts.css'), faces.join('\n'));
+  await writeFile(path.join(fontsRoot, 'LICENSE.txt'), 'SIL Open Font License 1.1');
+  await Promise.all(Array.from({ length: 92 }, (_, index) => writeFile(
+    path.join(woff2Root, `PretendardVariable.subset.${index}.woff2`),
+    `font-${index}`,
+  )));
+  return root;
+}
+
+test('accepts a complete local Pretendard font package', async (t) => {
+  const root = await createFontFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  assert.deepEqual(await verifyFontArtifacts(root), []);
+});
+
+test('rejects external, missing, and unlicensed Pretendard assets', async (t) => {
+  const root = await createFontFixture();
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const cssPath = path.join(root, 'packages', 'tokens', 'fonts.css');
+  const css = await readFile(cssPath, 'utf8');
+  await writeFile(cssPath, css.replace(
+    './fonts/pretendard/woff2/PretendardVariable.subset.0.woff2',
+    'https://cdn.example.com/PretendardVariable.subset.0.woff2',
+  ));
+  await rm(path.join(
+    root,
+    'packages/tokens/fonts/pretendard/woff2/PretendardVariable.subset.1.woff2',
+  ));
+  await rm(path.join(root, 'packages/tokens/fonts/pretendard/LICENSE.txt'));
+
+  const violations = await verifyFontArtifacts(root);
+  assert.ok(violations.includes('Pretendard fonts.css must not use external font URLs'));
+  assert.ok(violations.includes('Missing Pretendard font asset: ./fonts/pretendard/woff2/PretendardVariable.subset.1.woff2'));
+  assert.ok(violations.includes('Missing Pretendard SIL OFL license'));
+});
 
 test('accepts a complete v0.3 build, 118-token map, fifteen-component manifest, and Figma evidence', async (t) => {
   const root = await createFixture();

@@ -111,3 +111,18 @@ test('components.json exposes all fifteen release-ready component contracts', as
     expect(component.tokens.length).toBeGreaterThan(0);
   }
 });
+
+test('documentation loads the self-hosted Pretendard variable font', async ({ page }) => {
+  await page.goto('/foundations/typography/');
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+  });
+
+  const result = await page.locator('body').evaluate((body) => ({
+    family: getComputedStyle(body).fontFamily,
+    loaded: document.fonts.check('16px "Pretendard Variable"', '타이포그래피'),
+  }));
+
+  expect(result.family).toContain('Pretendard Variable');
+  expect(result.loaded).toBe(true);
+});

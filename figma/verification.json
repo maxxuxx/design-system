@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-12T23:09:56+09:00",
+  "verifiedAt": "2026-07-14T11:34:56+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -40,7 +40,7 @@
     "90 Native Differences",
     "99 Deprecated"
   ],
-  "tokenValuesSha256": "6552796c323819093677b58af217f94bedf69dfce9ea63c2c3bc15953bfc7018",
+  "tokenValuesSha256": "a9560f0635f009448adb3e8182574874cc317c42df68ce7630aaf2609d06b9aa",
   "effectValuesSha256": "e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8",
   "effectReadback": [
     {
@@ -95,16 +95,16 @@
     }
   ],
   "pageScreenshotSha256": {
-    "00 Cover": "c77e8b4b72feed70637ebccd24bac7443b83e6b30672faf7cd2d98f6a9361a13",
+    "00 Cover": "4602fa11f94696ed924d4078514d236bb05e7ef74de1c528a179419d8a29e76e",
     "01 Principles": "4002e3e8df110e06171a6b69a24e9b9dfb208eec633f2947e1470b185daa3625",
     "02 Getting Started": "2f4295f5dbe155b152639eaa149162d52b82fbf2fc7e0cbcd670b34ee0836071",
-    "03 Foundations": "be3abf4369d6b466082c18a2ebfaebc65835e9cbaa4a2d243e38393d70a84fc1",
+    "03 Foundations": "c3f132507d8a8ef4bd6e9690d099419ae849f047788f09311b860768c3cc6ebd",
     "04 Components": "748cc65b960ebc1a4bc87694a215dc173ec59d8cfa588048cf44922f03d9434c",
     "04.1 Icon": "ef4c59b98e2884752a85a7529dd4fda0bbd2d57c6b5b97abc31aae179a9ae09d",
-    "04.2 Badge": "273987be72319f7b9e48726632074c8475b58749227b155555fe27477506bd0f",
-    "04.3 Button": "ae5b3d09b20f974fc5ea439e4e4da8c1ca6d3f4168fcd291ed7cd3788a73e2a8",
-    "04.4 TextField": "ac62db900a8c7560d993392d0173874a1db8c6da75fabc8fee489d75a8274117",
-    "04.5 ScrollArea": "a46826086c4267d6de0f613e462997b7d8a471960e8db6b0e137c40eb865ec77",
+    "04.2 Badge": "183ebf9fdf84d6667526328f88b209d9ecdeeb3db5100d559e745d2fdf79b2ba",
+    "04.3 Button": "8ff05ea41d421d9276c7cb00848ad20d1e68b7b45e68e06ce14deb4a6e651df2",
+    "04.4 TextField": "7e768e590af79626dc178136537f4c9ab2da4323e278de7b102fb3cea31e84d3",
+    "04.5 ScrollArea": "04be530d2b892a693d73cca90745f01ec0b9089c4f86e698ef4c29c094a6ad64",
     "04.6 Checkbox": "72185543d79c8ab482e5b975d261cc47783c573f45175bf6d74f0ab8acb93b38",
     "04.7 RadioGroup": "a0bc1871d5a0f54b41d60adc7f60649f865536065baa26b50fb2551b9ea6d7df",
     "04.8 Switch": "88e54ade7faafefda00a8378214e7a9d2b8e52ef86ec76982984f0bb0f97b6d5",
