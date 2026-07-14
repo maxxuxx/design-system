@@ -474,6 +474,35 @@ top-level overlap.
   `1440 × 576`; SHA-256
   `5018b9a4f38e76e31c4cda142f0263a5feaf9d18dabd6fa1bf848c971d206cc5`
 
+## TDS-inspired mobile workflows v0.4 BottomCTA validation
+
+- Component set: [BottomCTA](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=331-55)
+- Variant count: 4
+- Axes:
+  - `Layout`: `Single`, `Double`
+  - `Background`: `Default`, `None`
+- Component properties, in order: `Primary label` and `Secondary label`
+  (`TEXT`), with `Continue` and `Back` defaults
+- Every master is `320 × 88px`, uses token-bound `space/16` four-side
+  padding and `space/12` action gap, and keeps the Pretendard-backed
+  Body/Large typography with `font/weight/semibold`
+- Single variants expose one `288 × 56px` primary action. Double variants use
+  equal `138 × 56px` secondary and primary actions in secondary-first order
+- All four masters own the large Fill Button master `64:38` and the large Weak
+  Button master `64:62`; Single keeps its secondary instance hidden so both
+  TEXT properties and owned-instance links remain stable across the set
+- Default binds the root surface to `color/bg/surface`; None has no root fill.
+  The audit found zero visible hard-coded product paints and zero unnamed nodes
+- Both label properties have four live references, semantic foreground Variable
+  bindings, and no missing Pretendard fonts. The final design-context readback
+  reproduced the exact four-variant React structure
+- Fixed positioning, measured `takeSpace`, safe-area padding, and the
+  BottomSheet footer restriction remain documented code behaviors rather than
+  additional visual axes
+- Full-page screenshot target: `04.20 BottomCTA` (`329:2`), rendered at
+  `1440 × 521`; SHA-256
+  `e0daa225ea23a82abf38a92735e92fd8b1818125cf4e64dc4e62eda2ba59addb`
+
 ## Phase 3 TextField validation
 
 - Component set: [TextField](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=80-50)

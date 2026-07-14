@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-14T14:38:32+09:00",
+  "verifiedAt": "2026-07-14T15:00:12+09:00",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -38,6 +38,7 @@
     "04.17 SearchField",
     "04.18 ListRow",
     "04.19 Toast",
+    "04.20 BottomCTA",
     "90 Native Differences",
     "99 Deprecated"
   ],
@@ -120,6 +121,7 @@
     "04.17 SearchField": "e53117e1bc17ffe727c87fd42b07e13c8681e10432d781946135cc5d87b553c2",
     "04.18 ListRow": "38f0975fdbe50d9bf1fd6982bd5d28933a79678d3c05263e31eaff0a6d57f0ff",
     "04.19 Toast": "5018b9a4f38e76e31c4cda142f0263a5feaf9d18dabd6fa1bf848c971d206cc5",
+    "04.20 BottomCTA": "e0daa225ea23a82abf38a92735e92fd8b1818125cf4e64dc4e62eda2ba59addb",
     "90 Native Differences": "d2f4653ba4149b165cba3bd7e2987ccf9dee7e52334311aaa3facc59b03c5e7c",
     "99 Deprecated": "d89687926c008d8841f097314ec3358aa2bf8267fe6d00501d4b4055c63c820e"
   },
@@ -556,6 +558,21 @@
       "screenshotReviewed": true,
       "bindingsAudited": true,
       "propParity": true
+    },
+    "BottomCTA": {
+      "componentSetUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=331-55",
+      "variantCount": 4,
+      "axes": [
+        { "name": "Layout", "values": ["Single", "Double"] },
+        { "name": "Background", "values": ["Default", "None"] }
+      ],
+      "properties": [
+        { "name": "Primary label", "type": "TEXT" },
+        { "name": "Secondary label", "type": "TEXT" }
+      ],
+      "screenshotReviewed": true,
+      "bindingsAudited": true,
+      "propParity": true
     }
   },
   "foundations": {
@@ -588,6 +605,7 @@
     "04.17 SearchField": "230:29",
     "04.18 ListRow": "248:6",
     "04.19 Toast": "316:2",
+    "04.20 BottomCTA": "329:2",
     "90 Native Differences": "88:2",
     "99 Deprecated": "88:5"
   },

@@ -907,7 +907,7 @@ describe('component metadata contract', () => {
     expect(matter(source).content).toContain('top Toast');
   });
 
-  it('locks the BottomCTA owned-action and fixed-layout metadata with its pending Figma URL', async () => {
+  it('locks the BottomCTA owned-action, fixed-layout metadata, and live Figma URL', async () => {
     const source = await readFile(
       `${srcRoot}content/components/bottom-cta.mdx`,
       'utf8',
@@ -917,7 +917,7 @@ describe('component metadata contract', () => {
     expect(data).toMatchObject({
       name: 'BottomCTA',
       slug: 'bottom-cta',
-      figmaUrl: '',
+      figmaUrl: 'https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=331-55',
       variants: ['single', 'double', 'background-default', 'background-none'],
       sizes: [],
       states: ['static', 'fixed', 'take-space'],
