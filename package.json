@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "pnpm --filter @hds/docs dev",
     "build": "pnpm --filter @hds/docs build",
+    "build:packages": "pnpm --filter @hds/tokens build && pnpm --filter @hds/react build",
     "check": "pnpm -r --if-present check",
     "test": "pnpm -r --if-present test",
     "test:e2e": "pnpm --filter @hds/docs test:e2e",
@@ -16,6 +17,7 @@
     "generated:check": "pnpm --filter @hds/tokens generated:check && pnpm --filter @hds/docs manifest:check",
     "guardrails:check": "node tooling/verification/guardrails.mjs",
     "artifacts:check": "node tooling/verification/artifacts.mjs",
-    "verify": "pnpm run check && pnpm run test && pnpm run test:guardrails && pnpm run generated:check && pnpm run guardrails:check && pnpm run build && pnpm run artifacts:check && pnpm run test:e2e"
+    "pack:check": "pnpm run build:packages && node tooling/verification/packages.mjs",
+    "verify": "pnpm run check && pnpm run test && pnpm run test:guardrails && pnpm run generated:check && pnpm run guardrails:check && pnpm run pack:check && pnpm run build && pnpm run artifacts:check && pnpm run test:e2e"
   }
 }

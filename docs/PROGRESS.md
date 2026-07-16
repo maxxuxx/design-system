@@ -7,7 +7,8 @@
 - 정식명: `Haru Design System`
 - 약칭: `HDS`
 - 버전: `0.1.0`
-- 작업 브랜치: `codex/hds-rebrand-v0-1`
+- 릴리스: [`v0.1.0`](https://github.com/maxxuxx/design-system/releases/tag/v0.1.0)
+- main commit: `4a17022`
 - 저장소: [maxxuxx/design-system](https://github.com/maxxuxx/design-system)
 - 문서: [hds.haru-dev.com](https://hds.haru-dev.com)
 - Figma: [Haru Design System](https://www.figma.com/design/hNlju4j556mzi0G515UDwE)
@@ -78,7 +79,17 @@ Windows Chromium baseline workflow [run 29319319388](https://github.com/maxxuxx/
 - [x] Windows Chromium component slice 40개와 full-page 15개 PR 재비교
 - [x] Linux·Windows CI와 Vercel Preview 통과
 - [ ] Vercel 프로젝트명을 `haru-design-system`으로 변경
-- [ ] `main` 병합 후 Production과 `hds.haru-dev.com` 최종 점검
+- [x] `main` 병합 후 Production과 `hds.haru-dev.com` 최종 점검
+- [x] `v0.1.0` tag와 GitHub Release 발행
+
+## npm 공개 준비
+
+- [x] `@hds/react` ESM·타입 선언·CSS `dist` build
+- [x] `@hds/react`, `@hds/tokens` publish file allowlist와 package metadata
+- [x] React runtime export·20개 stylesheet와 token 92개 font subset tarball 검증
+- [ ] npm 로그인과 `@hds` scope 소유권 확인
+- [ ] 첫 공개용 trusted publishing workflow 추가
+- [ ] `private: true` 해제 후 `@hds/tokens`, `@hds/react` 순서로 공개
 
 ## 후속 범위
 

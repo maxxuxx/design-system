@@ -2,17 +2,42 @@
   "name": "@hds/tokens",
   "private": true,
   "version": "0.1.0",
+  "description": "Design tokens and self-hosted Pretendard assets for Haru Design System.",
   "type": "module",
+  "license": "MIT",
+  "homepage": "https://hds.haru-dev.com/foundations/colors/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxxuxx/design-system.git",
+    "directory": "packages/tokens"
+  },
+  "bugs": {
+    "url": "https://github.com/maxxuxx/design-system/issues"
+  },
+  "files": [
+    "dist",
+    "fonts",
+    "fonts.css"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "exports": {
     "./fonts.css": "./fonts.css",
     "./tokens.css": "./dist/tokens.css",
-    "./tokens.json": "./dist/tokens.json"
+    "./tokens.json": "./dist/tokens.json",
+    "./package.json": "./package.json"
   },
   "scripts": {
+    "build": "pnpm run generated:check",
     "tokens:generate": "tsx scripts/tokens.ts --write",
     "generated:check": "tsx scripts/tokens.ts --check",
     "check": "tsc -p tsconfig.json --noEmit",
+    "prepack": "pnpm run build",
     "test": "vitest run"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
     "@types/node": "26.1.1",
