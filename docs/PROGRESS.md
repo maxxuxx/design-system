@@ -1,6 +1,6 @@
 # HDS v0.1.0 진행 상황
 
-마지막 갱신: 2026-07-14 (KST)
+마지막 갱신: 2026-07-16 (KST)
 
 ## 릴리스 기준
 
@@ -75,8 +75,8 @@ Windows Chromium baseline workflow [run 29319319388](https://github.com/maxxuxx/
 - [x] macOS `pnpm verify` 통과
 - [ ] Figma 파일 제목을 `Haru Design System`으로 변경
 - [x] Windows Chromium 누락 baseline 30개 생성·검토
-- [ ] Windows Chromium component slice 40개와 full-page 15개 PR 재비교
-- [ ] Linux·Windows CI와 Vercel Preview 통과
+- [x] Windows Chromium component slice 40개와 full-page 15개 PR 재비교
+- [x] Linux·Windows CI와 Vercel Preview 통과
 - [ ] Vercel 프로젝트명을 `haru-design-system`으로 변경
 - [ ] `main` 병합 후 Production과 `hds.haru-dev.com` 최종 점검
 
