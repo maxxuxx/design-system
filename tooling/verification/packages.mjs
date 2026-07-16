@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -8,6 +9,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const node = process.execPath;
 const useShell = process.platform === 'win32';
+const workspaceRequire = createRequire(path.join(root, 'packages/react/package.json'));
 
 function execCli(command, args, options) {
   return execFileSync(command, args, {
@@ -61,6 +63,15 @@ function createTarball(relative, output) {
   const [artifact] = JSON.parse(result);
   assert.ok(artifact, `npm pack returned no artifact for ${relative}`);
   return path.join(output, artifact.filename);
+}
+
+async function copyDependency(consumer, name, manifestPath) {
+  const target = path.join(consumer, 'node_modules', ...name.split('/'));
+  await mkdir(path.dirname(target), { recursive: true });
+  await cp(path.dirname(manifestPath), target, {
+    dereference: true,
+    recursive: true,
+  });
 }
 
 const react = packageFiles('packages/react');
@@ -162,24 +173,49 @@ try {
       dependencies: {
         '@hds/react': pathToFileURL(reactTarball).href,
         '@hds/tokens': pathToFileURL(tokensTarball).href,
-        react: '19.2.7',
-        'react-dom': '19.2.7',
-      },
-      devDependencies: {
-        '@types/react': '19.2.17',
-        '@types/react-dom': '19.2.3',
-        typescript: '6.0.3',
       },
     }, null, 2),
   );
   execCli(
-    'pnpm',
-    ['install', '--offline', '--ignore-scripts', '--frozen-lockfile=false'],
+    'npm',
+    [
+      'install',
+      '--offline',
+      '--ignore-scripts',
+      '--legacy-peer-deps',
+      '--no-audit',
+      '--no-fund',
+      '--package-lock=false',
+    ],
     {
       cwd: consumer,
       stdio: 'pipe',
     },
   );
+  const reactManifest = workspaceRequire.resolve('react/package.json');
+  const reactDomManifest = workspaceRequire.resolve('react-dom/package.json');
+  const reactTypesManifest = workspaceRequire.resolve('@types/react/package.json');
+  const reactDomTypesManifest = workspaceRequire.resolve('@types/react-dom/package.json');
+  const typescriptManifest = workspaceRequire.resolve('typescript/package.json');
+  const reactDomRequire = createRequire(reactDomManifest);
+  const reactTypesRequire = createRequire(reactTypesManifest);
+  await Promise.all([
+    copyDependency(consumer, 'react', reactManifest),
+    copyDependency(consumer, 'react-dom', reactDomManifest),
+    copyDependency(
+      consumer,
+      'scheduler',
+      reactDomRequire.resolve('scheduler/package.json'),
+    ),
+    copyDependency(consumer, '@types/react', reactTypesManifest),
+    copyDependency(consumer, '@types/react-dom', reactDomTypesManifest),
+    copyDependency(
+      consumer,
+      'csstype',
+      reactTypesRequire.resolve('csstype/package.json'),
+    ),
+    copyDependency(consumer, 'typescript', typescriptManifest),
+  ]);
   execFileSync(
     node,
     [
@@ -235,10 +271,14 @@ try {
       include: ['index.ts'],
     }, null, 2),
   );
-  execCli('pnpm', ['exec', 'tsc', '-p', 'tsconfig.json'], {
-    cwd: consumer,
-    stdio: 'pipe',
-  });
+  execFileSync(
+    node,
+    [path.join(consumer, 'node_modules/typescript/bin/tsc'), '-p', 'tsconfig.json'],
+    {
+      cwd: consumer,
+      stdio: 'pipe',
+    },
+  );
 } finally {
   await rm(consumer, { force: true, recursive: true });
 }
