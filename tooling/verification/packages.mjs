@@ -171,8 +171,8 @@ try {
       private: true,
       type: 'module',
       dependencies: {
-        '@hds/react': pathToFileURL(reactTarball).href,
-        '@hds/tokens': pathToFileURL(tokensTarball).href,
+        '@hds/react': `file:./${path.basename(reactTarball)}`,
+        '@hds/tokens': `file:./${path.basename(tokensTarball)}`,
       },
     }, null, 2),
   );
