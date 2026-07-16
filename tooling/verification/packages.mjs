@@ -6,13 +6,20 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 const node = process.execPath;
-const pnpm = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm';
+const useShell = process.platform === 'win32';
+
+function execCli(command, args, options) {
+  return execFileSync(command, args, {
+    ...options,
+    shell: useShell,
+    windowsHide: true,
+  });
+}
 
 function packageFiles(relative) {
-  const output = execFileSync(
-    npm,
+  const output = execCli(
+    'npm',
     ['pack', '--dry-run', '--json', '--ignore-scripts'],
     {
       cwd: path.join(root, relative),
@@ -42,8 +49,8 @@ function rejectFiles(artifact, patterns) {
 }
 
 function createTarball(relative, output) {
-  const result = execFileSync(
-    npm,
+  const result = execCli(
+    'npm',
     ['pack', '--json', '--ignore-scripts', '--pack-destination', output],
     {
       cwd: path.join(root, relative),
@@ -165,8 +172,8 @@ try {
       },
     }, null, 2),
   );
-  execFileSync(
-    pnpm,
+  execCli(
+    'pnpm',
     ['install', '--offline', '--ignore-scripts', '--frozen-lockfile=false'],
     {
       cwd: consumer,
@@ -228,7 +235,7 @@ try {
       include: ['index.ts'],
     }, null, 2),
   );
-  execFileSync(pnpm, ['exec', 'tsc', '-p', 'tsconfig.json'], {
+  execCli('pnpm', ['exec', 'tsc', '-p', 'tsconfig.json'], {
     cwd: consumer,
     stdio: 'pipe',
   });
