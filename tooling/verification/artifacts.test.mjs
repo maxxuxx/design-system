@@ -1766,7 +1766,9 @@ test('keeps permanent Linux and Windows verification CI', async () => {
   assert.match(workflow, /ubuntu-latest/);
   assert.match(workflow, /windows-latest/);
   assert.match(workflow, /runs-on:\s*\$\{\{ matrix\.os \}\}/);
-  assert.match(workflow, /pnpm\/action-setup@v4/);
+  assert.match(workflow, /actions\/checkout@v6/);
+  assert.match(workflow, /pnpm\/action-setup@v6/);
+  assert.match(workflow, /actions\/setup-node@v6/);
   assert.match(workflow, /node-version-file:\s*\.node-version/);
   assert.match(workflow, /cache:\s*pnpm/);
   assert.match(workflow, /corepack pnpm install --frozen-lockfile/);
@@ -1781,6 +1783,9 @@ test('keeps a manual Windows workflow for reviewing all forty component-slice ba
   );
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /runs-on:\s*windows-latest/);
+  assert.match(workflow, /actions\/checkout@v6/);
+  assert.match(workflow, /pnpm\/action-setup@v6/);
+  assert.match(workflow, /actions\/setup-node@v6/);
   assert.match(workflow, /corepack pnpm install --frozen-lockfile/);
   assert.match(workflow, /playwright install chromium/);
   assert.match(workflow, /component-slices\.visual\.spec\.ts/);

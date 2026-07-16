@@ -8,7 +8,7 @@
 - 약칭: `HDS`
 - 버전: `0.1.0`
 - 릴리스: [`v0.1.0`](https://github.com/maxxuxx/design-system/releases/tag/v0.1.0)
-- main commit: `4a17022`
+- release commit: `4a17022`
 - 저장소: [maxxuxx/design-system](https://github.com/maxxuxx/design-system)
 - 문서: [hds.haru-dev.com](https://hds.haru-dev.com)
 - Figma: [Haru Design System](https://www.figma.com/design/hNlju4j556mzi0G515UDwE)
@@ -88,8 +88,9 @@ Windows Chromium baseline workflow [run 29319319388](https://github.com/maxxuxx/
 - [x] `@hds/react`, `@hds/tokens` publish file allowlist와 package metadata
 - [x] React runtime export·20개 stylesheet와 token 92개 font subset tarball 검증
 - [ ] npm 로그인과 `@hds` scope 소유권 확인
-- [ ] 첫 공개용 trusted publishing workflow 추가
-- [ ] `private: true` 해제 후 `@hds/tokens`, `@hds/react` 순서로 공개
+- [ ] `private: true` 해제 후 2FA로 `@hds/tokens`, `@hds/react` 첫 공개
+- [ ] registry 소비자 설치 검증
+- [ ] 첫 공개 후 trusted publisher와 후속 release workflow 연결
 
 ## 후속 범위
 
