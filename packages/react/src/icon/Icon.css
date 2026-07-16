@@ -1,21 +1,21 @@
-.ds-icon {
+.hds-icon {
   display: inline-block;
   flex: 0 0 auto;
   vertical-align: -0.125em;
-  color: var(--ds-color-icon-primary);
+  color: var(--hds-color-icon-primary);
 }
 
-.ds-icon[data-size='16'] {
-  width: var(--ds-size-icon-small);
-  height: var(--ds-size-icon-small);
+.hds-icon[data-size='16'] {
+  width: var(--hds-size-icon-small);
+  height: var(--hds-size-icon-small);
 }
 
-.ds-icon[data-size='20'] {
-  width: var(--ds-size-icon-medium);
-  height: var(--ds-size-icon-medium);
+.hds-icon[data-size='20'] {
+  width: var(--hds-size-icon-medium);
+  height: var(--hds-size-icon-medium);
 }
 
-.ds-icon[data-size='24'] {
-  width: var(--ds-size-icon-large);
-  height: var(--ds-size-icon-large);
+.hds-icon[data-size='24'] {
+  width: var(--hds-size-icon-large);
+  height: var(--hds-size-icon-large);
 }

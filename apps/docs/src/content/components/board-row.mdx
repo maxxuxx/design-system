@@ -1,0 +1,176 @@
+---
+name: BoardRow
+slug: board-row
+description: 설정과 주문 정보처럼 한 줄의 요약과 상세 내용을 native disclosure로 연결합니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [closed, open]
+sizes: []
+states: [default, hover, pressed, focus-visible]
+accessibility: native details와 summary 의미, Enter·Space·click toggle, visible focus, decorative owned arrow를 보존합니다.
+props:
+  - name: title
+    type: string
+    required: true
+    defaultValue: null
+    description: summary의 주 정보이자 localizable visible label입니다.
+  - name: description
+    type: string
+    required: false
+    defaultValue: null
+    description: title 아래에 표시하는 선택 설명입니다.
+  - name: prefix
+    type: ReactNode
+    required: false
+    defaultValue: null
+    description: 번호나 decorative glyph 같은 presentational leading content입니다.
+  - name: children
+    type: ReactNode
+    required: true
+    defaultValue: null
+    description: disclosure가 열릴 때 표시하는 상세 내용입니다.
+  - name: open
+    type: boolean
+    required: false
+    defaultValue: null
+    description: owner가 관리하는 controlled open 상태입니다.
+  - name: defaultOpen
+    type: boolean
+    required: false
+    defaultValue: "false"
+    description: uncontrolled disclosure의 초기 open 상태입니다.
+  - name: onOpenChange
+    type: "(open: boolean) => void"
+    required: false
+    defaultValue: null
+    description: native toggle이 확정한 최종 open 상태를 전달합니다.
+  - name: ...detailsProps
+    type: "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>"
+    required: false
+    defaultValue: null
+    description: className, id, data·aria 속성과 ref를 포함합니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다.
+tokens:
+  - size/control/large
+  - size/icon/medium
+  - space/0
+  - space/2
+  - space/4
+  - space/8
+  - space/12
+  - space/16
+  - radius/none
+  - radius/md
+  - font/family/sans
+  - font/size/body-sm
+  - font/size/body
+  - font/weight/semibold
+  - font/line-height/body-sm
+  - font/line-height/body
+  - motion/duration/fast
+  - motion/easing/standard
+  - color/bg/surface
+  - color/text/primary
+  - color/text/secondary
+  - color/border/default
+  - color/action/weak
+  - color/action/weak-hover
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import BoardRowExample from '../../components/examples/BoardRowExample';
+
+## 예제
+
+<ComponentPreview title="BoardRow native disclosure와 제어 상태" description="비제어·제어 상태, 선택 설명과 prefix, 긴 문자열, native keyboard toggle을 비교하세요.">
+  <BoardRowExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+설정, 주문, 배송, 상품 목록처럼 한 줄의 요약에서 같은 문맥의 상세 정보를 펼칠 때 사용합니다. 별도 화면으로 이동하지 않고 현재 위치에서 보조 내용을 확인하는 disclosure에 적합합니다.
+
+## 사용하지 말아야 할 때
+
+요약을 누르면 다른 화면으로 이동해야 한다면 native link를 사용합니다. summary 안에 Button, anchor, input 같은 별도 interactive control을 넣거나, 알 수 없는 content height를 애니메이션하는 accordion으로 사용하지 않습니다.
+
+## 구조
+
+root는 native `details`, header는 그 첫 자식인 native `summary`입니다. summary 안에는 선택적인 presentational prefix, title과 description copy, 디자인 시스템이 소유하는 decorative ChevronRight가 있습니다. `children`은 summary 밖의 owned content region에 놓입니다.
+
+## 크기와 변형
+
+summary는 최소 56px 높이와 full-width pointer target을 유지합니다. 공개 size 축은 없고 `closed`와 `open` 값이 있습니다. Figma에서는 `Value=Closed|Open`과 `State=Default|Pressed`를 조합하며, React에서는 native open state가 같은 의미를 소유합니다.
+
+## 상태와 동작
+
+기본은 닫힌 uncontrolled disclosure입니다. `defaultOpen`은 초기값만 정하고 이후 click, Enter, Space는 native element가 처리합니다. `open`을 제공하면 controlled mode이며 `onOpenChange`에서 받은 최종 native state를 owner state에 반영합니다. content height는 애니메이션하지 않고 arrow transform만 짧게 전환합니다.
+
+## 반응형 동작
+
+row와 summary는 container 너비를 사용하고 title, description, prefix, content는 긴 unbroken copy에도 줄바꿈됩니다. 320px mobile에서도 가로 overflow 없이 한 열을 유지하며, 문서 specimen만 넓은 화면에서 두 열로 배치됩니다.
+
+## 접근성
+
+`details`와 `summary`가 제공하는 disclosure 의미, focusability, click·Enter·Space 동작을 재구현하지 않습니다. prefix와 ChevronRight는 presentational이므로 summary의 accessible name을 방해하지 않습니다. summary 안에 nested interactive descendant를 넣지 않으며 normal과 forced-colors에서 visible focus를 제공합니다. reduced motion에서는 arrow transition을 제거합니다.
+
+## React 예제
+
+```tsx
+import { useState } from 'react';
+import { BoardRow } from '@hds/react';
+import '@hds/react/styles.css';
+
+export function OrderDetails() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <BoardRow
+      description="내일 오후 2시 도착 예정"
+      open={open}
+      prefix={<span>01</span>}
+      title="배송 정보"
+      onOpenChange={setOpen}
+    >
+      서울시 중구 · 공동현관 호출
+    </BoardRow>
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `title` | `string` | required | summary의 localizable visible label |
+| `description` | `string` | - | title 아래 선택 설명 |
+| `prefix` | `ReactNode` | - | presentational leading content; interactive descendant 금지 |
+| `children` | `ReactNode` | required | disclosure 상세 내용 |
+| `open` | `boolean` | - | controlled open state |
+| `defaultOpen` | `boolean` | `false` | uncontrolled 초기값 |
+| `onOpenChange` | `(open: boolean) => void` | - | 최종 native state callback |
+| native props | <code>Omit&lt;DetailsHTMLAttributes&lt;HTMLDetailsElement&gt;, 'children' \| 'onToggle' \| 'open' \| 'prefix'&gt;</code> | - | native id·data·aria props와 ref; `style`은 외부 배치 whitelist만 보존, owned geometry/state와 dangerous HTML은 무시 |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/large`, `size/icon/medium`, `space/0`, `space/2`, `space/4`, `space/8`, `space/12`, `space/16`
+- `radius/none`, `radius/md`, `font/family/sans`, `font/size/body-sm`, `font/size/body`, `font/weight/semibold`, `font/line-height/body-sm`, `font/line-height/body`
+- `motion/duration/fast`, `motion/easing/standard`, `color/bg/surface`, `color/text/primary`, `color/text/secondary`, `color/border/default`, `color/action/weak`, `color/action/weak-hover`, `color/focus/ring`
+
+## Figma
+
+Live [BoardRow component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38)은 `Value Closed/Open × State Default/Pressed = 4` variants와 `Title`, `Description`, `Prefix` TEXT, `Show description`, `Show prefix` BOOLEAN properties를 제공합니다. Open variant만 content region을 보이고 owned ChevronRight를 회전하며, summary는 token-bound 56px minimum과 content-driven height를 유지합니다. 구현 방향은 [TDS Mobile BoardRow reference](https://tossmini-docs.toss.im/thds-mobile/components/board-row/)와 함께 검토합니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

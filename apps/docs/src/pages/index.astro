@@ -1,11 +1,18 @@
 ---
+import componentManifest from '../../public/design-system/components.json';
+import tokenManifest from '../../public/design-system/tokens.json';
+import { BRAND } from '../config/brand';
 import DocsLayout from '../layouts/DocsLayout.astro';
+
+const tokenCount = tokenManifest.tokens.length;
+const componentCount = componentManifest.components.length;
 ---
-<DocsLayout title="AI-Readable Design System v0.1">
+<DocsLayout title={BRAND.name} description={BRAND.description}>
   <section class="hero">
-    <span class="eyebrow">v0.1 · Local preview</span>
-    <h1>사람과 AI가 함께 읽는 디자인 시스템</h1>
-    <p>토큰, 원칙, React 파일럿 계약을 정적 문서와 JSON으로 같은 이름 아래 연결합니다.</p>
+    <span class="eyebrow">{BRAND.shortName} v{BRAND.version}</span>
+    <h1>{BRAND.headline}</h1>
+    <p>{BRAND.description}</p>
+    <p class="hero-metrics">{tokenCount}개 토큰 · {componentCount}개 React 컴포넌트 · Figma library · AI metadata</p>
     <a class="primary-link" href="/getting-started/">Getting Started</a>
   </section>
   <section aria-labelledby="explore-title">
@@ -13,7 +20,7 @@ import DocsLayout from '../layouts/DocsLayout.astro';
     <div class="link-grid">
       <a class="link-card" href="/principles/"><strong>원칙</strong><span>제품 전반의 판단 기준</span></a>
       <a class="link-card" href="/foundations/colors/"><strong>Foundations</strong><span>색상, 글자, 간격, 반경, 고도</span></a>
-      <a class="link-card" href="/components/button/"><strong>Components</strong><span>Icon, Badge, Button, TextField, ScrollArea</span></a>
+      <a class="link-card" href="/components/"><strong>Components</strong><span>{componentCount}개 컴포넌트의 목적, 상태, 프레임워크 지원 범위</span></a>
     </div>
   </section>
 </DocsLayout>

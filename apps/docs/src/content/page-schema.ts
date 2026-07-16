@@ -7,6 +7,7 @@ export const FOUNDATION_SLUGS = [
   'spacing',
   'radius',
   'elevation',
+  'motion',
 ] as const;
 
 export const guideSchema = z.object({

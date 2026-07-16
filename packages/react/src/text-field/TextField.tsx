@@ -4,6 +4,8 @@ import {
   type InputHTMLAttributes,
 } from 'react';
 
+import { mergeIds } from '../field/ids';
+
 export type TextFieldSize = 'medium' | 'large';
 export type TextFieldType =
   | 'text'
@@ -43,13 +45,6 @@ function normalizeType(type: unknown): TextFieldType {
     : 'text';
 }
 
-function mergeIds(...values: Array<string | undefined>): string | undefined {
-  const ids = values
-    .flatMap((value) => value?.split(/\s+/) ?? [])
-    .filter((value, index, all) => value.length > 0 && all.indexOf(value) === index);
-  return ids.length > 0 ? ids.join(' ') : undefined;
-}
-
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
   {
     'aria-describedby': ariaDescribedBy,
@@ -68,19 +63,19 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   ref,
 ) {
   const generatedId = useId();
-  const inputId = id ?? `ds-text-field-${generatedId}`;
+  const inputId = id ?? `hds-text-field-${generatedId}`;
   const hasDescription = typeof description === 'string' && description.trim().length > 0;
   const hasError = errorMessage !== undefined;
   const descriptionId = hasDescription ? `${inputId}-description` : undefined;
   const errorId = hasError ? `${inputId}-error` : undefined;
   const describedBy = mergeIds(descriptionId, errorId, ariaDescribedBy);
   const state = disabled ? 'disabled' : hasError ? 'error' : 'default';
-  const inputClasses = ['ds-text-field__input', className].filter(Boolean).join(' ');
+  const inputClasses = ['hds-text-field__input', className].filter(Boolean).join(' ');
   const inputType = normalizeType(type);
 
   return (
-    <div className="ds-text-field" data-state={state} data-size={size}>
-      <label className="ds-text-field__label" htmlFor={inputId}>
+    <div className="hds-text-field" data-state={state} data-size={size}>
+      <label className="hds-text-field__label" htmlFor={inputId}>
         {label}
       </label>
       <input
@@ -97,12 +92,12 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
         type={inputType}
       />
       {hasDescription ? (
-        <p className="ds-text-field__description" id={descriptionId}>
+        <p className="hds-text-field__description" id={descriptionId}>
           {description}
         </p>
       ) : null}
       {hasError ? (
-        <p className="ds-text-field__error" id={errorId} role="alert">
+        <p className="hds-text-field__error" id={errorId} role="alert">
           {errorMessage}
         </p>
       ) : null}

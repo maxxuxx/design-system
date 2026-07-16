@@ -141,10 +141,10 @@ function expectState(
   canScrollUp: boolean,
   canScrollDown: boolean,
 ): void {
-  const upEdge = root.querySelector<HTMLElement>('.ds-scroll-area__edge--top');
-  const downEdge = root.querySelector<HTMLElement>('.ds-scroll-area__edge--bottom');
-  const upButton = root.querySelector<HTMLButtonElement>('.ds-scroll-area__button--up');
-  const downButton = root.querySelector<HTMLButtonElement>('.ds-scroll-area__button--down');
+  const upEdge = root.querySelector<HTMLElement>('.hds-scroll-area__edge--top');
+  const downEdge = root.querySelector<HTMLElement>('.hds-scroll-area__edge--bottom');
+  const upButton = root.querySelector<HTMLButtonElement>('.hds-scroll-area__button--up');
+  const downButton = root.querySelector<HTMLButtonElement>('.hds-scroll-area__button--down');
 
   expect(root).toHaveAttribute('data-state', state);
   expect(viewport).toHaveAttribute('data-state', state);
@@ -280,7 +280,7 @@ describe('ScrollArea', () => {
       scrollHeight: 600,
       scrollTop: 0,
     });
-    const content = root.querySelector('.ds-scroll-area__content');
+    const content = root.querySelector('.hds-scroll-area__content');
     const observer = ResizeObserverDouble.instances[0];
 
     expect(observer).toBeDefined();
@@ -351,7 +351,7 @@ describe('ScrollArea', () => {
     expect(root).toHaveAttribute('id', 'orders-scroll-area');
     expect(root).toHaveAttribute('data-consumer', 'orders');
     expect(root).toHaveAttribute('data-state', 'no-overflow');
-    expect(root).toHaveClass('ds-scroll-area', 'consumer-scroll-area');
+    expect(root).toHaveClass('hds-scroll-area', 'consumer-scroll-area');
     expect(root).toHaveStyle({ height: '320px' });
     expect(viewportRef.current).toBe(viewport);
     expect(viewport).not.toHaveAttribute('id', 'orders-scroll-area');
@@ -367,7 +367,7 @@ describe('ScrollArea', () => {
 
     expect(viewport).toHaveAttribute('role', 'region');
     expect(viewport).toHaveAccessibleName(defaultProps.label);
-    expect(viewport.id).toMatch(/^ds-scroll-area-viewport-/);
+    expect(viewport.id).toMatch(/^hds-scroll-area-viewport-/);
     expect(viewport).toHaveAttribute('tabindex', '0');
     expect(buttons).toHaveLength(2);
     expect(buttons[0]).toHaveAttribute('type', 'button');
@@ -385,7 +385,7 @@ describe('ScrollArea', () => {
       scrollHeight: 600,
       scrollTop: 200,
     });
-    const icons = root.querySelectorAll<SVGSVGElement>('.ds-scroll-area__button .ds-icon');
+    const icons = root.querySelectorAll<SVGSVGElement>('.hds-scroll-area__button .hds-icon');
 
     expect(icons).toHaveLength(2);
     for (const icon of icons) {
@@ -419,28 +419,28 @@ describe('ScrollArea', () => {
     const reactStyles = readFileSync('src/styles.css', 'utf8');
     const tokenStyles = readFileSync('../tokens/dist/tokens.css', 'utf8');
 
-    expect(tokenStyles).toContain('--ds-blur-subtle: 8px;');
+    expect(tokenStyles).toContain('--hds-blur-subtle: 8px;');
     expect(reactStyles).toContain("@import './scroll-area/ScrollArea.css';");
     for (const selector of [
-      '.ds-scroll-area',
-      '.ds-scroll-area__viewport',
-      '.ds-scroll-area__content',
-      '.ds-scroll-area__edge',
-      '.ds-scroll-area__edge--top',
-      '.ds-scroll-area__edge--bottom',
-      '.ds-scroll-area__button',
-      '.ds-scroll-area__button--up',
-      '.ds-scroll-area__button--down',
+      '.hds-scroll-area',
+      '.hds-scroll-area__viewport',
+      '.hds-scroll-area__content',
+      '.hds-scroll-area__edge',
+      '.hds-scroll-area__edge--top',
+      '.hds-scroll-area__edge--bottom',
+      '.hds-scroll-area__button',
+      '.hds-scroll-area__button--up',
+      '.hds-scroll-area__button--down',
     ]) {
       expect(componentCss).toContain(selector);
     }
     expect(componentCss).toMatch(
-      /\.ds-scroll-area__edge\s*\{[^}]*box-sizing: border-box;/s,
+      /\.hds-scroll-area__edge\s*\{[^}]*box-sizing: border-box;/s,
     );
-    expect(componentCss).toContain('blur(var(--ds-blur-subtle))');
+    expect(componentCss).toContain('blur(var(--hds-blur-subtle))');
     expect([
       ...componentCss.matchAll(
-        /\.ds-scroll-area__edge--(?:top|bottom)\[data-active='true'\]\s*\{[^}]*background:\s*linear-gradient\(\s*to (?:top|bottom),\s*color-mix\(\s*in srgb,\s*var\(--ds-color-bg-surface\)\s+36%,\s*transparent\s*\),\s*transparent\s*\)\s*;?/g,
+        /\.hds-scroll-area__edge--(?:top|bottom)\[data-active='true'\]\s*\{[^}]*background:\s*linear-gradient\(\s*to (?:top|bottom),\s*color-mix\(\s*in srgb,\s*var\(--hds-color-bg-surface\)\s+36%,\s*transparent\s*\),\s*transparent\s*\)\s*;?/g,
       ),
     ]).toHaveLength(2);
   });

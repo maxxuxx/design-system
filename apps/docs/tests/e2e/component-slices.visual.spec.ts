@@ -8,6 +8,21 @@ const slices = [
   { name: 'Button', slug: 'button' },
   { name: 'TextField', slug: 'text-field' },
   { name: 'ScrollArea', slug: 'scroll-area' },
+  { name: 'Checkbox', slug: 'checkbox' },
+  { name: 'RadioGroup', slug: 'radio-group' },
+  { name: 'Switch', slug: 'switch' },
+  { name: 'Textarea', slug: 'textarea' },
+  { name: 'Select', slug: 'select' },
+  { name: 'TextButton', slug: 'text-button' },
+  { name: 'IconButton', slug: 'icon-button' },
+  { name: 'BoardRow', slug: 'board-row' },
+  { name: 'Tab', slug: 'tab' },
+  { name: 'BottomSheet', slug: 'bottom-sheet' },
+  { name: 'Dialog', slug: 'dialog' },
+  { name: 'SearchField', slug: 'search-field' },
+  { name: 'ListRow', slug: 'list-row' },
+  { name: 'Toast', slug: 'toast' },
+  { name: 'BottomCTA', slug: 'bottom-cta' },
 ] as const;
 
 for (const slice of slices) {
@@ -59,8 +74,8 @@ test('Button icon slots inherit the Button foreground color', async ({ page }) =
   await page.goto('/components/button/');
   const demo = page.locator('[data-component-demo="button"]');
   const button = demo.getByRole('button', { name: '주문 확인' });
-  const icon = button.locator('.ds-icon');
-  const label = button.locator('.ds-button__label');
+  const icon = button.locator('.hds-icon');
+  const label = button.locator('.hds-button__label');
   await expect(icon).toBeVisible();
 
   const labelColor = await label.evaluate((element) => getComputedStyle(element).color);
@@ -84,7 +99,7 @@ test('Button demo includes a full-width mobile sample', async ({ page }, testInf
   await expect(button).toHaveAttribute('data-width', 'full');
 
   const widths = await sample.evaluate((element) => {
-    const buttonElement = element.querySelector<HTMLButtonElement>('.ds-button')!;
+    const buttonElement = element.querySelector<HTMLButtonElement>('.hds-button')!;
     const sampleStyle = getComputedStyle(element);
     const sampleContentWidth = element.getBoundingClientRect().width
       - Number.parseFloat(sampleStyle.paddingLeft)
@@ -101,16 +116,16 @@ test('TextField demo shows full-width mobile states at both control heights', as
   const demo = page.locator('[data-component-demo="text-field"]');
   const stage = demo.locator('.component-demo__stage');
   const stack = stage.locator('.component-demo__stack');
-  const fields = stack.locator('.ds-text-field__input');
+  const fields = stack.locator('.hds-text-field__input');
   await expect(fields).toHaveCount(4);
   await expect(stack.getByText('기본 도움말')).toBeVisible();
   await expect(stack.getByText('필수 항목입니다.')).toBeVisible();
 
   const layout = await stage.evaluate((element) => {
     const stackElement = element.querySelector<HTMLElement>('.component-demo__stack')!;
-    const inputs = [...stackElement.querySelectorAll<HTMLInputElement>('.ds-text-field__input')];
+    const inputs = [...stackElement.querySelectorAll<HTMLInputElement>('.hds-text-field__input')];
     const feedback = [...stackElement.querySelectorAll<HTMLElement>(
-      '.ds-text-field__description, .ds-text-field__error',
+      '.hds-text-field__description, .hds-text-field__error',
     )];
     const stageStyle = getComputedStyle(element);
     const stageContentWidth = element.getBoundingClientRect().width
@@ -137,4 +152,109 @@ test('TextField demo shows full-width mobile states at both control heights', as
   expect(layout.states).toEqual(['default', 'default', 'error', 'disabled']);
   expect(layout.feedbackFits).toBe(true);
   expect(layout.noPageOverflow).toBe(true);
+});
+
+test('Checkbox label rows own 44px targets around 20px and 24px indicators', async ({ page }) => {
+  await page.goto('/components/checkbox/');
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  await expect(demo).toBeVisible();
+
+  const geometry = await demo.locator('.hds-checkbox').evaluateAll((roots) => roots.map((root) => {
+    const row = root.querySelector<HTMLElement>('.hds-checkbox__row')!;
+    const input = root.querySelector<HTMLInputElement>('.hds-checkbox__input')!;
+    return {
+      inputHeight: input.getBoundingClientRect().height,
+      rowHeight: row.getBoundingClientRect().height,
+    };
+  }));
+
+  expect(geometry.length).toBeGreaterThanOrEqual(6);
+  expect(geometry.every(({ rowHeight }) => rowHeight >= 44)).toBe(true);
+  expect([...new Set(geometry.map(({ inputHeight }) => inputHeight))]
+    .sort((left, right) => left - right)).toEqual([20, 24]);
+});
+
+test('Checkbox state cascade keeps checked Error styling while hovered', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/components/checkbox/');
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  const island = demo.locator('xpath=ancestor::astro-island');
+  await expect(island).not.toHaveAttribute('ssr', '');
+  await demo.getByLabel('값').selectOption('checked');
+  await expect(demo).toHaveAttribute('data-value', 'checked');
+  await demo.getByLabel('error', { exact: true }).check();
+
+  const checkbox = demo.locator('.hds-checkbox').first();
+  const input = checkbox.locator('.hds-checkbox__input');
+  await expect(input).toBeChecked();
+  await expect(checkbox).toHaveAttribute('data-state', 'error');
+
+  const beforeHover = await input.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, border: style.borderColor };
+  });
+  await checkbox.locator('.hds-checkbox__row').hover();
+  const whileHovered = await input.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { background: style.backgroundColor, border: style.borderColor };
+  });
+
+  expect(whileHovered).toEqual(beforeHover);
+});
+
+test('Checkbox state cascade uses system colors for Error and Disabled', async ({ page }) => {
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await page.goto('/components/checkbox/');
+  const demo = page.locator('[data-component-demo="checkbox"]');
+  const island = demo.locator('xpath=ancestor::astro-island');
+  await expect(island).not.toHaveAttribute('ssr', '');
+  await demo.getByLabel('값').selectOption('checked');
+  await expect(demo).toHaveAttribute('data-value', 'checked');
+  await demo.getByLabel('error', { exact: true }).check();
+
+  const colors = await demo.evaluate((element) => {
+    const probe = document.createElement('div');
+    probe.setAttribute(
+      'style',
+      'position:absolute;color:CanvasText;background:Canvas;border:1px solid GrayText;forced-color-adjust:none',
+    );
+    document.body.append(probe);
+    const system = getComputedStyle(probe);
+    const error = getComputedStyle(
+      element.querySelector<HTMLInputElement>('.hds-checkbox[data-state="error"] .hds-checkbox__input')!,
+    );
+    const disabled = getComputedStyle(
+      element.querySelector<HTMLInputElement>('.hds-checkbox[data-state="disabled"] .hds-checkbox__input')!,
+    );
+    const result = {
+      disabled: {
+        background: disabled.backgroundColor,
+        border: disabled.borderColor,
+        color: disabled.color,
+      },
+      error: {
+        background: error.backgroundColor,
+        border: error.borderColor,
+        color: error.color,
+      },
+      system: {
+        canvas: system.backgroundColor,
+        canvasText: system.color,
+        grayText: system.borderColor,
+      },
+    };
+    probe.remove();
+    return result;
+  });
+
+  expect(colors.error).toEqual({
+    background: colors.system.canvasText,
+    border: colors.system.canvasText,
+    color: colors.system.canvas,
+  });
+  expect(colors.disabled).toEqual({
+    background: colors.system.canvas,
+    border: colors.system.grayText,
+    color: colors.system.grayText,
+  });
 });

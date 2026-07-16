@@ -1,7 +1,7 @@
 ---
 slug: typography
 title: 타이포그래피
-description: 시스템 글꼴과 크기·행간·굵기 토큰으로 읽기 위계를 만듭니다.
+description: 자체 호스팅 Pretendard와 크기·행간·굵기 토큰으로 읽기 위계를 만듭니다.
 order: 2
 tokenPrefixes: [font/]
 ---
@@ -9,14 +9,21 @@ import TypeScale from '../../components/foundations/TypeScale.astro';
 
 ## 목적
 
-v0.1은 `font/family/sans` 시스템 스택을 사용합니다. 크기와 행간은 같은 이름의 단계로 조합하고, 굵기는 의미 있는 위계에만 사용합니다.
+v0.1은 자체 호스팅하는 Pretendard Variable v1.3.9를 기본 글꼴로 사용합니다. 외부 CDN을 호출하지 않으며, 글꼴을 불러오지 못하면 한국어와 운영체제의 sans-serif 글꼴로 대체합니다. 크기와 행간은 같은 이름의 단계로 조합하고, 굵기는 의미 있는 위계에만 사용합니다.
+
+제품에서 같은 글꼴을 사용하려면 토큰 CSS와 별도로 폰트 CSS를 한 번 불러옵니다.
+
+```css
+@import '@hds/tokens/fonts.css';
+@import '@hds/tokens/tokens.css';
+```
 
 ## 사용 문법
 
 ```css
-font-family: var(--ds-font-family-sans);
-font-size: var(--ds-font-size-body);
-line-height: var(--ds-font-line-height-body);
+font-family: var(--hds-font-family-sans);
+font-size: var(--hds-font-size-body);
+line-height: var(--hds-font-line-height-body);
 ```
 
 ## 생성된 스케일

@@ -1,0 +1,162 @@
+---
+name: Checkbox
+slug: checkbox
+description: 독립적인 선택지를 native form behavior와 mixed state로 제공하는 checkbox control입니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=139-176"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [unchecked, checked, indeterminate]
+sizes: [small, medium]
+states: [default, error, disabled]
+accessibility: visible label과 44px pointer target, native keyboard·form semantics, ordered description/error relationships를 제공합니다.
+props:
+  - name: label
+    type: string
+    required: true
+    defaultValue: null
+    description: checkbox와 연결되는 visible label입니다.
+  - name: description
+    type: string
+    required: false
+    defaultValue: null
+    description: 선택을 보조하는 도움말입니다.
+  - name: errorMessage
+    type: string
+    required: false
+    defaultValue: null
+    description: aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다.
+  - name: indeterminate
+    type: boolean
+    required: false
+    defaultValue: "false"
+    description: native input의 DOM indeterminate property를 동기화합니다.
+  - name: size
+    type: CheckboxSize
+    required: false
+    defaultValue: medium
+    description: small 20px 또는 medium 24px visible indicator를 선택합니다.
+  - name: ...inputProps
+    type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>"
+    required: false
+    defaultValue: null
+    description: owned size와 checkbox type을 제외한 native input props입니다.
+tokens:
+  - size/control/small
+  - size/selection/small
+  - size/selection/medium
+  - space/2
+  - space/4
+  - space/8
+  - radius/sm
+  - font/family/sans
+  - font/size/caption
+  - font/size/body-sm
+  - font/size/body
+  - font/line-height/caption
+  - font/line-height/body-sm
+  - font/line-height/body
+  - color/bg/surface
+  - color/bg/subtle
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/border/default
+  - color/border/focus
+  - color/action/primary
+  - color/action/primary-hover
+  - color/action/primary-pressed
+  - color/action/on-primary
+  - color/status/danger
+  - color/status/on-status
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import CheckboxExample from '../../components/examples/CheckboxExample';
+
+## 예제
+
+<ComponentPreview title="Checkbox 상태" description="value, size, indeterminate, disabled, error controls와 정적 상태를 비교합니다.">
+  <CheckboxExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+약관 동의, 알림 수신, 목록 항목 선택처럼 서로 독립적인 선택지를 한 개 이상 켜거나 끌 때 사용합니다. 하위 선택을 요약하는 부모 선택지는 `indeterminate` mixed state로 표시할 수 있습니다.
+
+## 사용하지 말아야 할 때
+
+여러 선택지 중 반드시 하나만 골라야 할 때는 RadioGroup을, 즉시 켜고 끄는 설정에는 Switch를 사용합니다. 실행 동작은 Button으로 표현합니다.
+
+## 구조
+
+root 안에 native checkbox input과 visible text를 감싼 label row가 먼저 오고, optional description과 optional error가 뒤따릅니다. label row가 pointer target을 소유하되 실제 focus와 form control은 input입니다.
+
+## 크기와 변형
+
+`small` indicator는 20px, `medium`은 24px이며 기본값은 `medium`입니다. 두 크기 모두 label row의 최소 높이는 44px입니다. value axis는 `unchecked`, `checked`, `indeterminate`입니다.
+
+## 상태와 동작
+
+상태 우선순위는 `Disabled > Error > Focus > Default`이며 checked value와 독립적입니다. `:checked`와 `:indeterminate` pseudo-class로 mark를 그리므로 uncontrolled native change도 시각 상태와 함께 움직입니다.
+
+## 반응형 동작
+
+root는 내용 너비를 사용하면서 available width를 넘지 않고, 긴 label과 feedback은 줄바꿈됩니다. 모바일에서도 별도 control을 만들지 않고 같은 44px label row와 native input을 유지합니다.
+
+## 접근성
+
+visible label은 input과 직접 연결됩니다. Space activation, browser form value, required와 disabled semantics를 그대로 보존합니다. `aria-describedby`는 description, error, caller IDs 순서로 중복 없이 합쳐지고 error는 `role="alert"`, `aria-invalid="true"`, `aria-errormessage`를 제공합니다.
+
+## React 예제
+
+```tsx
+import { Checkbox } from '@hds/react';
+import '@hds/react/styles.css';
+
+export function TermsConsent() {
+  return (
+    <Checkbox
+      description="필수 약관입니다."
+      label="서비스 약관에 동의합니다."
+      name="terms"
+      required
+      value="yes"
+    />
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `label` | `string` | required | visible associated label |
+| `description` | `string` | 없음 | helper text |
+| `errorMessage` | `string` | 없음 | error ARIA와 alert text |
+| `indeterminate` | `boolean` | `false` | native mixed property |
+| `size` | `'small' \| 'medium'` | `'medium'` | 20/24px indicator; row는 항상 최소 44px |
+| native input props | <code>Omit&lt;InputHTMLAttributes&lt;HTMLInputElement&gt;, 'size' \| 'type'&gt;</code> | 없음 | controlled/uncontrolled/form behavior |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/small`, `size/selection/small`, `size/selection/medium`
+- `space/2`, `space/4`, `space/8`, `radius/sm`
+- `color/bg/*`, `color/text/*`, `color/border/*`, `color/action/*`, `color/status/*`, `color/focus/ring`
+
+## Figma
+
+라이브 [Checkbox component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=139-176)은 `Size 2 × Value 3 × State 3 = 18` variants와 `Label`, `Description`, `Error` TEXT properties를 제공합니다. indicator 크기, 44px target row, 간격, radius, 색상과 text style은 local Variables와 Styles에 연결되어 있습니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

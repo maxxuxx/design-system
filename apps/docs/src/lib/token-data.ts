@@ -1,12 +1,19 @@
-import artifact from '@maxxuxx/tokens/tokens.json';
+import artifact from '@hds/tokens/tokens.json';
 
 export interface TokenRecord {
   name: string;
-  type: 'color' | 'dimension' | 'fontFamily' | 'fontWeight' | 'shadow';
+  type:
+    | 'color'
+    | 'dimension'
+    | 'fontFamily'
+    | 'fontWeight'
+    | 'shadow'
+    | 'duration'
+    | 'cubicBezier';
   kind: 'primitive' | 'semantic';
   value: string | number;
   description: string;
-  cssVariable: `--ds-${string}`;
+  cssVariable: `--hds-${string}`;
   resolvedValue: string | number;
 }
 

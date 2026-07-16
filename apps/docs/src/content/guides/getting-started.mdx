@@ -1,19 +1,19 @@
 ---
 slug: getting-started
 title: Getting Started
-description: 로컬 문서와 AI 산출물을 확인하는 가장 짧은 시작 경로입니다.
+description: HDS 문서와 AI 산출물을 확인하는 가장 짧은 시작 경로입니다.
 order: 2
 ---
 
-## 현재 배포 상태
+## HDS v0.1.0
 
-v0.1은 로컬 검증용이며 npm으로 설치할 수 없습니다. 저장소의 pnpm workspace 안에서만 사용합니다.
+Haru Design System은 `https://hds.haru-dev.com`에 배포됩니다. 패키지는 아직 npm으로 공개하지 않으며 저장소의 pnpm workspace 안에서만 사용합니다.
 
 ## 문서 실행
 
 ```powershell
 corepack pnpm install
-corepack pnpm --filter @maxxuxx/docs dev
+corepack pnpm --filter @hds/docs dev
 ```
 
 개발 서버가 출력한 로컬 URL에서 문서를 탐색합니다.
@@ -21,7 +21,7 @@ corepack pnpm --filter @maxxuxx/docs dev
 ## 정적 빌드
 
 ```powershell
-corepack pnpm --filter @maxxuxx/docs build
+corepack pnpm --filter @hds/docs build
 ```
 
 결과는 `apps/docs/dist`에 생성됩니다. 정적 HTML과 `/design-system/tokens.json`, `/design-system/components.json`이 함께 있어야 합니다.

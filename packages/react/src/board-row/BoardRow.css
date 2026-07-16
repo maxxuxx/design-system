@@ -1,0 +1,154 @@
+.hds-board-row {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  color: var(--hds-color-text-primary);
+  font-family: var(--hds-font-family-sans);
+  background: var(--hds-color-bg-surface);
+  border: var(--hds-space-2) solid var(--hds-color-border-default);
+  border-radius: var(--hds-radius-md);
+}
+
+.hds-board-row__summary {
+  display: flex;
+  box-sizing: border-box;
+  min-block-size: var(--hds-size-control-large);
+  min-inline-size: var(--hds-space-0);
+  align-items: center;
+  gap: var(--hds-space-12);
+  padding-block: var(--hds-space-8);
+  padding-inline: var(--hds-space-16);
+  list-style: none;
+  border-radius: inherit;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+  transition:
+    color var(--hds-motion-duration-fast) var(--hds-motion-easing-standard),
+    background-color var(--hds-motion-duration-fast)
+      var(--hds-motion-easing-standard);
+}
+
+.hds-board-row__summary::-webkit-details-marker {
+  display: none;
+}
+
+.hds-board-row__summary:hover {
+  background: var(--hds-color-action-weak);
+}
+
+.hds-board-row__summary:active {
+  background: var(--hds-color-action-weak-hover);
+}
+
+.hds-board-row__summary:focus-visible {
+  outline: var(--hds-space-2) solid transparent;
+  outline-offset: var(--hds-space-2);
+  box-shadow: 0 0 0 var(--hds-space-4) var(--hds-color-focus-ring);
+}
+
+.hds-board-row[open] .hds-board-row__summary {
+  border-end-start-radius: var(--hds-radius-none);
+  border-end-end-radius: var(--hds-radius-none);
+}
+
+.hds-board-row__prefix {
+  min-inline-size: var(--hds-space-0);
+  flex: 0 1 auto;
+  color: var(--hds-color-text-secondary);
+  font-size: var(--hds-font-size-body-sm);
+  line-height: var(--hds-font-line-height-body-sm);
+  overflow-wrap: anywhere;
+}
+
+.hds-board-row__copy {
+  display: grid;
+  min-inline-size: var(--hds-space-0);
+  flex: 1 1 auto;
+  gap: var(--hds-space-2);
+}
+
+.hds-board-row__title,
+.hds-board-row__description,
+.hds-board-row__content {
+  min-inline-size: var(--hds-space-0);
+  overflow-wrap: anywhere;
+}
+
+.hds-board-row__title {
+  font-size: var(--hds-font-size-body);
+  font-weight: var(--hds-font-weight-semibold);
+  line-height: var(--hds-font-line-height-body);
+}
+
+.hds-board-row__description {
+  color: var(--hds-color-text-secondary);
+  font-size: var(--hds-font-size-body-sm);
+  line-height: var(--hds-font-line-height-body-sm);
+}
+
+.hds-board-row__arrow {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--hds-color-text-secondary);
+  transition: transform var(--hds-motion-duration-fast)
+    var(--hds-motion-easing-standard);
+}
+
+.hds-board-row[open] .hds-board-row__arrow {
+  transform: rotate(90deg);
+}
+
+.hds-board-row__content {
+  padding: var(--hds-space-16);
+  color: var(--hds-color-text-primary);
+  font-size: var(--hds-font-size-body);
+  line-height: var(--hds-font-line-height-body);
+  border-block-start: var(--hds-space-2) solid var(--hds-color-border-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hds-board-row__summary,
+  .hds-board-row__arrow {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .hds-board-row {
+    color: CanvasText;
+    background: Canvas;
+    border-color: ButtonText;
+    forced-color-adjust: none;
+  }
+
+  .hds-board-row__summary:hover,
+  .hds-board-row__summary:active {
+    color: HighlightText;
+    background: Highlight;
+  }
+
+  .hds-board-row__summary:focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+
+  .hds-board-row__prefix,
+  .hds-board-row__description,
+  .hds-board-row__arrow {
+    color: CanvasText;
+  }
+
+  .hds-board-row__summary:hover .hds-board-row__prefix,
+  .hds-board-row__summary:hover .hds-board-row__description,
+  .hds-board-row__summary:hover .hds-board-row__arrow,
+  .hds-board-row__summary:active .hds-board-row__prefix,
+  .hds-board-row__summary:active .hds-board-row__description,
+  .hds-board-row__summary:active .hds-board-row__arrow {
+    color: HighlightText;
+  }
+
+  .hds-board-row__content {
+    color: CanvasText;
+    border-color: ButtonText;
+  }
+}

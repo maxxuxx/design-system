@@ -1,0 +1,168 @@
+.hds-bottom-sheet {
+  position: fixed;
+  inset: var(--hds-space-0);
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: none;
+  block-size: 100%;
+  max-block-size: none;
+  margin: var(--hds-space-0);
+  padding: var(--hds-space-24) var(--hds-space-0) var(--hds-space-0);
+  place-items: end center;
+  color: var(--hds-color-text-primary);
+  font-family: var(--hds-font-family-sans);
+  background: transparent;
+  border: var(--hds-space-0);
+  overflow: hidden;
+}
+
+.hds-bottom-sheet[open] {
+  display: grid;
+}
+
+.hds-bottom-sheet::backdrop {
+  background: var(--hds-color-bg-scrim);
+  transition: background-color var(--hds-motion-duration-medium)
+    var(--hds-motion-easing-standard);
+}
+
+.hds-bottom-sheet__surface {
+  display: flex;
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: calc(var(--hds-space-64) * 10);
+  max-block-size: calc(100dvh - var(--hds-space-24));
+  min-block-size: var(--hds-space-0);
+  flex-direction: column;
+  color: var(--hds-color-text-primary);
+  background: var(--hds-color-bg-surface);
+  border: var(--hds-space-2) solid var(--hds-color-border-default);
+  border-block-end: var(--hds-space-0);
+  border-start-start-radius: var(--hds-radius-xl);
+  border-start-end-radius: var(--hds-radius-xl);
+  box-shadow: var(--hds-elevation-2);
+  opacity: 1;
+  overflow: hidden;
+  transform: translateY(0);
+  transition:
+    opacity var(--hds-motion-duration-medium) var(--hds-motion-easing-standard),
+    transform var(--hds-motion-duration-medium) var(--hds-motion-easing-standard);
+}
+
+.hds-bottom-sheet[data-state='closing']::backdrop {
+  background: transparent;
+}
+
+.hds-bottom-sheet[data-state='closing'] .hds-bottom-sheet__surface {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+@starting-style {
+  .hds-bottom-sheet[data-state='open']::backdrop {
+    background: transparent;
+  }
+
+  .hds-bottom-sheet[data-state='open'] .hds-bottom-sheet__surface {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+.hds-bottom-sheet__header {
+  display: flex;
+  min-inline-size: var(--hds-space-0);
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: var(--hds-space-12);
+  padding: var(--hds-space-16) var(--hds-space-16) var(--hds-space-8)
+    var(--hds-space-24);
+}
+
+.hds-bottom-sheet__heading-copy {
+  display: grid;
+  min-inline-size: var(--hds-space-0);
+  flex: 1 1 auto;
+  gap: var(--hds-space-4);
+  padding-block: var(--hds-space-8);
+  overflow-wrap: anywhere;
+}
+
+.hds-bottom-sheet__title,
+.hds-bottom-sheet__description,
+.hds-bottom-sheet__body {
+  min-inline-size: var(--hds-space-0);
+  margin: var(--hds-space-0);
+  overflow-wrap: anywhere;
+}
+
+.hds-bottom-sheet__title {
+  font-size: var(--hds-font-size-title-sm);
+  font-weight: var(--hds-font-weight-semibold);
+  line-height: var(--hds-font-line-height-title-sm);
+}
+
+.hds-bottom-sheet__description {
+  color: var(--hds-color-text-secondary);
+  font-size: var(--hds-font-size-body-sm);
+  line-height: var(--hds-font-line-height-body-sm);
+}
+
+.hds-bottom-sheet__close {
+  flex: 0 0 auto;
+}
+
+.hds-bottom-sheet__body {
+  min-block-size: var(--hds-space-0);
+  flex: 1 1 auto;
+  padding: var(--hds-space-8) var(--hds-space-24) var(--hds-space-24);
+  font-size: var(--hds-font-size-body);
+  line-height: var(--hds-font-line-height-body);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.hds-bottom-sheet__footer {
+  position: sticky;
+  inset-block-end: var(--hds-space-0);
+  display: flex;
+  flex: 0 0 auto;
+  gap: var(--hds-space-12);
+  padding: var(--hds-space-16) var(--hds-space-24) var(--hds-space-24);
+  background: var(--hds-color-bg-surface);
+  border-block-start: var(--hds-space-2) solid var(--hds-color-border-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hds-bottom-sheet::backdrop,
+  .hds-bottom-sheet__surface {
+    transition: none;
+  }
+
+  .hds-bottom-sheet[data-state='closing'] .hds-bottom-sheet__surface {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .hds-bottom-sheet::backdrop {
+    background: Canvas;
+  }
+
+  .hds-bottom-sheet__surface {
+    color: CanvasText;
+    background: Canvas;
+    border-color: ButtonText;
+    box-shadow: none;
+    forced-color-adjust: none;
+  }
+
+  .hds-bottom-sheet__description {
+    color: CanvasText;
+  }
+
+  .hds-bottom-sheet__footer {
+    background: Canvas;
+    border-color: ButtonText;
+  }
+}

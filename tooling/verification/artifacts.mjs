@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -12,29 +12,70 @@ const routes = [
   'foundations/spacing/index.html',
   'foundations/radius/index.html',
   'foundations/elevation/index.html',
+  'foundations/motion/index.html',
+  'components/index.html',
   'components/icon/index.html',
   'components/badge/index.html',
   'components/button/index.html',
   'components/text-field/index.html',
   'components/scroll-area/index.html',
+  'components/checkbox/index.html',
+  'components/radio-group/index.html',
+  'components/switch/index.html',
+  'components/textarea/index.html',
+  'components/select/index.html',
+  'components/text-button/index.html',
+  'components/icon-button/index.html',
+  'components/board-row/index.html',
+  'components/tab/index.html',
+  'components/bottom-sheet/index.html',
+  'components/dialog/index.html',
+  'components/search-field/index.html',
+  'components/list-row/index.html',
+  'components/toast/index.html',
+  'components/bottom-cta/index.html',
   'design-system/tokens.json',
   'design-system/components.json',
 ];
 
 const tokenKeys = ['cssVariable', 'description', 'kind', 'name', 'resolvedValue', 'type', 'value'];
-const tokenTypes = new Set(['color', 'dimension', 'fontFamily', 'fontWeight', 'shadow']);
+const tokenTypes = new Set([
+  'color', 'cubicBezier', 'dimension', 'duration', 'fontFamily', 'fontWeight', 'shadow',
+]);
+const tokenTypeCounts = {
+  color: 59,
+  cubicBezier: 1,
+  dimension: 49,
+  duration: 2,
+  fontFamily: 1,
+  fontWeight: 4,
+  shadow: 2,
+};
 const tokenKinds = new Set(['primitive', 'semantic']);
 const componentKeys = [
   'accessibility', 'description', 'docsUrl', 'figmaUrl', 'frameworks', 'name',
   'props', 'sizes', 'slug', 'states', 'status', 'tokens', 'variants',
 ];
 const propKeys = ['defaultValue', 'description', 'name', 'required', 'type'];
-const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius'];
+const collectionNames = ['Primitives', 'Semantic Color', 'Spacing', 'Typography', 'Radius', 'Motion'];
+const collectionVariableCounts = {
+  Primitives: 33,
+  'Semantic Color': 27,
+  Spacing: 26,
+  Typography: 21,
+  Radius: 6,
+  Motion: 3,
+};
 const textStyleNames = ['Display', 'Heading', 'Title', 'Body/Large', 'Body', 'Body/Small', 'Caption', 'Label'];
 const pageNames = [
   '00 Cover', '01 Principles', '02 Getting Started', '03 Foundations',
   '04 Components', '04.1 Icon', '04.2 Badge', '04.3 Button',
-  '04.4 TextField', '04.5 ScrollArea', '90 Native Differences', '99 Deprecated',
+  '04.4 TextField', '04.5 ScrollArea', '04.6 Checkbox', '04.7 RadioGroup',
+  '04.8 Switch', '04.9 Textarea', '04.10 Select',
+  '04.11 TextButton', '04.12 IconButton', '04.13 BoardRow', '04.14 Tab',
+  '04.15 BottomSheet', '04.16 Dialog', '04.17 SearchField', '04.18 ListRow',
+  '04.19 Toast', '04.20 BottomCTA',
+  '90 Native Differences', '99 Deprecated',
 ];
 const componentSpecs = [
   {
@@ -46,6 +87,11 @@ const componentSpecs = [
     name: 'Badge',
     slug: 'badge',
     variantCount: 16,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Variant', values: ['Soft', 'Solid'] },
+      { name: 'Tone', values: ['Neutral', 'Primary', 'Success', 'Danger'] },
+    ],
     properties: [{ name: 'Label', type: 'TEXT' }],
     variants: ['soft', 'solid', 'neutral', 'primary', 'success', 'danger'],
     sizes: ['small', 'medium'],
@@ -55,6 +101,11 @@ const componentSpecs = [
     name: 'Button',
     slug: 'button',
     variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Fill', 'Weak', 'Outline'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Loading', type: 'BOOLEAN' },
@@ -71,6 +122,10 @@ const componentSpecs = [
     name: 'TextField',
     slug: 'text-field',
     variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
     properties: [
       { name: 'Label', type: 'TEXT' },
       { name: 'Value', type: 'TEXT' },
@@ -85,10 +140,278 @@ const componentSpecs = [
     name: 'ScrollArea',
     slug: 'scroll-area',
     variantCount: 4,
+    axes: [{ name: 'State', values: ['No overflow', 'Start', 'Middle', 'End'] }],
     properties: [],
     variants: [],
     sizes: [],
     states: ['no-overflow', 'start', 'middle', 'end'],
+  },
+  {
+    name: 'Checkbox',
+    slug: 'checkbox',
+    variantCount: 18,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Value', values: ['Unchecked', 'Checked', 'Indeterminate'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['unchecked', 'checked', 'indeterminate'],
+    sizes: ['small', 'medium'],
+    states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'RadioGroup',
+    slug: 'radio-group',
+    variantCount: 18,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Selection', values: ['None', 'First', 'Second'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
+    properties: [
+      { name: 'Legend', type: 'TEXT' },
+      { name: 'Option 1', type: 'TEXT' },
+      { name: 'Option 2', type: 'TEXT' },
+      { name: 'Option 3', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['none', 'first', 'second'],
+    sizes: ['small', 'medium'],
+    states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'Switch',
+    slug: 'switch',
+    variantCount: 12,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium'] },
+      { name: 'Value', values: ['Off', 'On'] },
+      { name: 'State', values: ['Default', 'Error', 'Disabled'] },
+    ],
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['off', 'on'],
+    sizes: ['small', 'medium'],
+    states: ['default', 'error', 'disabled'],
+  },
+  {
+    name: 'Textarea',
+    slug: 'textarea',
+    variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Value', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: ['vertical', 'none'],
+    sizes: ['medium', 'large'],
+    states: ['default', 'focus', 'error', 'disabled'],
+  },
+  {
+    name: 'Select',
+    slug: 'select',
+    variantCount: 8,
+    axes: [
+      { name: 'Size', values: ['Medium', 'Large'] },
+      { name: 'State', values: ['Default', 'Focus', 'Error', 'Disabled'] },
+    ],
+    properties: [
+      { name: 'Label', type: 'TEXT' },
+      { name: 'Value', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Error', type: 'TEXT' },
+    ],
+    variants: [],
+    sizes: ['medium', 'large'],
+    states: ['default', 'focus', 'error', 'disabled'],
+  },
+  {
+    name: 'TextButton',
+    slug: 'text-button',
+    variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Clear', 'Underline', 'Arrow'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    properties: [{ name: 'Label', type: 'TEXT' }],
+    variants: ['clear', 'underline', 'arrow'],
+    sizes: ['small', 'medium', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'visited', 'disabled'],
+  },
+  {
+    name: 'IconButton',
+    slug: 'icon-button',
+    variantCount: 27,
+    axes: [
+      { name: 'Size', values: ['Small', 'Medium', 'Large'] },
+      { name: 'Variant', values: ['Clear', 'Fill', 'Outline'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    properties: [{ name: 'Icon', type: 'INSTANCE_SWAP' }],
+    variants: ['clear', 'fill', 'outline'],
+    sizes: ['small', 'medium', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'disabled'],
+  },
+  {
+    name: 'BoardRow',
+    slug: 'board-row',
+    variantCount: 4,
+    axes: [
+      { name: 'Value', values: ['Closed', 'Open'] },
+      { name: 'State', values: ['Default', 'Pressed'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Prefix', type: 'TEXT' },
+      { name: 'Show description', type: 'BOOLEAN' },
+      { name: 'Show prefix', type: 'BOOLEAN' },
+    ],
+    variants: ['closed', 'open'],
+    sizes: [],
+    states: ['default', 'hover', 'pressed', 'focus-visible'],
+  },
+  {
+    name: 'Tab',
+    slug: 'tab',
+    variantCount: 12,
+    axes: [
+      { name: 'Size', values: ['Small', 'Large'] },
+      { name: 'Layout', values: ['Equal', 'Scroll'] },
+      { name: 'Selection', values: ['First', 'Second', 'Third'] },
+    ],
+    properties: [
+      { name: 'First label', type: 'TEXT' },
+      { name: 'Second label', type: 'TEXT' },
+      { name: 'Third label', type: 'TEXT' },
+    ],
+    variants: ['equal', 'scroll'],
+    sizes: ['small', 'large'],
+    states: ['default', 'hover', 'pressed', 'focus-visible', 'selected', 'disabled'],
+  },
+  {
+    name: 'BottomSheet',
+    slug: 'bottom-sheet',
+    variantCount: 4,
+    axes: [
+      { name: 'Height', values: ['Content', 'Full'] },
+      { name: 'Footer', values: ['Hidden', 'Visible'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Show description', type: 'BOOLEAN' },
+    ],
+    variants: ['content', 'full'],
+    sizes: [],
+    states: ['open', 'closing'],
+  },
+  {
+    name: 'Dialog',
+    slug: 'dialog',
+    variantCount: 4,
+    axes: [
+      { name: 'Type', values: ['Alert', 'Confirm'] },
+      { name: 'Description', values: ['Hidden', 'Visible'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Alert label', type: 'TEXT' },
+      { name: 'Cancel label', type: 'TEXT' },
+      { name: 'Confirm label', type: 'TEXT' },
+      { name: 'Show description', type: 'BOOLEAN' },
+    ],
+    variants: ['alert', 'confirm'],
+    sizes: [],
+    states: ['open', 'closing', 'disabled', 'loading'],
+  },
+  {
+    name: 'SearchField',
+    slug: 'search-field',
+    variantCount: 8,
+    axes: [
+      { name: 'Value', values: ['Empty', 'Filled'] },
+      { name: 'State', values: ['Default', 'Focus', 'Disabled', 'ReadOnly'] },
+    ],
+    properties: [
+      { name: 'Placeholder', type: 'TEXT' },
+      { name: 'Value', type: 'TEXT' },
+    ],
+    variants: ['empty', 'filled'],
+    sizes: [],
+    states: ['default', 'focus', 'disabled', 'readonly'],
+  },
+  {
+    name: 'ListRow',
+    slug: 'list-row',
+    variantCount: 6,
+    axes: [
+      { name: 'Divider', values: ['None', 'Indented'] },
+      { name: 'State', values: ['Default', 'Pressed', 'Disabled'] },
+    ],
+    properties: [
+      { name: 'Title', type: 'TEXT' },
+      { name: 'Description', type: 'TEXT' },
+      { name: 'Right', type: 'TEXT' },
+      { name: 'Show left', type: 'BOOLEAN' },
+      { name: 'Show description', type: 'BOOLEAN' },
+      { name: 'Show right', type: 'BOOLEAN' },
+      { name: 'Show arrow', type: 'BOOLEAN' },
+      { name: 'Left icon', type: 'INSTANCE_SWAP' },
+    ],
+    variants: ['none', 'indented'],
+    sizes: [],
+    states: ['default', 'pressed', 'disabled'],
+  },
+  {
+    name: 'Toast',
+    slug: 'toast',
+    variantCount: 6,
+    axes: [
+      { name: 'Tone', values: ['Neutral', 'Success', 'Danger'] },
+      { name: 'Action', values: ['Hidden', 'Visible'] },
+    ],
+    properties: [
+      { name: 'Message', type: 'TEXT' },
+      { name: 'Action label', type: 'TEXT' },
+      { name: 'Show icon', type: 'BOOLEAN' },
+      { name: 'Icon', type: 'INSTANCE_SWAP' },
+    ],
+    variants: ['neutral', 'success', 'danger', 'action-hidden', 'action-visible'],
+    sizes: [],
+    states: ['visible', 'queued', 'paused', 'persistent'],
+  },
+  {
+    name: 'BottomCTA',
+    slug: 'bottom-cta',
+    variantCount: 4,
+    axes: [
+      { name: 'Layout', values: ['Single', 'Double'] },
+      { name: 'Background', values: ['Default', 'None'] },
+    ],
+    properties: [
+      { name: 'Primary label', type: 'TEXT' },
+      { name: 'Secondary label', type: 'TEXT' },
+    ],
+    variants: ['single', 'double', 'background-default', 'background-none'],
+    sizes: [],
+    states: ['static', 'fixed', 'take-space'],
   },
 ];
 const componentPropContracts = {
@@ -172,14 +495,346 @@ const componentPropContracts = {
       defaultValue: null,
     },
   ],
+  Checkbox: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'indeterminate', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'size', type: 'CheckboxSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  RadioGroup: [
+    { name: 'legend', type: 'string', required: true, defaultValue: null },
+    { name: 'name', type: 'string', required: true, defaultValue: null },
+    { name: 'options', type: 'readonly RadioGroupOption[]', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'RadioGroupSize', required: false, defaultValue: 'medium' },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: null },
+    { name: 'required', type: 'boolean', required: false, defaultValue: 'false' },
+    {
+      name: 'onChange',
+      type: 'ChangeEventHandler<HTMLInputElement>',
+      required: false,
+      defaultValue: null,
+    },
+    {
+      name: '...fieldsetProps',
+      type: "Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 'children' | 'onChange'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Switch: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'SwitchSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'role' | 'size' | 'type'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Textarea: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextareaSize', required: false, defaultValue: 'medium' },
+    { name: 'resize', type: 'TextareaResize', required: false, defaultValue: 'vertical' },
+    {
+      name: '...textareaProps',
+      type: "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Select: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'errorMessage', type: 'string', required: false, defaultValue: null },
+    { name: 'placeholder', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'SelectSize', required: false, defaultValue: 'medium' },
+    {
+      name: '...selectProps',
+      type: "Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'multiple' | 'size'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  TextButton: [
+    { name: 'children', type: 'string', required: true, defaultValue: null },
+    { name: 'href', type: 'string', required: false, defaultValue: null },
+    { name: 'size', type: 'TextButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'TextButtonVariant', required: false, defaultValue: 'clear' },
+    { name: 'tone', type: 'TextButtonTone', required: false, defaultValue: 'primary' },
+    {
+      name: '...nativeProps',
+      type: "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  IconButton: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'name', type: 'IconName', required: true, defaultValue: null },
+    { name: 'size', type: 'IconButtonSize', required: false, defaultValue: 'medium' },
+    { name: 'variant', type: 'IconButtonVariant', required: false, defaultValue: 'clear' },
+    {
+      name: '...buttonProps',
+      type: "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  BoardRow: [
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'prefix', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'open', type: 'boolean', required: false, defaultValue: null },
+    { name: 'defaultOpen', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'onOpenChange', type: '(open: boolean) => void', required: false, defaultValue: null },
+    {
+      name: '...detailsProps',
+      type: "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Tab: [
+    { name: 'ariaLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'items', type: 'readonly TabItem[]', required: true, defaultValue: null },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: 'first enabled' },
+    { name: 'onValueChange', type: '(value: string) => void', required: false, defaultValue: null },
+    { name: 'size', type: 'TabSize', required: false, defaultValue: 'large' },
+    { name: 'layout', type: 'TabLayout', required: false, defaultValue: 'equal' },
+    {
+      name: '...divProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  BottomSheet: [
+    { name: 'open', type: 'boolean', required: true, defaultValue: null },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean, reason: BottomSheetCloseReason) => void',
+      required: true,
+      defaultValue: null,
+    },
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    { name: 'footer', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'closeLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    {
+      name: 'initialFocusRef',
+      type: 'RefObject<HTMLElement | null>',
+      required: false,
+      defaultValue: 'owned close button',
+    },
+  ],
+  Dialog: [
+    { name: 'open', type: 'boolean', required: true, defaultValue: null },
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'alertLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'cancelLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'confirmLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'confirmDisabled', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'confirmLoading', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'dismissible', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    {
+      name: 'onOpenChange',
+      type: '((open: boolean, reason: AlertDialogCloseReason) => void) | ((open: boolean, reason: ConfirmDialogCloseReason) => void)',
+      required: true,
+      defaultValue: null,
+    },
+    {
+      name: '...rootProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  SearchField: [
+    { name: 'label', type: 'string', required: true, defaultValue: null },
+    { name: 'clearLabel', type: 'string', required: true, defaultValue: null },
+    { name: 'value', type: 'string', required: false, defaultValue: null },
+    { name: 'defaultValue', type: 'string', required: false, defaultValue: null },
+    { name: 'onValueChange', type: '(value: string) => void', required: false, defaultValue: null },
+    { name: 'onClear', type: '() => void', required: false, defaultValue: null },
+    { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+    {
+      name: '...inputProps',
+      type: "Omit<InputHTMLAttributes<HTMLInputElement>, 'children' | 'defaultValue' | 'onChange' | 'size' | 'type' | 'value'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  ListRow: [
+    { name: 'title', type: 'string', required: true, defaultValue: null },
+    { name: 'description', type: 'string', required: false, defaultValue: null },
+    { name: 'left', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'right', type: 'ReactNode', required: false, defaultValue: null },
+    { name: 'divider', type: "'none' | 'indented'", required: false, defaultValue: 'none' },
+    { name: 'withArrow', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'href', type: 'string', required: false, defaultValue: null },
+    { name: 'onClick', type: 'MouseEventHandler<HTMLButtonElement>', required: false, defaultValue: null },
+    {
+      name: '...nativeProps',
+      type: 'ListRowStaticProps | ListRowButtonProps | ListRowAnchorProps',
+      required: false,
+      defaultValue: null,
+    },
+  ],
+  Toast: [
+    { name: 'children', type: 'ReactNode', required: true, defaultValue: null },
+    {
+      name: 'portalContainer',
+      type: 'HTMLElement | null',
+      required: false,
+      defaultValue: 'document.body after hydration',
+    },
+    { name: 'message', type: 'string', required: true, defaultValue: null },
+    { name: 'tone', type: 'ToastTone', required: false, defaultValue: 'neutral' },
+    { name: 'icon', type: 'IconName', required: false, defaultValue: null },
+    {
+      name: 'duration',
+      type: 'number',
+      required: false,
+      defaultValue: '3000 or 5000 with action',
+    },
+    { name: 'position', type: 'ToastPosition', required: false, defaultValue: 'bottom' },
+    { name: 'action', type: 'ToastAction', required: false, defaultValue: null },
+    { name: 'show', type: '(options: ToastOptions) => string', required: true, defaultValue: null },
+    { name: 'dismiss', type: '(id: string) => void', required: true, defaultValue: null },
+    { name: 'clear', type: '() => void', required: true, defaultValue: null },
+  ],
+  BottomCTA: [
+    { name: 'primaryAction', type: 'BottomCTAAction', required: true, defaultValue: null },
+    { name: 'secondaryAction', type: 'BottomCTAAction', required: false, defaultValue: null },
+    { name: 'fixed', type: 'boolean', required: false, defaultValue: 'false' },
+    { name: 'takeSpace', type: 'boolean', required: false, defaultValue: 'true' },
+    { name: 'hasSafeAreaPadding', type: 'boolean', required: false, defaultValue: 'true' },
+    { name: 'background', type: 'BottomCTABackground', required: false, defaultValue: 'default' },
+    {
+      name: '...divProps',
+      type: "Omit<HTMLAttributes<HTMLDivElement>, 'children'>",
+      required: false,
+      defaultValue: null,
+    },
+  ],
 };
 const componentLocalCssVariables = {
-  ScrollArea: new Set(['--ds-scroll-area-edge-size']),
+  ScrollArea: new Set(['--hds-scroll-area-edge-size']),
+  Switch: new Set(['--hds-switch-track-height', '--hds-switch-track-width']),
+  BottomCTA: new Set(['--hds-safe-area-bottom']),
+};
+const componentTransitiveTokens = {
+  TextButton: new Set(['size/icon/small']),
+  IconButton: new Set(['size/icon/medium', 'size/icon/large']),
+  BoardRow: new Set(['size/icon/medium']),
+  BottomSheet: new Set([
+    'color/action/on-primary',
+    'color/action/on-weak',
+    'color/action/primary',
+    'color/action/primary-hover',
+    'color/action/primary-pressed',
+    'color/action/weak',
+    'color/action/weak-hover',
+    'color/bg/subtle',
+    'color/border/focus',
+    'color/border/strong',
+    'color/focus/ring',
+    'color/text/disabled',
+    'motion/duration/fast',
+    'size/control/small',
+    'size/icon/medium',
+  ]),
+  Dialog: new Set([
+    'size/control/small',
+    'size/control/large',
+    'size/icon/medium',
+    'space/4',
+    'space/12',
+    'radius/sm',
+    'radius/md',
+    'radius/full',
+    'font/size/body-lg',
+    'font/line-height/body-lg',
+    'motion/duration/fast',
+    'color/bg/subtle',
+    'color/text/disabled',
+    'color/action/primary',
+    'color/action/primary-hover',
+    'color/action/primary-pressed',
+    'color/action/on-primary',
+    'color/focus/ring',
+  ]),
+  ListRow: new Set(['size/icon/medium']),
+  Toast: new Set(['size/icon/medium', 'color/focus/ring']),
+  BottomCTA: new Set([
+    'space/4',
+    'radius/md',
+    'font/size/body-lg',
+    'font/weight/semibold',
+    'font/line-height/body-lg',
+    'color/action/primary',
+    'color/action/primary-hover',
+    'color/action/primary-pressed',
+    'color/action/on-primary',
+    'color/action/weak',
+    'color/action/weak-hover',
+    'color/action/on-weak',
+    'color/border/default',
+    'color/border/strong',
+    'color/focus/ring',
+  ]),
 };
 const iconNames = ['Icon/Check', 'Icon/ChevronRight', 'Icon/Close', 'Icon/Info', 'Icon/Search'];
+const htmlRoutes = routes.filter((route) => route.endsWith('.html'));
 
 async function json(file) {
   return JSON.parse(await readFile(file, 'utf8'));
+}
+
+async function collectHtmlRoutes(directory, prefix = '') {
+  const found = [];
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) {
+      found.push(...await collectHtmlRoutes(path.join(directory, entry.name), relative));
+    } else if (entry.isFile() && entry.name.endsWith('.html')) {
+      found.push(relative);
+    }
+  }
+  return found.sort();
 }
 
 function exactKeys(value, expected) {
@@ -249,6 +904,7 @@ function figmaNodeTarget(value) {
 
 function expectedCollection(token) {
   if (token.kind === 'semantic') return 'Semantic Color';
+  if (token.name.startsWith('motion/')) return 'Motion';
   if (token.name.startsWith('space/') || token.name.startsWith('size/')) return 'Spacing';
   if (token.name.startsWith('font/')) return 'Typography';
   if (token.name.startsWith('radius/')) return 'Radius';
@@ -257,7 +913,7 @@ function expectedCollection(token) {
 
 function expectedScopes(token) {
   const collection = expectedCollection(token);
-  if (collection === 'Primitives') return [];
+  if (collection === 'Primitives' || collection === 'Motion') return [];
   if (collection === 'Radius') return ['CORNER_RADIUS'];
   if (collection === 'Spacing') {
     return token.name.startsWith('size/') ? ['WIDTH_HEIGHT'] : ['GAP'];
@@ -276,7 +932,7 @@ function expectedScopes(token) {
 
 function expectedVariableType(token) {
   if (token.type === 'color') return 'COLOR';
-  if (token.type === 'fontFamily') return 'STRING';
+  if (token.type === 'fontFamily' || token.type === 'cubicBezier') return 'STRING';
   return 'FLOAT';
 }
 
@@ -342,9 +998,10 @@ function validateTokensArtifact(artifact) {
     violations.push('tokens.json must contain tokens');
     return violations;
   }
-  if (artifact.tokens.length !== 107) violations.push('tokens.json must contain exactly 107 tokens');
+  if (artifact.tokens.length !== 118) violations.push('tokens.json must contain exactly 118 tokens');
   const names = new Set();
   const cssVariables = new Set();
+  const types = new Map();
   let primitiveCount = 0;
   let semanticCount = 0;
   artifact.tokens.forEach((token, index) => {
@@ -364,7 +1021,7 @@ function validateTokensArtifact(artifact) {
     if (!['string', 'number'].includes(typeof token?.resolvedValue)) {
       violations.push(`Token ${label} missing resolvedValue`);
     }
-    const expectedCss = nonEmpty(token?.name) ? `--ds-${token.name.replaceAll('/', '-')}` : '';
+    const expectedCss = nonEmpty(token?.name) ? `--hds-${token.name.replaceAll('/', '-')}` : '';
     if (token?.cssVariable !== expectedCss) violations.push(`Token ${label} cssVariable mismatch`);
     if (names.has(token?.name)) violations.push(`Duplicate token name: ${token.name}`);
     if (cssVariables.has(token?.cssVariable)) violations.push(`Duplicate cssVariable: ${token.cssVariable}`);
@@ -372,9 +1029,15 @@ function validateTokensArtifact(artifact) {
     cssVariables.add(token?.cssVariable);
     if (token?.kind === 'primitive') primitiveCount += 1;
     if (token?.kind === 'semantic') semanticCount += 1;
+    if (tokenTypes.has(token?.type)) types.set(token.type, (types.get(token.type) ?? 0) + 1);
   });
-  if (primitiveCount !== 81) violations.push('tokens.json must contain exactly 81 primitive tokens');
-  if (semanticCount !== 26) violations.push('tokens.json must contain exactly 26 semantic tokens');
+  if (primitiveCount !== 91) violations.push('tokens.json must contain exactly 91 primitive tokens');
+  if (semanticCount !== 27) violations.push('tokens.json must contain exactly 27 semantic tokens');
+  for (const [type, expected] of Object.entries(tokenTypeCounts)) {
+    if ((types.get(type) ?? 0) !== expected) {
+      violations.push(`tokens.json must contain exactly ${expected} ${type} token${expected === 1 ? '' : 's'}`);
+    }
+  }
   return violations;
 }
 
@@ -386,7 +1049,7 @@ function validateComponentsArtifact(artifact) {
     violations.push('components.json must contain components');
     return violations;
   }
-  if (artifact.components.length !== 5) violations.push('components.json must contain exactly 5 components');
+  if (artifact.components.length !== 20) violations.push('components.json must contain exactly 20 components');
   const figmaUrls = [];
   componentSpecs.forEach(({ name, slug, variants, sizes, states }, index) => {
     const component = artifact.components[index];
@@ -451,8 +1114,8 @@ function validateComponentsArtifact(artifact) {
       }
     }
   });
-  if (figmaUrls.length !== 5 || new Set(figmaUrls).size !== 5) {
-    violations.push('components.json must contain five distinct Figma URLs');
+  if (figmaUrls.length !== 20 || new Set(figmaUrls).size !== 20) {
+    violations.push('components.json must contain twenty distinct Figma URLs');
   }
   return violations;
 }
@@ -474,16 +1137,11 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
     }
 
     const executableCss = source.replace(/\/\*[\s\S]*?\*\//g, '');
-    const declaredVariables = new Set(
-      [...executableCss.matchAll(/(--[A-Za-z0-9_-]+)\s*:/g)].map((match) => match[1]),
-    );
     const allowedLocalVariables = componentLocalCssVariables[name] ?? new Set();
     const cssVariables = [...new Set(
-      [...executableCss.matchAll(/var\(\s*(--ds-[A-Za-z0-9_-]+)\b/g)]
+      [...executableCss.matchAll(/var\(\s*(--hds-[A-Za-z0-9_-]+)\b/g)]
         .map((match) => match[1])
-        .filter((cssVariable) => !(
-          declaredVariables.has(cssVariable) && allowedLocalVariables.has(cssVariable)
-        )),
+        .filter((cssVariable) => !allowedLocalVariables.has(cssVariable)),
     )];
     const usedTokenNames = new Set();
     for (const cssVariable of cssVariables) {
@@ -499,6 +1157,7 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
     if (!Array.isArray(component?.tokens)) continue;
     const declaredTokenNames = component.tokens.filter((tokenName) => typeof tokenName === 'string');
     const declaredTokenSet = new Set(declaredTokenNames);
+    const transitiveTokenSet = componentTransitiveTokens[name] ?? new Set();
 
     for (const tokenName of declaredTokenNames) {
       if (!tokenByName.has(tokenName)) {
@@ -514,7 +1173,9 @@ async function validateComponentTokenCoverage(root, tokensArtifact, componentsAr
       }
     }
     for (const tokenName of declaredTokenSet) {
-      if (tokenByName.has(tokenName) && !usedTokenNames.has(tokenName)) {
+      if (tokenByName.has(tokenName)
+        && !usedTokenNames.has(tokenName)
+        && !transitiveTokenSet.has(tokenName)) {
         violations.push(`${name} manifest tokens include unused CSS token: ${tokenName}`);
       }
     }
@@ -558,18 +1219,18 @@ export function verifyTokenMap(tokens, tokenMap) {
   const tokenByName = new Map(tokens.map((token) => [token.name, token]));
   const mappedNames = [...variables.map(({ tokenName }) => tokenName), ...effects.map(({ tokenName }) => tokenName)];
   const expectedNames = tokens.map(({ name }) => name);
-  if (variables.length !== 105) violations.push('token-map must contain exactly 105 variables');
+  if (variables.length !== 116) violations.push('token-map must contain exactly 116 variables');
   if (new Set(variables.map(({ variableId }) => variableId)).size !== variables.length) {
     violations.push('token-map variable IDs must be unique');
   }
-  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.kind === 'semantic').length !== 26) {
-    violations.push('token-map must contain exactly 26 Semantic Color variables');
+  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.kind === 'semantic').length !== 27) {
+    violations.push('token-map must contain exactly 27 Semantic Color variables');
   }
-  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.type === 'color').length !== 57) {
-    violations.push('token-map must contain exactly 57 COLOR variables');
+  if (variables.filter(({ tokenName }) => tokenByName.get(tokenName)?.type === 'color').length !== 59) {
+    violations.push('token-map must contain exactly 59 COLOR variables');
   }
-  if (mappedNames.length !== 107
-    || new Set(mappedNames).size !== 107
+  if (mappedNames.length !== 118
+    || new Set(mappedNames).size !== 118
     || JSON.stringify([...mappedNames].sort()) !== JSON.stringify([...expectedNames].sort())) {
     violations.push('token-map token-name mapping must equal tokens.json');
   }
@@ -606,8 +1267,10 @@ export function verifyTokenMap(tokens, tokenMap) {
       violations.push(`${collection.name} variableCount must be ${actual}`);
     }
   }
-  if (collectionByName.get('Primitives')?.variableCount !== 32) {
-    violations.push('Primitives collection must contain exactly 32 variables');
+  for (const [name, expected] of Object.entries(collectionVariableCounts)) {
+    if (collectionByName.get(name)?.variableCount !== expected) {
+      violations.push(`${name} collection must contain exactly ${expected} variables`);
+    }
   }
 
   if (JSON.stringify(tokenMap?.styles?.text?.map(({ name }) => name)) !== JSON.stringify(textStyleNames)) {
@@ -658,11 +1321,58 @@ export async function verifyBuildArtifacts(root) {
       violations.push(`Missing build artifact: ${relative}`);
     }
   }
+  try {
+    const actualHtmlRoutes = await collectHtmlRoutes(dist);
+    if (JSON.stringify(actualHtmlRoutes) !== JSON.stringify([...htmlRoutes].sort())) {
+      violations.push('Static HTML routes must be exactly the 30 canonical routes');
+    }
+  } catch {
+    violations.push('Static HTML route set is unreadable');
+  }
   const tokens = await json(path.join(dist, 'design-system', 'tokens.json'));
   const manifest = await json(path.join(dist, 'design-system', 'components.json'));
   violations.push(...validateTokensArtifact(tokens));
   violations.push(...validateComponentsArtifact(manifest));
   violations.push(...await validateComponentTokenCoverage(root, tokens, manifest));
+  return violations.sort();
+}
+
+export async function verifyFontArtifacts(root) {
+  const cssPath = path.join(root, 'packages', 'tokens', 'fonts.css');
+  const css = await readFile(cssPath, 'utf8');
+  const urls = [...css.matchAll(/url\(["']?([^"')]+)["']?\)/g)]
+    .map((match) => match[1]);
+  const violations = [];
+
+  if (urls.length !== 92) {
+    violations.push('Pretendard fonts.css must reference exactly 92 subsets');
+  }
+  if (urls.some((url) => /^https?:\/\//.test(url))) {
+    violations.push('Pretendard fonts.css must not use external font URLs');
+  }
+  if (!css.includes('font-display: swap')) {
+    violations.push('Pretendard fonts.css must use font-display: swap');
+  }
+  for (const url of urls.filter((value) => !/^https?:\/\//.test(value))) {
+    try {
+      await access(path.resolve(path.dirname(cssPath), url));
+    } catch {
+      violations.push(`Missing Pretendard font asset: ${url}`);
+    }
+  }
+  try {
+    await access(path.join(
+      root,
+      'packages',
+      'tokens',
+      'fonts',
+      'pretendard',
+      'LICENSE.txt',
+    ));
+  } catch {
+    violations.push('Missing Pretendard SIL OFL license');
+  }
+
   return violations.sort();
 }
 
@@ -754,6 +1464,10 @@ export async function verifyFigmaEvidence(root) {
   if (!exactKeys(evidence.components, componentSpecs.map(({ name }) => name))) {
     violations.push(`Figma component keys must be exactly ${componentSpecs.map(({ name }) => name).join(', ')}`);
   }
+  const componentSetCount = Object.entries(evidence.components ?? {})
+    .filter(([name, component]) => name !== 'Icon' && nonEmpty(component?.componentSetUrl))
+    .length;
+  if (componentSetCount !== 19) violations.push('Figma evidence must expose exactly nineteen component sets');
 
   const manifestTargets = [];
   for (const spec of componentSpecs) {
@@ -764,7 +1478,7 @@ export async function verifyFigmaEvidence(root) {
     }
     const expectedEvidenceKeys = spec.name === 'Icon'
       ? ['catalogUrl', 'componentCount', 'componentUrls', 'properties', 'screenshotReviewed', 'bindingsAudited', 'propParity']
-      : ['componentSetUrl', 'variantCount', 'properties', 'screenshotReviewed', 'bindingsAudited', 'propParity'];
+      : ['componentSetUrl', 'variantCount', 'axes', 'properties', 'screenshotReviewed', 'bindingsAudited', 'propParity'];
     if (!exactKeys(component, expectedEvidenceKeys)) {
       violations.push(`${spec.name} evidence fields mismatch`);
     }
@@ -798,6 +1512,10 @@ export async function verifyFigmaEvidence(root) {
       violations.push(`${spec.name} variantCount must be ${spec.variantCount}`);
     }
 
+    if (spec.name !== 'Icon' && JSON.stringify(component.axes) !== JSON.stringify(spec.axes)) {
+      violations.push(`${spec.name} axis definitions mismatch`);
+    }
+
     if (JSON.stringify(component.properties) !== JSON.stringify(spec.properties)) {
       violations.push(`${spec.name} property definitions mismatch`);
     }
@@ -811,16 +1529,16 @@ export async function verifyFigmaEvidence(root) {
     }
   }
 
-  if (manifestTargets.length !== 5 || new Set(manifestTargets).size !== 5) {
-    violations.push('Figma evidence must expose five distinct manifest Figma node targets');
+  if (manifestTargets.length !== 20 || new Set(manifestTargets).size !== 20) {
+    violations.push('Figma evidence must expose twenty distinct manifest Figma node targets');
   }
   const ownedIconTargets = evidence.components?.Icon?.componentUrls
     ?.map(({ url }) => figmaNodeTarget(url)) ?? [];
   const allEvidenceTargets = [...manifestTargets, ...ownedIconTargets];
-  if (allEvidenceTargets.length !== 10
+  if (allEvidenceTargets.length !== 25
     || allEvidenceTargets.some((value) => !value)
-    || new Set(allEvidenceTargets).size !== 10) {
-    violations.push('Figma evidence must expose ten distinct Figma node targets');
+    || new Set(allEvidenceTargets).size !== 25) {
+    violations.push('Figma evidence must expose twenty-five distinct Figma node targets');
   }
   return violations.sort();
 }
@@ -829,6 +1547,7 @@ async function main() {
   const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
   const violations = [
     ...(await verifyBuildArtifacts(root)),
+    ...(await verifyFontArtifacts(root)),
     ...(await verifyFigmaEvidence(root)),
   ];
   if (violations.length) {

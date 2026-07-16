@@ -4,7 +4,7 @@ import {
   type BadgeSize,
   type BadgeTone,
   type BadgeVariant,
-} from '@maxxuxx/react';
+} from '@hds/react';
 import './examples.css';
 
 const SIZES: BadgeSize[] = ['small', 'medium'];

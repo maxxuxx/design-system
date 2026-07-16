@@ -1,0 +1,86 @@
+.hds-bottom-cta {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font-family: var(--hds-font-family-sans);
+}
+
+.hds-bottom-cta__panel {
+  box-sizing: border-box;
+  inline-size: 100%;
+  padding-block-start: var(--hds-space-16);
+  padding-block-end: var(--hds-space-16);
+  padding-inline:
+    max(var(--hds-space-16), env(safe-area-inset-left, var(--hds-space-0)))
+    max(var(--hds-space-16), env(safe-area-inset-right, var(--hds-space-0)));
+  background: var(--hds-color-bg-surface);
+}
+
+.hds-bottom-cta[data-safe-area='true'] .hds-bottom-cta__panel {
+  padding-block-end: max(
+    var(--hds-space-16),
+    env(safe-area-inset-bottom, var(--hds-space-0)),
+    var(--hds-safe-area-bottom, var(--hds-space-0))
+  );
+}
+
+.hds-bottom-cta[data-background='none'] .hds-bottom-cta__panel {
+  background: transparent;
+}
+
+.hds-bottom-cta[data-fixed='true'] .hds-bottom-cta__panel {
+  position: fixed;
+  z-index: 10;
+  inset-block-end: 0;
+  inset-inline: 0;
+  pointer-events: none;
+}
+
+.hds-bottom-cta__spacer {
+  block-size: calc(
+    var(--hds-size-control-large)
+    + var(--hds-space-16)
+    + max(
+      var(--hds-space-16),
+      env(safe-area-inset-bottom, var(--hds-space-0)),
+      var(--hds-safe-area-bottom, var(--hds-space-0))
+    )
+  );
+}
+
+.hds-bottom-cta__actions {
+  display: grid;
+  box-sizing: border-box;
+  grid-template-columns: minmax(0, 1fr);
+  inline-size: 100%;
+  min-inline-size: 0;
+  gap: var(--hds-space-12);
+  pointer-events: auto;
+}
+
+.hds-bottom-cta[data-layout='double'] .hds-bottom-cta__actions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hds-bottom-cta .hds-button,
+.hds-bottom-cta .hds-button__content,
+.hds-bottom-cta .hds-button__label {
+  min-inline-size: 0;
+}
+
+.hds-bottom-cta .hds-button__label {
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+@media (forced-colors: active) {
+  .hds-bottom-cta__panel {
+    background: Canvas;
+    border-block-start: 1px solid ButtonText;
+  }
+
+  .hds-bottom-cta[data-background='none'] .hds-bottom-cta__panel {
+    background: transparent;
+    border-block-start-color: transparent;
+  }
+}

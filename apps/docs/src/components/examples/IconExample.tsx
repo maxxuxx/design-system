@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ICON_NAMES, Icon, type IconName, type IconSize } from '@maxxuxx/react';
+import { ICON_NAMES, Icon, type IconName, type IconSize } from '@hds/react';
 import './examples.css';
 
 const ICON_SIZES: IconSize[] = [16, 20, 24];

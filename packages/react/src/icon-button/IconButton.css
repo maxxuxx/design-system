@@ -1,0 +1,172 @@
+.hds-icon-button {
+  display: inline-flex;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin: var(--hds-space-0);
+  padding: var(--hds-space-0);
+  border: 1px solid transparent;
+  border-radius: var(--hds-radius-full);
+  font-family: var(--hds-font-family-sans);
+  cursor: pointer;
+  transition:
+    color var(--hds-motion-duration-fast) var(--hds-motion-easing-standard),
+    background-color var(--hds-motion-duration-fast)
+      var(--hds-motion-easing-standard),
+    border-color var(--hds-motion-duration-fast)
+      var(--hds-motion-easing-standard);
+}
+
+.hds-icon-button[data-size='small'] {
+  inline-size: var(--hds-size-control-small);
+  block-size: var(--hds-size-control-small);
+}
+
+.hds-icon-button[data-size='medium'] {
+  inline-size: var(--hds-size-control-medium);
+  block-size: var(--hds-size-control-medium);
+}
+
+.hds-icon-button[data-size='large'] {
+  inline-size: var(--hds-size-control-large);
+  block-size: var(--hds-size-control-large);
+}
+
+.hds-icon-button .hds-icon {
+  color: inherit;
+}
+
+.hds-icon-button[data-variant='clear'] {
+  color: var(--hds-color-action-primary);
+  background: transparent;
+}
+
+.hds-icon-button[data-variant='clear']:not(:disabled):hover {
+  color: var(--hds-color-action-primary-hover);
+  background: var(--hds-color-action-weak);
+}
+
+.hds-icon-button[data-variant='clear']:not(:disabled):active {
+  color: var(--hds-color-action-primary-pressed);
+  background: var(--hds-color-action-weak-hover);
+}
+
+.hds-icon-button[data-variant='fill'] {
+  color: var(--hds-color-action-on-primary);
+  background: var(--hds-color-action-primary);
+}
+
+.hds-icon-button[data-variant='fill']:not(:disabled):hover {
+  background: var(--hds-color-action-primary-hover);
+}
+
+.hds-icon-button[data-variant='fill']:not(:disabled):active {
+  background: var(--hds-color-action-primary-pressed);
+}
+
+.hds-icon-button[data-variant='outline'] {
+  color: var(--hds-color-text-primary);
+  background: var(--hds-color-bg-surface);
+  border-color: var(--hds-color-border-strong);
+}
+
+.hds-icon-button[data-variant='outline']:not(:disabled):hover {
+  background: var(--hds-color-bg-subtle);
+  border-color: var(--hds-color-border-focus);
+}
+
+.hds-icon-button[data-variant='outline']:not(:disabled):active {
+  color: var(--hds-color-action-on-weak);
+  background: var(--hds-color-action-weak);
+}
+
+.hds-icon-button:focus-visible {
+  outline: var(--hds-space-2) solid transparent;
+  outline-offset: var(--hds-space-2);
+  box-shadow: 0 0 0 var(--hds-space-4) var(--hds-color-focus-ring);
+}
+
+.hds-icon-button:disabled {
+  color: var(--hds-color-text-disabled);
+  background: var(--hds-color-bg-subtle);
+  border-color: var(--hds-color-border-default);
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hds-icon-button {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .hds-icon-button[data-variant] {
+    forced-color-adjust: none;
+  }
+
+  .hds-icon-button[data-variant='clear'] {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonFace;
+  }
+
+  .hds-icon-button[data-variant='fill'] {
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  .hds-icon-button[data-variant='outline'] {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: ButtonText;
+  }
+
+  .hds-icon-button[data-variant='clear']:not(:disabled):hover {
+    color: HighlightText;
+    background: Highlight;
+    border-color: Highlight;
+  }
+
+  .hds-icon-button[data-variant='fill']:not(:disabled):hover {
+    color: ButtonText;
+    background: ButtonFace;
+    border-color: Highlight;
+  }
+
+  .hds-icon-button[data-variant='outline']:not(:disabled):hover {
+    color: HighlightText;
+    background: Highlight;
+    border-color: ButtonText;
+  }
+
+  .hds-icon-button[data-variant='clear']:not(:disabled):active {
+    color: ActiveText;
+    background: ButtonFace;
+    border-color: ActiveText;
+  }
+
+  .hds-icon-button[data-variant='fill']:not(:disabled):active {
+    color: HighlightText;
+    background: Highlight;
+    border-color: ActiveText;
+  }
+
+  .hds-icon-button[data-variant='outline']:not(:disabled):active {
+    color: ActiveText;
+    background: ButtonFace;
+    border-color: ButtonText;
+  }
+
+  .hds-icon-button[data-variant]:focus-visible {
+    outline-color: Highlight;
+    box-shadow: none;
+  }
+
+  .hds-icon-button[data-variant]:disabled {
+    color: GrayText;
+    background: Canvas;
+    border-color: GrayText;
+  }
+}

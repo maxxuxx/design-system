@@ -5,35 +5,73 @@ test('tokens.json exposes the complete resolved token contract', async ({ reques
   expect(response.status()).toBe(200);
   const artifact = await response.json();
   expect(artifact.schemaVersion).toBe(1);
-  expect(artifact.tokens).toHaveLength(107);
-  expect(artifact.tokens.filter(({ kind }: { kind: string }) => kind === 'primitive')).toHaveLength(81);
-  expect(artifact.tokens.filter(({ kind }: { kind: string }) => kind === 'semantic')).toHaveLength(26);
+  expect(artifact.tokens).toHaveLength(118);
+  expect(artifact.tokens.filter(({ kind }: { kind: string }) => kind === 'primitive')).toHaveLength(91);
+  expect(artifact.tokens.filter(({ kind }: { kind: string }) => kind === 'semantic')).toHaveLength(27);
   for (const token of artifact.tokens) {
     expect(token).toEqual(expect.objectContaining({
       name: expect.any(String),
-      type: expect.stringMatching(/^(color|dimension|fontFamily|fontWeight|shadow)$/),
+      type: expect.stringMatching(
+        /^(color|dimension|duration|cubicBezier|fontFamily|fontWeight|shadow)$/,
+      ),
       kind: expect.stringMatching(/^(primitive|semantic)$/),
       description: expect.any(String),
-      cssVariable: expect.stringMatching(/^--ds-/),
+      cssVariable: expect.stringMatching(/^--hds-/),
     }));
     expect(['string', 'number']).toContain(typeof token.value);
     expect(['string', 'number']).toContain(typeof token.resolvedValue);
   }
 });
 
-test('components.json exposes all five release-ready component contracts', async ({ request }) => {
+test('components.json exposes all twenty release-ready component contracts', async ({ request }) => {
   const response = await request.get('/design-system/components.json');
   expect(response.status()).toBe(200);
   const artifact = await response.json();
   expect(artifact.schemaVersion).toBe(1);
   expect(artifact.components.map(({ name }: { name: string }) => name))
-    .toEqual(['Icon', 'Badge', 'Button', 'TextField', 'ScrollArea']);
+    .toEqual([
+      'Icon',
+      'Badge',
+      'Button',
+      'TextField',
+      'ScrollArea',
+      'Checkbox',
+      'RadioGroup',
+      'Switch',
+      'Textarea',
+      'Select',
+      'TextButton',
+      'IconButton',
+      'BoardRow',
+      'Tab',
+      'BottomSheet',
+      'Dialog',
+      'SearchField',
+      'ListRow',
+      'Toast',
+      'BottomCTA',
+    ]);
   expect(artifact.components.map(({ docsUrl }: { docsUrl: string }) => docsUrl)).toEqual([
     '/components/icon/',
     '/components/badge/',
     '/components/button/',
     '/components/text-field/',
     '/components/scroll-area/',
+    '/components/checkbox/',
+    '/components/radio-group/',
+    '/components/switch/',
+    '/components/textarea/',
+    '/components/select/',
+    '/components/text-button/',
+    '/components/icon-button/',
+    '/components/board-row/',
+    '/components/tab/',
+    '/components/bottom-sheet/',
+    '/components/dialog/',
+    '/components/search-field/',
+    '/components/list-row/',
+    '/components/toast/',
+    '/components/bottom-cta/',
   ]);
   const scrollArea = artifact.components.find(({ name }: { name: string }) => name === 'ScrollArea');
   expect(scrollArea.variants).toEqual([]);
@@ -82,4 +120,19 @@ test('components.json exposes all five release-ready component contracts', async
     expect(Array.isArray(component.props)).toBe(true);
     expect(component.tokens.length).toBeGreaterThan(0);
   }
+});
+
+test('documentation loads the self-hosted Pretendard variable font', async ({ page }) => {
+  await page.goto('/foundations/typography/');
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+  });
+
+  const result = await page.locator('body').evaluate((body) => ({
+    family: getComputedStyle(body).fontFamily,
+    loaded: document.fonts.check('16px "Pretendard Variable"', '타이포그래피'),
+  }));
+
+  expect(result.family).toContain('Pretendard Variable');
+  expect(result.loaded).toBe(true);
 });

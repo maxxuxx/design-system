@@ -53,7 +53,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ref,
 ) {
   const isDisabled = disabled || loading;
-  const classes = ['ds-button', className].filter(Boolean).join(' ');
+  const classes = ['hds-button', className].filter(Boolean).join(' ');
   const ownedLeadingIcon = getOwnedIcon(leadingIcon);
   const ownedTrailingIcon = getOwnedIcon(trailingIcon);
 
@@ -70,16 +70,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       disabled={isDisabled}
       type={type}
     >
-      <span className="ds-button__content">
+      <span className="hds-button__content">
         {ownedLeadingIcon ? (
-          <span className="ds-button__icon">{ownedLeadingIcon}</span>
+          <span className="hds-button__icon">{ownedLeadingIcon}</span>
         ) : null}
-        <span className="ds-button__label">{children}</span>
+        <span className="hds-button__label">{children}</span>
         {ownedTrailingIcon ? (
-          <span className="ds-button__icon">{ownedTrailingIcon}</span>
+          <span className="hds-button__icon">{ownedTrailingIcon}</span>
         ) : null}
       </span>
-      {loading ? <span aria-hidden="true" className="ds-button__spinner" /> : null}
+      {loading ? <span aria-hidden="true" className="hds-button__spinner" /> : null}
     </button>
   );
 });

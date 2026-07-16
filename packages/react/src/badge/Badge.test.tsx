@@ -14,7 +14,7 @@ describe('Badge', () => {
     const badge = screen.getByTestId('badge');
 
     expect(badge.tagName).toBe('SPAN');
-    expect(badge).toHaveClass('ds-badge');
+    expect(badge).toHaveClass('hds-badge');
     expect(badge).toHaveAttribute('data-size', 'medium');
     expect(badge).toHaveAttribute('data-variant', 'soft');
     expect(badge).toHaveAttribute('data-tone', 'neutral');
@@ -32,7 +32,7 @@ describe('Badge', () => {
             </Badge>,
           );
           const label = getByText(`${size}-${variant}-${tone}`);
-          const badge = label.closest('.ds-badge');
+          const badge = label.closest('.hds-badge');
           expect(badge).not.toBeNull();
           expect(badge).toHaveAttribute('data-size', size);
           expect(badge).toHaveAttribute('data-variant', variant);
@@ -57,7 +57,7 @@ describe('Badge', () => {
     );
     const badge = screen.getByTestId('badge');
 
-    expect(badge).toHaveClass('ds-badge', 'consumer-badge');
+    expect(badge).toHaveClass('hds-badge', 'consumer-badge');
     expect(badge).toHaveAttribute('data-size', 'small');
     expect(badge).toHaveAttribute('aria-label', '주문 상태: 완료');
   });
@@ -72,7 +72,7 @@ describe('Badge', () => {
     render(<Badge data-testid="badge">매우 긴 현지화 상태 레이블</Badge>);
     const badge = screen.getByTestId('badge');
 
-    expect(badge.querySelector('.ds-badge__label')).toHaveTextContent(
+    expect(badge.querySelector('.hds-badge__label')).toHaveTextContent(
       '매우 긴 현지화 상태 레이블',
     );
   });

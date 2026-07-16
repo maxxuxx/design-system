@@ -1,0 +1,54 @@
+---
+slug: motion
+title: 모션
+description: 짧고 예측 가능한 전환으로 상태 변화와 공간 이동을 설명합니다.
+order: 6
+tokenPrefixes: [motion/, color/bg/scrim]
+---
+import MotionScale from '../../components/foundations/MotionScale.astro';
+
+## 목적
+
+모션은 상태 변화와 공간 이동의 관계를 설명합니다. 장식적인 움직임보다 짧고 예측 가능한 피드백을 우선하며, focus 이동이나 Escape 처리, 접근 가능한 상태 변경을 지연하지 않습니다.
+
+## Duration
+
+- `motion/duration/fast`는 120ms입니다. color, opacity, border와 작은 transform처럼 직접적인 상호작용 피드백에 사용합니다.
+- `motion/duration/medium`은 200ms입니다. BottomSheet처럼 화면 안팎으로 이동하는 surface의 진입과 종료에 사용합니다.
+
+## Easing
+
+`motion/easing/standard`는 `cubic-bezier(0.2, 0, 0, 1)`입니다. 공간을 이동하는 transform에 duration과 함께 사용해 일관된 가속과 감속을 유지합니다.
+
+```css
+transition:
+  transform var(--hds-motion-duration-medium)
+  var(--hds-motion-easing-standard);
+```
+
+## 생성된 단계
+
+아래 specimen은 자동으로 반복되지 않습니다. 각 영역에 마우스를 올리거나 키보드 focus를 이동할 때만 fast와 medium duration을 비교할 수 있습니다.
+
+<MotionScale />
+
+## Reduced motion
+
+`prefers-reduced-motion: reduce`에서는 필수적이지 않은 transform과 transition을 제거합니다. 닫기 완료는 즉시 처리하고, focus 배치, Escape 처리, 접근 가능한 상태 변경은 모션 시간에 의존하지 않게 만듭니다.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .moving-surface {
+    transition: none;
+    transform: none;
+  }
+}
+```
+
+## Scrim
+
+모달 backdrop에는 semantic token인 `color/bg/scrim`을 사용합니다. 이 토큰은 `rgba(15, 23, 42, 0.56)`으로 resolve되며, 제품 CSS에서 원시 `color/neutral/900-alpha-56` 값을 직접 참조하지 않습니다. scrim은 뒤 콘텐츠와 현재 modal surface를 구분하지만 focus 이동이나 닫기 동작을 대신하지 않습니다.
+
+```css
+background: var(--hds-color-bg-scrim);
+```

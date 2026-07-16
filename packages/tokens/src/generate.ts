@@ -11,8 +11,8 @@ function aliasTarget(value: string | number): string | null {
   return aliasPattern.exec(value)?.[1] ?? null;
 }
 
-export function toCssVariable(name: string): `--ds-${string}` {
-  return `--ds-${name.replaceAll('/', '-')}`;
+export function toCssVariable(name: string): `--hds-${string}` {
+  return `--hds-${name.replaceAll('/', '-')}`;
 }
 
 export function resolveTokens(
@@ -60,6 +60,8 @@ function renderCssValue(token: ResolvedToken): string {
     case 'color':
     case 'fontFamily':
     case 'shadow':
+    case 'duration':
+    case 'cubicBezier':
       return String(token.value);
   }
 }

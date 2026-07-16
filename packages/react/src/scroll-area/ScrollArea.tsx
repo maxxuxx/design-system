@@ -77,12 +77,12 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
     ref,
   ) {
     const generatedId = useId();
-    const viewportId = `ds-scroll-area-viewport-${generatedId}`;
+    const viewportId = `hds-scroll-area-viewport-${generatedId}`;
     const internalViewportRef = useRef<HTMLDivElement | null>(null);
     const contentRef = useRef<HTMLDivElement | null>(null);
     const [state, setState] = useState<ScrollAreaState>('no-overflow');
     const committedStateRef = useRef<ScrollAreaState>(state);
-    const classes = ['ds-scroll-area', className].filter(Boolean).join(' ');
+    const classes = ['hds-scroll-area', className].filter(Boolean).join(' ');
     const canScrollUp = state === 'middle' || state === 'end';
     const canScrollDown = state === 'start' || state === 'middle';
 
@@ -151,26 +151,26 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
         <div
           ref={setViewportRef}
           aria-label={label}
-          className="ds-scroll-area__viewport"
+          className="hds-scroll-area__viewport"
           data-state={state}
           id={viewportId}
           onScroll={handleViewportScroll}
           role="region"
           tabIndex={state === 'no-overflow' ? -1 : 0}
         >
-          <div className="ds-scroll-area__content" ref={contentRef}>
+          <div className="hds-scroll-area__content" ref={contentRef}>
             {children}
           </div>
         </div>
         <div
-          className="ds-scroll-area__edge ds-scroll-area__edge--top"
+          className="hds-scroll-area__edge hds-scroll-area__edge--top"
           data-active={canScrollUp}
         >
           <button
             aria-controls={viewportId}
             aria-hidden={!canScrollUp}
             aria-label={scrollUpLabel}
-            className="ds-scroll-area__button ds-scroll-area__button--up"
+            className="hds-scroll-area__button hds-scroll-area__button--up"
             disabled={!canScrollUp}
             onClick={() => scrollBy(-1)}
             type="button"
@@ -179,14 +179,14 @@ export const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(
           </button>
         </div>
         <div
-          className="ds-scroll-area__edge ds-scroll-area__edge--bottom"
+          className="hds-scroll-area__edge hds-scroll-area__edge--bottom"
           data-active={canScrollDown}
         >
           <button
             aria-controls={viewportId}
             aria-hidden={!canScrollDown}
             aria-label={scrollDownLabel}
-            className="ds-scroll-area__button ds-scroll-area__button--down"
+            className="hds-scroll-area__button hds-scroll-area__button--down"
             disabled={!canScrollDown}
             onClick={() => scrollBy(1)}
             type="button"

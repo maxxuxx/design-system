@@ -1,11 +1,12 @@
 import { test } from '@playwright/test';
+import brand from '../../src/config/brand.json' with { type: 'json' };
 import { assertNoHorizontalOverflow, openHtmlRoute } from './support/routes';
 import { expectPageScreenshot } from './support/visual';
 
 test.skip(process.platform !== 'win32', 'Visual baselines are approved only on Windows Chromium.');
 
 const cases = [
-  { name: 'home', path: '/', heading: '사람과 AI가 함께 읽는 디자인 시스템' },
+  { name: 'home', path: '/', heading: brand.headline },
   { name: 'foundations-colors', path: '/foundations/colors/', heading: '색상' },
   { name: 'button', path: '/components/button/', heading: 'Button' },
   { name: 'text-field', path: '/components/text-field/', heading: 'TextField' },

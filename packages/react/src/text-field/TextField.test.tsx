@@ -15,7 +15,7 @@ describe('TextField', () => {
     const input = screen.getByRole('textbox', { name: '이름' });
     const label = screen.getByText('이름');
 
-    expect(input.id).toMatch(/^ds-text-field-/);
+    expect(input.id).toMatch(/^hds-text-field-/);
     expect(label).toHaveAttribute('for', input.id);
     expect(input).toHaveAttribute('data-size', 'medium');
     expect(input).toHaveAttribute('data-state', 'default');
@@ -138,7 +138,7 @@ describe('TextField', () => {
     expect(input).toBeDisabled();
     expect(input).toBeRequired();
     expect(input).toHaveAttribute('autocomplete', 'name');
-    expect(input).toHaveClass('ds-text-field__input', 'consumer-input');
+    expect(input).toHaveClass('hds-text-field__input', 'consumer-input');
     expect(input).toHaveAttribute('data-state', 'disabled');
     expect(ref.current).toBe(input);
   });

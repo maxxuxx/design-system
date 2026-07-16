@@ -471,6 +471,1727 @@
         "color/focus/ring"
       ],
       "docsUrl": "/components/scroll-area/"
+    },
+    {
+      "name": "Checkbox",
+      "slug": "checkbox",
+      "description": "독립적인 선택지를 native form behavior와 mixed state로 제공하는 checkbox control입니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=139-176",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "unchecked",
+        "checked",
+        "indeterminate"
+      ],
+      "sizes": [
+        "small",
+        "medium"
+      ],
+      "states": [
+        "default",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "visible label과 44px pointer target, native keyboard·form semantics, ordered description/error relationships를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "checkbox와 연결되는 visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "선택을 보조하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다."
+        },
+        {
+          "name": "indeterminate",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "native input의 DOM indeterminate property를 동기화합니다."
+        },
+        {
+          "name": "size",
+          "type": "CheckboxSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small 20px 또는 medium 24px visible indicator를 선택합니다."
+        },
+        {
+          "name": "...inputProps",
+          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "owned size와 checkbox type을 제외한 native input props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/selection/small",
+        "size/selection/medium",
+        "space/2",
+        "space/4",
+        "space/8",
+        "radius/sm",
+        "font/family/sans",
+        "font/size/caption",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/line-height/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/status/danger",
+        "color/status/on-status",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/checkbox/"
+    },
+    {
+      "name": "RadioGroup",
+      "slug": "radio-group",
+      "description": "하나의 값을 고르는 visible option set을 native fieldset과 same-name radio로 제공합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=147-272",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "none",
+        "first",
+        "second"
+      ],
+      "sizes": [
+        "small",
+        "medium"
+      ],
+      "states": [
+        "default",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "visible legend, 44px option rows, native arrow-key·form semantics, group와 option의 ordered description/error relationships를 제공합니다.",
+      "props": [
+        {
+          "name": "legend",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "fieldset의 visible accessible name입니다."
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "모든 native radio input이 공유하는 form field name입니다."
+        },
+        {
+          "name": "options",
+          "type": "readonly RadioGroupOption[]",
+          "required": true,
+          "defaultValue": null,
+          "description": "value, label, optional description과 disabled를 가진 선택지 목록입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "그룹 전체를 설명하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "그룹과 각 radio에 연결되는 오류 문구입니다."
+        },
+        {
+          "name": "size",
+          "type": "RadioGroupSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small 20px 또는 medium 24px indicator를 선택합니다."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "controlled 선택 값입니다."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "uncontrolled 초기 선택 값입니다."
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "첫 번째 enabled radio에 native required를 적용합니다."
+        },
+        {
+          "name": "onChange",
+          "type": "ChangeEventHandler<HTMLInputElement>",
+          "required": false,
+          "defaultValue": null,
+          "description": "선택된 native radio change event를 전달합니다."
+        },
+        {
+          "name": "...fieldsetProps",
+          "type": "Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 'children' | 'onChange'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "owned children과 onChange를 제외한 native fieldset props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/selection/small",
+        "size/selection/medium",
+        "space/2",
+        "space/4",
+        "space/8",
+        "radius/full",
+        "font/family/sans",
+        "font/weight/semibold",
+        "font/size/caption",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/line-height/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/status/danger",
+        "color/status/on-status",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/radio-group/"
+    },
+    {
+      "name": "Switch",
+      "slug": "switch",
+      "description": "변경 즉시 적용되는 binary setting을 native checkbox와 switch role로 제공합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=153-122",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "off",
+        "on"
+      ],
+      "sizes": [
+        "small",
+        "medium"
+      ],
+      "states": [
+        "default",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "stable visible label, 44px pointer target, native Space·checked·form semantics와 ordered description/error relationships를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "on/off에서 변하지 않는 visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "설정 효과를 설명하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다."
+        },
+        {
+          "name": "size",
+          "type": "SwitchSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small 36×20px 또는 medium 44×24px track을 선택합니다."
+        },
+        {
+          "name": "...inputProps",
+          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'role' | 'size' | 'type'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "owned role, size, checkbox type을 제외한 native input props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/switch/small-width",
+        "size/switch/small-height",
+        "size/switch/medium-width",
+        "size/switch/medium-height",
+        "space/2",
+        "space/4",
+        "space/8",
+        "radius/full",
+        "elevation/1",
+        "font/family/sans",
+        "font/size/caption",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/line-height/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/status/danger",
+        "color/status/on-status",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/switch/"
+    },
+    {
+      "name": "Textarea",
+      "slug": "textarea",
+      "description": "여러 줄 자유 입력을 native textarea의 form·keyboard·resize 동작과 함께 제공합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=158-56",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "vertical",
+        "none"
+      ],
+      "sizes": [
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "focus",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "visible label, stable feedback IDs, ordered aria-describedby, native keyboard·form semantics와 forced error state를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "textarea와 연결되는 visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "입력 목적과 형식을 설명하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다."
+        },
+        {
+          "name": "size",
+          "type": "TextareaSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "medium 또는 large 최소 높이와 padding tier를 선택합니다."
+        },
+        {
+          "name": "resize",
+          "type": "TextareaResize",
+          "required": false,
+          "defaultValue": "vertical",
+          "description": "vertical 또는 none만 허용해 수평 크기 조절과 overflow를 막습니다."
+        },
+        {
+          "name": "...textareaProps",
+          "type": "Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "children을 제외한 rows, value, maxLength, required, form 등의 native textarea props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/control/large",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/20",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/size/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "font/line-height/caption",
+        "font/weight/semibold",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/status/danger",
+        "color/status/danger-subtle",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/textarea/"
+    },
+    {
+      "name": "Select",
+      "slug": "select",
+      "description": "닫힌 목록에서 한 값을 고르는 native single-select와 OS popup 동작을 제공합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=168-72",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [],
+      "sizes": [
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "focus",
+        "error",
+        "disabled"
+      ],
+      "accessibility": "visible label, native combobox keyboard·validation·form semantics, stable feedback IDs와 decorative chevron을 제공합니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "native option 또는 optgroup content입니다."
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "select와 연결되는 visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "선택 기준을 설명하는 도움말입니다."
+        },
+        {
+          "name": "errorMessage",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-invalid, aria-errormessage, alert를 만드는 오류 문구입니다."
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "value가 비어 있고 disabled인 첫 option을 선택적으로 추가합니다."
+        },
+        {
+          "name": "size",
+          "type": "SelectSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "medium 48px 또는 large 56px closed-field tier를 선택합니다."
+        },
+        {
+          "name": "...selectProps",
+          "type": "Omit<SelectHTMLAttributes<HTMLSelectElement>, 'children' | 'multiple' | 'size'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "single-select가 소유하는 children, multiple, native size를 제외한 native props입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/control/large",
+        "size/icon/medium",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/16",
+        "space/20",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/size/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "font/line-height/caption",
+        "font/weight/semibold",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/icon/primary",
+        "color/status/danger",
+        "color/status/danger-subtle",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/select/"
+    },
+    {
+      "name": "TextButton",
+      "slug": "text-button",
+      "description": "텍스트 위계와 native button 또는 anchor 의미로 가벼운 행동과 이동을 표현합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=182-121",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "clear",
+        "underline",
+        "arrow"
+      ],
+      "sizes": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible",
+        "visited",
+        "disabled"
+      ],
+      "accessibility": "native button과 anchor 의미, 44px minimum target, visible focus, persistent underline, button-only disabled, decorative owned arrow를 제공합니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "localizable visible accessible label입니다."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "문자열이면 native anchor, 없으면 native button을 렌더링합니다."
+        },
+        {
+          "name": "size",
+          "type": "TextButtonSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "small caption, medium body-small, large body typography tier입니다."
+        },
+        {
+          "name": "variant",
+          "type": "TextButtonVariant",
+          "required": false,
+          "defaultValue": "clear",
+          "description": "clear, persistent underline, owned arrow 표현입니다."
+        },
+        {
+          "name": "tone",
+          "type": "TextButtonTone",
+          "required": false,
+          "defaultValue": "primary",
+          "description": "semantic primary 또는 neutral text tone입니다."
+        },
+        {
+          "name": "...nativeProps",
+          "type": "Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'children' | 'href'> | Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "href 분기의 native events·form·data·aria props와 ref입니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/icon/small",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "radius/sm",
+        "font/family/sans",
+        "font/size/caption",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/line-height/caption",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "font/weight/semibold",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/text-button/"
+    },
+    {
+      "name": "IconButton",
+      "slug": "icon-button",
+      "description": "접근 가능한 이름과 시스템 소유 아이콘으로 compact action을 일관되게 표현합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=190-134",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "clear",
+        "fill",
+        "outline"
+      ],
+      "sizes": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible",
+        "disabled"
+      ],
+      "accessibility": "필수 localizable label, native button 의미, 44px 이상 pointer target, decorative owned Icon, visible focus를 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "trim 후 button의 필수 aria-label로 사용하는 localizable accessible name입니다."
+        },
+        {
+          "name": "name",
+          "type": "IconName",
+          "required": true,
+          "defaultValue": null,
+          "description": "디자인 시스템이 소유하는 다섯 Icon glyph 중 하나입니다."
+        },
+        {
+          "name": "size",
+          "type": "IconButtonSize",
+          "required": false,
+          "defaultValue": "medium",
+          "description": "44, 48, 56px button box와 대응하는 icon tier입니다."
+        },
+        {
+          "name": "variant",
+          "type": "IconButtonVariant",
+          "required": false,
+          "defaultValue": "clear",
+          "description": "clear, fill, outline action hierarchy입니다."
+        },
+        {
+          "name": "...buttonProps",
+          "type": "Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "form, disabled, event, data·aria와 ref를 포함합니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/control/medium",
+        "size/control/large",
+        "size/icon/medium",
+        "size/icon/large",
+        "space/0",
+        "space/2",
+        "space/4",
+        "radius/full",
+        "font/family/sans",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/border/strong",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-primary",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/icon-button/"
+    },
+    {
+      "name": "BoardRow",
+      "slug": "board-row",
+      "description": "설정과 주문 정보처럼 한 줄의 요약과 상세 내용을 native disclosure로 연결합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=197-38",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "closed",
+        "open"
+      ],
+      "sizes": [],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible"
+      ],
+      "accessibility": "native details와 summary 의미, Enter·Space·click toggle, visible focus, decorative owned arrow를 보존합니다.",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "summary의 주 정보이자 localizable visible label입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "title 아래에 표시하는 선택 설명입니다."
+        },
+        {
+          "name": "prefix",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "번호나 decorative glyph 같은 presentational leading content입니다."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "disclosure가 열릴 때 표시하는 상세 내용입니다."
+        },
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": null,
+          "description": "owner가 관리하는 controlled open 상태입니다."
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "uncontrolled disclosure의 초기 open 상태입니다."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "native toggle이 확정한 최종 open 상태를 전달합니다."
+        },
+        {
+          "name": "...detailsProps",
+          "type": "Omit<DetailsHTMLAttributes<HTMLDetailsElement>, 'children' | 'onToggle' | 'open' | 'prefix'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "className, id, data·aria 속성과 ref를 포함합니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/large",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "radius/none",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/weight/semibold",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/border/default",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/board-row/"
+    },
+    {
+      "name": "Tab",
+      "slug": "tab",
+      "description": "관련된 화면 구획을 자동 활성화 키보드 탐색과 연결해 같은 문맥 안에서 전환합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=202-59",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "equal",
+        "scroll"
+      ],
+      "sizes": [
+        "small",
+        "large"
+      ],
+      "states": [
+        "default",
+        "hover",
+        "pressed",
+        "focus-visible",
+        "selected",
+        "disabled"
+      ],
+      "accessibility": "named tablist, roving tabindex, Arrow·Home·End automatic activation, stable tab·panel 관계와 visible focus를 제공합니다.",
+      "props": [
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "tablist의 목적을 설명하는 localizable accessible name입니다."
+        },
+        {
+          "name": "items",
+          "type": "readonly TabItem[]",
+          "required": true,
+          "defaultValue": null,
+          "description": "고유한 non-empty value, visible label, panel content와 선택적 disabled 상태입니다."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "enabled item을 가리키는 controlled selection입니다."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "defaultValue": "first enabled",
+          "description": "uncontrolled selection의 초기 enabled value입니다."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "pointer 또는 자동 활성화 키보드 탐색이 선택한 enabled value를 전달합니다."
+        },
+        {
+          "name": "size",
+          "type": "TabSize",
+          "required": false,
+          "defaultValue": "large",
+          "description": "small 44px 또는 large 52px tab 높이입니다."
+        },
+        {
+          "name": "layout",
+          "type": "TabLayout",
+          "required": false,
+          "defaultValue": "equal",
+          "description": "두 개에서 네 개를 균등 배치하거나 content-width native scroll을 사용합니다."
+        },
+        {
+          "name": "...divProps",
+          "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'defaultValue' | 'onChange'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "className, id, data·aria 속성과 ref를 포함합니다. style은 margin, order, self alignment, grid placement 같은 외부 배치 속성만 보존합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "space/0",
+        "space/2",
+        "space/8",
+        "space/16",
+        "space/24",
+        "radius/none",
+        "radius/sm",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/weight/semibold",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/action/primary",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/tab/"
+    },
+    {
+      "name": "BottomSheet",
+      "slug": "bottom-sheet",
+      "description": "모바일 선택과 확인 흐름을 native modal dialog, focus 관리, scroll lock으로 표준화합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=209-66",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "content",
+        "full"
+      ],
+      "sizes": [],
+      "states": [
+        "open",
+        "closing"
+      ],
+      "accessibility": "native modal dialog, owned accessible name, focus entry·containment·restore, Escape와 close button, scroll lock을 제공합니다.",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": null,
+          "description": "owner가 관리하는 controlled open 상태입니다."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean, reason: BottomSheetCloseReason) => void",
+          "required": true,
+          "defaultValue": null,
+          "description": "backdrop, close-button, escape 종료 요청과 다음 상태를 전달합니다."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "aria-labelledby와 연결되는 localizable visible heading입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-describedby와 연결되는 선택 설명입니다."
+        },
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "독립적으로 scroll되는 sheet 본문입니다."
+        },
+        {
+          "name": "footer",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "본문 scroll과 분리되어 계속 보이는 선택 footer입니다."
+        },
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "owned Close IconButton의 localizable accessible name입니다."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Escape와 backdrop 종료 요청 허용 여부입니다. close button은 항상 유지됩니다."
+        },
+        {
+          "name": "portalContainer",
+          "type": "HTMLElement | null",
+          "required": false,
+          "defaultValue": "document.body after hydration",
+          "description": "SSR 이후 dialog Portal을 놓을 DOM container입니다."
+        },
+        {
+          "name": "initialFocusRef",
+          "type": "RefObject<HTMLElement | null>",
+          "required": false,
+          "defaultValue": "owned close button",
+          "description": "dialog 내부의 유효한 초기 focus 대상입니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/24",
+        "space/64",
+        "radius/xl",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/size/title-sm",
+        "font/weight/semibold",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "font/line-height/title-sm",
+        "elevation/2",
+        "motion/duration/fast",
+        "motion/duration/medium",
+        "motion/easing/standard",
+        "color/bg/scrim",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/border/strong",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-primary",
+        "color/action/on-weak",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/bottom-sheet/"
+    },
+    {
+      "name": "Dialog",
+      "slug": "dialog",
+      "description": "짧고 중요한 알림과 확인 결정을 native modal dialog와 명시적인 종료 사유로 표준화합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=219-48",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "alert",
+        "confirm"
+      ],
+      "sizes": [],
+      "states": [
+        "open",
+        "closing",
+        "disabled",
+        "loading"
+      ],
+      "accessibility": "native modal dialog, stable accessible relationships, owned initial focus, Tab containment, focus restore, Escape와 backdrop 정책을 제공합니다.",
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": true,
+          "defaultValue": null,
+          "description": "owner가 관리하는 controlled open 상태입니다."
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "aria-labelledby와 연결되는 localizable visible heading입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "aria-describedby와 연결되고 길어지면 내부에서 scroll되는 설명입니다."
+        },
+        {
+          "name": "alertLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "AlertDialog가 소유하는 acknowledgement action의 localizable label입니다."
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "ConfirmDialog의 첫 번째 cancel action label입니다."
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "ConfirmDialog의 두 번째 confirm action label입니다."
+        },
+        {
+          "name": "confirmDisabled",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "confirm action만 native disabled 상태로 만듭니다."
+        },
+        {
+          "name": "confirmLoading",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "confirm action만 loading과 disabled 상태로 만듭니다."
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "Escape와 backdrop 종료 요청 허용 여부입니다. visible action은 항상 유지됩니다."
+        },
+        {
+          "name": "portalContainer",
+          "type": "HTMLElement | null",
+          "required": false,
+          "defaultValue": "document.body after hydration",
+          "description": "SSR 이후 native dialog Portal을 놓을 DOM container입니다."
+        },
+        {
+          "name": "onOpenChange",
+          "type": "((open: boolean, reason: AlertDialogCloseReason) => void) | ((open: boolean, reason: ConfirmDialogCloseReason) => void)",
+          "required": true,
+          "defaultValue": null,
+          "description": "variant별 exact close reason과 요청된 다음 open 상태를 전달합니다."
+        },
+        {
+          "name": "...rootProps",
+          "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children' | 'title'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "surface root의 안전한 native attributes이며 inline style은 외부 layout 속성만 허용합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/small",
+        "size/control/large",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/24",
+        "space/64",
+        "radius/sm",
+        "radius/md",
+        "radius/xl",
+        "radius/full",
+        "font/family/sans",
+        "font/size/body",
+        "font/size/body-lg",
+        "font/size/title-sm",
+        "font/weight/semibold",
+        "font/line-height/body",
+        "font/line-height/body-lg",
+        "font/line-height/title-sm",
+        "elevation/2",
+        "motion/duration/fast",
+        "motion/duration/medium",
+        "motion/easing/standard",
+        "color/bg/scrim",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/dialog/"
+    },
+    {
+      "name": "SearchField",
+      "slug": "search-field",
+      "description": "검색어 입력, 명시적인 clear 동작, 선택적인 fixed 배치를 native search input으로 제공합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=238-19",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "empty",
+        "filled"
+      ],
+      "sizes": [],
+      "states": [
+        "default",
+        "focus",
+        "disabled",
+        "readonly"
+      ],
+      "accessibility": "non-empty hidden label, localizable clear label, native search semantics, 44px clear target, clear 뒤 focus 복원을 제공합니다.",
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "native search input과 연결되는 non-empty localizable accessible label입니다."
+        },
+        {
+          "name": "clearLabel",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "filled writable 상태에서 나타나는 owned clear button의 non-empty label입니다."
+        },
+        {
+          "name": "value",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "controlled string value입니다. 빈 문자열도 controlled로 판정합니다."
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "uncontrolled 초기값이며 생략하면 빈 문자열입니다."
+        },
+        {
+          "name": "onValueChange",
+          "type": "(value: string) => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "typing과 clear가 만든 다음 string value를 전달합니다."
+        },
+        {
+          "name": "onClear",
+          "type": "() => void",
+          "required": false,
+          "defaultValue": null,
+          "description": "clear 시 onValueChange 빈 문자열 뒤 호출됩니다."
+        },
+        {
+          "name": "fixed",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "search bar를 viewport 상단에 fixed 배치하며 portal하지 않습니다."
+        },
+        {
+          "name": "takeSpace",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "fixed일 때 ResizeObserver로 측정한 높이를 spacer로 예약합니다."
+        },
+        {
+          "name": "...inputProps",
+          "type": "Omit<InputHTMLAttributes<HTMLInputElement>, 'children' | 'defaultValue' | 'onChange' | 'size' | 'type' | 'value'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "className과 safe layout style은 root에, 그 밖의 native props와 forwarded ref는 input에 적용됩니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/control/large",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/16",
+        "radius/full",
+        "font/family/sans",
+        "font/size/body",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/bg/subtle",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/border/focus",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/search-field/"
+    },
+    {
+      "name": "ListRow",
+      "slug": "list-row",
+      "description": "정보, 전체 행 동작, 화면 이동을 static div와 native button·anchor로 구분하는 flat row입니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=253-14",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "none",
+        "indented"
+      ],
+      "sizes": [],
+      "states": [
+        "default",
+        "pressed",
+        "disabled"
+      ],
+      "accessibility": "native div·button·anchor 의미, presentational left, exposed right, decorative arrow, action branch의 nested-control 금지를 보존합니다.",
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "행의 주 정보이자 localizable visible copy입니다."
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "title 아래에 표시하는 선택 설명입니다."
+        },
+        {
+          "name": "left",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "assistive technology에서 숨기는 presentational leading content입니다."
+        },
+        {
+          "name": "right",
+          "type": "ReactNode",
+          "required": false,
+          "defaultValue": null,
+          "description": "의미를 노출하는 trailing content이며 interactive child는 static branch에만 허용됩니다."
+        },
+        {
+          "name": "divider",
+          "type": "'none' | 'indented'",
+          "required": false,
+          "defaultValue": "none",
+          "description": "행 아래에 inset divider를 표시할지 정합니다."
+        },
+        {
+          "name": "withArrow",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "회전하지 않는 owned decorative ChevronRight를 표시합니다."
+        },
+        {
+          "name": "href",
+          "type": "string",
+          "required": false,
+          "defaultValue": null,
+          "description": "string이면 native anchor branch를 선택하며 fake disabled로 바뀌지 않습니다."
+        },
+        {
+          "name": "onClick",
+          "type": "MouseEventHandler<HTMLButtonElement>",
+          "required": false,
+          "defaultValue": null,
+          "description": "href가 없고 function이면 native button branch를 선택합니다."
+        },
+        {
+          "name": "...nativeProps",
+          "type": "ListRowStaticProps | ListRowButtonProps | ListRowAnchorProps",
+          "required": false,
+          "defaultValue": null,
+          "description": "선택된 native root의 data·aria·form·navigation props와 정확한 forwarded ref를 보존하며 style은 safe layout 값만 적용합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/large",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/4",
+        "space/8",
+        "space/12",
+        "space/16",
+        "radius/none",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/size/body",
+        "font/weight/medium",
+        "font/line-height/body-sm",
+        "font/line-height/body",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/bg/surface",
+        "color/text/primary",
+        "color/text/secondary",
+        "color/text/disabled",
+        "color/border/default",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/list-row/"
+    },
+    {
+      "name": "Toast",
+      "slug": "toast",
+      "description": "짧은 비모달 피드백을 한 번에 하나씩 portal에 표시하고 FIFO queue로 순서를 보존하는 provider입니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=319-274",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "neutral",
+        "success",
+        "danger",
+        "action-hidden",
+        "action-visible"
+      ],
+      "sizes": [],
+      "states": [
+        "visible",
+        "queued",
+        "paused",
+        "persistent"
+      ],
+      "accessibility": "neutral·success는 polite atomic status, danger는 assertive atomic alert이며 focus·scroll·inert 상태를 변경하지 않습니다.",
+      "props": [
+        {
+          "name": "children",
+          "type": "ReactNode",
+          "required": true,
+          "defaultValue": null,
+          "description": "Toast context를 사용하는 application subtree입니다."
+        },
+        {
+          "name": "portalContainer",
+          "type": "HTMLElement | null",
+          "required": false,
+          "defaultValue": "document.body after hydration",
+          "description": "SSR-safe portal 목적지이며 변경되어도 진행 중 timer를 재시작하지 않습니다."
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "required": true,
+          "defaultValue": null,
+          "description": "trim 후 비어 있지 않아야 하는 localizable visible copy입니다."
+        },
+        {
+          "name": "tone",
+          "type": "ToastTone",
+          "required": false,
+          "defaultValue": "neutral",
+          "description": "neutral, success, danger live-region tone을 정합니다."
+        },
+        {
+          "name": "icon",
+          "type": "IconName",
+          "required": false,
+          "defaultValue": null,
+          "description": "accessible name에서 제외되는 owned decorative Icon입니다."
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "defaultValue": "3000 or 5000 with action",
+          "description": "finite non-negative milliseconds이며 0은 persistent입니다."
+        },
+        {
+          "name": "position",
+          "type": "ToastPosition",
+          "required": false,
+          "defaultValue": "bottom",
+          "description": "top 또는 bottom safe-area 위치이며 top Toast에는 action을 허용하지 않습니다."
+        },
+        {
+          "name": "action",
+          "type": "ToastAction",
+          "required": false,
+          "defaultValue": null,
+          "description": "bottom에서만 허용되는 non-empty label과 callable onPress입니다."
+        },
+        {
+          "name": "show",
+          "type": "(options: ToastOptions) => string",
+          "required": true,
+          "defaultValue": null,
+          "description": "검증된 Toast를 FIFO queue에 추가하고 stable monotonic ID를 반환합니다."
+        },
+        {
+          "name": "dismiss",
+          "type": "(id: string) => void",
+          "required": true,
+          "defaultValue": null,
+          "description": "visible 또는 queued ID를 action 호출 없이 제거합니다."
+        },
+        {
+          "name": "clear",
+          "type": "() => void",
+          "required": true,
+          "defaultValue": null,
+          "description": "visible과 queued Toast를 모두 action 호출 없이 제거합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/medium",
+        "size/icon/medium",
+        "space/0",
+        "space/2",
+        "space/8",
+        "space/12",
+        "space/16",
+        "space/64",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-sm",
+        "font/line-height/body-sm",
+        "elevation/2",
+        "motion/duration/fast",
+        "motion/easing/standard",
+        "color/status/neutral",
+        "color/status/success",
+        "color/status/danger",
+        "color/status/on-status",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/toast/"
+    },
+    {
+      "name": "BottomCTA",
+      "slug": "bottom-cta",
+      "description": "화면 하단의 한두 개 핵심 행동을 owned Button으로 구성하고 fixed·safe-area·공간 보존을 일관되게 처리합니다.",
+      "status": "preview",
+      "figmaUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=331-55",
+      "frameworks": {
+        "react": "preview",
+        "svelte": "planned",
+        "reactNative": "planned"
+      },
+      "variants": [
+        "single",
+        "double",
+        "background-default",
+        "background-none"
+      ],
+      "sizes": [],
+      "states": [
+        "static",
+        "fixed",
+        "take-space"
+      ],
+      "accessibility": "secondary 다음 primary의 DOM·tab 순서를 유지하고 owned native Button의 이름, 상태, form 동작과 focus 표현을 보존합니다.",
+      "props": [
+        {
+          "name": "primaryAction",
+          "type": "BottomCTAAction",
+          "required": true,
+          "defaultValue": null,
+          "description": "정확한 owned Button element이며 large·full geometry로 렌더링되는 주 행동입니다."
+        },
+        {
+          "name": "secondaryAction",
+          "type": "BottomCTAAction",
+          "required": false,
+          "defaultValue": null,
+          "description": "있으면 Double layout을 만들고 primary보다 먼저 DOM과 tab 순서에 배치되는 보조 행동입니다."
+        },
+        {
+          "name": "fixed",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "false",
+          "description": "portal 없이 현재 DOM 위치에서 viewport 하단에 panel을 고정합니다."
+        },
+        {
+          "name": "takeSpace",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "fixed일 때 ResizeObserver로 측정한 높이만큼 spacer를 두어 콘텐츠 가림을 방지합니다."
+        },
+        {
+          "name": "hasSafeAreaPadding",
+          "type": "boolean",
+          "required": false,
+          "defaultValue": "true",
+          "description": "system inset, --hds-safe-area-bottom override, space/16 중 최댓값을 하단 padding으로 사용합니다."
+        },
+        {
+          "name": "background",
+          "type": "BottomCTABackground",
+          "required": false,
+          "defaultValue": "default",
+          "description": "default surface 또는 persistent surface를 제거한 none을 선택합니다."
+        },
+        {
+          "name": "...divProps",
+          "type": "Omit<HTMLAttributes<HTMLDivElement>, 'children'>",
+          "required": false,
+          "defaultValue": null,
+          "description": "data·aria·event와 forwarded ref를 보존하며 style은 safe layout 값만 적용합니다."
+        }
+      ],
+      "tokens": [
+        "size/control/large",
+        "space/0",
+        "space/4",
+        "space/12",
+        "space/16",
+        "radius/md",
+        "font/family/sans",
+        "font/size/body-lg",
+        "font/weight/semibold",
+        "font/line-height/body-lg",
+        "color/bg/surface",
+        "color/action/primary",
+        "color/action/primary-hover",
+        "color/action/primary-pressed",
+        "color/action/on-primary",
+        "color/action/weak",
+        "color/action/weak-hover",
+        "color/action/on-weak",
+        "color/border/default",
+        "color/border/strong",
+        "color/focus/ring"
+      ],
+      "docsUrl": "/components/bottom-cta/"
     }
   ]
 }

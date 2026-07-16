@@ -1,0 +1,197 @@
+---
+name: RadioGroup
+slug: radio-group
+description: 하나의 값을 고르는 visible option set을 native fieldset과 same-name radio로 제공합니다.
+status: preview
+figmaUrl: "https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=147-272"
+frameworks:
+  react: preview
+  svelte: planned
+  reactNative: planned
+variants: [none, first, second]
+sizes: [small, medium]
+states: [default, error, disabled]
+accessibility: visible legend, 44px option rows, native arrow-key·form semantics, group와 option의 ordered description/error relationships를 제공합니다.
+props:
+  - name: legend
+    type: string
+    required: true
+    defaultValue: null
+    description: fieldset의 visible accessible name입니다.
+  - name: name
+    type: string
+    required: true
+    defaultValue: null
+    description: 모든 native radio input이 공유하는 form field name입니다.
+  - name: options
+    type: readonly RadioGroupOption[]
+    required: true
+    defaultValue: null
+    description: value, label, optional description과 disabled를 가진 선택지 목록입니다.
+  - name: description
+    type: string
+    required: false
+    defaultValue: null
+    description: 그룹 전체를 설명하는 도움말입니다.
+  - name: errorMessage
+    type: string
+    required: false
+    defaultValue: null
+    description: 그룹과 각 radio에 연결되는 오류 문구입니다.
+  - name: size
+    type: RadioGroupSize
+    required: false
+    defaultValue: medium
+    description: small 20px 또는 medium 24px indicator를 선택합니다.
+  - name: value
+    type: string
+    required: false
+    defaultValue: null
+    description: controlled 선택 값입니다.
+  - name: defaultValue
+    type: string
+    required: false
+    defaultValue: null
+    description: uncontrolled 초기 선택 값입니다.
+  - name: required
+    type: boolean
+    required: false
+    defaultValue: "false"
+    description: 첫 번째 enabled radio에 native required를 적용합니다.
+  - name: onChange
+    type: ChangeEventHandler<HTMLInputElement>
+    required: false
+    defaultValue: null
+    description: 선택된 native radio change event를 전달합니다.
+  - name: ...fieldsetProps
+    type: "Omit<FieldsetHTMLAttributes<HTMLFieldSetElement>, 'children' | 'onChange'>"
+    required: false
+    defaultValue: null
+    description: owned children과 onChange를 제외한 native fieldset props입니다.
+tokens:
+  - size/control/small
+  - size/selection/small
+  - size/selection/medium
+  - space/2
+  - space/4
+  - space/8
+  - radius/full
+  - font/family/sans
+  - font/weight/semibold
+  - font/size/caption
+  - font/size/body-sm
+  - font/size/body
+  - font/line-height/caption
+  - font/line-height/body-sm
+  - font/line-height/body
+  - color/bg/surface
+  - color/bg/subtle
+  - color/text/primary
+  - color/text/secondary
+  - color/text/disabled
+  - color/border/default
+  - color/border/focus
+  - color/action/primary
+  - color/action/primary-hover
+  - color/action/primary-pressed
+  - color/action/on-primary
+  - color/status/danger
+  - color/status/on-status
+  - color/focus/ring
+---
+
+import ComponentPreview from '../../components/ComponentPreview.astro';
+import RadioGroupExample from '../../components/examples/RadioGroupExample';
+
+## 예제
+
+<ComponentPreview title="RadioGroup 상태" description="controlled 선택, 크기, required, disabled, error와 정적 상태를 비교합니다.">
+  <RadioGroupExample client:load />
+</ComponentPreview>
+
+## 사용해야 할 때
+
+배송 방법이나 연락 수단처럼 사용자가 작은 visible set에서 정확히 하나를 선택해야 할 때 사용합니다. 선택지를 한 화면에서 비교할 수 있고 각 항목을 짧게 설명할 수 있을 때 적합합니다.
+
+## 사용하지 말아야 할 때
+
+여러 값을 독립적으로 선택하려면 Checkbox를 사용합니다. 선택지가 매우 많거나 공간이 제한적이면 Select를 사용하고, 즉시 켜고 끄는 binary setting에는 Switch를 사용합니다.
+
+## 구조
+
+native `fieldset` 안에 visible `legend`, optional group description, same-name radio option list, optional group error가 순서대로 옵니다. 각 option label row는 native radio와 label, optional option description을 함께 감쌉니다.
+
+## 크기와 변형
+
+`small` indicator는 20px, `medium`은 24px이며 기본값은 `medium`입니다. 모든 option row는 최소 44px입니다. public metadata의 `none`, `first`, `second`는 문서와 Figma가 보여 주는 selection 예시이며 option 수는 runtime data입니다.
+
+## 상태와 동작
+
+상태 우선순위는 `Disabled > Error > Focus > Default`입니다. controlled `value`와 uncontrolled `defaultValue`를 모두 지원하지만 내부 mirror state는 만들지 않습니다. 같은 `name`을 공유하므로 browser가 단일 선택, 방향키 이동, form value를 소유합니다.
+
+## 반응형 동작
+
+fieldset은 content width를 사용하되 available width를 넘지 않습니다. 긴 legend, option label, description과 error는 줄바꿈되며 모바일에서도 같은 native radios와 44px rows를 유지합니다.
+
+## 접근성
+
+visible legend가 group name을 제공합니다. option label click, Tab 진입, 방향키 선택, native required와 disabled semantics를 보존합니다. `required`는 첫 enabled option 하나에만 적용합니다. group description/error는 fieldset과 각 radio에 연결되고 option description이 먼저 결합됩니다.
+
+## React 예제
+
+```tsx
+import { RadioGroup } from '@hds/react';
+import '@hds/react/styles.css';
+
+const options = [
+  { value: 'standard', label: '일반 배송' },
+  { value: 'express', label: '빠른 배송' },
+];
+
+export function DeliveryMethod() {
+  return (
+    <RadioGroup
+      defaultValue="standard"
+      legend="배송 방법"
+      name="delivery"
+      options={options}
+      required
+    />
+  );
+}
+```
+
+## API
+
+<div className="api-table">
+
+| Prop | Type | Default | 설명 |
+|---|---|---|---|
+| `legend` | `string` | required | visible fieldset legend |
+| `name` | `string` | required | same-name native radio field |
+| `options` | `readonly RadioGroupOption[]` | required | value/label/description/disabled options |
+| `description` | `string` | 없음 | group helper text |
+| `errorMessage` | `string` | 없음 | group·option error ARIA와 alert text |
+| `size` | `'small' \| 'medium'` | `'medium'` | 20/24px indicator; row는 최소 44px |
+| `value` / `defaultValue` | `string` | 없음 | controlled / uncontrolled selection |
+| `required` | `boolean` | `false` | first enabled radio의 native constraint |
+| `onChange` | <code>ChangeEventHandler&lt;HTMLInputElement&gt;</code> | 없음 | selected radio change event |
+| native fieldset props | <code>Omit&lt;FieldsetHTMLAttributes&lt;HTMLFieldSetElement&gt;, 'children' \| 'onChange'&gt;</code> | 없음 | form, aria, data attributes와 ref |
+
+</div>
+
+## 사용 토큰
+
+- `size/control/small`, `size/selection/small`, `size/selection/medium`
+- `space/2`, `space/4`, `space/8`, `radius/full`
+- `font/*`, `color/bg/*`, `color/text/*`, `color/border/*`, `color/action/*`, `color/status/*`, `color/focus/ring`
+
+## Figma
+
+라이브 [RadioGroup component set](https://www.figma.com/design/hNlju4j556mzi0G515UDwE?node-id=147-272)은 `Size 2 × Selection 3 × State 3 = 18` variants와 `Legend`, `Option 1`, `Option 2`, `Option 3`, `Description`, `Error` TEXT properties를 제공합니다. 44px option rows, indicator 크기·0 padding·radius, gaps, semantic colors와 text styles는 local Variables와 Styles에 연결되어 있습니다.
+
+## 지원 상태
+
+| React | Svelte | React Native |
+|---|---|---|
+| preview | planned | planned |

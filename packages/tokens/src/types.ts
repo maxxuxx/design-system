@@ -3,7 +3,9 @@ export type TokenType =
   | 'dimension'
   | 'fontFamily'
   | 'fontWeight'
-  | 'shadow';
+  | 'shadow'
+  | 'duration'
+  | 'cubicBezier';
 
 export interface TokenDefinition {
   name: string;
@@ -14,6 +16,6 @@ export interface TokenDefinition {
 }
 
 export interface ResolvedToken extends TokenDefinition {
-  cssVariable: `--ds-${string}`;
+  cssVariable: `--hds-${string}`;
   resolvedValue: string | number;
 }
