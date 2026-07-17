@@ -40,9 +40,20 @@
   justify-content: center;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 120ms ease;
+}
+
+.hds-scroll-area__edge::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: none;
+  pointer-events: none;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
-  transition: opacity 120ms ease, backdrop-filter 120ms ease;
+  -webkit-mask-image: none;
+  mask-image: none;
+  content: '';
 }
 
 .hds-scroll-area__edge--top {
@@ -53,37 +64,55 @@
   bottom: 0;
 }
 
-.hds-scroll-area__edge--top[data-active='true'] {
+.hds-scroll-area__edge--top[data-active='true']::before {
   background: linear-gradient(
     to bottom,
     color-mix(
       in srgb,
-      var(--hds-color-bg-surface) 36%,
+      var(--hds-color-bg-surface) 18%,
       transparent
-    ),
-    transparent
+    ) 0%,
+    color-mix(
+      in srgb,
+      var(--hds-color-bg-surface) 6%,
+      transparent
+    ) 56%,
+    transparent 100%
   );
+  -webkit-backdrop-filter: blur(var(--hds-blur-subtle));
+  backdrop-filter: blur(var(--hds-blur-subtle));
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 42%, transparent 100%);
 }
 
-.hds-scroll-area__edge--bottom[data-active='true'] {
+.hds-scroll-area__edge--bottom[data-active='true']::before {
   background: linear-gradient(
     to top,
     color-mix(
       in srgb,
-      var(--hds-color-bg-surface) 36%,
+      var(--hds-color-bg-surface) 18%,
       transparent
-    ),
-    transparent
+    ) 0%,
+    color-mix(
+      in srgb,
+      var(--hds-color-bg-surface) 6%,
+      transparent
+    ) 56%,
+    transparent 100%
   );
+  -webkit-backdrop-filter: blur(var(--hds-blur-subtle));
+  backdrop-filter: blur(var(--hds-blur-subtle));
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 42%, transparent 100%);
+  mask-image: linear-gradient(to top, #000 0%, #000 42%, transparent 100%);
 }
 
 .hds-scroll-area__edge[data-active='true'] {
   opacity: 1;
-  -webkit-backdrop-filter: blur(var(--hds-blur-subtle));
-  backdrop-filter: blur(var(--hds-blur-subtle));
 }
 
 .hds-scroll-area__button {
+  position: relative;
+  z-index: 1;
   display: inline-grid;
   box-sizing: border-box;
   width: var(--hds-size-control-small);
@@ -92,11 +121,12 @@
   min-height: var(--hds-size-control-small);
   padding: 0;
   color: var(--hds-color-action-on-weak);
-  background: var(--hds-color-action-weak);
-  border: 1px solid var(--hds-color-border-default);
+  background: transparent;
+  border: 0;
   border-radius: var(--hds-radius-full);
-  box-shadow: var(--hds-elevation-1);
+  box-shadow: none;
   cursor: pointer;
+  isolation: isolate;
   place-items: center;
   pointer-events: auto;
   touch-action: manipulation;
@@ -107,9 +137,47 @@
     opacity 120ms ease;
 }
 
-.hds-scroll-area__button:not(:disabled):hover {
-  background: var(--hds-color-action-weak-hover);
-  border-color: var(--hds-color-border-focus);
+.hds-scroll-area__button::before {
+  position: absolute;
+  z-index: 0;
+  inset: var(--hds-space-4);
+  background: color-mix(
+    in srgb,
+    var(--hds-color-bg-surface) 88%,
+    transparent
+  );
+  border: 1px solid color-mix(
+    in srgb,
+    var(--hds-color-border-default) 44%,
+    transparent
+  );
+  border-radius: var(--hds-radius-full);
+  box-shadow: var(--hds-elevation-1);
+  content: '';
+  -webkit-backdrop-filter: blur(var(--hds-blur-subtle));
+  backdrop-filter: blur(var(--hds-blur-subtle));
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    transform 120ms ease;
+}
+
+.hds-scroll-area__button:not(:disabled):hover::before {
+  background: color-mix(
+    in srgb,
+    var(--hds-color-bg-surface) 72%,
+    var(--hds-color-action-weak-hover)
+  );
+  border-color: color-mix(
+    in srgb,
+    var(--hds-color-border-focus) 48%,
+    transparent
+  );
+}
+
+.hds-scroll-area__button:not(:disabled):active::before {
+  background: var(--hds-color-action-weak);
+  transform: scale(0.94);
 }
 
 .hds-scroll-area__button:focus-visible {
@@ -128,7 +196,17 @@
   pointer-events: none;
 }
 
+.hds-scroll-area__button:disabled::before {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 .hds-scroll-area__button .hds-icon {
+  position: relative;
+  z-index: 1;
   color: inherit;
   transition: transform 120ms ease;
 }
@@ -141,29 +219,55 @@
   transform: rotate(90deg);
 }
 
+.hds-scroll-area__button--up:not(:disabled):hover .hds-icon {
+  transform: translateY(-1px) rotate(-90deg);
+}
+
+.hds-scroll-area__button--down:not(:disabled):hover .hds-icon {
+  transform: translateY(1px) rotate(90deg);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hds-scroll-area__viewport {
     scroll-behavior: auto;
   }
 
   .hds-scroll-area__edge,
+  .hds-scroll-area__edge::before,
   .hds-scroll-area__button,
+  .hds-scroll-area__button::before,
   .hds-scroll-area__button .hds-icon {
     transition: none;
+  }
+
+  .hds-scroll-area__button--up:not(:disabled):hover .hds-icon {
+    transform: rotate(-90deg);
+  }
+
+  .hds-scroll-area__button--down:not(:disabled):hover .hds-icon {
+    transform: rotate(90deg);
   }
 }
 
 @media (forced-colors: active) {
-  .hds-scroll-area__edge[data-active='true'] {
+  .hds-scroll-area__edge[data-active='true']::before {
     background: transparent;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 
   .hds-scroll-area__button:not(:disabled) {
     color: ButtonText;
+    background: transparent;
+  }
+
+  .hds-scroll-area__button:not(:disabled)::before {
     background: ButtonFace;
     border-color: ButtonText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .hds-scroll-area__button:focus-visible {
@@ -176,5 +280,10 @@
     background: transparent;
     border-color: transparent;
     forced-color-adjust: none;
+  }
+
+  .hds-scroll-area__button:disabled::before {
+    background: transparent;
+    border-color: transparent;
   }
 }

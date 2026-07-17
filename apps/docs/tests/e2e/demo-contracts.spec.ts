@@ -111,20 +111,25 @@ async function expectScrollAreaState(
     await expect(button).toHaveAttribute('aria-hidden', String(!isActive));
     const cue = await edge.evaluate((element) => {
       const style = getComputedStyle(element);
+      const visual = getComputedStyle(element, '::before');
       return {
-        backdropFilter: style.backdropFilter,
-        backgroundImage: style.backgroundImage,
+        backdropFilter: visual.backdropFilter,
+        backgroundImage: visual.backgroundImage,
+        maskImage: visual.maskImage,
         opacity: style.opacity,
       };
     });
     if (isActive) {
-      expect(resolvedBlurPixels(cue.backdropFilter)).toBe(8);
+      expect(resolvedBlurPixels(cue.backdropFilter)).toBe(4);
       expect(cue.backgroundImage).not.toBe('none');
-      expect(cue.backgroundImage).toMatch(/\/\s*0\.36\b/);
+      expect(cue.backgroundImage).toMatch(/\/\s*0\.18\b/);
+      expect(cue.backgroundImage).toMatch(/\/\s*0\.06\b/);
+      expect(cue.maskImage).not.toBe('none');
       expect(cue.opacity).toBe('1');
     } else {
       expect(cue.backdropFilter).toBe('none');
       expect(cue.backgroundImage).toBe('none');
+      expect(cue.maskImage).toBe('none');
       expect(cue.opacity).toBe('0');
     }
   }

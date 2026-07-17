@@ -138,11 +138,11 @@ describe('token generation', () => {
     expect(first.find((token) => token.name === 'blur/subtle')).toMatchObject({
       type: 'dimension',
       kind: 'primitive',
-      value: 8,
+      value: 4,
       cssVariable: '--hds-blur-subtle',
-      resolvedValue: 8,
+      resolvedValue: 4,
     });
-    expect(renderCss(first)).toContain('  --hds-blur-subtle: 8px;');
+    expect(renderCss(first)).toContain('  --hds-blur-subtle: 4px;');
     expect(second.map((token) => token.name)).toEqual(
       first.map((token) => token.name),
     );

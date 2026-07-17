@@ -85,7 +85,7 @@
   --hds-font-family-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
   --hds-elevation-1: 0 1px 2px rgba(15, 23, 42, 0.06);
   --hds-elevation-2: 0 8px 24px rgba(15, 23, 42, 0.10);
-  --hds-blur-subtle: 8px;
+  --hds-blur-subtle: 4px;
   --hds-color-neutral-900-alpha-56: rgba(15, 23, 42, 0.56);
   --hds-motion-duration-fast: 120ms;
   --hds-motion-duration-medium: 200ms;
