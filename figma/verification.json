@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "fileUrl": "https://www.figma.com/design/hNlju4j556mzi0G515UDwE",
-  "verifiedAt": "2026-07-14T08:20:29Z",
+  "verifiedAt": "2026-07-17T06:46:30Z",
   "codeConnect": "skipped-v0.1",
   "collections": [
     "Primitives",
@@ -42,7 +42,7 @@
     "90 Native Differences",
     "99 Deprecated"
   ],
-  "tokenValuesSha256": "40b2ff9c96c11d969cee7b9da7af3e1e9de28c5f86f4a983a823cd6dbbb0289a",
+  "tokenValuesSha256": "f7f33f13a4686f64d8495b137d97577a67f3fa6b2a880f3ca139fa7bc7973f02",
   "effectValuesSha256": "e2179886ca04a830b42b19fad263d68ed2510c3e8fb826cf3171b7cfeb370fb8",
   "effectReadback": [
     {
@@ -106,7 +106,7 @@
     "04.2 Badge": "183ebf9fdf84d6667526328f88b209d9ecdeeb3db5100d559e745d2fdf79b2ba",
     "04.3 Button": "8ff05ea41d421d9276c7cb00848ad20d1e68b7b45e68e06ce14deb4a6e651df2",
     "04.4 TextField": "7e768e590af79626dc178136537f4c9ab2da4323e278de7b102fb3cea31e84d3",
-    "04.5 ScrollArea": "04be530d2b892a693d73cca90745f01ec0b9089c4f86e698ef4c29c094a6ad64",
+    "04.5 ScrollArea": "7c2c9bc7feb10f1ed3a198c665bc69d046bcf8a0958a9490b6e5657297a05957",
     "04.6 Checkbox": "72185543d79c8ab482e5b975d261cc47783c573f45175bf6d74f0ab8acb93b38",
     "04.7 RadioGroup": "a0bc1871d5a0f54b41d60adc7f60649f865536065baa26b50fb2551b9ea6d7df",
     "04.8 Switch": "88e54ade7faafefda00a8378214e7a9d2b8e52ef86ec76982984f0bb0f97b6d5",

@@ -545,12 +545,14 @@ top-level overlap.
 - Specimen size: `320 × 240` per state
 - Direction cues: `0`, `1`, `2`, and `1` active edges respectively
 - Active edge height: `space/64`; directional `color/bg/surface` tint opacity:
-  `36%`; background blur radius: `blur/subtle` (`8px`)
+  `18%` → `6%` → transparent; progressive background blur strengthens toward
+  the active edge and resolves to `blur/subtle` (`4px`)
 - Navigation targets: `44 × 44`, bound to `size/control/small`; icon instances
   are `Icon/ChevronRight` at `size/icon/medium` (`20px`)
 - Top controls point up and bottom controls point down; inactive directions
   contain neither a blur layer nor a navigation target
-- Buttons reuse `Shadow/1`, semantic action/border Variables, and `radius/full`
+- Buttons keep a `44 × 44` hit area around a lighter `36 × 36` translucent
+  surface, reusing `Shadow/1`, semantic surface/border Variables, and `radius/full`
 - Binding audit: no unbound visible fill, stroke, or effect values; all four
   ChevronRight instances resolve to the owned master component
 - Full-page screenshot target: `04.5 ScrollArea` (`111:2`), rendered at

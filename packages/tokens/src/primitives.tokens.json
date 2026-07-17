@@ -85,7 +85,7 @@
   { "name": "font/family/sans", "type": "fontFamily", "kind": "primitive", "value": "\"Pretendard Variable\", Pretendard, -apple-system, BlinkMacSystemFont, \"Segoe UI\", \"Noto Sans KR\", sans-serif", "description": "자체 호스팅 Pretendard Variable과 한국어 시스템 fallback을 제공하는 기본 sans-serif 글꼴 stack입니다." },
   { "name": "elevation/1", "type": "shadow", "kind": "primitive", "value": "0 1px 2px rgba(15, 23, 42, 0.06)", "description": "인접 surface를 미세하게 구분하는 낮은 elevation입니다." },
   { "name": "elevation/2", "type": "shadow", "kind": "primitive", "value": "0 8px 24px rgba(15, 23, 42, 0.10)", "description": "떠 있는 panel과 overlay를 구분하는 중간 elevation입니다." },
-  { "name": "blur/subtle", "type": "dimension", "kind": "primitive", "value": 8, "description": "Direction cue background blur radius." },
+  { "name": "blur/subtle", "type": "dimension", "kind": "primitive", "value": 4, "description": "다음 콘텐츠를 은은하게 암시하는 배경 흐림 반경입니다." },
   { "name": "color/neutral/900-alpha-56", "type": "color", "kind": "primitive", "value": "rgba(15, 23, 42, 0.56)", "description": "모달 뒤 콘텐츠를 가리는 scrim에 사용하는 반투명 중립색입니다." },
   { "name": "motion/duration/fast", "type": "duration", "kind": "primitive", "value": "120ms", "description": "직접적인 상호작용 피드백 전환에 사용하는 짧은 시간입니다." },
   { "name": "motion/duration/medium", "type": "duration", "kind": "primitive", "value": "200ms", "description": "sheet 진입과 종료에 사용하는 중간 시간입니다." },

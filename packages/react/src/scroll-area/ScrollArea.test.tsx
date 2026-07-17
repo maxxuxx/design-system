@@ -419,7 +419,7 @@ describe('ScrollArea', () => {
     const reactStyles = readFileSync('src/styles.css', 'utf8');
     const tokenStyles = readFileSync('../tokens/dist/tokens.css', 'utf8');
 
-    expect(tokenStyles).toContain('--hds-blur-subtle: 8px;');
+    expect(tokenStyles).toContain('--hds-blur-subtle: 4px;');
     expect(reactStyles).toContain("@import './scroll-area/ScrollArea.css';");
     for (const selector of [
       '.hds-scroll-area',
@@ -437,12 +437,16 @@ describe('ScrollArea', () => {
     expect(componentCss).toMatch(
       /\.hds-scroll-area__edge\s*\{[^}]*box-sizing: border-box;/s,
     );
+    expect(componentCss).toContain('.hds-scroll-area__edge::before');
     expect(componentCss).toContain('blur(var(--hds-blur-subtle))');
-    expect([
-      ...componentCss.matchAll(
-        /\.hds-scroll-area__edge--(?:top|bottom)\[data-active='true'\]\s*\{[^}]*background:\s*linear-gradient\(\s*to (?:top|bottom),\s*color-mix\(\s*in srgb,\s*var\(--hds-color-bg-surface\)\s+36%,\s*transparent\s*\),\s*transparent\s*\)\s*;?/g,
-      ),
-    ]).toHaveLength(2);
+    expect(componentCss.match(/var\(--hds-color-bg-surface\) 18%/g)).toHaveLength(2);
+    expect(componentCss.match(/var\(--hds-color-bg-surface\) 6%/g)).toHaveLength(2);
+    expect(componentCss).toContain('-webkit-mask-image: linear-gradient');
+    expect(componentCss).toContain('.hds-scroll-area__button::before');
+    expect(componentCss).toContain('var(--hds-color-bg-surface) 88%');
+    expect(componentCss).toContain('var(--hds-color-border-default) 44%');
+    expect(componentCss).toContain('var(--hds-color-action-weak-hover)');
+    expect(componentCss).toContain('transform: scale(0.94)');
   });
 
   it('has no axe violations in an overflow state', async () => {
