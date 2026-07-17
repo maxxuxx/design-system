@@ -1763,6 +1763,19 @@ test('keeps permanent Linux and Windows verification CI', async () => {
   assert.match(workflow, /push:/);
   assert.match(workflow, /push:\s*\n\s+branches:\s*\[main\]/);
   assert.match(workflow, /pull_request:/);
+  assert.match(workflow, /types:\s*\[opened, synchronize, reopened, ready_for_review\]/);
+  assert.match(
+    workflow,
+    /group:\s*verify-\$\{\{ github\.event\.pull_request\.number \|\| github\.ref \}\}/,
+  );
+  assert.match(
+    workflow,
+    /cancel-in-progress:\s*\$\{\{ github\.event_name == 'pull_request' \}\}/,
+  );
+  assert.match(
+    workflow,
+    /if:\s*\$\{\{ github\.event_name != 'pull_request' \|\| github\.event\.pull_request\.draft == false \}\}/,
+  );
   assert.match(workflow, /ubuntu-latest/);
   assert.match(workflow, /windows-latest/);
   assert.match(workflow, /runs-on:\s*\$\{\{ matrix\.os \}\}/);
