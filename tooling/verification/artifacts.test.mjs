@@ -1756,20 +1756,42 @@ test('rejects nonnumeric Figma page screenshot node IDs', async (t) => {
 });
 
 test('keeps permanent Linux and Windows verification CI', async () => {
+  const rootPackage = JSON.parse(await readFile(
+    new URL('../../package.json', import.meta.url),
+    'utf8',
+  ));
   const workflow = await readFile(
     new URL('../../.github/workflows/verify.yml', import.meta.url),
     'utf8',
   );
+  assert.equal(rootPackage.engines.node, '>=22.14.0');
   assert.match(workflow, /push:/);
   assert.match(workflow, /push:\s*\n\s+branches:\s*\[main\]/);
   assert.match(workflow, /pull_request:/);
+  assert.match(workflow, /types:\s*\[opened, synchronize, reopened, ready_for_review\]/);
+  assert.match(
+    workflow,
+    /group:\s*verify-\$\{\{ github\.event\.pull_request\.number \|\| github\.ref \}\}/,
+  );
+  assert.match(
+    workflow,
+    /cancel-in-progress:\s*\$\{\{ github\.event_name == 'pull_request' \}\}/,
+  );
+  assert.match(
+    workflow,
+    /if:\s*\$\{\{ github\.event_name != 'pull_request' \|\| github\.event\.pull_request\.draft == false \}\}/,
+  );
   assert.match(workflow, /ubuntu-latest/);
   assert.match(workflow, /windows-latest/);
   assert.match(workflow, /runs-on:\s*\$\{\{ matrix\.os \}\}/);
   assert.match(workflow, /actions\/checkout@v6/);
   assert.match(workflow, /pnpm\/action-setup@v6/);
   assert.match(workflow, /actions\/setup-node@v6/);
+  assert.match(workflow, /if:\s*runner\.os != 'Windows'/);
   assert.match(workflow, /node-version-file:\s*\.node-version/);
+  assert.match(workflow, /if:\s*runner\.os == 'Windows'/);
+  assert.match(workflow, /node-version:\s*22\.23\.1/);
+  assert.match(workflow, /nodejs\/node#56645/);
   assert.match(workflow, /cache:\s*pnpm/);
   assert.match(workflow, /corepack pnpm install --frozen-lockfile/);
   assert.match(workflow, /playwright install(?: --with-deps)? chromium/);
@@ -1786,6 +1808,8 @@ test('keeps a manual Windows workflow for reviewing all forty component-slice ba
   assert.match(workflow, /actions\/checkout@v6/);
   assert.match(workflow, /pnpm\/action-setup@v6/);
   assert.match(workflow, /actions\/setup-node@v6/);
+  assert.match(workflow, /node-version:\s*22\.23\.1/);
+  assert.match(workflow, /nodejs\/node#56645/);
   assert.match(workflow, /corepack pnpm install --frozen-lockfile/);
   assert.match(workflow, /playwright install chromium/);
   assert.match(workflow, /component-slices\.visual\.spec\.ts/);
