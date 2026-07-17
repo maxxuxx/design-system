@@ -27,9 +27,18 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           run_install: false
-      - uses: actions/setup-node@v6
+      - name: Set up repository Node version
+        if: runner.os != 'Windows'
+        uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
+          cache: pnpm
+      # Node 24 can abort with 0xC0000409 on Windows: nodejs/node#56645.
+      - name: Set up stable Windows Node version
+        if: runner.os == 'Windows'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22.23.1
           cache: pnpm
       - name: Install dependencies
         run: corepack pnpm install --frozen-lockfile
